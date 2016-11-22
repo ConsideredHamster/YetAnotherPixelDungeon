@@ -1,0 +1,173 @@
+/*
+ * Pixel Dungeon
+ * Copyright (C) 2012-2015 Oleg Dolya
+ *
+ * Yet Another Pixel Dungeon
+ * Copyright (C) 2015-2016 Considered Hamster
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
+
+import com.watabou.utils.Callback;
+import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Knives;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
+import com.consideredhamster.yetanotherpixeldungeon.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.MissileSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ThiefSprite;
+
+public class Thief extends MobPrecise {
+
+//	protected static final String TXT_STOLE	= "%s stole %s from you!";
+//	protected static final String TXT_CARRIES	= "\n\n%s is carrying a _%s_. Stolen obviously.";
+	
+//	public Item item;
+
+    public Thief() {
+
+        super( 2 );
+
+        name = "mugger";
+        spriteClass = ThiefSprite.class;
+
+        loot = Gold.class;
+        lootChance = 0.25f;
+	}
+
+    @Override
+    public int damageRoll() {
+        return isRanged() ? super.damageRoll() / 2 : super.damageRoll();
+    }
+
+    @Override
+    protected boolean canAttack( Char enemy ) {
+        return super.canAttack( enemy ) || HP >= HT && Level.distance( pos, enemy.pos ) <= 2 &&
+                Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos && !isCharmedBy( enemy );
+    }
+
+    @Override
+    protected void onRangedAttack( int cell ) {
+        ((MissileSprite)sprite.parent.recycle( MissileSprite.class )).
+                reset(pos, cell, new Knives(), new Callback() {
+                    @Override
+                    public void call() {
+                        onAttackComplete();
+                    }
+                });
+
+        super.onRangedAttack( cell );
+    }
+
+    @Override
+    public void die( Object cause, DamageType dmg ) {
+        Ghost.Quest.process( pos );
+        super.die( cause, dmg );
+    }
+
+    @Override
+    public String description() {
+
+        return "The Sewers always been hiding place for all sorts of cutthroats and outlaws. "
+
+                + ( Dungeon.hero.heroClass == HeroClass.WARRIOR ?
+                "Usually armed with different manners of daggers and knives, these cowards rely on dirty tactics instead of skill and strength." : "" )
+
+                + ( Dungeon.hero.heroClass == HeroClass.SCHOLAR ?
+                "It would be better to exercise caution when dealing with their kind, as lone old man down there can look like an easy prey through the eyes of greed." : "" )
+
+                + ( Dungeon.hero.heroClass == HeroClass.BRIGAND ?
+                "Looks like it's the time to show 'ese rookies who's da boss here. After all, their 'ill-begotten gains' can help you on your 'noble quest', isn't it?" : "" )
+
+                + ( Dungeon.hero.heroClass == HeroClass.ACOLYTE ?
+                "What leads them down the path of banditry? Greed, misfortune, or something more sinister? It doesn't really matter now, however." : "" )
+
+                ;
+    }
+	
+//	private static final String ITEM = "item";
+	
+//	@Override
+//	public void storeInBundle( Bundle bundle ) {
+//		super.storeInBundle( bundle );
+//		bundle.put( ITEM, item );
+//	}
+	
+//	@Override
+//	public void restoreFromBundle( Bundle bundle ) {
+//		super.restoreFromBundle( bundle );
+//		item = (Item)bundle.get( ITEM );
+//	}
+	
+//	@Override
+//	public void die( Object cause ) {
+//
+//		super.die( cause );
+//
+//		if (item != null) {
+//			Dungeon.bonus.drop( item, pos ).sprite.drop();
+//		}
+//	}
+	
+//	@Override
+//	public int attackProc( Char enemy, int damage ) {
+//		if (item == null && enemy instanceof Hero && steal( (Hero)enemy )) {
+//			state = FLEEING;
+//		}
+//
+//		return damage;
+//	}
+	
+//	@Override
+//	public int defenseProc(Char enemy, int damage) {
+//		if (state == FLEEING) {
+//			Dungeon.bonus.drop( new Gold(), pos ).sprite.drop();
+//		}
+//
+//		return damage;
+//	}
+	
+//	protected boolean steal( Hero hero ) {
+//
+//		Item item = hero.belongings.randomUnequipped();
+//		if (item != null && item.visible) {
+//
+//			GLog.w( TXT_STOLE, this.name, item.name() );
+//
+//			item.detachAll( hero.belongings.backpack );
+//			this.item = item;
+//
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
+	
+//	private class Fleeing extends Mob.Fleeing {
+//		@Override
+//		protected void nowhereToRun() {
+//			if (buff( Terror.class ) == null) {
+//				sprite.showStatus( CharSprite.NEGATIVE, TXT_RAGE );
+//				state = HUNTING;
+//			} else {
+//				super.nowhereToRun();
+//			}
+//		}
+//	}
+}

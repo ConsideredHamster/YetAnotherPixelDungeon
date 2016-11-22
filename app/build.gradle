@@ -1,0 +1,32 @@
+apply plugin: 'com.android.application'
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "com.consideredhamster.yetanotherpixeldungeon"
+        minSdkVersion 9
+        targetSdkVersion 21
+        versionCode 291
+         versionName '0.2.9a'
+        archivesBaseName = "yapd-$versionName"
+    }
+
+    buildTypes {
+//        release {
+//            shrinkResources true
+//            minifyEnabled true
+//        }
+
+//        debug {
+//            shrinkResources true
+//            minifyEnabled true
+//        }
+    }
+
+
+}
+
+dependencies {
+    compile project(':libs')
+}
