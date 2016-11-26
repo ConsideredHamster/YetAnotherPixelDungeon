@@ -22,9 +22,11 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.hero;
 
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.ArmorerKit;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Battery;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.CraftingKit;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.Explosives;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Waterskin;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Whetstone;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.HuntressArmor;
@@ -34,11 +36,23 @@ import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.RogueArmo
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.RoundShield;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.Keyring;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.Food;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfBlessing;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfCorrosiveGas;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfFrigidVapours;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfInvisibility;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMending;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMindVision;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfOvergrowth;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfThunderstorm;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfBanishment;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfDarkness;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfIdentify;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfPhaseWarp;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfRaiseDead;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfSunlight;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfMagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.Sling;
@@ -202,16 +216,18 @@ public enum HeroClass {
 //        new ScrollOfDarkness().quantity(3).identify().collect();
 //        new ScrollOfRaiseDead().quantity(3).identify().collect();
 //        new ScrollOfBanishment().quantity(3).identify().collect();
-//        new PotionOfHealing().quantity(5).identify().collect();
+//
+//        new PotionOfMending().quantity(5).identify().collect();
 //        new PotionOfLiquidFlame().quantity(5).identify().collect();
 //        new PotionOfMindVision().quantity(4).identify().collect();
 //        new PotionOfFrigidVapours().quantity(4).identify().collect();
 //        new PotionOfInvisibility().quantity(3).identify().collect();
+//
 //        new PotionOfCorrosiveGas().quantity(3).identify().collect();
 //        new PotionOfThunderstorm().quantity(2).identify().collect();
-//        new PotionOfShield().quantity(2).identify().collect();
-
-
+//        new PotionOfBlessing().quantity(2).identify().collect();
+//
+//
 //        new ScrollOfUpgrade().quantity(2).identify().collect();
 
 
@@ -240,7 +256,7 @@ public enum HeroClass {
 //        hero.STR += 4;
 //        hero.strBonus += 4;
 
-//        Dungeon.hero.earnExp( 1000 );
+//        Dungeon.hero.earnExp( 155 );
 //        Dungeon.hero.earnExp( 4050 );
 //        Dungeon.hero.earnExp( 6535 );
 
@@ -310,7 +326,7 @@ public enum HeroClass {
         hero.defenseSkill += 5;
         hero.magicSkill -= 5;
 
-        (hero.belongings.weap1 = new Dagger()).repair().identify().fix();
+        (hero.belongings.weap1 = new Dagger()).identify().repair().fix();
         (hero.belongings.weap2 = new Knives()).quantity(10);
         (hero.belongings.armor = new RogueArmor()).identify().repair().fix();
         (hero.belongings.ring1 = new RingOfShadows()).identify();
@@ -328,7 +344,6 @@ public enum HeroClass {
 //        new Explosives.Gunpowder().quantity(1000).collect();
 
         hero.belongings.ring1.activate( hero );
-
         new Whetstone().collect();
     }
 	

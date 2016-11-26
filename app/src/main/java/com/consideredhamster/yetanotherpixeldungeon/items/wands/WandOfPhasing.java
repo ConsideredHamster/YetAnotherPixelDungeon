@@ -60,7 +60,7 @@ public class WandOfPhasing extends WandUtility {
                 int count = curCharges;
 
                 do {
-                    pos = Dungeon.level.randomRespawnCell();
+                    pos = Dungeon.level.randomRespawnCell( true, true );
                     if (count-- <= 0) {
                         break;
                     }

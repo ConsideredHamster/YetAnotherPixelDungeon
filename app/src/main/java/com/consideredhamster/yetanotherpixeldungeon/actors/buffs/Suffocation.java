@@ -26,7 +26,7 @@ import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 
 public class Suffocation extends PassiveBuff {
 	
-	protected int left;
+	protected int left = 0;
 	
 	private static final String LEFT	= "left";
 	
@@ -43,14 +43,14 @@ public class Suffocation extends PassiveBuff {
 		left = bundle.getInt(LEFT);
 	}
 	
-	public void apply( int duration, Object source ) {
-        this.left = duration;
-        target.damage( left, this, DamageType.BODY );
-    };
+	public void proliferate(int duration ) {
 
-    public void proliferate( Object source ) {
-        if( Random.Int(left) == 0 )
-            this.left ++;
+        if( left == 0 ) {
+            this.left = duration;
+        } else if( Random.Int(left) == 0 ) {
+            this.left++;
+        }
+
         target.damage( left, this, DamageType.BODY );
     };
 	

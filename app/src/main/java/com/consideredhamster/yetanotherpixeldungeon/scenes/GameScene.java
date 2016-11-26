@@ -214,18 +214,16 @@ public class GameScene extends PixelScene {
 		
 		add(cellSelector = new CellSelector(tiles));
 		
-		StatusPane sb = new StatusPane();
-		sb.camera = uiCamera;
-		sb.setSize(uiCamera.width, 0);
-		add(sb);
-		
 		toolbar = new Toolbar();
 		toolbar.camera = uiCamera;
 		toolbar.setRect(0, uiCamera.height - toolbar.height(), uiCamera.width, toolbar.height());
 		add( toolbar );
-		
 
-		
+        StatusPane sb = new StatusPane( (int)( toolbar.top() - toolbar.btnQuick0.height() ) );
+        sb.camera = uiCamera;
+        sb.setSize(uiCamera.width, 0);
+        add(sb);
+
 		log = new GameLog();
 		log.camera = uiCamera;
 		log.setRect( 0, toolbar.top(), uiCamera.width - toolbar.btnQuick0.width(),  0 );
@@ -360,8 +358,10 @@ public class GameScene extends PixelScene {
 		if (Dungeon.hero.ready && !Dungeon.hero.stunned) {
 			log.newLine();
 		}
-		
-		cellSelector.enabled = Dungeon.hero.ready;
+
+        if( cellSelector != null ) {
+            cellSelector.enabled = Dungeon.hero.ready;
+        }
 	}
 	
 	@Override

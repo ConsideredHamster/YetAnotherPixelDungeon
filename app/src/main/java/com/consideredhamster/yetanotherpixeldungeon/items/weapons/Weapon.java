@@ -212,7 +212,7 @@ public abstract class Weapon extends EquipableItem {
 
     @Override
     public boolean disarmable() {
-        return !(enchantment instanceof Heroic);
+        return super.disarmable() && !(enchantment instanceof Heroic);
     }
 
     public int min( int bonus ) {

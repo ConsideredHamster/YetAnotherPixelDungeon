@@ -209,8 +209,8 @@ public class Toolbar extends Component {
 			value;
 		instance.layout();
 	}
-	
-	private static CellSelector.Listener informer = new CellSelector.Listener() {
+
+    public static CellSelector.Listener informer = new CellSelector.Listener() {
 		@Override
 		public void onSelect( Integer cell ) {
 
@@ -229,21 +229,11 @@ public class Toolbar extends Component {
                     return;
                 }
 
-                Mob mob = (Mob) Actor.findChar(cell);
-                if (mob != null && Dungeon.visible[cell]) {
-                    GameScene.show(new WndInfoMob(mob));
+                if( examineMob( cell ) )
                     return;
-                }
 
-                Heap heap = Dungeon.level.heaps.get(cell);
-                if (heap != null) {
-                    if (heap.type == Heap.Type.FOR_SALE && heap.size() == 1 && heap.peek().price() > 0) {
-                        GameScene.show(new WndTradeItem(heap, false));
-                    } else {
-                        GameScene.show(new WndInfoItem(heap));
-                    }
+                if( examineHeap( cell ) )
                     return;
-                }
 
 //                Plant plant = Dungeon.level.plants.get(cell);
 //                if (plant != null) {
@@ -259,6 +249,32 @@ public class Toolbar extends Component {
 			return "Select a cell to examine";
 		}
 	};
+
+    public static boolean examineMob( int pos ) {
+
+        Mob mob = (Mob) Actor.findChar( pos );
+        if (mob != null && Dungeon.visible[ pos ]) {
+            GameScene.show(new WndInfoMob(mob));
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean examineHeap( int pos ) {
+
+        Heap heap = Dungeon.level.heaps.get( pos );
+        if (heap != null) {
+            if (heap.type == Heap.Type.FOR_SALE && heap.size() == 1 && heap.peek().price() > 0) {
+                GameScene.show(new WndTradeItem(heap, false));
+            } else {
+                GameScene.show(new WndInfoItem(heap));
+            }
+            return true;
+        }
+
+        return false;
+    }
 	
 	public static class Tool extends Button {
 		

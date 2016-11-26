@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.windows;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmorCloth;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.ClothArmor;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.BitmapText;
@@ -490,8 +492,8 @@ public class WndBag extends WndTabbed {
 						mode == Mode.UNIDENTIFED && !item.isIdentified() ||
 						mode == Mode.WEAPON && item instanceof Weapon && item.isRepairable() && item.state < 3 ||
 						mode == Mode.WHETSTONE && (item instanceof MeleeWeapon && item.state < 3) ||
-						mode == Mode.CRAFTING_KIT && (item instanceof RangedWeapon && item.state < 3) ||
-						mode == Mode.ARMORERS_KIT && (item instanceof Armour && item.state < 3) ||
+						mode == Mode.CRAFTING_KIT && ((item instanceof RangedWeapon || item instanceof BodyArmorCloth)&& item.state < 3) ||
+						mode == Mode.ARMORERS_KIT && (item instanceof Armour && !(item instanceof BodyArmorCloth) && item.state < 3) ||
 						mode == Mode.ARCANE_BATTERY && (item instanceof Wand && item.state < 3) ||
 						mode == Mode.ENCHANTABLE && (item instanceof MeleeWeapon || item instanceof RangedWeapon || item instanceof Armour) ||
 						mode == Mode.TRANSMUTABLE && (item instanceof MeleeWeapon || item instanceof BodyArmor || item instanceof Wand || item instanceof Ring) ||

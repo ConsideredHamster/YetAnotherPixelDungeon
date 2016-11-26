@@ -51,10 +51,10 @@ public class Miasma extends Blob {
 
                 if( !ch.immunities().contains( DamageType.Body.class ) ) {
 
-                    if (ch.buff(Suffocation.class) == null) {
-                        Buff.prolong(ch, Suffocation.class, TICK).apply((int) (Math.sqrt(ch.HT) / 2), this);
-                    } else {
-                        Buff.prolong(ch, Suffocation.class, TICK).proliferate(this);
+                    Suffocation buff = Buff.prolong(ch, Suffocation.class, TICK);
+
+                    if ( buff != null ) {
+                        Buff.prolong(ch, Suffocation.class, TICK).proliferate((int) (Math.sqrt(ch.HT) / 2));
                     }
 
                 }

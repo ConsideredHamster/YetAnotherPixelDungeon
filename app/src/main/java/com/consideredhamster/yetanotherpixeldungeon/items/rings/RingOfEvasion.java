@@ -36,7 +36,7 @@ public class RingOfEvasion extends Ring {
 	public String desc() {
         return isTypeKnown() ?
                 ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
-                "improves your reflexes, making it easier to dodge any incoming attacks when equipped - especially" +
+                "improves your reflexes, making it easier to dodge any incoming attacks when equipped - especially " +
                 "if it wearer is on the move." +
                 ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();

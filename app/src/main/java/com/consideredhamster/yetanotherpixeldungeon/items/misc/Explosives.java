@@ -106,7 +106,9 @@ public abstract class Explosives extends Item {
 
             if( result != null ) {
 
-                result.collect();
+                if ( !result.doPickUp( Dungeon.hero )) {
+                    Dungeon.level.drop( result, Dungeon.hero.pos ).sprite.drop();
+                }
 
                 QuickSlot.refresh();
 
@@ -129,7 +131,9 @@ public abstract class Explosives extends Item {
 
             if( result != null ) {
 
-                result.collect();
+                if ( !result.doPickUp( Dungeon.hero )) {
+                    Dungeon.level.drop( result, Dungeon.hero.pos ).sprite.drop();
+                }
 
                 updateQuickslot();
 

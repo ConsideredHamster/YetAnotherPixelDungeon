@@ -88,7 +88,7 @@ public class Imp extends MobRanged {
             int newPos = -1;
 
             for (int i = 0; i < 10; i++) {
-                newPos = Dungeon.level.randomRespawnCell();
+                newPos = Dungeon.level.randomRespawnCell( true, false );
                 if (newPos != -1) {
                     break;
                 }

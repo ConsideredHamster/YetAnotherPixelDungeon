@@ -173,6 +173,11 @@ public class Dungeon {
 		Actor.clear();
 		
 		depth++;
+//		depth = 6;
+//		depth = 12;
+//		depth = 18;
+//		depth = 24;
+//		depth = 30;
 //		depth = 31;
 
 		if (depth > Statistics.deepestFloor) {

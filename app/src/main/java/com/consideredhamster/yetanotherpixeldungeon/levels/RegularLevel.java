@@ -607,7 +607,7 @@ public abstract class RegularLevel extends Level {
 	}
 	
 	@Override
-	public int randomRespawnCell() {
+	public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
 		int count = 0;
 		int cell = -1;
 		
@@ -623,8 +623,16 @@ public abstract class RegularLevel extends Level {
 			}
 			
 			cell = room.random();
-			if ( !Dungeon.visible[cell] && Actor.findChar( cell ) == null &&
-                Level.mob_passable[cell] && distance(Dungeon.hero.pos, cell) > 8 ) {
+
+            // FIXME
+
+			if (
+                Actor.findChar( cell ) == null &&
+                distance(Dungeon.hero.pos, cell) > 8 &&
+                ( ignoreView || !Dungeon.visible[cell] ) &&
+                ( ( ignoreTraps && Level.passable[cell] ) ||
+                ( !ignoreTraps && Level.mob_passable[cell] ) )
+            ) {
 
 				return cell;
 

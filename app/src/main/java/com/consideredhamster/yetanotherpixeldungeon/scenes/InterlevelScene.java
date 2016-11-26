@@ -212,7 +212,7 @@ public class InterlevelScene extends PixelScene {
             "Scrolls of Phase Warp can sometimes erase your memory about current depth",
 
             "Scrolls of Raise Dead can be very deadly against a single creature - including you",
-            "Wraiths summoned by using a scroll of Raise Dead will disappear after a while",
+            // "Wraiths summoned by using a scroll of Raise Dead will disappear after a while",
 
             "Using scrolls of Challenge is an effective, but risky way to farm experience faster",
             "Scroll of Challenge can be used to lure mimics out of their cover",

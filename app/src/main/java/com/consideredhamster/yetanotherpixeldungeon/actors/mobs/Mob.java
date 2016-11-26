@@ -23,6 +23,8 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
+import com.watabou.noosa.Camera;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Challenges;
@@ -63,6 +65,7 @@ import com.consideredhamster.yetanotherpixeldungeon.ui.HealthIndicator;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 
 public abstract class Mob extends Char {
@@ -533,9 +536,11 @@ public abstract class Mob extends Char {
 
     protected void onRangedAttack( int cell ) {
 
-        sprite.idle();
+        if ( enemy == Dungeon.hero ) {
+            Dungeon.hero.interrupt();
+        }
 
-//        attack( enemy );
+        sprite.idle();
         next();
 
     }

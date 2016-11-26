@@ -182,9 +182,9 @@ public class Generator {
 
         Category.RING.probs = null;
         Category.RING.classes = new Class<?>[]{
+                RingOfShadows.class,
                 RingOfAccuracy.class,
                 RingOfEvasion.class,
-                RingOfShadows.class,
                 RingOfPerception.class,
                 RingOfVitality.class,
                 RingOfSatiety.class,

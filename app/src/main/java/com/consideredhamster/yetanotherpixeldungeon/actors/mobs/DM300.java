@@ -74,8 +74,20 @@ public class DM300 extends MobHealthy {
 	@Override
 	public void move( int step ) {
 		super.move( step );
-		
-		if (Dungeon.level.map[step] == Terrain.INACTIVE_TRAP && HP < HT) {
+
+        if( buff( Enraged.class ) != null ) {
+
+            int cell1 = step + Level.NEIGHBOURS8[ Random.Int( Level.NEIGHBOURS8.length ) ];
+
+            int cell2 = step + Level.NEIGHBOURS12[ Random.Int( Level.NEIGHBOURS12.length ) ];
+
+            if( cell1 != pos ) {
+                BoulderTrap.boulders(cell1, damageRoll() / 2 );
+            }
+
+            BoulderTrap.boulders( cell2, damageRoll() / 3 );
+
+        } else if (Dungeon.level.map[step] == Terrain.INACTIVE_TRAP && HP < HT) {
 			
 			HP += ( HT - HP ) / 5;
 			sprite.emitter().burst( ElmoParticle.FACTORY, 5 );
@@ -85,10 +97,7 @@ public class DM300 extends MobHealthy {
 			}
 		}
 
-        if( buff( Enraged.class ) != null ) {
-            BoulderTrap.boulders(step + Level.NEIGHBOURS8[Random.Int(8)], damageRoll() / 2);
-            BoulderTrap.boulders(step + Level.NEIGHBOURS12[Random.Int(12)], damageRoll() / 3);
-        }
+
 
 	}
 

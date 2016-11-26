@@ -28,6 +28,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.PixelScene;
 
 public class DangerIndicator extends Tag {
+
+    private static final float ENABLED	= 1.0f;
+    private static final float DISABLED	= 0.3f;
 	
 	public static final int COLOR	= 0xFF4C4C;
 	
@@ -37,14 +40,40 @@ public class DangerIndicator extends Tag {
 	private int enemyIndex = 0;
 	
 	private int lastNumber = -1;
-	
-	public DangerIndicator() {
+
+    private boolean enabled = true;
+
+    public DangerIndicator() {
 		super( 0xFF4C4C );
 		
 		setSize( 24, 16 );
 		
 		visible = false;
 	}
+
+    private void enable( boolean value ) {
+        enabled = value;
+
+        if (icon != null) {
+            icon.alpha( value ? ENABLED : DISABLED );
+        }
+
+        if (number != null) {
+            number.alpha( value ? ENABLED : DISABLED );
+        }
+    }
+
+    private void visible( boolean value ) {
+        bg.visible = value;
+
+        if (icon != null) {
+            icon.visible = value;
+        }
+
+        if (number != null) {
+            number.visible = value;
+        }
+    }
 	
 	@Override
 	protected void createChildren() {
@@ -87,8 +116,16 @@ public class DangerIndicator extends Tag {
 					flash();
 				}
 			}
-		} else {
-			visible = false;
+
+            if (!Dungeon.hero.ready) {
+                enable( false );
+            } else {
+                enable( visible );
+            }
+
+        } else {
+			enable( false );
+            visible( false );
 		}
 		
 		super.update();
@@ -97,11 +134,22 @@ public class DangerIndicator extends Tag {
 	@Override
 	protected void onClick() {
 		
-		Mob target = Dungeon.hero.visibleEnemy( enemyIndex++ );
-		
-		HealthIndicator.instance.target( target == HealthIndicator.instance.target() ? null : target );
-		
-		Camera.main.target = null;
-		Camera.main.focusOn( target.sprite );
+		Mob target = next();
+
+		if( target != null ) {
+            Camera.main.target = null;
+            Camera.main.focusOn(target.sprite);
+        }
 	}
+
+    public Mob next() {
+
+        Mob target = Dungeon.hero.visibleEnemy( enemyIndex++ );
+
+        AttackIndicator.instance.target( target );
+        HealthIndicator.instance.target( target );
+
+        return target;
+
+    }
 }

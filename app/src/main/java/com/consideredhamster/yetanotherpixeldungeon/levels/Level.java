@@ -511,7 +511,7 @@ public abstract class Level implements Bundlable {
                                 new Wraith() : Bestiary.mob(Dungeon.depth));
 
                     mob.state = mob.WANDERING;
-                    mob.pos = randomRespawnCell();
+                    mob.pos = randomRespawnCell( mob.flying, false );
                     if (Dungeon.hero.isAlive() && mob.pos != -1) {
                         GameScene.add( mob );
 						if (Statistics.amuletObtained) {
@@ -527,13 +527,52 @@ public abstract class Level implements Bundlable {
 			}
 		};
 	}
+
+    public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
+        int cell;
+
+        // FIXME
+
+        if( ignoreTraps ) {
+
+            if( ignoreView ) {
+
+                do {
+                    cell = Random.Int(LENGTH);
+                } while (!passable[cell] || Actor.findChar(cell) != null);
+
+            } else {
+
+                do {
+                    cell = Random.Int(LENGTH);
+                } while (!passable[cell] || Dungeon.visible[cell] || Actor.findChar(cell) != null);
+
+            }
+
+        } else {
+
+            if( ignoreView ) {
+
+                do {
+                    cell = Random.Int(LENGTH);
+                }
+                while (!mob_passable[cell] || Actor.findChar(cell) != null);
+
+            } else {
+
+                do {
+                    cell = Random.Int(LENGTH);
+                }
+                while (!mob_passable[cell] || Dungeon.visible[cell] || Actor.findChar(cell) != null);
+
+            }
+
+        }
+        return cell;
+    }
 	
 	public int randomRespawnCell() {
-		int cell;
-		do {
-			cell = Random.Int( LENGTH );
-		} while (!mob_passable[cell] || Dungeon.visible[cell] || Actor.findChar( cell ) != null);
-		return cell;
+		return randomRespawnCell( false, false );
 	}
 	
 	public int randomDestination() {

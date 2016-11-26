@@ -218,6 +218,7 @@ public class StartScene extends PixelScene {
         unlock1 = new Group();
         add(unlock1);
 
+//        if (!(brigandUnlocked = true)) {
         if (!(brigandUnlocked = Badges.isUnlocked( Badges.Badge.BOSS_SLAIN_1 ))) {
 
             BitmapTextMultiline text = PixelScene.createMultiline(
@@ -240,6 +241,7 @@ public class StartScene extends PixelScene {
         unlock2 = new Group();
         add(unlock2);
 
+//        if (!(scholarUnlocked = true)) {
         if (!(scholarUnlocked = Badges.isUnlocked( Badges.Badge.BOSS_SLAIN_2 ))) {
 
             BitmapTextMultiline text = PixelScene.createMultiline(
@@ -263,8 +265,9 @@ public class StartScene extends PixelScene {
         unlock3 = new Group();
 		add(unlock3);
 		
+//		if (!(acolyteUnlocked = true)) {
 		if (!(acolyteUnlocked = Badges.isUnlocked( Badges.Badge.BOSS_SLAIN_3 ))) {
-		
+
 			BitmapTextMultiline text = PixelScene.createMultiline(
                     Utils.format(TXT_UNLOCK_3, Difficulties.NAMES[Difficulties.NORMAL]), 9 );
 			text.maxWidth = (int)width;

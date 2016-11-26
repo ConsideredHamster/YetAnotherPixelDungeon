@@ -190,11 +190,9 @@ public class Tengu extends MobRanged {
 		int newPos;
 
 		do {
-			newPos = Dungeon.level.randomRespawnCell();
-		} while (
-			!Level.passable[newPos] || Level.adjacent( pos, newPos ) ||
-			(enemy != null && Level.adjacent( newPos, enemy.pos )) ||
-			Actor.findChar( newPos ) != null);
+			newPos = Dungeon.level.randomRespawnCell( false, true );
+		} while (Level.adjacent( pos, newPos ) ||
+			(enemy != null && Level.adjacent( newPos, enemy.pos )));
 		
 		sprite.move( pos, newPos );
 		move( newPos );

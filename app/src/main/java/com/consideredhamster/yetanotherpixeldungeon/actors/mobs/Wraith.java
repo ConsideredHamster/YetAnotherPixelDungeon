@@ -93,10 +93,9 @@ public class Wraith extends MobRanged {
         if( buff(Blindness.class) == null ) {
             do {
 
-                newPos = Random.Int( Level.LENGTH );
+                newPos = Dungeon.level.randomRespawnCell( true, true );
 
-            } while ( Level.solid[newPos] || !Level.fieldOfView[newPos] ||
-                    Actor.findChar(newPos) != null && pos != newPos);
+            } while ( !Level.fieldOfView[newPos] );
         }
 
         if (Dungeon.visible[pos]) {
@@ -215,7 +214,7 @@ public class Wraith extends MobRanged {
 
     @Override
     public int attackProc( Char enemy, int damage ) {
-        if ( distance( enemy ) <= 1 && !enemy.isMagical() ) {
+        if ( distance( enemy ) <= 1 && !enemy.isMagical() && isAlive() ) {
             int reg = Math.min( Random.Int( damage + 1 ), HT - HP );
 
             if (reg > 0) {

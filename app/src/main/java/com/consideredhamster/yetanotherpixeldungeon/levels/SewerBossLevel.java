@@ -194,22 +194,22 @@ public class SewerBossLevel extends Level {
     }
 
     @Override
-    public int randomRespawnCell() {
+    public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
 
         int cell;
 
-        if( !bossAppeared) {
+        if( !bossAppeared ) {
             do {
-                cell = Random.Int(LENGTH);
-            } while (!mob_passable[cell] || Actor.findChar(cell) != null || !beforeArena(cell) );
-        } else if( !bossDefeated) {
+                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
+            } while ( !beforeArena(cell) );
+        } else if( !bossDefeated ) {
             do {
-                cell = Random.Int(LENGTH);
-            } while (!mob_passable[cell] || Actor.findChar(cell) != null || !insideArena(cell) );
+                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
+            } while ( !insideArena(cell) );
         } else {
             do {
-                cell = Random.Int(LENGTH);
-            } while (!mob_passable[cell] || Actor.findChar(cell) != null || outOfArena(cell) );
+                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
+            } while ( outOfArena(cell) );
         }
 
         return cell;
@@ -279,7 +279,7 @@ public class SewerBossLevel extends Level {
     }
 
     private boolean outOfArena(int cell) {
-        return cell / WIDTH > TOP + CHAMBER_HEIGHT + ARENA_HEIGHT;
+        return cell / WIDTH >= TOP + CHAMBER_HEIGHT + ARENA_HEIGHT;
     }
 
     @Override

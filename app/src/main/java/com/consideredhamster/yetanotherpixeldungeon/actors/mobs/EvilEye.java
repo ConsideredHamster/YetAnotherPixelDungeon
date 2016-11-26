@@ -78,7 +78,7 @@ public class EvilEye extends MobRanged {
 
     @Override
 	protected boolean getCloser( int target ) {
-		if (state == HUNTING && enemySeen && Level.adjacent( pos, target ) && HP >= HT) {
+		if (state == HUNTING && (enemySeen || enemy != null && detected( enemy ))) {
 			return getFurther( target );
 		} else {
 			return super.getCloser( target );
@@ -87,7 +87,8 @@ public class EvilEye extends MobRanged {
 
     @Override
     protected boolean canAttack( Char enemy ) {
-        return !Level.adjacent( pos, enemy.pos ) && Ballistica.cast( pos, enemy.pos, false, false ) == enemy.pos && !isCharmedBy( enemy );
+        return !Level.adjacent( pos, enemy.pos ) && !isCharmedBy( enemy ) &&
+                Ballistica.cast( pos, enemy.pos, false, false ) == enemy.pos;
     }
 
     @Override
@@ -163,10 +164,10 @@ public class EvilEye extends MobRanged {
         return true;
     }
 
-	@Override
-	public float attackSpeed() {
-		return 0.5f;
-	}
+//	@Override
+//	public float attackSpeed() {
+//		return 1f;
+//	}
 	
 //	@Override
 //	protected boolean doAttack( Char enemy ) {

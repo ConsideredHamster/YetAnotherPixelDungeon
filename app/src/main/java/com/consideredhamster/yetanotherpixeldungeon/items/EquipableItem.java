@@ -138,17 +138,12 @@ public abstract class EquipableItem extends Item {
 	}
 
     public boolean disarmable() {
-        return true;
+        return bonus >= 0;
     }
 	
 	public abstract boolean doEquip( Hero hero );
 	
 	public boolean doUnequip( Hero hero, boolean collect, boolean single ) {
-
-		if (single) {
-			hero.spendAndNext( time2equip( hero ) );
-            GLog.i(TXT_UNEQUIP, name());
-		}
 
         if (bonus < 0) {
 //            int dmg = hero.HP / 5;
@@ -162,6 +157,9 @@ public abstract class EquipableItem extends Item {
                 GLog.w(TXT_UNEQUIP_CURSED, name() );
                 return false;
 //            }
+        } else if (single) {
+            hero.spendAndNext( time2equip( hero ) );
+            GLog.i(TXT_UNEQUIP, name());
         }
 		
 		if (collect && !collect( hero.belongings.backpack )) {

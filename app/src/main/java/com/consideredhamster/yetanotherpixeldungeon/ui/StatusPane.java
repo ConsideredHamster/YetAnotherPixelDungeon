@@ -48,7 +48,8 @@ public class StatusPane extends Component {
 	private Emitter blood;
 	
 	private int lastTier = 0;
-	
+	private int bottom = 0;
+
 	private Image hp;
 	private Image exp;
 	
@@ -61,12 +62,17 @@ public class StatusPane extends Component {
 
 	private DangerIndicator danger;
     private AttackIndicator attack;
-    private LootIndicator loot;
+    private PickupIndicator pickup;
 	private ResumeButton resume;
 	private BuffIndicator buffs;
 	private Compass compass;
 	
 	private MenuButton btnMenu;
+
+    public StatusPane( int bottom ) {
+        super();
+        this.bottom = bottom;
+    }
 	
 	@Override
 	protected void createChildren() {
@@ -133,8 +139,8 @@ public class StatusPane extends Component {
 //                toolbar.btnQuick0.top() - attack.height());
         add( attack );
 
-        loot = new LootIndicator();
-        add(loot);
+        pickup = new PickupIndicator();
+        add(pickup);
 		
 		resume = new ResumeButton();
 		add( resume );
@@ -164,54 +170,59 @@ public class StatusPane extends Component {
 		
 		keys.y = 6;
 		
-		layoutTags();
+		layoutTags( bottom );
 		
 		buffs.setPos( 32, 11 );
 		
 		btnMenu.setPos( width - btnMenu.width(), 1 );
 	}
 	
-	private void layoutTags() {
+	private void layoutTags( int bottom ) {
 		
-		float pos = 18;
+		float pos = bottom - 1;
 		
 		if (tagDanger) {
-			danger.setPos( width - danger.width(), pos );
-			pos = danger.bottom() + 1;
+			danger.setPos( width - danger.width(), pos - danger.height() );
+			pos = danger.top() - 1;
 		}
 
         if (tagAttack) {
-            attack.setPos( width - attack.width(), pos );
-            pos = attack.bottom() + 1;
+            attack.setPos( width - attack.width(), pos - attack.height() );
+            pos = attack.top() - 1;
         }
 		
-		if (tagLoot) {
-			loot.setPos( width - loot.width(), pos );
-			pos = loot.bottom() + 1;
+		if (tagPickup) {
+			pickup.setPos( width - pickup.width(), pos - pickup.height() );
+			pos = pickup.top() - 1;
 		}
 		
 		if (tagResume) {
-			resume.setPos( width - resume.width(), pos );
+			resume.setPos( width - resume.width(), pos - resume.height() );
 		}
 	}
 	
 	private boolean tagDanger	= false;
     private boolean tagAttack	= false;
-    private boolean tagLoot		= false;
+    private boolean tagPickup   = false;
 	private boolean tagResume	= false;
 	
 	@Override
 	public void update() {
 		super.update();
 		
-		if (tagDanger != danger.visible || tagAttack != attack.visible || tagLoot != loot.visible || tagResume != resume.visible) {
+		if (
+            tagDanger != danger.visible ||
+            tagAttack != attack.visible ||
+            tagPickup != pickup.visible ||
+            tagResume != resume.visible
+        ) {
 			
 			tagDanger = danger.visible;
             tagAttack = attack.visible;
-            tagLoot = loot.visible;
+            tagPickup = pickup.visible;
 			tagResume = resume.visible;
 			
-			layoutTags();
+			layoutTags( bottom );
 		}
 		
 		float health_percent = (float)Dungeon.hero.HP / Dungeon.hero.HT;

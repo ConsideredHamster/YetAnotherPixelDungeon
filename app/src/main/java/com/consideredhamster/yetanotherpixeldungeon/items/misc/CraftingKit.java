@@ -38,7 +38,7 @@ import java.util.ArrayList;
 
 public class CraftingKit extends Item {
 
-    private static final String TXT_SELECT_RANGED = "Select a ranged weapon to repair";
+    private static final String TXT_SELECT_RANGED = "Select a ranged weapon or cloth armor to repair";
     private static final String TXT_REPAIR_RANGED = "Your %s looks much better now!";
 
     private static final float TIME_TO_APPLY = 3f;
@@ -107,7 +107,7 @@ public class CraftingKit extends Item {
         return 20 + 10 * value;
     }
 	
-	private void repair(RangedWeapon ranged) {
+	private void repair(Item ranged) {
 
         if( --value <= 0 ) {
             detach(curUser.belongings.backpack);
@@ -128,7 +128,7 @@ public class CraftingKit extends Item {
 	public String info() {
 		return
             "The instruments and materials in this toolkit cannot be used to repair a battle axe or a mail armor. " +
-            "However, they can be used to fix some other things, like bows, slings or flintlock weapons. " +
+            "However, they can be used to fix some other things, like bows, slings, flintlock weapons or clot armors. " +
             "Currently, it has enough materials for only " + ( value > 2 ? "three usages" : value < 2 ? "only one usage" : "two usages" ) + ".";
 	}
 
@@ -146,7 +146,7 @@ public class CraftingKit extends Item {
 		@Override
 		public void onSelect( Item item ) {
 			if (item != null) {
-				CraftingKit.this.repair((RangedWeapon) item);
+				CraftingKit.this.repair(item);
 			}
 		}
 	};

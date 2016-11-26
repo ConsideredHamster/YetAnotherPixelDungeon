@@ -1,0 +1,42 @@
+General
+
+- long tap on the attack indicator will open mob description window
+- long tap on the attack indicator will open mob description window
+
+- attack indicator now can choose any visible mob, not just adjacent ones
+- scrolling through mobs by tapping the danger indicator will change your attack target
+
+- moved status indicators to the bottom side of the screen
+- updated lore
+
+
+Mobs & Bosses
+
+- ranged mob attacks now interrupt current action
+
+- flying mobs can spawn on trap tiles now
+
+- evil eyes will not try to attack in melee anymore
+
+- evil eye will flee more in a smarter manner
+
+- evil eyes now have proper attack speed
+
+- DM-300 will never damage himself with avalanches anymore
+
+- DM-300 will not repair itself while enraged
+
+
+Bugfixes
+
+- fixed game crashing when Goo's miasma fails to work
+
+- fixed crafting kit and armorer's kit repairing/not repairing cloth armors
+
+- fixed bomb crafting when inventory is full
+
+- fixed health bars staying after death of wraiths in rare occasions
+
+- fixed wraiths teleporting out of boss arena
+
+- fixed some descriptions

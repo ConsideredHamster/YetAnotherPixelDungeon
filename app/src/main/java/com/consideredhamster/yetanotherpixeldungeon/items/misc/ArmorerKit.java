@@ -38,7 +38,7 @@ import com.consideredhamster.yetanotherpixeldungeon.windows.WndBag;
 
 public class ArmorerKit extends Item {
 
-    private static final String TXT_SELECT_ARMOUR = "Select an armor or a shield to repair";
+    private static final String TXT_SELECT_ARMOUR = "Select an non-cloth armor or a shield to repair";
     private static final String TXT_REPAIR_ARMOUR = "Your %s looks much better now!";
 
     private static final float TIME_TO_APPLY = 3f;
@@ -151,7 +151,8 @@ public class ArmorerKit extends Item {
 	@Override
 	public String info() {
 		return
-            "Using this kit of small tools and materials anybody can repair any armors or shields in a quite short amount of time.\n" +
+            "Using this kit of small tools and materials anybody can repair any armors (except cloth " +
+            "armors) or shields in a quite short amount of time.\n" +
             "No skills in tailoring, leatherworking or blacksmithing are required, but it has enough materials for only " +
             ( value > 2 ? "three usages" : value < 2 ? "only one usage" : "two usages" ) + ".";
 //			"Using this kit of small tools and materials anybody can transform any armor into an \"epic armor\", " +

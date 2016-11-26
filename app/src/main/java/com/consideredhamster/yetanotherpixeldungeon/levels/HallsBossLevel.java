@@ -158,18 +158,18 @@ public class HallsBossLevel extends Level {
 	}
 	
 	@Override
-    public int randomRespawnCell() {
+    public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
 
         int cell;
 
         if( !enteredArena ) {
             do {
-                cell = Random.Int(LENGTH);
-            } while (!mob_passable[cell] || Actor.findChar(cell) != null || !outsideEntranceRoom(cell) );
+                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
+            } while ( !outsideEntranceRoom(cell) );
         } else {
-            do {
-                cell = Random.Int(LENGTH);
-            } while (!mob_passable[cell] || Actor.findChar(cell) != null );
+
+            cell = super.randomRespawnCell( ignoreTraps, ignoreView );
+
         }
 
         return cell;

@@ -23,15 +23,18 @@ package com.consideredhamster.yetanotherpixeldungeon.ui;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndInfoItem;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndTradeItem;
 
-public class LootIndicator extends Tag {
+public class PickupIndicator extends Tag {
 	
 	private ItemSlot slot;
 	
 	private Item lastItem = null;
 	private int lastQuantity = 0;
 	
-	public LootIndicator() {
+	public PickupIndicator() {
 		super( 0x1F75CC );
 		
 		setSize( 24, 22 );
@@ -44,9 +47,15 @@ public class LootIndicator extends Tag {
 		super.createChildren();
 		
 		slot = new ItemSlot() {
+
 			protected void onClick() {
 				Dungeon.hero.handle( Dungeon.hero.pos );
 			};
+
+            protected boolean onLongClick() {
+                Toolbar.examineHeap( Dungeon.hero.pos );
+                return true;
+            };
 		};
 		slot.showParams( false );
 		add( slot );

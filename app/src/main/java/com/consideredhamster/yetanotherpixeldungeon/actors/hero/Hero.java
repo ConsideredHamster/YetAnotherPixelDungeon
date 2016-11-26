@@ -1842,7 +1842,7 @@ public class Hero extends Char {
 	@Override
 	public void onAttackComplete() {
 		
-		AttackIndicator.target( enemy );
+		AttackIndicator.target( (Mob)enemy );
 
         currentWeapon = isDualWielding() ? Random.oneOf( belongings.weap1, (Weapon)belongings.weap2 ) :
             belongings.weap1 instanceof MeleeWeapon ? belongings.weap1 :
