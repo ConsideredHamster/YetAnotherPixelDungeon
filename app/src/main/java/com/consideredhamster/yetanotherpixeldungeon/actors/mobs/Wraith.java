@@ -93,9 +93,11 @@ public class Wraith extends MobRanged {
         if( buff(Blindness.class) == null ) {
             do {
 
-                newPos = Dungeon.level.randomRespawnCell( true, true );
+                newPos = Random.Int( Level.LENGTH );
 
-            } while ( !Level.fieldOfView[newPos] );
+            } while ( Level.solid[newPos] || !Level.fieldOfView[newPos] ||
+                     Actor.findChar(newPos) != null && pos != newPos ||
+                    Ballistica.cast(pos, newPos, false, false) != newPos );
         }
 
         if (Dungeon.visible[pos]) {

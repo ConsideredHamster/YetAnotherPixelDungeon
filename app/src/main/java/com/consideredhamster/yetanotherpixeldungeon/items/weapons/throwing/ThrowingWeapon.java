@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
+import com.consideredhamster.yetanotherpixeldungeon.ui.AttackIndicator;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
@@ -351,6 +353,7 @@ public abstract class ThrowingWeapon extends Weapon {
                     }
 
                     QuickSlot.target(curItem, enemy);
+                    AttackIndicator.target( (Mob)enemy );
                 }
 
                 curUser.sprite.cast(cell);

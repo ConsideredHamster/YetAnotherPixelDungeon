@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
+import com.consideredhamster.yetanotherpixeldungeon.ui.AttackIndicator;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
@@ -171,6 +173,7 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
                     }
 
                     QuickSlot.target(curItem, ch);
+                    AttackIndicator.target( (Mob)ch );
                 }
 
                 curUser.sprite.cast(cell);

@@ -22,6 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
+import com.consideredhamster.yetanotherpixeldungeon.ui.AttackIndicator;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
@@ -642,6 +644,7 @@ public abstract class Wand extends EquipableItem {
                     }
 
                     QuickSlot.target(curItem, ch);
+                    AttackIndicator.target( (Mob)ch );
                 }
 
                 curUser.sprite.cast(cell);

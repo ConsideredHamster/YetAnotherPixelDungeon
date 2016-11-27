@@ -351,18 +351,20 @@ public class PrisonBossLevel extends RegularLevel {
 
         int cell;
 
+        // FIXME
+
         if( !enteredArena ) {
             do {
-                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-            } while (roomExit.inside(cell) );
-        } else if( enteredArena && !keyDropped) {
+                cell = Random.Int(LENGTH);
+            } while (!mob_passable[cell] || Actor.findChar(cell) != null || roomExit.inside(cell) );
+        } else if( !keyDropped ) {
             do {
-                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-            } while (!roomExit.inside(cell) );
+                cell = Random.Int(LENGTH);
+            } while (!mob_passable[cell] || Actor.findChar(cell) != null || !roomExit.inside(cell) );
         } else {
-
-            cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-
+            do {
+                cell = Random.Int(LENGTH);
+            } while (!mob_passable[cell] || Actor.findChar(cell) != null );
         }
 
         return cell;

@@ -24,6 +24,7 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeapon;
@@ -1249,6 +1250,17 @@ public class Hero extends Char {
 				}
 			}
 		}
+
+        Collections.sort(visible, new Comparator<Mob>() {
+            @Override
+            public int compare(Mob mob1, Mob mob2) {
+
+                int d1 = Level.distance( Dungeon.hero.pos, mob1.pos );
+                int d2 = Level.distance( Dungeon.hero.pos, mob2.pos );
+
+                return d1 > d2 ? 1 : d1 < d2 ? -1 : 0;
+            }
+        });
 		
 		if (newMob) {
             restoreHealth = false;
@@ -1547,7 +1559,9 @@ public class Hero extends Char {
 	@Override
 	public boolean add( Buff buff ) {
 
-		if (sprite != null) {
+        boolean result = super.add(buff);
+
+//		if (sprite != null) {
 			if (buff instanceof Burning) {
 				GLog.w("You catch fire!");
 			} else if (buff instanceof Stun) {
@@ -1576,13 +1590,13 @@ public class Hero extends Char {
 //			} else if (buff instanceof Light) {
 //                sprite.add(CharSprite.State.ILLUMINATED);
             }
-		}
+//		}
 
         interrupt();
 
         BuffIndicator.refreshHero();
 
-        return super.add(buff);
+        return result;
 	}
 	
 	@Override
@@ -1841,7 +1855,7 @@ public class Hero extends Char {
 	
 	@Override
 	public void onAttackComplete() {
-		
+
 		AttackIndicator.target( (Mob)enemy );
 
         currentWeapon = isDualWielding() ? Random.oneOf( belongings.weap1, (Weapon)belongings.weap2 ) :

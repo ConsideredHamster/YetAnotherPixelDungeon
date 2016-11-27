@@ -73,7 +73,7 @@ public class GooSprite extends MobSprite {
 
 		if (ch instanceof Goo && ((Goo)ch).phase && anim != die) {
 
-            if (spray == null) {
+            if (spray == null && visible) {
                 spray = emitter();
                 spray.pour( GooParticle.FACTORY, 0.05f );
             }

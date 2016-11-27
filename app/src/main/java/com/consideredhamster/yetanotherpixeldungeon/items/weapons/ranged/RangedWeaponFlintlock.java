@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
+import com.consideredhamster.yetanotherpixeldungeon.ui.AttackIndicator;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -243,6 +244,7 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
                     }
 
                     QuickSlot.target(curItem, ch);
+                    AttackIndicator.target( (Mob)ch );
                 }
 
                 curUser.sprite.shoot(cell);

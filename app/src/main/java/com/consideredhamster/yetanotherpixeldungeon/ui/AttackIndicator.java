@@ -103,7 +103,7 @@ public class AttackIndicator extends Tag {
 			if (candidates.isEmpty()) {
 				lastTarget = null;
 			} else {
-				lastTarget = Random.element( candidates );
+				lastTarget = candidates.get(0);
 				updateImage();				
 				flash();
 			}
@@ -158,6 +158,7 @@ public class AttackIndicator extends Tag {
 	protected void onClick() {
 		if (enabled) {
 			Dungeon.hero.handle( lastTarget.pos );
+            enable( false );
 		}
 	}
 
