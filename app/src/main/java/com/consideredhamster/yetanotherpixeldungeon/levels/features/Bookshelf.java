@@ -98,7 +98,7 @@ public class Bookshelf {
 
         if (Random.Float() < ( 0.05f + 0.05f * Dungeon.chapter() ) ) {
 
-            Dungeon.level.drop( Generator.random( Generator.Category.SCROLL ), cell ).sprite.drop();
+            Dungeon.level.drop( Generator.random( Generator.Category.SCROLL ), Dungeon.hero.pos ).sprite.drop();
             GLog.i( TXT_FOUND_SCROLL );
 
         } else if (Random.Float() < 0.05f ) {

@@ -557,7 +557,7 @@ public class Heap implements Bundlable {
                 break;
 
             case 4:
-                type = Dungeon.chapter() > Random.Int( 5 ) ? Type.BONES_CURSED : Type.BONES;
+                type = Dungeon.depth > 1 && Dungeon.chapter() > Random.Int( 5 ) ? Type.BONES_CURSED : Type.BONES;
                 break;
 
             case 5:
@@ -568,7 +568,7 @@ public class Heap implements Bundlable {
                 break;
 
             case 9:
-                type = Dungeon.chapter() > Random.Int( 5 ) ? Type.CHEST_MIMIC : Type.CHEST;
+                type = Dungeon.depth > 1 && Dungeon.chapter() > Random.Int( 5 ) ? Type.CHEST_MIMIC : Type.CHEST;
                 break;
 
             default:

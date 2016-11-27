@@ -28,7 +28,10 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.effects.CellEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.BlastParticle;
 import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ElmoParticle;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.WebParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.keys.SkeletonKey;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
@@ -77,15 +80,9 @@ public class DM300 extends MobHealthy {
 
         if( buff( Enraged.class ) != null ) {
 
-            int cell1 = step + Level.NEIGHBOURS8[ Random.Int( Level.NEIGHBOURS8.length ) ];
+            BoulderTrap.boulders( step + Level.NEIGHBOURS8[ Random.Int( Level.NEIGHBOURS8.length ) ], damageRoll() / 2 );
 
-            int cell2 = step + Level.NEIGHBOURS12[ Random.Int( Level.NEIGHBOURS12.length ) ];
-
-            if( cell1 != pos ) {
-                BoulderTrap.boulders(cell1, damageRoll() / 2 );
-            }
-
-            BoulderTrap.boulders( cell2, damageRoll() / 3 );
+            BoulderTrap.boulders( step + Level.NEIGHBOURS12[ Random.Int( Level.NEIGHBOURS12.length ) ], damageRoll() / 3 );
 
         } else if (Dungeon.level.map[step] == Terrain.INACTIVE_TRAP && HP < HT) {
 			

@@ -146,7 +146,7 @@ public abstract class ResultDescriptions {
             } else if( killedBy instanceof Hunger) {
                 result = "starvation";
             } else if( killedBy instanceof Burning) {
-                result = "burning";
+                result = "being burned alive";
             } else if( killedBy instanceof Ooze) {
                 result = "caustic ooze";
             }

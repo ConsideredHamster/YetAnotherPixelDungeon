@@ -69,7 +69,9 @@ public class DwarfWarlock extends MobRanged {
 
             charged = true;
 
-            sprite.centerEmitter().burst( EnergyParticle.FACTORY_BLUE, 20 );
+            if( Dungeon.visible[ pos ] ) {
+                sprite.centerEmitter().burst(EnergyParticle.FACTORY_BLUE, 20);
+            }
 
             spend( attackDelay() );
 

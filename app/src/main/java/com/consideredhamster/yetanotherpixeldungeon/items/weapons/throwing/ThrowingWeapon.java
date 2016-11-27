@@ -343,17 +343,17 @@ public abstract class ThrowingWeapon extends Weapon {
 
                 final int cell = Ballistica.cast(curUser.pos, target, false, true);
 
-                Char enemy = Actor.findChar( cell );
+                Char ch = Actor.findChar( cell );
 
-                if( enemy != null ) {
+                if( ch != null && curUser != ch && Dungeon.visible[ cell ] ) {
 
-                    if ( curUser.isCharmedBy( enemy ) ) {
+                    if ( curUser.isCharmedBy( ch ) ) {
                         GLog.i( TXT_TARGET_CHARMED );
                         return;
                     }
 
-                    QuickSlot.target(curItem, enemy);
-                    AttackIndicator.target( (Mob)enemy );
+                    QuickSlot.target(curItem, ch);
+                    AttackIndicator.target( (Mob)ch );
                 }
 
                 curUser.sprite.cast(cell);
@@ -362,7 +362,7 @@ public abstract class ThrowingWeapon extends Weapon {
 //                Char enemy = Actor.findChar( cell );
 
                 if (curWeap instanceof Harpoons) {
-                    curUser.sprite.parent.add( new Chains( curUser.pos, cell, enemy != null && enemy.isHeavy() ) );
+                    curUser.sprite.parent.add( new Chains( curUser.pos, cell, ch != null && ch.isHeavy() ) );
                 }
 
                 ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).

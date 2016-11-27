@@ -636,7 +636,7 @@ public abstract class Wand extends EquipableItem {
 
                 Char ch = Actor.findChar(cell);
 
-                if( ch != null ) {
+                if( ch != null && curUser != ch && Dungeon.visible[ cell ] ) {
 
                     if ( curUser.isCharmedBy( ch ) ) {
                         GLog.i( TXT_TARGET_CHARMED );

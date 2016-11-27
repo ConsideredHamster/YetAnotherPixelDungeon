@@ -1773,10 +1773,6 @@ public class Hero extends Char {
         Camera.main.shake(4, 0.3f);
         GameScene.flash(0xBB0000);
 
-        Dungeon.fail( ResultDescriptions.generateResult( cause, dmg ) );
-
-        GLog.n( ResultDescriptions.generateMessage( cause, dmg ) );
-
 		int length = Level.LENGTH;
 		int[] map = Dungeon.level.map;
 		boolean[] visited = Dungeon.level.visited;
@@ -1799,7 +1795,7 @@ public class Hero extends Char {
 		Bones.leave();
 		
 		Dungeon.observe();
-				
+
 		Dungeon.hero.belongings.identify();
 		
 		int pos = Dungeon.hero.pos;
@@ -1825,6 +1821,10 @@ public class Hero extends Char {
 		}
 		
 		GameScene.gameOver();
+
+        Dungeon.fail( ResultDescriptions.generateResult( cause, dmg ) );
+
+        GLog.n( ResultDescriptions.generateMessage( cause, dmg ) );
 		
 		Dungeon.deleteGame( Dungeon.hero.heroClass, true );
 	}
@@ -1856,7 +1856,10 @@ public class Hero extends Char {
 	@Override
 	public void onAttackComplete() {
 
-		AttackIndicator.target( (Mob)enemy );
+        // For a good measure...
+        if( enemy instanceof Mob ) {
+            AttackIndicator.target((Mob) enemy);
+        }
 
         currentWeapon = isDualWielding() ? Random.oneOf( belongings.weap1, (Weapon)belongings.weap2 ) :
             belongings.weap1 instanceof MeleeWeapon ? belongings.weap1 :

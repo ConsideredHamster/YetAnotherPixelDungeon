@@ -28,6 +28,7 @@ import com.consideredhamster.yetanotherpixeldungeon.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.effects.Lightning;
 import com.consideredhamster.yetanotherpixeldungeon.effects.particles.SparkParticle;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.watabou.utils.Random;
 
 public class LightningTrap extends Trap {
@@ -38,6 +39,10 @@ public class LightningTrap extends Trap {
 	// 00x66CCEE
 	
 	public static void trigger( int pos ) {
+
+        // FIXME
+
+        Level.set( pos, Terrain.INACTIVE_TRAP );
 
         Char ch = Actor.findChar( pos );
 

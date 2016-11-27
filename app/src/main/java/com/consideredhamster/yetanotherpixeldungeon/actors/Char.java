@@ -871,7 +871,9 @@ public abstract class Char extends Actor {
 		if (Dungeon.level.map[pos] == Terrain.OPEN_DOOR) {
 			Door.leave( pos );
 		}
-		
+
+        Actor.freeCell( pos );
+
 		pos = step;
 		
 		if (Dungeon.level.map[pos] == Terrain.DOOR_CLOSED) {

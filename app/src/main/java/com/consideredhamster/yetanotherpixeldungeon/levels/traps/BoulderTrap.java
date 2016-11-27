@@ -46,7 +46,9 @@ public class BoulderTrap extends Trap {
 		
 //		GameScene.add( Blob.seed( pos, 80 + 5 * Dungeon.depth, ParalyticGas.class ) );
 
-        Level.set( pos, Terrain.EMPTY );
+        // FIXME
+
+        Level.set( pos, Terrain.INACTIVE_TRAP );
 
         Sample.INSTANCE.play( Assets.SND_ROCKS );
         Camera.main.shake(3, 0.07f * 5);

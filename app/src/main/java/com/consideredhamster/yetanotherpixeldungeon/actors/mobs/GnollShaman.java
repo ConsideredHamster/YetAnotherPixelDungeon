@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
@@ -69,7 +70,9 @@ public class GnollShaman extends MobRanged {
 
             charged = true;
 
-            sprite.centerEmitter().burst( EnergyParticle.FACTORY_WHITE, 15 );
+            if( Dungeon.visible[ pos ] ) {
+                sprite.centerEmitter().burst(EnergyParticle.FACTORY_WHITE, 15);
+            }
 
             spend( attackDelay() );
 
