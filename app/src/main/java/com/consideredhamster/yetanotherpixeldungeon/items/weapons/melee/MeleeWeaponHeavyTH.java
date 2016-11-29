@@ -66,7 +66,7 @@ public abstract class MeleeWeaponHeavyTH extends MeleeWeapon {
         return super.strShown( identified ) + (
                 this == Dungeon.hero.belongings.weap1 && incompatibleWith( Dungeon.hero.belongings.weap2 ) ?
                         Dungeon.hero.belongings.weap2.str(
-                                identified || Dungeon.hero.belongings.weap2.isIdentified() ?
+                                Dungeon.hero.belongings.weap2.isIdentified() ?
                                         Dungeon.hero.belongings.weap2.bonus : 0
                         ) : 0 );
     }

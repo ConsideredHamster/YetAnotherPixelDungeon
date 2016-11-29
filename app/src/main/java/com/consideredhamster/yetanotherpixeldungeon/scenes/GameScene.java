@@ -309,7 +309,7 @@ public class GameScene extends PixelScene {
 		ArrayList<Item> dropped = Dungeon.droppedItems.get( Dungeon.depth );
 		if (dropped != null) {
 			for (Item item : dropped) {
-				int pos = Dungeon.level.randomRespawnCell();
+				int pos = Dungeon.level.randomRespawnCell( false, true );
 				if (item instanceof Potion) {
 					((Potion)item).shatter( pos );
 				} else if (item instanceof Plant.Seed) {

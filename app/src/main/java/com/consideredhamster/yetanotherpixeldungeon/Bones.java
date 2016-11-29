@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.watabou.noosa.Game;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
@@ -124,6 +125,10 @@ public class Bones {
 				if (item instanceof Ring) {
 					((Ring)item).syncGem();
 				}
+
+                if (item instanceof Wand) {
+                    ((Wand)item).syncWood();
+                }
 				
 				return item;
 			} else {

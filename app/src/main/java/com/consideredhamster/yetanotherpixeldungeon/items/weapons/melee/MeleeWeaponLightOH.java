@@ -68,8 +68,8 @@ public abstract class MeleeWeaponLightOH extends MeleeWeapon {
         return super.strShown( identified ) + (
                 this == Dungeon.hero.belongings.weap2 && incompatibleWith( Dungeon.hero.belongings.weap1 ) ?
                         Dungeon.hero.belongings.weap1.str(
-                                identified || Dungeon.hero.belongings.weap1.isIdentified() ?
-                                        Dungeon.hero.belongings.weap1.bonus : 0
+                            Dungeon.hero.belongings.weap1.isIdentified() ?
+                            Dungeon.hero.belongings.weap1.bonus : 0
                         ) : 0 );
     }
 

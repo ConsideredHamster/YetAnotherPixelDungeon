@@ -174,7 +174,7 @@ public abstract class Shield extends Armour {
         return super.strShown( identified ) + (
                 this == Dungeon.hero.belongings.weap2 && incompatibleWith( Dungeon.hero.belongings.weap1 ) ?
                         Dungeon.hero.belongings.weap1.str(
-                                identified || Dungeon.hero.belongings.weap1.isIdentified() ?
+                                Dungeon.hero.belongings.weap1.isIdentified() ?
                                         Dungeon.hero.belongings.weap1.bonus : 0
                         ) : 0 );
     }

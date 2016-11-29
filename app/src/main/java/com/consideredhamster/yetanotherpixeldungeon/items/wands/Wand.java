@@ -151,16 +151,14 @@ public abstract class Wand extends EquipableItem {
 	
 	public Wand() {
 		super();
-		
-//		calculateDamage();
-		
-		try {
-			image = handler.image( this );
-			wood = handler.label( this );
-		} catch (Exception e) {
-			// Wand of Magic Missile
-		}
+        syncWood();
+        shortName = "??";
 	}
+
+    public void syncWood() {
+        image	= handler.image( this );
+        wood	= handler.label( this );
+    }
 
     private static final String TXT_EQUIP_CURSED	= "you wince as your grip involuntarily tightens around your %s";
 

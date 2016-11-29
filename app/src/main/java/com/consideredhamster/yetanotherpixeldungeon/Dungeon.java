@@ -175,7 +175,7 @@ public class Dungeon {
 		depth++;
 //		depth = 6;
 //		depth = 12;
-//		depth = 18;
+//		depth = 17;
 //		depth = 24;
 //		depth = 30;
 //		depth = 31;
@@ -434,8 +434,6 @@ public class Dungeon {
 	private static final String CHAPTERS	= "chapters";
 	private static final String QUESTS		= "quests";
 	private static final String BADGES		= "badges";
-
-    private static final String MRSKELTAL   = "mrskeltal";
 
 	public static String gameFile( HeroClass cl ) {
 		switch (cl) {
