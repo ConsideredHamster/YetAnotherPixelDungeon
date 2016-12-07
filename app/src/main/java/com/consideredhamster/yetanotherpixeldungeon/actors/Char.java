@@ -216,7 +216,7 @@ public abstract class Char extends Actor {
                 }
 
                 if (enemy == Dungeon.hero) {
-                    Dungeon.hero.interrupt();
+                    Dungeon.hero.interrupt( "You were awoken by an attack!" );
                     if (effectiveDamage >= enemy.HP) {
                         Camera.main.shake(GameMath.gate(1, effectiveDamage / (enemy.HT / 4), 5), 0.3f);
                         GameScene.flash(0x330000);

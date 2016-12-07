@@ -54,7 +54,7 @@ public class Vampiric extends Weapon.Enchantment {
 
     @Override
     protected String desc_p() {
-        return "restore your health on hit and increase damage dealt by wands of Harm";
+        return "drain health from non-magical enemies and increase damage dealt by wands of Harm";
     }
 
     @Override

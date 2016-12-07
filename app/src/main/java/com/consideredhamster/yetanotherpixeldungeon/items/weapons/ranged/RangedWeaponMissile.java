@@ -177,16 +177,20 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
                     AttackIndicator.target( (Mob)ch );
                 }
 
-                curUser.sprite.cast(cell);
-                curUser.busy();
+                curUser.sprite.cast(cell, new Callback() {
+                    @Override
+                    public void call() {
+                        curUser.busy();
+                        ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).
+                            reset(curUser.pos, cell, curUser.belongings.weap2, 2.0f, new Callback() {
+                                @Override
+                                public void call() {
+                                    ((ThrowingWeaponAmmo) curUser.belongings.weap2).onShoot(cell, curWeap);
+                                }
+                            });
+                    }
+                });
 
-                ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).
-                        reset(curUser.pos, cell, curUser.belongings.weap2, 2.0f, new Callback() {
-                            @Override
-                            public void call() {
-                                ((ThrowingWeaponAmmo) curUser.belongings.weap2).onShoot(cell, curWeap);
-                            }
-                        });
 
                 Sample.INSTANCE.play(Assets.SND_MISS, 0.6f, 0.6f, 1.5f);
                 Invisibility.dispel();

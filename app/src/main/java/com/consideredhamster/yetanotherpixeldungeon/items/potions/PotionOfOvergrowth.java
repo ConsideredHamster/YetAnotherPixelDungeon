@@ -90,7 +90,7 @@ public class PotionOfOvergrowth extends Potion {
 	public String desc() {
 		return
 			"This wondrous concoction fills the air around it with magical fumes, " +
-			"forcing roots, grass and plants in it's area of effect to grow at a greatly accelerated rate. " +
+			"forcing roots, grass and plants in its area of effect to grow at a greatly accelerated rate. " +
             "Apart from creating an instant cover, it can be thrown at your enemies to " +
             "stop them in their tracks or to re-decorate your garden.";
 	}

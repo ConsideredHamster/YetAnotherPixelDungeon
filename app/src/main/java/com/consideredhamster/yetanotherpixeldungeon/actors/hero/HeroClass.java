@@ -47,6 +47,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfOvergr
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfThunderstorm;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfBanishment;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfChallenge;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfDarkness;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfPhaseWarp;
@@ -54,6 +55,8 @@ import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfRaiseD
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfSunlight;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfDisintegration;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfLightning;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfMagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.Sling;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Bullets;
@@ -215,7 +218,10 @@ public enum HeroClass {
 //        new ScrollOfSunlight().quantity(3).identify().collect();
 //        new ScrollOfDarkness().quantity(3).identify().collect();
 //        new ScrollOfRaiseDead().quantity(3).identify().collect();
-//        new ScrollOfBanishment().quantity(3).identify().collect();
+//        new ScrollOfUpgrade().quantity(99).identify().collect();
+//        new ScrollOfIdentify().quantity(99).identify().collect();
+//        new ScrollOfBanishment().quantity(99).identify().collect();
+//        new ScrollOfChallenge().quantity(99).identify().collect();
 //
 //        new PotionOfMending().quantity(5).identify().collect();
 //        new PotionOfLiquidFlame().quantity(5).identify().collect();

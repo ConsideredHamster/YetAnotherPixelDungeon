@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
@@ -41,7 +42,13 @@ public class Regeneration extends Buff {
 
                 if( target.HP == target.HT && ((Hero) target).restoreHealth ) {
 //                    ((Hero) target).restoreHealth = false;
-                    ((Hero) target).interrupt();
+
+                        ((Hero) target).interrupt( Level.water[ target.pos ] ?
+                                "You don't feel well. Better not sleep in the water next time." :
+                                "You feel well rested.",
+                                !Level.water[ target.pos ]
+                        );
+
                 }
 			}
 			

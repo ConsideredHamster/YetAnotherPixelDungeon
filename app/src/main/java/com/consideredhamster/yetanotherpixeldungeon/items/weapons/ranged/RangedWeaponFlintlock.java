@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
+import com.consideredhamster.yetanotherpixeldungeon.sprites.HeroSprite;
 import com.consideredhamster.yetanotherpixeldungeon.ui.AttackIndicator;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
@@ -247,28 +248,32 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
                     AttackIndicator.target( (Mob)ch );
                 }
 
-                curUser.sprite.shoot(cell);
-                curUser.busy();
+                curUser.sprite.cast(cell, new Callback() {
+                    @Override
+                    public void call() {
 
-                ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).
-                        reset(curUser.pos, cell, curUser.belongings.weap2, 3.0f, new Callback() {
-                            @Override
-                            public void call() {
-                                ((ThrowingWeaponAmmo) curUser.belongings.weap2).onShoot(cell, curWeap);
+                        curUser.busy();
 
-                            }
-                        });
+                        ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).
+                                reset(curUser.pos, cell, curUser.belongings.weap2, 3.0f, new Callback() {
+                                    @Override
+                                    public void call() {
+                                        ((ThrowingWeaponAmmo) curUser.belongings.weap2).onShoot(cell, curWeap);
+                                    }
+                                });
 
-                curWeap.loaded = false;
+                        curWeap.loaded = false;
 
-                Sample.INSTANCE.play(Assets.SND_BLAST, 0.4f + curWeap.tier * 0.2f, 0.4f + curWeap.tier * 0.2f, 1.55f - curWeap.tier * 0.15f);
-                Camera.main.shake(curWeap.tier, 0.1f);
+                        Sample.INSTANCE.play(Assets.SND_BLAST, 0.4f + curWeap.tier * 0.2f, 0.4f + curWeap.tier * 0.2f, 1.55f - curWeap.tier * 0.15f);
+                        Camera.main.shake(curWeap.tier, 0.1f);
 
-                PointF pf = DungeonTilemap.tileCenterToWorld( curUser.pos );
-                PointF pt = DungeonTilemap.tileCenterToWorld( cell );
+                        PointF pf = DungeonTilemap.tileCenterToWorld(curUser.pos);
+                        PointF pt = DungeonTilemap.tileCenterToWorld(cell);
 
-                curUser.sprite.emitter().burst(SmokeParticle.FACTORY, 3 + curWeap.tier);
-                Spark.at(pf, PointF.angle(pf, pt), 3.1415926f / 12, 0xEE7722, 3 + curWeap.tier);
+                        curUser.sprite.emitter().burst(SmokeParticle.FACTORY, 3 + curWeap.tier);
+                        Spark.at(pf, PointF.angle(pf, pt), 3.1415926f / 12, 0xEE7722, 3 + curWeap.tier);
+                    }
+                });
 
                 for (Mob mob : Dungeon.level.mobs) {
                     if (Level.distance( cell, mob.pos ) <= 3 + curWeap.tier ) {

@@ -28,7 +28,7 @@ public class FiendSprite extends MobSprite {
 	public FiendSprite() {
 		super();
 		
-		texture( Assets.FIEND);
+		texture( Assets.FIEND );
 
 		TextureFilm frames = new TextureFilm( texture, 16, 16 );
 		

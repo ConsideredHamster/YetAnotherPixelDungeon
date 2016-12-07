@@ -243,7 +243,7 @@ public class InterlevelScene extends PixelScene {
             "Dwarven King's ritual can be disrupted by certain spell...",
 
             "Tengu teleports more often when threatened",
-            "DM-300 is neither magical nor organical creature.",
+            "DM-300 is neither organic nor magical creature.",
 
             // TERRAIN
 

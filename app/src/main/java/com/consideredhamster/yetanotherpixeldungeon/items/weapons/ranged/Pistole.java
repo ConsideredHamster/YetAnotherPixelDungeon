@@ -42,6 +42,7 @@ public class Pistole extends RangedWeaponFlintlock {
 	
 	@Override
 	public String desc() {
-		return "A lighter variety of flintlock weapons, this simple firearm is generally used as a secondary weapon.";
+		return "A lighter variety of flintlock weapons, this simple firearm is still capable of " +
+                "tearing through target's armor with ease.";
 	}
 }

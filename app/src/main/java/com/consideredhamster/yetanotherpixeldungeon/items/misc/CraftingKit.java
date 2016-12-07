@@ -38,7 +38,7 @@ import java.util.ArrayList;
 
 public class CraftingKit extends Item {
 
-    private static final String TXT_SELECT_RANGED = "Select a ranged weapon or cloth armor to repair";
+    private static final String TXT_SELECT_RANGED = "Select a ranged weapon or a cloth armor to repair";
     private static final String TXT_REPAIR_RANGED = "Your %s looks much better now!";
 
     private static final float TIME_TO_APPLY = 3f;

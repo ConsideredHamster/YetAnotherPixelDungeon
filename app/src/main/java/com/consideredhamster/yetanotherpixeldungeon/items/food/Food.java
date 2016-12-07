@@ -66,11 +66,11 @@ public class Food extends Item {
 	
 	@Override
 	public void execute( Hero hero, String action ) {
-		if (action.equals( AC_EAT )) {
+		if ( action.equals( AC_EAT ) && hero != null ) {
 
             Hunger hunger = hero.buff(Hunger.class);
 
-            if( !hunger.isOverfed()) {
+            if( hunger != null && !hunger.isOverfed() ) {
 
                 hunger.satisfy(energy);
                 detach( hero.belongings.backpack );

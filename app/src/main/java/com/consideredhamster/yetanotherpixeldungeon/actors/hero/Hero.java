@@ -29,6 +29,7 @@ import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Bookshelf;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
@@ -587,7 +588,6 @@ public class Hero extends Char {
 
                 for ( Mob mob : Dungeon.level.mobs ) {
                     if ( mob.hostile && Level.adjacent( pos, mob.pos ) && detected( mob ) ) {
-                        GLog.w( TXT_WOKEN_UP );
                         wakeUp = true;
                         break;
                     }
@@ -595,7 +595,7 @@ public class Hero extends Char {
 
 				if ( wakeUp ) {
 //					restoreHealth = false;
-                    interrupt();
+                    interrupt( TXT_WOKEN_UP );
 				} else {
 					spend( TIME_TO_REST ); next();
 					return false;
@@ -689,14 +689,35 @@ public class Hero extends Char {
 		
 		GameScene.ready();
 	}
-	
+
+    public void interrupt( String awakening ) {
+
+        interrupt( awakening, false );
+
+    }
+
+    public void interrupt( String awakening, boolean positive ) {
+
+        if( restoreHealth ) {
+
+            if( positive ) {
+                GLog.p(awakening);
+            } else {
+                GLog.w(awakening);
+            }
+
+        }
+
+        interrupt();
+    }
+
 	public void interrupt() {
 
         restoreHealth = false;
 
         Dungeon.observe();
 
-		if (isAlive() && curAction != null && curAction.dst != pos) {
+		if (isAlive() && curAction != null && !(curAction instanceof HeroAction.Attack) && curAction.dst != pos) {
 			lastAction = curAction;
 		}
 
@@ -1090,8 +1111,10 @@ public class Hero extends Char {
                 Item.curUser = this;
                 Item.curItem = weap;
 
+
                 RangedWeaponMissile.shooter.onSelect(enemy.pos);
                 curAction = null;
+                busy();
 
                 return false;
 
@@ -1103,6 +1126,8 @@ public class Hero extends Char {
                 Item.curItem = weap;
 
                 if( weap.checkAmmo( this, true ) ) {
+
+                    busy();
 
                     RangedWeaponFlintlock.shooter.onSelect(enemy.pos);
 
@@ -1122,6 +1147,8 @@ public class Hero extends Char {
 
                 Item.curUser = this;
                 Item.curItem = weap;
+
+                busy();
 
                 ThrowingWeapon.shooter.onSelect( enemy.pos );
                 curAction = null;
@@ -1238,7 +1265,7 @@ public class Hero extends Char {
 
 
 	private void checkVisibleMobs() {
-		ArrayList<Mob> visible = new ArrayList<Mob>();
+		ArrayList<Mob> visible = new ArrayList<>();
 		
 		boolean newMob = false;
 		

@@ -206,11 +206,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		play( cast != null ? cast : attack );
 	}
 
-    public void shoot(int cell) {
-        turnTo( ch.pos, cell );
-        play( cast != null ? cast : attack );
-    }
-
     public void cast(int cell, Callback callback ) {
         animCallback = callback;
         turnTo( ch.pos, cell );

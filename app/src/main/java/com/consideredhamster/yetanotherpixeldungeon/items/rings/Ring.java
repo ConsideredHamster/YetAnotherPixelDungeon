@@ -357,7 +357,7 @@ public abstract class Ring extends EquipableItem {
         }
 
         if( n > 0 ) {
-            if (Random.Int(Dungeon.depth) < Random.Int(n * 10)) {
+            if ( Random.Int( Dungeon.chapter() * 10 + 1 ) < Random.Int( n * 10 + 1 ) ) {
                 curse(n);
             } else {
                 upgrade(n);
@@ -384,8 +384,10 @@ public abstract class Ring extends EquipableItem {
 			price /= 2;
 		}
 
-        if (isIdentified() && bonus > 0) {
-            price += price * bonus;
+        if (isIdentified()) {
+            price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
+        } else {
+            price /= 2;
         }
 
         return price;

@@ -23,6 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.scenes;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;

@@ -109,13 +109,13 @@ public class Hunger extends Buff {
 
         }  else if ( newLevel >= STARVING && level < STARVING ) {
 
-            GLog.n(TXT_STARVING);
-            ((Hero)target).interrupt();
+             ((Hero)target).interrupt( "You were awoken by a pain in you stomach." );
+             GLog.n(TXT_STARVING);
 
         } else if ( newLevel >= HUNGRY && level < HUNGRY ) {
 
+             ((Hero)target).interrupt( "You were awoken by a rumbling in your stomach." );
              GLog.w(TXT_HUNGRY);
-            ((Hero)target).interrupt();
 
         }
 

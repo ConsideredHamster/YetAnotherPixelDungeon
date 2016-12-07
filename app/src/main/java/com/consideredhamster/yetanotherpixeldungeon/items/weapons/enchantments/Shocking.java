@@ -63,12 +63,12 @@ public class Shocking extends Weapon.Enchantment {
 
     @Override
     protected String desc_p() {
-        return "shocks your enemies on hit and increase damage dealt by wands of Lightning";
+        return "shock your enemies on hit and increase damage dealt by wands of Lightning";
     }
 
     @Override
     protected String desc_n() {
-        return "shocks you on hit";
+        return "shock you on hit";
     }
 
     @Override

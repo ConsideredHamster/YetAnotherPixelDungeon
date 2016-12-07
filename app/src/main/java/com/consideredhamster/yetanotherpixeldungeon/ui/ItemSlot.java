@@ -146,6 +146,7 @@ public class ItemSlot extends Button {
             bottomLeft.text( "" );
 
             if ( item instanceof RangedWeapon ) {
+
                 topLeft.visible = false;
                 bottomLeft.visible = false;
 
@@ -155,19 +156,19 @@ public class ItemSlot extends Button {
 
                     bottomLeft.text( powder != null ? Integer.toString( powder.quantity ) : "" );
                     bottomLeft.measure();
-
-                    if (((RangedWeaponFlintlock) item).loaded) {
-                        bottomLeft.resetColorAlpha();
-                        topLeft.resetColorAlpha();
-                    } else {
-                        bottomLeft.hardlight(WARNING);
-                        topLeft.hardlight(WARNING);
-
-                    }
-                } else {
-                    bottomLeft.resetColorAlpha();
-                    topLeft.resetColorAlpha();
                 }
+            }
+
+            if ( item instanceof RangedWeaponFlintlock && !((RangedWeaponFlintlock) item).loaded ) {
+
+                bottomLeft.hardlight(WARNING);
+                topLeft.hardlight(WARNING);
+
+            } else {
+
+                bottomLeft.resetColorAlpha();
+                topLeft.resetColorAlpha();
+
             }
 
             topLeft.measure();
@@ -201,6 +202,7 @@ public class ItemSlot extends Button {
 			} else if( item.shortName != null && item.isTypeKnown() ) {
 
 				topRight.text( Utils.format( "%s", item.shortName ) );
+                topRight.resetColorAlpha();
                 topRight.measure();
 
 			} else {

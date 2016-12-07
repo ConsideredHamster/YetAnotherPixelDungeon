@@ -198,23 +198,23 @@ public class Generator {
 
         Category.SCROLL.probs = new float[]{ 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 3, 2 };
         Category.SCROLL.classes = new Class<?>[]{
-                ScrollOfIdentify.class,
-                ScrollOfTransmutation.class,
+                ScrollOfIdentify.class,         //55
+                ScrollOfTransmutation.class,    //60
 
-                ScrollOfSunlight.class,
-                ScrollOfDarkness.class,
+                ScrollOfDarkness.class,         //65
+                ScrollOfSunlight.class,         //70
 
-                ScrollOfClairvoyance.class,
-                ScrollOfPhaseWarp.class,
+                ScrollOfPhaseWarp.class,        //75
+                ScrollOfClairvoyance.class,     //80
 
-                ScrollOfBanishment.class,
-                ScrollOfChallenge.class,
+                ScrollOfBanishment.class,       //85
+                ScrollOfChallenge.class,        //90
 
-                ScrollOfTorment.class,
-                ScrollOfRaiseDead.class,
+                ScrollOfTorment.class,          //95
+                ScrollOfRaiseDead.class,        //100
 
-                ScrollOfUpgrade.class,
-                ScrollOfEnchantment.class,
+                ScrollOfUpgrade.class,          //125
+                ScrollOfEnchantment.class,      //150
         };
 
         Category.POTION.probs = new float[]{ 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 3, 2 };
@@ -387,6 +387,24 @@ public class Generator {
             delta++;
         }
 
+        // FIXME
+
+        if ( a.bonus < 0 && Random.Int( 2 ) == 0 ) {
+
+            a.bonus++;
+
+            if ( a.bonus < 0 && Random.Int( 2 ) == 0 ) {
+
+                a.bonus++;
+
+                if ( a.bonus < 0 && Random.Int( 2 ) == 0 ) {
+
+                    a.bonus++;
+
+                }
+            }
+        }
+
         return a;
 
 	}
@@ -403,6 +421,24 @@ public class Generator {
             w = (Weapon)Random.element( cat.classes ).newInstance();
             w.random();
             delta++;
+        }
+
+        // FIXME
+
+        if ( w.bonus < 0 && Random.Int( 2 ) == 0 ) {
+
+            w.bonus++;
+
+            if ( w.bonus < 0 && Random.Int( 2 ) == 0 ) {
+
+                w.bonus++;
+
+                if ( w.bonus < 0 && Random.Int( 2 ) == 0 ) {
+
+                    w.bonus++;
+
+                }
+            }
         }
 
         return w;
@@ -424,21 +460,4 @@ public class Generator {
 
         return w;
     }
-
-//    public static Wand randomWand() throws Exception {
-//
-//        Category cat = Category.WAND;
-//
-//        Wand w = (Wand)cat.classes[Random.chances( cat.probs )].newInstance();
-//        w.random();
-//        int delta = 0;
-//
-//        while ( ( Dungeon.depth - w.lootLevel() > delta ) || ( w.lootLevel() - Dungeon.depth > delta ) ) {
-//            w = (Wand)cat.classes[Random.chances( cat.probs )].newInstance();
-//            w.random();
-//            delta++;
-//        }
-//
-//        return w;
-//    }
 }

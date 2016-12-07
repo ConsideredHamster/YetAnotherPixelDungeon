@@ -107,6 +107,6 @@ public class ScrollOfTorment extends Scroll {
 	
 	@Override
 	public int price() {
-		return isTypeKnown() ? 70 * quantity : super.price();
+		return isTypeKnown() ? 95 * quantity : super.price();
 	}
 }

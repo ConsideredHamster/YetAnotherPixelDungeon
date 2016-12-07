@@ -343,7 +343,7 @@ public abstract class ThrowingWeapon extends Weapon {
 
                 final int cell = Ballistica.cast(curUser.pos, target, false, true);
 
-                Char ch = Actor.findChar( cell );
+                final Char ch = Actor.findChar( cell );
 
                 if( ch != null && curUser != ch && Dungeon.visible[ cell ] ) {
 
@@ -356,22 +356,27 @@ public abstract class ThrowingWeapon extends Weapon {
                     AttackIndicator.target( (Mob)ch );
                 }
 
-                curUser.sprite.cast(cell);
-                curUser.busy();
 
-//                Char enemy = Actor.findChar( cell );
 
-                if (curWeap instanceof Harpoons) {
-                    curUser.sprite.parent.add( new Chains( curUser.pos, cell, ch != null && ch.isHeavy() ) );
-                }
+                curUser.sprite.cast(cell, new Callback() {
+                    @Override
+                    public void call() {
 
-                ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).
+                        curUser.busy();
+
+                        if (curWeap instanceof Harpoons) {
+                            curUser.sprite.parent.add(new Chains(curUser.pos, cell, ch != null && ch.isHeavy()));
+                        }
+
+                        ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).
                         reset(curUser.pos, cell, curUser.belongings.weap2, new Callback() {
                             @Override
                             public void call() {
                                 ((ThrowingWeapon) curUser.belongings.weap2).onShoot(cell, curWeap);
                             }
                         });
+                    }
+                });
 
                 Invisibility.dispel();
                 Sample.INSTANCE.play(Assets.SND_MISS, 0.6f, 0.6f, 1.5f);

@@ -65,6 +65,6 @@ public class ScrollOfSunlight extends Scroll {
 	
 	@Override
 	public int price() {
-		return isTypeKnown() ? 100 * quantity : super.price();
+		return isTypeKnown() ? 70 * quantity : super.price();
 	}
 }

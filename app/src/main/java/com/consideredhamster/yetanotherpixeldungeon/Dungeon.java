@@ -175,8 +175,9 @@ public class Dungeon {
 		depth++;
 //		depth = 6;
 //		depth = 12;
-//		depth = 17;
+//		depth = 18;
 //		depth = 24;
+//		depth = 25;
 //		depth = 30;
 //		depth = 31;
 
@@ -747,11 +748,11 @@ public class Dungeon {
 	private static boolean[] passable = new boolean[Level.LENGTH];
 	
 	public static int findPath( Char ch, int from, int to, boolean pass[], boolean[] visible ) {
-		
+
 		if (Level.adjacent( from, to )) {
 			return Actor.findChar( to ) == null && (pass[to] || Level.avoid[to] && !(ch instanceof Piranha)) ? to : -1;
 		}
-		
+
 		if (ch.flying || ch.buff( Terror.class ) != null || ch.buff( Confusion.class ) != null || ch.buff( Blindness.class ) != null) {
 			BArray.or( pass, Level.avoid, passable );
 		} else {
@@ -759,9 +760,9 @@ public class Dungeon {
 		}
 
         if (ch instanceof Mob && !(ch instanceof Piranha)) {
-            BArray.or( pass, Level.illusory, passable );
+            BArray.or( passable, Level.illusory, passable );
         }
-		
+
 		for (Actor actor : Actor.all()) {
 			if (actor instanceof Char) {
 				int pos = ((Char)actor).pos;

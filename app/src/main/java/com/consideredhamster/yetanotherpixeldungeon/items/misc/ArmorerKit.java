@@ -38,7 +38,7 @@ import com.consideredhamster.yetanotherpixeldungeon.windows.WndBag;
 
 public class ArmorerKit extends Item {
 
-    private static final String TXT_SELECT_ARMOUR = "Select an non-cloth armor or a shield to repair";
+    private static final String TXT_SELECT_ARMOUR = "Select a non-cloth armor or a shield to repair";
     private static final String TXT_REPAIR_ARMOUR = "Your %s looks much better now!";
 
     private static final float TIME_TO_APPLY = 3f;

@@ -102,6 +102,6 @@ public class ScrollOfChallenge extends Scroll {
 
     @Override
     public int price() {
-        return isTypeKnown() ? 60 * quantity : super.price();
+        return isTypeKnown() ? 90 * quantity : super.price();
     }
 }

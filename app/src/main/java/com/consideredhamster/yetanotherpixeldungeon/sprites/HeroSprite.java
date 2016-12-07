@@ -72,8 +72,8 @@ public class HeroSprite extends CharSprite {
 		attack = new Animation( 15, false );
 		attack.frames( film, 13, 14, 15, 0 );
 
-        shoot = new Animation( 15, false );
-        shoot.frames( film, 0, 0, 15, 14, 13 );
+        shoot = new Animation( 20, false );
+        shoot.frames( film, 15, 15, 14, 14, 13, 0 );
 
 		cast = attack.clone();
 		
@@ -107,6 +107,18 @@ public class HeroSprite extends CharSprite {
 		super.jump( from, to, callback );
 		play( fly );
 	}
+
+    public void shoot(int cell) {
+        turnTo( ch.pos, cell );
+        play( shoot );
+    }
+
+
+    public void shoot(int cell, Callback callback ) {
+        animCallback = callback;
+        turnTo( ch.pos, cell );
+        play( cast != null ? cast : attack );
+    }
 	
 	@Override
 	public void update() {

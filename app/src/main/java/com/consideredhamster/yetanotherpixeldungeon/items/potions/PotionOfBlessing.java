@@ -89,12 +89,12 @@ public class PotionOfBlessing extends Potion {
                 Heap heap = Dungeon.level.heaps.get( c );
 
                 if (heap != null) {
-                    affected = uncurse( c, heap.items.toArray( new Item[0] ) );
+                    affected = affected | uncurse( c, heap.items.toArray( new Item[0] ) );
                 }
 
             } else if( ch == curUser ) {
 
-                affected = uncurse( c,
+                affected = affected | uncurse( c,
                     curUser.belongings.weap1,
                     curUser.belongings.weap2,
                     curUser.belongings.armor,

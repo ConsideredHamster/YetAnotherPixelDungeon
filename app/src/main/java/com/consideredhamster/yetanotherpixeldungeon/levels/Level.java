@@ -931,6 +931,10 @@ public abstract class Level implements Bundlable {
 
             if (trap) {
 
+                if (ch == Dungeon.hero) {
+                    Dungeon.hero.interrupt( "You were awoken by falling on a trap." );
+                }
+
                 if( Dungeon.visible[cell] ) {
 
                     if( hidden ) {
@@ -938,10 +942,6 @@ public abstract class Level implements Bundlable {
                     }
 
                     Sample.INSTANCE.play(Assets.SND_TRAP);
-                }
-
-                if (ch == Dungeon.hero) {
-                    Dungeon.hero.interrupt();
                 }
 
                 set(cell, Terrain.INACTIVE_TRAP);
@@ -1132,18 +1132,34 @@ public abstract class Level implements Bundlable {
                     }
 				}
 			} else if( Dungeon.hero == c ) {
+
+                // FIXME
+
                 for (Mob mob : mobs) {
-                    if( mob.noticed) {
+                    if( mob.noticed ) {
                         int p = mob.pos;
-                        fieldOfView[p] = true;
-                        fieldOfView[p + 1] = true;
-                        fieldOfView[p - 1] = true;
-                        fieldOfView[p + WIDTH + 1] = true;
-                        fieldOfView[p + WIDTH - 1] = true;
-                        fieldOfView[p - WIDTH + 1] = true;
-                        fieldOfView[p - WIDTH - 1] = true;
-                        fieldOfView[p + WIDTH] = true;
-                        fieldOfView[p - WIDTH] = true;
+
+                        for (int n : Level.NEIGHBOURS8) {
+
+                            fieldOfView[p + n] = true;
+
+                            Char ch = Actor.findChar( p + n );
+
+                            if( ch instanceof Mob && !((Mob)ch).noticed ) {
+                                ((Mob)ch).noticed = true;
+                            }
+                        }
+
+                    } else {
+
+                        for (int n : Level.NEIGHBOURS8) {
+                            Char ch = Actor.findChar( mob.pos + n );
+
+                            if( ch instanceof Mob && ((Mob)ch).noticed ) {
+                                mob.noticed = true;
+                            }
+                        }
+
                     }
                 }
             }

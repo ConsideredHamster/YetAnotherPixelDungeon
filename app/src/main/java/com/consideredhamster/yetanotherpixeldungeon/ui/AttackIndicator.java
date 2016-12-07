@@ -73,10 +73,8 @@ public class AttackIndicator extends Tag {
 		super.update();
 		
 		if (Dungeon.hero.isAlive()) {
-			
-			if (!Dungeon.hero.ready) {
-				enable( false );
-			}		
+
+            enable( Dungeon.hero.ready );
 			
 		} else {
 			visible( false );
@@ -114,7 +112,7 @@ public class AttackIndicator extends Tag {
 		}
 		
 		visible( lastTarget != null );
-		enable( bg.visible );
+		enable( Dungeon.hero.ready );
 	}
 	
 	private void updateImage() {
@@ -156,9 +154,10 @@ public class AttackIndicator extends Tag {
 	
 	@Override
 	protected void onClick() {
-		if (enabled) {
+		if ( enabled && Dungeon.hero.ready && lastTarget != null ) {
+
 			Dungeon.hero.handle( lastTarget.pos );
-            enable( false );
+
 		}
 	}
 

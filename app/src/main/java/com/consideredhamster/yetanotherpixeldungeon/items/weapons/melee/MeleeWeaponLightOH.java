@@ -74,7 +74,7 @@ public abstract class MeleeWeaponLightOH extends MeleeWeapon {
     }
 
     @Override
-    public boolean incompatibleWith( EquipableItem item ) { return item instanceof MeleeWeapon; }
+    public boolean incompatibleWith( EquipableItem item ) { return this == Dungeon.hero.belongings.weap2 && item instanceof MeleeWeapon ; }
 
     @Override
     public boolean doEquip( final Hero hero ) {

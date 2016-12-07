@@ -121,17 +121,22 @@ public class Mimic extends MobHealthy {
 //	}
 
     @Override
+    public boolean cast( Char enemy ) {
+        return false;
+    }
+
+    @Override
     protected boolean act() {
 
         Heap heap = Dungeon.level.heaps.get( pos );
 
         if (heap != null && heap.type == Heap.Type.HEAP && !enemySeen) {
 
+            ((MimicSprite)sprite).devour();
+
             Item item = heap.pickUp();
 
             devour(item);
-
-            ((MimicSprite)sprite).devour();
 
             if (Dungeon.visible[pos]) {
                 GLog.w("Mimic swallows %s lying on the floor!", item.toString());

@@ -550,7 +550,7 @@ public abstract class Wand extends EquipableItem {
         }
 
         if( n > 0 ) {
-            if (Random.Int(Dungeon.depth) < Random.Int(n * 10)) {
+            if ( Random.Int( Dungeon.chapter() * 10 + 1 ) < Random.Int( n * 10 + 1 ) ) {
                 curse(n);
             } else {
                 upgrade(n);
@@ -618,84 +618,92 @@ public abstract class Wand extends EquipableItem {
 		public void onSelect( Integer target ) {
 			
 			if (target != null) {
-				
-				if (target == curUser.pos) {
-					GLog.i( TXT_SELF_TARGET );
-					return;
-				}
 
-				final Wand curWand = (Wand)Wand.curItem;
-
-                if( curUser.buff( Confusion.class ) != null ) {
-                    target += Level.NEIGHBOURS8[Random.Int( 8 )];
+                if (target == curUser.pos) {
+                    GLog.i(TXT_SELF_TARGET);
+                    return;
                 }
 
-                final int cell = Ballistica.cast( curUser.pos, target, false, curWand.hitChars );
+                final Wand curWand = (Wand) Wand.curItem;
+
+                if (curUser.buff(Confusion.class) != null) {
+                    target += Level.NEIGHBOURS8[Random.Int(8)];
+                }
+
+                final int cell = Ballistica.cast(curUser.pos, target, false, curWand.hitChars);
 
                 Char ch = Actor.findChar(cell);
 
-                if( ch != null && curUser != ch && Dungeon.visible[ cell ] ) {
+                if (ch != null && curUser != ch && Dungeon.visible[cell]) {
 
-                    if ( curUser.isCharmedBy( ch ) ) {
-                        GLog.i( TXT_TARGET_CHARMED );
+                    if (curUser.isCharmedBy(ch)) {
+                        GLog.i(TXT_TARGET_CHARMED);
                         return;
                     }
 
                     QuickSlot.target(curItem, ch);
-                    AttackIndicator.target( (Mob)ch );
+                    AttackIndicator.target((Mob) ch);
                 }
 
                 curUser.sprite.cast(cell);
-                curUser.busy();
 
-                if ( curWand.curCharges > 0 && Random.Float() > curWand.miscastChance() ||
-                        curWand.curCharges == 0 && Random.Float() < curWand.squeezeChance() ) {
+//                curUser.sprite.cast(cell,
+//                        new Callback() {
+//                    @Override
+//                    public void call() {
 
-                    if( curWand.curCharges == 0 ) {
+                        curUser.busy();
 
-                        curWand.use(3);
+                        if (curWand.curCharges > 0 && Random.Float() > curWand.miscastChance() ||
+                                curWand.curCharges == 0 && Random.Float() < curWand.squeezeChance()) {
 
-                        if( curWand.isIdentified() ) {
-                            GLog.w(TXT_SQUEEZE);
+                            if (curWand.curCharges == 0) {
+
+                                curWand.use(3);
+
+                                if (curWand.isIdentified()) {
+                                    GLog.w(TXT_SQUEEZE);
+                                }
+
+                            } else {
+
+                                curWand.use(curWand instanceof WandUtility ? curWand.curCharges : 2);
+
+                            }
+
+                            curWand.fx(cell, new Callback() {
+                                @Override
+                                public void call() {
+                                    curWand.onZap(cell);
+                                    curWand.wandUsed();
+                                }
+                            });
+
+
+                        } else {
+
+                            if (curWand.curCharges > 0 && curWand.isIdentified()) {
+                                GLog.w(TXT_MISCAST);
+                                curWand.spendCharges();
+                            }
+
+                            curUser.spendAndNext(TIME_TO_ZAP);
+
+                            curUser.sprite.showStatus(CharSprite.WARNING, TXT_FIZZLES);
+
+                            if (!(curWand instanceof WandUtility))
+                                curWand.use(1);
+
+                            curWand.updateQuickslot();
                         }
-
-                    } else {
-
-                        curWand.use( curWand instanceof WandUtility ? curWand.curCharges : 2);
-
-                    }
-
-                    curWand.fx(cell, new Callback() {
-                        @Override
-                        public void call() {
-                            curWand.onZap(cell);
-                            curWand.wandUsed();
-                        }
-                    } );
+//                    }
+//                });
 
 
+                Invisibility.dispel();
 
-                    Invisibility.dispel();
-
-                    curWand.setKnown();
-
-                } else {
-
-                    if( curWand.curCharges > 0 && curWand.isIdentified() ) {
-                        GLog.w(TXT_MISCAST);
-                        curWand.spendCharges();
-                    }
-
-                    curUser.spendAndNext(TIME_TO_ZAP);
-
-                    curUser.sprite.showStatus(CharSprite.WARNING, TXT_FIZZLES);
-
-                    if( !(curWand instanceof WandUtility) )
-                        curWand.use(1);
-
-					curWand.updateQuickslot();
-				}
-			}
+                curWand.setKnown();
+            }
 		}
 		
 		@Override

@@ -54,7 +54,7 @@ public class ScrollOfPhaseWarp extends Scroll {
 
         int pos;
 
-        pos = Dungeon.level.randomRespawnCell();
+        pos = Dungeon.level.randomRespawnCell( false, true );
 
         if (pos == -1) {
 
@@ -62,14 +62,14 @@ public class ScrollOfPhaseWarp extends Scroll {
 
         } else {
 
-            float chance = 0.5f / curUser.magicPower();
-
-            if( chance > Random.Float() ) {
-
-                GLog.i(Dungeon.level.visited[pos] ? TXT_TELEPORTED_VISITED : TXT_TELEPORTED_UNKNOWN);
-                Arrays.fill(Dungeon.level.visited, false);
-
-            }
+//            float chance = 0.5f / curUser.magicPower();
+//
+//            if( chance > Random.Float() ) {
+//
+//                GLog.i(Dungeon.level.visited[pos] ? TXT_TELEPORTED_VISITED : TXT_TELEPORTED_UNKNOWN);
+//                Arrays.fill(Dungeon.level.visited, false);
+//
+//            }
 
             WandOfBlink.appear(curUser, pos);
             Dungeon.level.press(pos, curUser);
@@ -93,6 +93,6 @@ public class ScrollOfPhaseWarp extends Scroll {
 
     @Override
     public int price() {
-        return isTypeKnown() ? 65 * quantity : super.price();
+        return isTypeKnown() ? 75 * quantity : super.price();
     }
 }

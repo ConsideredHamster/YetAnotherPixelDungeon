@@ -36,6 +36,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.watabou.utils.Random;
 
 public class ScrollOfBanishment extends Scroll {
 
@@ -57,7 +58,7 @@ public class ScrollOfBanishment extends Scroll {
 		
 		boolean procced = uncurse( curUser, curUser.belongings.backpack.items.toArray( new Item[0] ) );
 
-		procced = procced || uncurse( curUser,
+		procced = procced | uncurse( curUser,
 			curUser.belongings.weap1,
 			curUser.belongings.weap2,
 			curUser.belongings.armor,
@@ -107,14 +108,16 @@ public class ScrollOfBanishment extends Scroll {
 	public String desc() {
 		return
 			"The incantation on this scroll will attempt to banish any evil magics that might " +
-            "happen to exist near the reader, removing curses from carried items, harming " +
+            "happen to exist near the reader, weakening curses on carried items, harming " +
             "nearby creatures of magical origin and even dispelling some malicious effects.";
 	}
 	
 	public static boolean uncurse( Hero hero, Item... items ) {
 		
 		boolean procced = false;
+
 		for(Item item : items) {
+
 			if (item != null) {
 
                 item.identify( CURSED_KNOWN );
@@ -122,12 +125,16 @@ public class ScrollOfBanishment extends Scroll {
                 if (item.bonus < 0) {
 
                     if( item instanceof Weapon && ((Weapon)item).enchantment != null ) {
+
                         ((Weapon)item).enchant( null );
+
                     } else if( item instanceof Armour && ((Armour)item).glyph != null ) {
+
                         ((Armour)item).inscribe( null );
-                    } else {
-                        item.bonus++;
+
                     }
+
+                    item.bonus = Math.min( 0, item.bonus + Random.IntRange( 1, 3 ) );
 
                     procced = true;
 
@@ -144,6 +151,6 @@ public class ScrollOfBanishment extends Scroll {
 
     @Override
     public int price() {
-        return isTypeKnown() ? 75 * quantity : super.price();
+        return isTypeKnown() ? 85 * quantity : super.price();
     }
 }

@@ -93,7 +93,7 @@ public class ScrollOfClairvoyance extends Scroll {
 	
 	@Override
 	public int price() {
-		return isTypeKnown() ? 70 * quantity : super.price();
+		return isTypeKnown() ? 80 * quantity : super.price();
 	}
 	
 	public static void discover( int cell ) {

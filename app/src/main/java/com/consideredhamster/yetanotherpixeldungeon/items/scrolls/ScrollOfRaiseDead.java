@@ -94,6 +94,6 @@ public class ScrollOfRaiseDead extends Scroll {
 
     @Override
     public int price() {
-        return isTypeKnown() ? 75 * quantity : super.price();
+        return isTypeKnown() ? 100 * quantity : super.price();
     }
 }

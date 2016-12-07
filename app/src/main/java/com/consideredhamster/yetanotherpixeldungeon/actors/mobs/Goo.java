@@ -230,7 +230,7 @@ public abstract class Goo extends MobEvasive {
 
                 if( HP >= HT ) {
                     beckon( Dungeon.hero.pos );
-                    Dungeon.hero.interrupt();
+                    Dungeon.hero.interrupt( "You were awoken by a bad feeling." );
                     GLog.i("Goo awakens!");
                 }
             }

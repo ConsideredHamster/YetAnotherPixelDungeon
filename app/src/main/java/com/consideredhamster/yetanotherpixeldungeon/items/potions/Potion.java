@@ -190,7 +190,7 @@ public abstract class Potion extends Item {
 	
 	@Override
 	protected void onThrow( int cell ) {
-        if (Dungeon.level.map[cell] == Terrain.WELL || Level.chasm[cell]) {
+        if (Level.chasm[cell]) {
 
             super.onThrow(cell);
 

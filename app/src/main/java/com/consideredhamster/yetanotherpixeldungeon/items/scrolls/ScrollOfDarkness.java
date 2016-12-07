@@ -64,6 +64,6 @@ public class ScrollOfDarkness extends Scroll {
 
     @Override
     public int price() {
-        return isTypeKnown() ? 55 * quantity : super.price();
+        return isTypeKnown() ? 65 * quantity : super.price();
     }
 }
