@@ -278,13 +278,14 @@ public class ShopPainter extends Painter {
 
             Ring ring = (Ring)Generator.random(Generator.Category.RING);
             if( ring != null) {
-                ring.uncurse(3).upgrade( Random.Int( Dungeon.chapter() ) );
+                ring.bonus = Random.Int( Dungeon.chapter() );
                 items.add(ring);
             }
 
             Wand wand = (Wand)Generator.random(Generator.Category.WAND);
             if( wand != null ) {
-                wand.repair().fix().uncurse(3).upgrade(Random.Int(Dungeon.chapter()));
+                wand.bonus = Random.Int( Dungeon.chapter() );
+                wand.repair().fix();
                 items.add(wand);
             }
 

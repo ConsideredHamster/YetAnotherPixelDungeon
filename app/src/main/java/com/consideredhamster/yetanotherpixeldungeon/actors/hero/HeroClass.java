@@ -214,7 +214,7 @@ public enum HeroClass {
 //		new PotionSash().collect();
 //		new ScrollHolder().collect();
 
-//        new ScrollOfPhaseWarp().quantity(3).identify().collect();
+//        new ScrollOfPhaseWarp().quantity(33).identify().collect();
 //        new ScrollOfSunlight().quantity(3).identify().collect();
 //        new ScrollOfDarkness().quantity(3).identify().collect();
 //        new ScrollOfRaiseDead().quantity(3).identify().collect();

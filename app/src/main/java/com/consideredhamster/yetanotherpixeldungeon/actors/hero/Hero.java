@@ -701,7 +701,7 @@ public class Hero extends Char {
         if( restoreHealth ) {
 
             if( positive ) {
-                GLog.p(awakening);
+                GLog.i(awakening);
             } else {
                 GLog.w(awakening);
             }

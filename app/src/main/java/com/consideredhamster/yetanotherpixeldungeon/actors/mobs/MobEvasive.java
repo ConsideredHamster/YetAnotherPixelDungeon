@@ -77,6 +77,12 @@ public abstract class MobEvasive extends Mob {
             EXP = exp * 5;
             maxLvl = 25;
 
+            minDamage += tier - 1;
+            maxDamage += tier - 1;
+
+            dexterity /= 2;
+            armorClass /= 2;
+
         }
 
         HP = HT;

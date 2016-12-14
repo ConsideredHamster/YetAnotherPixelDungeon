@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
@@ -110,6 +111,12 @@ public class Sunlight extends Blob {
                                 ch.ringBuffsHalved(RingOfVitality.Vitality.class));
 
                         int healing = Math.min(ch.HT - ch.HP, healingRate / 25 + (healingRate % 25 > Random.Int(25) ? 1 : 0));
+
+                        // FIXME
+
+                        if( ch instanceof Hero && ((Hero)ch).restoreHealth && ( ch.HP + healing >= ch.HT ) ) {
+                            ((Hero)ch).interrupt();
+                        }
 
                         ch.HP += healing;
 

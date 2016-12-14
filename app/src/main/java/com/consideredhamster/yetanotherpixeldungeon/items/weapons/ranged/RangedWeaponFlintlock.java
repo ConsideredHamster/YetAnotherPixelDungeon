@@ -252,26 +252,27 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
                     @Override
                     public void call() {
 
-                        curUser.busy();
+                    curUser.busy();
 
-                        ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).
-                                reset(curUser.pos, cell, curUser.belongings.weap2, 3.0f, new Callback() {
-                                    @Override
-                                    public void call() {
-                                        ((ThrowingWeaponAmmo) curUser.belongings.weap2).onShoot(cell, curWeap);
-                                    }
-                                });
+                    ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).
+                            reset(curUser.pos, cell, curUser.belongings.weap2, 3.0f, new Callback() {
+                                @Override
+                                public void call() {
+                                    ((ThrowingWeaponAmmo) curUser.belongings.weap2).onShoot(cell, curWeap);
+                                }
+                            });
 
-                        curWeap.loaded = false;
+                    curWeap.loaded = false;
 
-                        Sample.INSTANCE.play(Assets.SND_BLAST, 0.4f + curWeap.tier * 0.2f, 0.4f + curWeap.tier * 0.2f, 1.55f - curWeap.tier * 0.15f);
-                        Camera.main.shake(curWeap.tier, 0.1f);
+                    Sample.INSTANCE.play(Assets.SND_BLAST, 0.4f + curWeap.tier * 0.2f, 0.4f + curWeap.tier * 0.2f, 1.55f - curWeap.tier * 0.15f);
+                    Camera.main.shake(curWeap.tier, 0.1f);
 
-                        PointF pf = DungeonTilemap.tileCenterToWorld(curUser.pos);
-                        PointF pt = DungeonTilemap.tileCenterToWorld(cell);
+                    PointF pf = DungeonTilemap.tileCenterToWorld(curUser.pos);
+                    PointF pt = DungeonTilemap.tileCenterToWorld(cell);
 
-                        curUser.sprite.emitter().burst(SmokeParticle.FACTORY, 3 + curWeap.tier);
-                        Spark.at(pf, PointF.angle(pf, pt), 3.1415926f / 12, 0xEE7722, 3 + curWeap.tier);
+                    curUser.sprite.emitter().burst(SmokeParticle.FACTORY, 3 + curWeap.tier);
+                    Spark.at(pf, PointF.angle(pf, pt), 3.1415926f / 12, 0xEE7722, 3 + curWeap.tier);
+
                     }
                 });
 

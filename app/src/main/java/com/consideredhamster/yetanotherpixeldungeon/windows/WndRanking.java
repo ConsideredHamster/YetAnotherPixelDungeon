@@ -251,7 +251,7 @@ public class WndRanking extends WndTabbed {
 			txt.y = pos;
 			parent.add( txt );
 			
-			txt = PixelScene.createText( value, 7 );
+			txt = PixelScene.createText( value, 6 );
 			txt.measure();
 			txt.x = PixelScene.align( WIDTH * 0.65f );
 			txt.y = pos;
@@ -265,6 +265,8 @@ public class WndRanking extends WndTabbed {
 		
 		private int count;
 		private float pos;
+
+        private static final int GAP = 1;
 		
 		public ItemsTab() {
 			super();
@@ -329,7 +331,7 @@ public class WndRanking extends WndTabbed {
 			slot.setRect( 0, pos, width, LabelledItemButton.SIZE );
 			add( slot );
 			
-			pos += slot.height() + 1;
+			pos += slot.height() + GAP;
 			count++;
 		}
 		
@@ -361,7 +363,7 @@ public class WndRanking extends WndTabbed {
 			ScrollPane list = new BadgesList( false );
 			add( list );
 			
-			list.setSize( WIDTH, HEIGHT );
+			list.setSize( WIDTH, WndRanking.this.height );
 		}
 	}
 	

@@ -154,7 +154,7 @@ public class AttackIndicator extends Tag {
 	
 	@Override
 	protected void onClick() {
-		if ( enabled && Dungeon.hero.ready && lastTarget != null ) {
+		if ( visible && enabled && Dungeon.hero.ready && lastTarget != null ) {
 
 			Dungeon.hero.handle( lastTarget.pos );
 
@@ -164,11 +164,12 @@ public class AttackIndicator extends Tag {
     @Override
     protected boolean onLongClick() {
 
-        if (enabled) {
+        if (visible && enabled && Dungeon.hero.ready && lastTarget != null) {
             Toolbar.examineMob( lastTarget.pos );
+            return true;
         }
 
-        return enabled;
+        return false;
     }
 	
 	public static void target( Mob target ) {

@@ -92,7 +92,7 @@ public class InterlevelScene extends PixelScene {
             "High Strength increases your chances to break free when being ensnared",
             "Your health regeneration rate grows with levels and potions of Strength used",
 
-            "Your health regeneration is tripled while you are asleep",
+            "Your health regeneration is tripled while you are sleeping on land",
             "You do not regenerate any health while you are starving, burning or poisoned",
 
             "Amount of loot and special rooms increases as you descend deeper into the dungeon",
@@ -127,7 +127,7 @@ public class InterlevelScene extends PixelScene {
             "You can combine bomb sticks into bomb bundles which pack some extra punch",
             "You can dismantle bomb bundles and sticks to obtain some of its components",
 
-            "Upgraded cloth armors increase your stats even further than usual",
+            "Upgraded cloth armor will increase its corresponding attribute even more",
             "Stealth penalty from your equipment is not applied while you are asleep",
 
             // WANDS & RINGS
@@ -165,7 +165,7 @@ public class InterlevelScene extends PixelScene {
             "Enemies can dispel effect of potion of Invisibility if they stumble into you",
 
             "Drinking a potion of Blessing increases your armor class by 20% of your max health",
-            "Potion of Blessing can be thrown on adjacent tile to uncurse equipped items",
+            "Potion of Blessing can be thrown on adjacent tile to completely uncurse equipped items",
 
             "Potions of Liquid Flame never spread on nearby water tiles",
             "Potions of Liquid Flame always affect nearby flammable tiles",
@@ -203,16 +203,16 @@ public class InterlevelScene extends PixelScene {
             "Area revealed by a scroll of Clairvoyance cannot be erased by a scroll of Phase Warp",
 
             "Scrolls of Banishment can be used to harm undead, elementals and golems",
-            "Effectiveness of scroll of Banishment depends on distance between you and your target",
+            "Scrolls of Banishment partially dispel curses from all of the items in your inventory",
 
             "Enemies blinded by a scroll of Darkness can fall into a chasm or step into a trap",
             "Scrolls of Darkness can be used to counteract effects of scrolls of Sunlight",
 
             "Scrolls of Phase Warp can save your life as easily as they can end it",
-            "Scrolls of Phase Warp can sometimes erase your memory about current depth",
+            "Using a scrolls of Phase Warp will confuse you for a short period",
 
             "Scrolls of Raise Dead can be very deadly against a single creature - including you",
-            // "Wraiths summoned by using a scroll of Raise Dead will disappear after a while",
+            "Wraiths summoned by using a scroll of Raise Dead will stop being charmed after a while",
 
             "Using scrolls of Challenge is an effective, but risky way to farm experience faster",
             "Scroll of Challenge can be used to lure mimics out of their cover",

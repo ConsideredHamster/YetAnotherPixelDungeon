@@ -128,7 +128,7 @@ public class CraftingKit extends Item {
 	public String info() {
 		return
             "The instruments and materials in this toolkit cannot be used to repair a battle axe or a mail armor. " +
-            "However, they can be used to fix some other things, like bows, slings, flintlock weapons or clot armors. " +
+            "However, they can be used to fix some other things, like bows, slings, flintlock weapons or cloth armors. " +
             "Currently, it has enough materials for only " + ( value > 2 ? "three usages" : value < 2 ? "only one usage" : "two usages" ) + ".";
 	}
 

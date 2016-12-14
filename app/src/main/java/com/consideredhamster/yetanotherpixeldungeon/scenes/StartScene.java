@@ -73,9 +73,9 @@ public class StartScene extends PixelScene {
 //            "\u007F You can't earn badges while playing on Easy mode gives no badges\n" +
 //            "\u007F Hardcore";
 	
-	private static final String TXT_UNLOCK_1	= "To unlock this character class, defeat the 1st boss on %s difficulty or higher";
-	private static final String TXT_UNLOCK_2	= "To unlock this character class, defeat the 2nd boss on %s difficulty or higher";
-	private static final String TXT_UNLOCK_3	= "To unlock this character class, defeat the 3rd boss on %s difficulty or higher";
+//	private static final String TXT_UNLOCK_1	= "To unlock this character class, defeat the 1st boss on %s difficulty or higher";
+//	private static final String TXT_UNLOCK_2	= "To unlock this character class, defeat the 2nd boss on %s difficulty or higher";
+//	private static final String TXT_UNLOCK_3	= "To unlock this character class, defeat the 3rd boss on %s difficulty or higher";
 
 	private static final String TXT_LOCKED = "Got it!";
 
@@ -97,9 +97,9 @@ public class StartScene extends PixelScene {
     private boolean scholarUnlocked;
 	private boolean acolyteUnlocked;
 
-	private Group unlock1;
-	private Group unlock2;
-	private Group unlock3;
+//	private Group unlock1;
+//	private Group unlock2;
+//	private Group unlock3;
 
 	public static HeroClass curClass;
 	
@@ -215,75 +215,72 @@ public class StartScene extends PixelScene {
 //			add( challenge );
 		}
 
-        unlock1 = new Group();
-        add(unlock1);
+//        unlock1 = new Group();
+//        add(unlock1);
 
-//        if (!(brigandUnlocked = true)) {
-        if (!(brigandUnlocked = Badges.isUnlocked( Badges.Badge.BOSS_SLAIN_1 ))) {
-
-            BitmapTextMultiline text = PixelScene.createMultiline(
-                    Utils.format(TXT_UNLOCK_1, Difficulties.NAMES[Difficulties.NORMAL]), 9 );
-            text.maxWidth = (int)width;
-            text.measure();
-
-            float pos = (bottom - BUTTON_HEIGHT) + (BUTTON_HEIGHT - text.height()) / 2;
-            for (BitmapText line : text.new LineSplitter().split()) {
-                line.measure();
-                line.hardlight( 0xFFFF00 );
-                line.x = PixelScene.align( w / 2 - line.width() / 2 );
-                line.y = PixelScene.align( pos );
-                unlock1.add(line);
-
-                pos += line.height();
-            }
-        }
-
-        unlock2 = new Group();
-        add(unlock2);
-
-//        if (!(scholarUnlocked = true)) {
-        if (!(scholarUnlocked = Badges.isUnlocked( Badges.Badge.BOSS_SLAIN_2 ))) {
-
-            BitmapTextMultiline text = PixelScene.createMultiline(
-                    Utils.format(TXT_UNLOCK_2, Difficulties.NAMES[Difficulties.NORMAL]), 9 );
-            text.maxWidth = (int)width;
-            text.measure();
-
-            float pos = (bottom - BUTTON_HEIGHT) + (BUTTON_HEIGHT - text.height()) / 2;
-            for (BitmapText line : text.new LineSplitter().split()) {
-                line.measure();
-                line.hardlight( 0xFFFF00 );
-                line.x = PixelScene.align( w / 2 - line.width() / 2 );
-                line.y = PixelScene.align( pos );
-                unlock2.add(line);
-
-                pos += line.height();
-            }
-        }
-
-
-        unlock3 = new Group();
-		add(unlock3);
-		
-//		if (!(acolyteUnlocked = true)) {
-		if (!(acolyteUnlocked = Badges.isUnlocked( Badges.Badge.BOSS_SLAIN_3 ))) {
-
-			BitmapTextMultiline text = PixelScene.createMultiline(
-                    Utils.format(TXT_UNLOCK_3, Difficulties.NAMES[Difficulties.NORMAL]), 9 );
-			text.maxWidth = (int)width;
-			text.measure();
-			
-			float pos = (bottom - BUTTON_HEIGHT) + (BUTTON_HEIGHT - text.height()) / 2;
-			for (BitmapText line : text.new LineSplitter().split()) {
-				line.measure();
-				line.hardlight( 0xFFFF00 );
-				line.x = PixelScene.align( w / 2 - line.width() / 2 );
-				line.y = PixelScene.align( pos );
-				unlock3.add(line);
-				
-				pos += line.height(); 
-			}
-		}
+//        if (!(brigandUnlocked = Badges.isUnlocked( Badges.Badge.BOSS_SLAIN_1 ))) {
+//
+//            BitmapTextMultiline text = PixelScene.createMultiline(
+//                    Utils.format(TXT_UNLOCK_1, Difficulties.NAMES[Difficulties.NORMAL]), 9 );
+//            text.maxWidth = (int)width;
+//            text.measure();
+//
+//            float pos = (bottom - BUTTON_HEIGHT) + (BUTTON_HEIGHT - text.height()) / 2;
+//            for (BitmapText line : text.new LineSplitter().split()) {
+//                line.measure();
+//                line.hardlight( 0xFFFF00 );
+//                line.x = PixelScene.align( w / 2 - line.width() / 2 );
+//                line.y = PixelScene.align( pos );
+//                unlock1.add(line);
+//
+//                pos += line.height();
+//            }
+//        }
+//
+//        unlock2 = new Group();
+//        add(unlock2);
+//
+//        if (!(scholarUnlocked = Badges.isUnlocked( Badges.Badge.BOSS_SLAIN_2 ))) {
+//
+//            BitmapTextMultiline text = PixelScene.createMultiline(
+//                    Utils.format(TXT_UNLOCK_2, Difficulties.NAMES[Difficulties.NORMAL]), 9 );
+//            text.maxWidth = (int)width;
+//            text.measure();
+//
+//            float pos = (bottom - BUTTON_HEIGHT) + (BUTTON_HEIGHT - text.height()) / 2;
+//            for (BitmapText line : text.new LineSplitter().split()) {
+//                line.measure();
+//                line.hardlight( 0xFFFF00 );
+//                line.x = PixelScene.align( w / 2 - line.width() / 2 );
+//                line.y = PixelScene.align( pos );
+//                unlock2.add(line);
+//
+//                pos += line.height();
+//            }
+//        }
+//
+//
+//        unlock3 = new Group();
+//		add(unlock3);
+//
+//		if (!(acolyteUnlocked = Badges.isUnlocked( Badges.Badge.BOSS_SLAIN_3 ))) {
+//
+//			BitmapTextMultiline text = PixelScene.createMultiline(
+//                    Utils.format(TXT_UNLOCK_3, Difficulties.NAMES[Difficulties.NORMAL]), 9 );
+//			text.maxWidth = (int)width;
+//			text.measure();
+//
+//			float pos = (bottom - BUTTON_HEIGHT) + (BUTTON_HEIGHT - text.height()) / 2;
+//			for (BitmapText line : text.new LineSplitter().split()) {
+//				line.measure();
+//				line.hardlight( 0xFFFF00 );
+//				line.x = PixelScene.align( w / 2 - line.width() / 2 );
+//				line.y = PixelScene.align( pos );
+//				unlock3.add(line);
+//
+//				pos += line.height();
+//			}
+//		}
 		
 		ExitButton btnExit = new ExitButton();
 		btnExit.setPos( Camera.main.width - btnExit.width(), 0 );
@@ -325,35 +322,35 @@ public class StartScene extends PixelScene {
 		}
 		shields.get( curClass = cl ).highlight(true);
 
-        if (cl == HeroClass.BRIGAND && !brigandUnlocked) {
+//        if (cl == HeroClass.BRIGAND && !brigandUnlocked) {
 
-            unlock1.visible = true;
-            unlock2.visible = false;
-            unlock3.visible = false;
-            btnLoad.visible = false;
-            btnNewGame.visible = false;
+//            unlock1.visible = true;
+//            unlock2.visible = false;
+//            unlock3.visible = false;
+//            btnLoad.visible = false;
+//            btnNewGame.visible = false;
 
-        } else if (cl == HeroClass.SCHOLAR && !scholarUnlocked) {
+//        } else if (cl == HeroClass.SCHOLAR && !scholarUnlocked) {
 
-            unlock1.visible = false;
-            unlock2.visible = true;
-            unlock3.visible = false;
-            btnLoad.visible = false;
-            btnNewGame.visible = false;
+//            unlock1.visible = false;
+//            unlock2.visible = true;
+//            unlock3.visible = false;
+//            btnLoad.visible = false;
+//            btnNewGame.visible = false;
 
-        } else if (cl == HeroClass.ACOLYTE && !acolyteUnlocked) {
+//        } else if (cl == HeroClass.ACOLYTE && !acolyteUnlocked) {
 
-            unlock1.visible = false;
-            unlock2.visible = false;
-            unlock3.visible = true;
-            btnLoad.visible = false;
-            btnNewGame.visible = false;
-
-        } else {
+//            unlock1.visible = false;
+//            unlock2.visible = false;
+//            unlock3.visible = true;
+//            btnLoad.visible = false;
+//            btnNewGame.visible = false;
+//
+//        } else {
 		
-			unlock1.visible = false;
-			unlock2.visible = false;
-			unlock3.visible = false;
+//			unlock1.visible = false;
+//			unlock2.visible = false;
+//			unlock3.visible = false;
 
 			GamesInProgress.Info info = GamesInProgress.check( curClass );
 			if (info != null) {
@@ -379,7 +376,7 @@ public class StartScene extends PixelScene {
 				btnNewGame.setRect( buttonX, buttonY, Camera.main.width - buttonX * 2, BUTTON_HEIGHT );
 			}
 			
-		}
+//		}
 	}
 
     private void askDifficulty() {

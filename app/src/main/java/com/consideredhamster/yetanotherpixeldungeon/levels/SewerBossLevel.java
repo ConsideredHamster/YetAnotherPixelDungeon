@@ -65,6 +65,9 @@ public class SewerBossLevel extends Level {
     private static final int CENTER_Y = TOP + CHAMBER_HEIGHT + ARENA_HEIGHT / 2;
     private static final int CENTER = CENTER_Y * WIDTH + CENTER_X;
 
+    private static final int DOOR1 = (TOP + CHAMBER_HEIGHT) * WIDTH + LEFT ;
+    private static final int DOOR2 = (TOP + CHAMBER_HEIGHT) * WIDTH + LEFT + ARENA_WIDTH - 1;
+
     private boolean bossAppeared = false;
     private boolean bossDefeated = false;
 
@@ -130,11 +133,8 @@ public class SewerBossLevel extends Level {
             x++;
         }
 
-        int door1 = (TOP + CHAMBER_HEIGHT) * WIDTH + LEFT ;
-        int door2 = (TOP + CHAMBER_HEIGHT) * WIDTH + LEFT + ARENA_WIDTH - 1;
-
-        map[door1] = Terrain.LOCKED_DOOR;
-        map[door2] = Terrain.LOCKED_DOOR;
+        map[ DOOR1 ] = Terrain.LOCKED_DOOR;
+        map[ DOOR2 ] = Terrain.LOCKED_DOOR;
 
         Painter.fill(this, 0, TOP + CHAMBER_HEIGHT + ARENA_HEIGHT + 1, WIDTH, HEIGHT - TOP - CHAMBER_HEIGHT - ARENA_HEIGHT - 1, Terrain.CHASM);
 
@@ -159,14 +159,6 @@ public class SewerBossLevel extends Level {
 //            }
 //        }
     }
-
-//    public static int pedestal( boolean left ) {
-//        if (left) {
-//            return (TOP + ARENA_HEIGHT / 2) * WIDTH + CENTER_X - 2;
-//        } else {
-//            return (TOP + ARENA_HEIGHT / 2) * WIDTH + CENTER_X + 2;
-//        }
-//    }
 
     @Override
     protected void createMobs() {
@@ -257,8 +249,9 @@ public class SewerBossLevel extends Level {
     @Override
     public Heap drop( Item item, int cell ) {
 
+        // FIXME
+
         if (bossAppeared && !bossDefeated && item instanceof Gold) {
-//        if (bossAppeared && !bossDefeated && item instanceof IronKey && ((IronKey)item).depth == Dungeon.depth ) {
 
             bossDefeated = true;
 
@@ -303,203 +296,26 @@ public class SewerBossLevel extends Level {
     }
 
     public void seal() {
-        for (int i=0; i < LENGTH; i++) {
-            if (map[i] == Terrain.DOOR_CLOSED || map[i] == Terrain.OPEN_DOOR) {
-                set(i, Terrain.LOCKED_DOOR);
-                GameScene.updateMap(i);
-            }
-        }
+
+        set( DOOR1, Terrain.LOCKED_DOOR );
+        GameScene.updateMap( DOOR1 );
+
+        set( DOOR2, Terrain.LOCKED_DOOR );
+        GameScene.updateMap( DOOR2 );
+
 	}
 
 	public void unseal() {
-        for (int i=0; i < LENGTH; i++) {
-            if (map[i] == Terrain.LOCKED_DOOR) {
-                set(i, Terrain.DOOR_CLOSED);
-                GameScene.updateMap(i);
-            }
-        }
+
+        set( DOOR1, Terrain.DOOR_CLOSED );
+        GameScene.updateMap( DOOR1 );
+
+        set( DOOR2, Terrain.DOOR_CLOSED );
+        GameScene.updateMap( DOOR2 );
 
         Dungeon.observe();
 	}
-	
-	/*@Override
-	protected boolean build() {
-		
-		initRooms();
-	
-		int distance;
-		int retry = 0;
-		int minDistance = (int)Math.sqrt( rooms.size() );
-		do {
-			int innerRetry = 0;
-			do {
-				if (innerRetry++ > 10) {
-					return false;
-				}
-				roomEntrance = Random.element( rooms );
-			} while (roomEntrance.width() < 4 || roomEntrance.height() < 4);
-			
-			innerRetry = 0;
-			do {
-				if (innerRetry++ > 10) {
-					return false;
-				}
-				roomExit = Random.element( rooms );
-			} while (roomExit == roomEntrance || roomExit.width() < 6 || roomExit.height() < 6 || roomExit.top == 0);
-	
-			Graph.buildDistanceMap( rooms, roomExit );
-			distance = roomEntrance.distance();
-			
-			if (retry++ > 10) {
-				return false;
-			}
-			
-		} while (distance < minDistance);
-		
-		roomEntrance.type = Type.ENTRANCE;
-		roomExit.type = Type.BOSS_EXIT;
-		
-		Graph.buildDistanceMap( rooms, roomExit );
-		List<Room> path = Graph.buildPath( rooms, roomEntrance, roomExit );
 
-		Graph.setPrice( path, roomEntrance.distance );
-
-		Graph.buildDistanceMap( rooms, roomExit );
-		path = Graph.buildPath( rooms, roomEntrance, roomExit );
-
-		Room room = roomEntrance;
-		for (Room next : path) {
-			room.connect( next );
-			room = next;
-		}
-		
-		room = (Room)roomExit.connected.keySet().toArray()[0];
-		if (roomExit.top == room.bottom) {
-			return false;
-		}
-		
-		for (Room r : rooms) {
-			if (r.type == Type.NULL && r.connected.size() > 0) {
-				r.type = Type.TUNNEL; 
-			}
-		}
-		
-//		ArrayList<Room> candidates = new ArrayList<Room>();
-//		for (Room r : roomExit.neighbours) {
-//			if (!roomExit.connected.containsKey( r ) &&
-//				(roomExit.left == r.right || roomExit.right == r.left || roomExit.bottom == r.top)) {
-//				candidates.add( r );
-//			}
-//		}
-//		if (candidates.size() > 0) {
-//			Room kingsRoom = Random.element( candidates );
-//			kingsRoom.connect( roomExit );
-//			kingsRoom.type = Room.Type.RAT_KING;
-//		}
-
-		paint();
-		
-		paintWater();
-		paintGrass();
-		
-//		placeTraps();
-		placeSign();
-
-		return true;
-	}
-
-	@Override
-	protected boolean[] water() {
-		return Patch.generate( 0.5f, 5 );
-	}
-
-	@Override
-	protected boolean[] grass() {
-		return Patch.generate( 0.40f, 4 );
-	}
-	
-	@Override
-	protected void decorate() {
-		int start = roomExit.top * WIDTH + roomExit.left + 1;
-		int end = start + roomExit.width() - 1;
-		for (int i=start; i < end; i++) {
-			if (i != exit) {
-				map[i] = Terrain.WALL_DECO;
-				map[i + WIDTH] = Terrain.WATER;
-			} else {
-				map[i + WIDTH] = Terrain.EMPTY;
-			}
-		}
-	}*/
-	
-
-	
-	
-//	@Override
-//	protected void createMobs() {
-//		Mob mob = Bestiary.mob( Dungeon.depth );
-//		mob.pos = roomExit.random();
-//		mobs.add(mob);
-//	}
-	
-//	public Actor respawner() {
-//		return null;
-//	}
-	
-//	@Override
-//	protected void createItems() {
-//		Item item = Bones.get();
-//		if (item != null) {
-//			int pos;
-//			do {
-//				pos = roomEntrance.random();
-//			} while (pos == entrance || map[pos] == Terrain.SIGN);
-//			drop( item, pos ).type = Heap.Type.BONES;
-//		}
-//	}
-//
-//	public void seal() {
-//		if (entrance != 0) {
-//
-//			set( entrance, Terrain.WATER_TILES );
-//			GameScene.updateMap( entrance );
-//			GameScene.ripple( entrance );
-//
-//			stairs = entrance;
-//			entrance = 0;
-//		}
-//	}
-//
-//	public void unseal() {
-//		if (stairs != 0) {
-//
-//			entrance = stairs;
-//			stairs = 0;
-//
-//			set( entrance, Terrain.ENTRANCE );
-//			GameScene.updateMap( entrance );
-//		}
-//	}
-
-//    @Override
-//    public boolean noTeleport() {
-//        return stairs != 0;
-//    }
-//
-//	private static final String STAIRS	= "stairs";
-//
-//	@Override
-//	public void storeInBundle( Bundle bundle ) {
-//		super.storeInBundle( bundle );
-//		bundle.put( STAIRS, stairs );
-//	}
-//
-//	@Override
-//	public void restoreFromBundle( Bundle bundle ) {
-//		super.restoreFromBundle(bundle);
-//		stairs = bundle.getInt( STAIRS );
-//	}
-	
 	@Override
 	public String tileName( int tile ) {
 		return SewerLevel.tileNames( tile );

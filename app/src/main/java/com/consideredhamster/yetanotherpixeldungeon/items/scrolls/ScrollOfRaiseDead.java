@@ -58,7 +58,7 @@ public class ScrollOfRaiseDead extends Scroll {
 //            }
 //        }
 
-        ArrayList<Wraith> summoned = Wraith.spawnAround( curUser.pos, Random.IntRange( 3, 4 ) );
+        ArrayList<Wraith> summoned = Wraith.spawnAround( curUser.pos, Random.IntRange( 2, 4 ) );
 
         for (Wraith w : summoned) {
 

@@ -41,7 +41,7 @@ public class GiantSpider extends MobHealthy {
 		spriteClass = SpinnerSprite.class;
 		
 		loot = new MysteryMeat();
-		lootChance = 0.1f;
+		lootChance = 0.15f;
 		
 		FLEEING = new Fleeing();
 	}

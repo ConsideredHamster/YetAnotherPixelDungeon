@@ -55,7 +55,7 @@ public abstract class Goo extends MobEvasive {
 
     private static final float SPLIT_DELAY	= 1f;
 
-    private static final int SPAWN_HEALTH = 16;
+    private static final int SPAWN_HEALTH = 8;
 
     public boolean phase = false;
 
@@ -64,7 +64,6 @@ public abstract class Goo extends MobEvasive {
         super(2, 10, true);
 
         armorClass = 0;
-        dexterity /= 2;
 
     }
 
@@ -104,7 +103,10 @@ public abstract class Goo extends MobEvasive {
             return;
         }
 
-        if ( buff( Frozen.class ) != null) {
+        if (
+                buff( Frozen.class ) != null || type == DamageType.ENERGY
+                || type == DamageType.FLAME || type == DamageType.SHOCK
+        ) {
 
             dmg *= 2;
 
@@ -114,7 +116,7 @@ public abstract class Goo extends MobEvasive {
 
             dmg /= 2;
 
-        } else if ( type == null && dmg > 1 && dmg < HP && dmg > Random.Int( SPAWN_HEALTH ) ) {
+        } else if ( type == null && dmg > 1 && dmg < HP && dmg > Random.Int( SPAWN_HEALTH * 3 ) ) {
 
             ArrayList<Integer> candidates = new ArrayList<Integer>();
             boolean[] passable = Level.passable;
@@ -198,6 +200,8 @@ public abstract class Goo extends MobEvasive {
             loot = Gold.class;
             lootChance = 4f;
 
+            dexterity /= 2;
+
         }
 
         protected int breaks = 0;
@@ -259,7 +263,7 @@ public abstract class Goo extends MobEvasive {
 
                             Spawn clone = new Spawn();
 
-                            clone.HT = SPAWN_HEALTH;
+                            clone.HT = Random.IntRange( SPAWN_HEALTH, SPAWN_HEALTH * 2 );
                             clone.HP = clone.HT;
                             clone.pos = pos;
                             clone.state = clone.HUNTING;

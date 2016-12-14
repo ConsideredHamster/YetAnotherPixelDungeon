@@ -37,7 +37,7 @@ public class SewerCrab extends MobHealthy {
 		spriteClass = CrabSprite.class;
 		
 		loot = new MysteryMeat();
-		lootChance = 0.1f;
+		lootChance = 0.125f;
 
 //        baseSpeed = 2f;
 	}

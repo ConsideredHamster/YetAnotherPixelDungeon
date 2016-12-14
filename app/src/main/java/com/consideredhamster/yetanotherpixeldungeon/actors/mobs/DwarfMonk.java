@@ -45,7 +45,7 @@ public class DwarfMonk extends MobEvasive {
         spriteClass = MonkSprite.class;
 
 		loot = new OverpricedRation();
-		lootChance = 0.05f;
+		lootChance = 0.1f;
 	}
 
     @Override

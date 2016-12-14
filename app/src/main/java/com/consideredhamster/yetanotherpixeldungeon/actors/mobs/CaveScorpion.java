@@ -46,7 +46,7 @@ public class CaveScorpion extends MobHealthy {
 //		lootChance = 0.125f;
 
         loot = new MysteryMeat();
-        lootChance = 0.1f;
+        lootChance = 0.175f;
 	}
 	
 //	@Override

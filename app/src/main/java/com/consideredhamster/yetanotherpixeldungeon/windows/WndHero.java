@@ -215,19 +215,19 @@ public class WndHero extends WndTabbed {
 			pos += GAP;
 
             statSlot(TXT_WILLPWR, (
-                    hero.belongings.armor instanceof MageArmor && !hero.belongings.armor.isIdentified() && hero.belongings.armor.bonus > 0 ||
+                    hero.belongings.armor instanceof MageArmor && !hero.belongings.armor.isIdentified() ||
                             hero.belongings.ring1 instanceof RingOfEnergy && !hero.belongings.ring1.isIdentified() ||
                             hero.belongings.ring2 instanceof RingOfEnergy && !hero.belongings.ring2.isIdentified() ?
                             "??" : (int)( hero.magicPower() * 100 ) ) + "%" );
 
             statSlot( TXT_AWARNSS, (
-                        hero.belongings.armor instanceof HuntressArmor && !hero.belongings.armor.isIdentified() && hero.belongings.armor.bonus > 0 ||
+                        hero.belongings.armor instanceof HuntressArmor && !hero.belongings.armor.isIdentified() ||
                         hero.belongings.ring1 instanceof RingOfPerception && !hero.belongings.ring1.isIdentified() ||
                         hero.belongings.ring2 instanceof RingOfPerception && !hero.belongings.ring2.isIdentified() ?
                     "??" : (int)( hero.awareness() * 100 ) ) + "%" );
 
             statSlot( TXT_STEALTH, (
-                        hero.belongings.armor instanceof RogueArmor && !hero.belongings.armor.isIdentified() && hero.belongings.armor.bonus > 0 ||
+                        hero.belongings.armor instanceof RogueArmor && !hero.belongings.armor.isIdentified() ||
                         hero.belongings.ring1 instanceof RingOfShadows && !hero.belongings.ring1.isIdentified() ||
                         hero.belongings.ring2 instanceof RingOfShadows && !hero.belongings.ring2.isIdentified() ||
                         hero.belongings.weap1 != null && !hero.belongings.weap1.isIdentified() ||

@@ -31,6 +31,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.SkeletonSprite;
+import com.watabou.utils.Random;
 
 public class Skeleton extends MobPrecise {
 
@@ -49,7 +50,7 @@ public class Skeleton extends MobPrecise {
 
     @Override
     public int attackProc( Char enemy, int damage ) {
-//        if ( Random.Int(enemy.HT) < damage ) {
+        if ( Random.Int(enemy.HT) < damage * 2 ) {
 
             Withered buff = Buff.affect(enemy, Withered.class);
 
@@ -57,7 +58,7 @@ public class Skeleton extends MobPrecise {
                 buff.prolong();
                 enemy.sprite.burst( 0x000000, 5 );
             }
-//        }
+        }
 
         return damage;
     }

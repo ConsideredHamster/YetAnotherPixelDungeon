@@ -362,19 +362,20 @@ public abstract class ThrowingWeapon extends Weapon {
                     @Override
                     public void call() {
 
-                        curUser.busy();
+                    curUser.busy();
 
-                        if (curWeap instanceof Harpoons) {
-                            curUser.sprite.parent.add(new Chains(curUser.pos, cell, ch != null && ch.isHeavy()));
+                    if (curWeap instanceof Harpoons) {
+                        curUser.sprite.parent.add(new Chains(curUser.pos, cell, ch != null && ch.isHeavy()));
+                    }
+
+                    ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).
+                    reset(curUser.pos, cell, curUser.belongings.weap2, new Callback() {
+                        @Override
+                        public void call() {
+                            ((ThrowingWeapon) curUser.belongings.weap2).onShoot(cell, curWeap);
                         }
+                    });
 
-                        ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).
-                        reset(curUser.pos, cell, curUser.belongings.weap2, new Callback() {
-                            @Override
-                            public void call() {
-                                ((ThrowingWeapon) curUser.belongings.weap2).onShoot(cell, curWeap);
-                            }
-                        });
                     }
                 });
 
@@ -442,7 +443,7 @@ public abstract class ThrowingWeapon extends Weapon {
             }
         }
 
-        curUser.spendAndNext( curUser.attackDelay() );
+        curUser.spendAndNext( weapon.speedFactor( curUser ) );
         QuickSlot.refresh();
     }
 }

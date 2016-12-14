@@ -184,7 +184,7 @@ public abstract class RegularLevel extends Level {
 					r.width() > 3 && r.height() > 3
                     && ( Random.Int( 6 - chapter ) == 0 ||
                     Dungeon.depth % 6 == 2 && specials.contains( Type.LABORATORY ) ||
-                    Dungeon.depth % 6 == 3 && specials.contains( Type.MAGIC_WELL ) )
+                    Dungeon.depth % 6 == 4 && specials.contains( Type.MAGIC_WELL ) )
                 ) {
 
 					if (pitRoomNeeded) {
@@ -205,7 +205,7 @@ public abstract class RegularLevel extends Level {
 						
 						r.type = Type.LABORATORY;
 						
-					} else if (Dungeon.depth % 6 == 3 && specials.contains( Type.MAGIC_WELL )) {
+					} else if (Dungeon.depth % 6 == 4 && specials.contains( Type.MAGIC_WELL )) {
 
 						r.type = Type.MAGIC_WELL;
 
@@ -630,8 +630,8 @@ public abstract class RegularLevel extends Level {
                 Actor.findChar( cell ) == null &&
                 distance(Dungeon.hero.pos, cell) > 8 &&
                 ( ignoreView || !Dungeon.visible[cell] ) &&
-                ( ( ignoreTraps && Level.passable[cell] ) ||
-                ( !ignoreTraps && Level.mob_passable[cell] ) )
+                ( Level.mob_passable[cell] ||
+                ignoreTraps && Level.passable[cell] )
             ) {
 
 				return cell;

@@ -535,7 +535,7 @@ public class DwarvenKing extends MobPrecise {
 		@Override
 		public int attackProc( Char enemy, int damage ) {
 
-//            if( damage * 2 > Random.Int( enemy.HT ) ) {
+            if( damage * 2 > Random.Int( enemy.HT ) ) {
 
                 Withered buff = Buff.affect(enemy, Withered.class);
 
@@ -543,7 +543,7 @@ public class DwarvenKing extends MobPrecise {
                     buff.prolong();
                     enemy.sprite.burst(0x000000, 5);
                 }
-//            }
+            }
 
 			return damage;
 		}

@@ -101,6 +101,12 @@ public class Mending extends Buff {
 
             if( healthRestored > 0 ) {
 
+                // FIXME
+
+                if( target instanceof Hero && ((Hero)target).restoreHealth && ( target.HP + healthRestored >= target.HT ) ) {
+                    ((Hero)target).interrupt();
+                }
+
                 target.HP += healthRestored ;
 
                 target.sprite.showStatus(CharSprite.POSITIVE, Integer.toString(healthRestored));
