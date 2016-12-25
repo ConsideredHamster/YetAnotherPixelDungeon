@@ -29,6 +29,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Combo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.AmbitiousImp;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.OverpricedRation;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.MonkSprite;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 
 public class DwarfMonk extends MobEvasive {
 
@@ -68,29 +69,31 @@ public class DwarfMonk extends MobEvasive {
 	@Override
 	public int attackProc( Char enemy, int damage ) {
 
-//		if (  Random.Int( enemy.HT ) < damage && enemy == Dungeon.hero) {
-
-//            Hero hero = (Hero)enemy;
-
-//            EquipableItem weapon = Random.oneOf( hero.belongings.weap1, hero.belongings.weap2 );
-//
-//            if( weapon != null && weapon.disarmable() ) {
-//
-//                GLog.w(TXT_DISARMED, weapon.name());
-//                weapon.doDrop(hero);
-//
-//            }
-//		}
-
-        damage += Buff.affect(this, Combo.class).hit( damage );
+        Buff.affect(this, Combo.class).hit();
 		
 		return damage;
 	}
+
+    @Override
+    public int damageRoll() {
+
+        int dmg = super.damageRoll();
+
+        Combo buff = buff( Combo.class );
+
+        if( buff != null ) {
+
+            dmg += (int) (dmg * buff.modifier());
+
+        }
+
+        return dmg;
+    }
 	
 	@Override
 	public String description() {
 		return
-			"These monks are fanatics, who devoted themselves to protecting their city's secrets from all aliens. " +
+			"These monks are fanatics, who devoted themselves to protecting their city's secrets from all intruders. " +
 			"They don't use any armor or weapons, relying solely on the art of hand-to-hand combat.";
 	}
 

@@ -36,7 +36,7 @@ public abstract class BodyArmorLight extends BodyArmor {
 
     @Override
     public int penaltyBase(Hero hero, int str) {
-        return super.penaltyBase(hero, str) + tier * 2;
+        return super.penaltyBase(hero, str) + tier * 4;
     }
 
     @Override

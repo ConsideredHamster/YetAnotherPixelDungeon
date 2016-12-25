@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.sprites;
 
+import com.watabou.noosa.Game;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
@@ -73,7 +74,7 @@ public class GooSprite extends MobSprite {
 
 		if (ch instanceof Goo && ((Goo)ch).phase && anim != die) {
 
-            if (spray == null && visible) {
+            if (spray == null) {
                 spray = emitter();
                 spray.pour( GooParticle.FACTORY, 0.05f );
             }
@@ -90,6 +91,16 @@ public class GooSprite extends MobSprite {
             anim.delay = 1f / NORMAL_FRAMERATE;
         }
 	}
+
+    @Override
+    public void update() {
+
+        super.update();
+
+        if (spray != null) {
+            spray.visible = visible;
+        }
+    }
 	
 	@Override
 	public int blood() {

@@ -22,14 +22,23 @@ package com.consideredhamster.yetanotherpixeldungeon.scenes;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.opengl.GLES20;
 
+import com.consideredhamster.yetanotherpixeldungeon.effects.Flare;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndChangelog;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndSettings;
+import com.watabou.input.Touchscreen;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
+import com.watabou.noosa.TouchArea;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.ui.Button;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
@@ -45,6 +54,9 @@ public class TitleScene extends PixelScene {
 	private static final String TXT_HIGHSCORES	= "Rankings";
 	private static final String TXT_BADGES		= "Badges";
 	private static final String TXT_ABOUT		= "About";
+
+    private static final int COLOR_NORMAL		= 0x444444;
+    private static final int COLOR_BRIGHT	    = 0xCACFC2;
 	
 	@Override
 	public void create() {
@@ -115,15 +127,8 @@ public class TitleScene extends PixelScene {
         signs2.y = title2.y;
         add( signs2 );
 
-
-//        if( YetAnotherPixelDungeon.landscape() ) {
-//            placeTorch( title.x - 8, title.y + 32 );
-//            placeTorch( title.x + title.width + 8, title.y + 32 );
-//        } else {
         placeTorch( title.x + 24, title.y + 12 );
         placeTorch( title.x + title.width - 24, title.y + 12 );
-//        }
-
 		
 		DashboardItem btnBadges = new DashboardItem( TXT_BADGES, 3 ) {
 			@Override
@@ -170,12 +175,35 @@ public class TitleScene extends PixelScene {
 			btnHighscores.setPos( w / 2, btnPlay.top() );
 		}
 		
-		BitmapText version = new BitmapText( "v " + Game.version + " (yapd)", font1x );
+		final BitmapText version = new BitmapText( "v " + Game.version, font1x );
 		version.measure();
-		version.hardlight( 0x888888 );
+		version.hardlight( COLOR_NORMAL );
 		version.x = w - version.width();
 		version.y = h - version.height();
-		add( version);
+        add( version );
+
+        final Emitter emitter = new Emitter();
+        emitter.pos( version.x, version.y, version.width(), version.height() );
+        add( emitter );
+
+        if( YetAnotherPixelDungeon.lastVersion() < Game.versionNum ) {
+            version.hardlight( COLOR_BRIGHT );
+            emitter.pour( Speck.factory( Speck.LIGHT ), 0.3f );
+        }
+
+        TouchArea changelog = new TouchArea( version ) {
+            @Override
+            protected void onClick( Touchscreen.Touch touch ) {
+
+                YetAnotherPixelDungeon.lastVersion( Game.versionNum );
+
+                emitter.on = false;
+                version.hardlight( COLOR_NORMAL );
+                parent.add( new WndChangelog() );
+
+            }
+        };
+        add( changelog );
 
         PrefsButton btnPrefs = new PrefsButton();
 		btnPrefs.setPos( 0, 0 );

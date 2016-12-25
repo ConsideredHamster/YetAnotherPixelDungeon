@@ -48,7 +48,7 @@ public class PotionOfBlessing extends Potion {
     public static final float MODIFIER	= 1.0f;
 
     private static final String TXT_PROCCED	=
-            "A cleansing light shines from above, and all malevolent magic nearby is banished.";
+            "A cleansing light shines from above, and all malevolent magic nearby is weakened.";
     private static final String TXT_NOT_PROCCED	=
             "A cleansing light shines from above, but nothing happens.";
 	
@@ -93,14 +93,13 @@ public class PotionOfBlessing extends Potion {
                 }
 
             } else if( ch == curUser ) {
-
-                affected = affected | uncurse( c,
-                    curUser.belongings.weap1,
-                    curUser.belongings.weap2,
-                    curUser.belongings.armor,
-                    curUser.belongings.ring1,
-                    curUser.belongings.ring2
-                );
+                affected = uncurse( c, curUser.belongings.backpack.items.toArray( new Item[0] ) ) |
+                        uncurse( c,
+                        curUser.belongings.weap1,
+                        curUser.belongings.weap2,
+                        curUser.belongings.armor,
+                        curUser.belongings.ring1,
+                        curUser.belongings.ring2 );
 
             } else if ( ch.isMagical() ) {
 
@@ -141,13 +140,16 @@ public class PotionOfBlessing extends Potion {
 
                 if (item.bonus < 0) {
 
-                    if( item instanceof Weapon && ((Weapon)item).enchantment != null ) {
-                        ((Weapon)item).enchant( null );
-                    } else if( item instanceof Armour && ((Armour)item).glyph != null ) {
-                        ((Armour)item).inscribe( null );
+                    item.bonus = Random.IntRange( item.bonus + 1, 0 );
+
+                    if( item.bonus == 0) {
+                        if( item instanceof Weapon && ((Weapon)item).enchantment != null ) {
+                            ((Weapon)item).enchant( null );
+                        } else if( item instanceof Armour && ((Armour)item).glyph != null ) {
+                            ((Armour)item).inscribe( null );
+                        }
                     }
 
-                    item.bonus = 0;
                     procced++;
 
                 }

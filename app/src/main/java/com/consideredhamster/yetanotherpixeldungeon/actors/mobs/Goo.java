@@ -23,6 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Bundle;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
@@ -104,11 +105,11 @@ public abstract class Goo extends MobEvasive {
         }
 
         if (
-                buff( Frozen.class ) != null || type == DamageType.ENERGY
-                || type == DamageType.FLAME || type == DamageType.SHOCK
+                type == DamageType.ENERGY || type == DamageType.SHOCK
+                || type == null && buff( Frozen.class ) != null
         ) {
 
-            dmg *= 2;
+            dmg += Random.IntRange( 0, dmg );
 
         }
 
@@ -141,8 +142,16 @@ public abstract class Goo extends MobEvasive {
 
                 clone.pos = Random.element( candidates );
                 clone.state = clone.HUNTING;
+
                 clone.HT = dmg;
-                clone.HP = clone.HT / 2;
+
+                if( Dungeon.difficulty == Difficulties.NORMAL ) {
+                    clone.HP = Random.NormalIntRange( 1, clone.HT / 2 );
+                } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
+                    clone.HP = clone.HT / 2;
+                } else {
+                    clone.HP = 1;
+                }
 
                 if (Dungeon.level.map[clone.pos] == Terrain.DOOR_CLOSED) {
                     Door.enter(clone.pos);
@@ -228,7 +237,7 @@ public abstract class Goo extends MobEvasive {
         @Override
         public boolean act() {
 
-            if (( state == SLEEPING || Level.water[pos] ) && HP < HT ) {
+            if (( state == SLEEPING || Level.water[pos] ) && HP < HT && !phase && buff( Frozen.class ) == null ) {
                 sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
                 HP++;
 
@@ -263,7 +272,14 @@ public abstract class Goo extends MobEvasive {
 
                             Spawn clone = new Spawn();
 
-                            clone.HT = Random.IntRange( SPAWN_HEALTH, SPAWN_HEALTH * 2 );
+                            clone.HT = SPAWN_HEALTH;
+
+                            if( Dungeon.difficulty == Difficulties.NORMAL ) {
+                                clone.HT = Random.NormalIntRange( clone.HT, clone.HT * 2);
+                            } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
+                                clone.HT = clone.HT * 2;
+                            }
+
                             clone.HP = clone.HT;
                             clone.pos = pos;
                             clone.state = clone.HUNTING;
@@ -421,13 +437,17 @@ public abstract class Goo extends MobEvasive {
 //                sprite.alpha(1);
                 sprite.parent.add(new AlphaTweener(sprite, 0.0f, 0.1f));
 
+                sprite.showStatus(CharSprite.NEGATIVE, "absorbed");
+
+                GLog.n("An entranced spawn was absorbed by the Goo, restoring its health!");
+
                 die(mother);
 
                 return true;
 
             }
 
-            if (Level.water[pos] && HP < HT) {
+            if ( Level.water[pos] && HP < HT && buff( Frozen.class ) == null ) {
 //                sprite.showStatus(CharSprite.POSITIVE, "%d", heal);
                 sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
                 HP ++;
@@ -436,6 +456,10 @@ public abstract class Goo extends MobEvasive {
             if( !phase && HP == HT ) {
                 phase = true;
                 sprite.idle();
+
+                sprite.showStatus(CharSprite.NEGATIVE, "entranced");
+                GLog.n("A spawn of Goo has fully recovered and became entranced!");
+
                 spend( TICK );
                 return true;
             }

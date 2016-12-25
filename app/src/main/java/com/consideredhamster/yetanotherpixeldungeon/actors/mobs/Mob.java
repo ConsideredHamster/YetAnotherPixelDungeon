@@ -71,7 +71,7 @@ import com.watabou.utils.Random;
 public abstract class Mob extends Char {
 	
 	private static final String	TXT_DIED     = "You hear something died in the distance";
-    private static final String TXT_HEARD    = "You think you hear someone %s nearby";
+    private static final String TXT_HEARD    = "You think you hear a %s %s nearby";
 	
 	protected static final String TXT_ECHO  = "echo of ";
 
@@ -302,10 +302,10 @@ public abstract class Mob extends Char {
             Dungeon.hero.interrupt( "You were awoken by a noise." );
 
             if( !enemySeen ) {
-                GLog.w(TXT_HEARD, state.status());
+                GLog.w(TXT_HEARD, name, state.status());
             }
 
-            noticed = true;
+//            noticed = true;
         }
 		
 		return act;
@@ -501,6 +501,7 @@ public abstract class Mob extends Char {
 
             if ( visible ) {
 
+                Dungeon.visible[pos] = true;
                 sprite.attack( enemyPos );
 
             } else {
@@ -513,6 +514,7 @@ public abstract class Mob extends Char {
 
             if ( visible ) {
 
+                Dungeon.visible[pos] = true;
                 sprite.cast( enemyPos, new Callback() {
                     @Override
                     public void call() { onRangedAttack( enemyPos ); }
@@ -541,7 +543,7 @@ public abstract class Mob extends Char {
         }
 
         sprite.idle();
-        next();
+//        next();
 
     }
 	
@@ -565,18 +567,35 @@ public abstract class Mob extends Char {
 	
 	@Override
 	public int defenseProc( Char enemy, int damage, boolean blocked ) {
-		if ( dexterity() == 0 && !counter && enemy instanceof Hero ) {
+		if ( dexterity() == 0 && enemy instanceof Hero ) {
 
             Hero hero = (Hero)enemy;
 
             Weapon weapon = hero.rangedWeapon != null ? hero.rangedWeapon : hero.currentWeapon;
 
-            if( weapon != null && weapon.canBackstab() ) {
-                damage += hero.damageRoll();
-                Wound.hit(this);
-            }
+            if( !counter ) {
 
-            damage = (int)(damage * hero.ringBuffs( RingOfShadows.Shadows.class ) );
+                if (weapon != null && weapon.canBackstab()) {
+                    damage += hero.damageRoll();
+                    Wound.hit(this);
+                }
+
+                damage = (int) (damage * hero.ringBuffs(RingOfShadows.Shadows.class));
+
+                if( sprite != null ) {
+                    sprite.showStatus(CharSprite.DEFAULT, TXT_AMBUSH);
+                }
+
+            } else {
+
+                damage += hero.damageRoll() / 2;
+                sprite.emitter().burst(Speck.factory(Speck.MASTERY), 6);
+
+                if( sprite != null ) {
+                    sprite.showStatus(CharSprite.DEFAULT, TXT_COUNTER);
+                }
+
+            }
         }
 		return damage;
 	}
@@ -623,20 +642,9 @@ public abstract class Mob extends Char {
 				Statistics.enemiesSlain++;
 				Badges.validateMonstersSlain();
 				Statistics.qualifiedForNoKilling = false;
-				
-//				if (Dungeon.nightMode) {
-//					Statistics.nightHunt++;
-//				} else {
-//					Statistics.nightHunt=0;
-//				}
-//				Badges.validateNightHunter();
-
-                if( !special ) {
-                    Dungeon.level.mobsKilled++;
-                }
 			}
 
-			if (Dungeon.hero.lvl <= maxLvl + Dungeon.hero.lvlBonus && EXP > 0) {
+            if ( EXP > 0 && Dungeon.hero.lvl <= maxLvl + Dungeon.hero.lvlBonus ) {
 
                 int exp = EXP;
 

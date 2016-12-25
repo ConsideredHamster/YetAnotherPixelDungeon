@@ -41,7 +41,8 @@ enum Preferences {
 	public static final String KEY_DONATED		= "donated";
 	public static final String KEY_INTRO		= "intro";
 	public static final String KEY_BRIGHTNESS	= "brightness";
-	public static final String KEY_LOADING_TIPS = "loading_tips";
+	public static final String KEY_LOADING_TIPS = "tips_delay";
+	public static final String KEY_LAST_VERSION = "last_version";
 
 	private SharedPreferences prefs;
 	

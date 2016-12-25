@@ -23,6 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.hero;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.ArmorerKit;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Battery;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.CraftingKit;
@@ -45,6 +46,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMendin
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMindVision;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfOvergrowth;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfThunderstorm;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfBanishment;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfChallenge;
@@ -58,11 +60,15 @@ import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfDisintegration;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfLightning;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfMagicMissile;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.Arbalest;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.Bow;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.Pistole;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.Sling;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Bullets;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Dagger;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Quarterstaff;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Shortsword;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Harpoons;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Knives;
 import com.consideredhamster.yetanotherpixeldungeon.ui.QuickSlot;
 import com.watabou.utils.Bundle;
@@ -128,11 +134,6 @@ public enum HeroClass {
             "",
             "- dexterity",
             "- stealth",
-//		"Warriors start with 11 points of Strength.",
-//		"Warriors start with a unique short sword. This sword can be later \"reforged\" to upgrade another melee weapon.",
-//		"Warriors are less proficient with missile weapons.",
-//		"Any piece of food restores some health when eaten.",
-//		"Potions of Strength are identified from the beginning.", // разве?
     };
 
     public static final String[] ROG_DETAILS = {
@@ -200,76 +201,14 @@ public enum HeroClass {
                 initHuntress( hero );
                 break;
 		}
-		
-//		if (Badges.isUnlocked( masteryBadge() )) {
-//			new TomeOfMastery().collect();
-//		}
-
-//		hero.updateAwareness();
 	}
 	
 	private static void initCommon( Hero hero ) {
 
 		new Keyring().collect();
-//		new PotionSash().collect();
-//		new ScrollHolder().collect();
-
-//        new ScrollOfPhaseWarp().quantity(33).identify().collect();
-//        new ScrollOfSunlight().quantity(3).identify().collect();
-//        new ScrollOfDarkness().quantity(3).identify().collect();
-//        new ScrollOfRaiseDead().quantity(3).identify().collect();
-//        new ScrollOfUpgrade().quantity(99).identify().collect();
-//        new ScrollOfIdentify().quantity(99).identify().collect();
-//        new ScrollOfBanishment().quantity(99).identify().collect();
-//        new ScrollOfChallenge().quantity(99).identify().collect();
-//
-//        new PotionOfMending().quantity(5).identify().collect();
-//        new PotionOfLiquidFlame().quantity(5).identify().collect();
-//        new PotionOfMindVision().quantity(4).identify().collect();
-//        new PotionOfFrigidVapours().quantity(4).identify().collect();
-//        new PotionOfInvisibility().quantity(3).identify().collect();
-//
-//        new PotionOfCorrosiveGas().quantity(3).identify().collect();
-//        new PotionOfThunderstorm().quantity(2).identify().collect();
-//        new PotionOfBlessing().quantity(2).identify().collect();
-//
-//
-//        new ScrollOfUpgrade().quantity(2).identify().collect();
-
-
-
-//        new Bow().identify().collect();
-//        new Arbalest().identify().collect();
-//        new Pistole().identify().collect();
-//        new Arquebuse().identify().collect();
-//        new Handcannon().identify().collect();
-//        new Harpoons().identify().collect();
-//        new Chakrams().identify().collect();
-//        new Boomerangs().identify().collect();
-
-//        new Explosives.Gunpowder().quantity(1000).collect();
-//
-
-//        hero.STR += 10;
-//        hero.strBonus += 10;
-
-//        hero.STR += 8;
-//        hero.strBonus += 8;
-
-//        hero.STR += 6;
-//        hero.strBonus += 6;
-
-//        hero.STR += 4;
-//        hero.strBonus += 4;
-
-//        Dungeon.hero.earnExp( 155 );
-//        Dungeon.hero.earnExp( 4050 );
-//        Dungeon.hero.earnExp( 6535 );
-
         new Food().collect();
-//        ((ScrollOfChallenge)(QuickSlot.quickslotValue_1 = new ScrollOfChallenge())).quantity(6).identify().collect();
-        ((Waterskin)(QuickSlot.quickslotValue_2 = new Waterskin())).setLimit( 5 ).fill().collect();
 
+        ((Waterskin)(QuickSlot.quickslotValue_3 = new Waterskin())).setLimit( 5 ).fill().collect();
 	}
 	
 	public Badges.Badge masteryBadge() {
@@ -314,15 +253,6 @@ public enum HeroClass {
         (hero.belongings.weap2 = new RoundShield()).identify().repair().fix();
         (hero.belongings.armor = new StuddedArmor()).identify().repair().fix();
 
-//        hero.HP = (hero.HT += hero.strBonus * 3);
-
-//        (hero.belongings.weap1 = new Greatsword()).upgrade( 3 ).identify().repair().fix();
-//        (hero.belongings.weap2 = new Harpoons()).quantity( 10 );
-//        (hero.belongings.armor = new ScaleArmor()).upgrade( 3 ).identify().repair().fix();
-//        (hero.belongings.ring1 = new RingOfProtection()).upgrade( 1 ).identify();
-//        (hero.belongings.ring2 = new RingOfVitality()).upgrade( 1 ).identify();
-
-//        new Food().collect();
         new ArmorerKit().collect();
 
     }
@@ -337,19 +267,8 @@ public enum HeroClass {
         (hero.belongings.armor = new RogueArmor()).identify().repair().fix();
         (hero.belongings.ring1 = new RingOfShadows()).identify();
 
-//        hero.HP = (hero.HT += hero.strBonus * 2);
-//
-//        (hero.belongings.weap1 = new Dagger()).upgrade(1).identify().repair().fix();
-//        (hero.belongings.weap2 = new Dagger()).upgrade(1).identify().repair().fix();
-//        (hero.belongings.armor = new StuddedArmor()).upgrade(1).identify().repair().fix();
-//        (hero.belongings.ring1 = new RingOfEvasion()).upgrade(1).identify();
-
-//
-//        new Pistole().upgrade(1).identify().repair().fix().collect();
-//        new Bullets().quantity(100).collect();
-//        new Explosives.Gunpowder().quantity(1000).collect();
-
         hero.belongings.ring1.activate( hero );
+
         new Whetstone().collect();
     }
 	
@@ -361,18 +280,6 @@ public enum HeroClass {
 		(hero.belongings.weap1 = new Quarterstaff()).identify().repair().fix();
 		(hero.belongings.weap2 = new WandOfMagicMissile()).identify().repair().fix();
         (hero.belongings.armor = new MageArmor()).identify().repair().fix();
-
-//        hero.HP = (hero.HT += hero.strBonus * 2);
-//
-//        (hero.belongings.weap1 = new Quarterstaff()).upgrade( 3 ).identify().repair().fix();
-//        (hero.belongings.weap2 = new WandOfMagicMissile()).upgrade( 3 ).identify().repair().fix();
-//        (hero.belongings.armor = new PlateArmor()).upgrade(3).identify().repair().fix();
-//        (hero.belongings.ring1 = new RingOfSorcery()).upgrade(3).identify();
-//        (hero.belongings.ring2 = new RingOfEnergy()).upgrade( 3 ).identify();
-
-//        new WandOfFirebolt().upgrade( 1 ).identify().repair().fix().collect();
-//        new WandOfDisintegration().upgrade( 1 ).identify().repair().fix().collect();
-//        new WandOfLightning().upgrade( 1 ).identify().repair().fix().collect();
 
         ((Wand)hero.belongings.weap2).recharge().charge(hero);
 
@@ -391,18 +298,6 @@ public enum HeroClass {
         (hero.belongings.weap1 = new Sling()).repair().identify().fix();
         (hero.belongings.weap2 = new Bullets()).quantity( 30 );
         (hero.belongings.armor = new HuntressArmor()).identify().repair().fix();
-
-//        hero.HP = (hero.HT += hero.strBonus);
-//
-//        (hero.belongings.weap1 = new Bow()).upgrade( 1 ).identify().repair().fix();
-//        (hero.belongings.weap2 = new Arrows()).quantity( 60 );
-//        (hero.belongings.armor = new StuddedArmor()).upgrade( 3 ).identify().repair().fix();
-//        (hero.belongings.ring1 = new RingOfAccuracy()).upgrade( 3 ).identify();
-//        (hero.belongings.ring2 = new RingOfPerception()).upgrade( 3 ).identify();
-////
-//        new Spear().upgrade( 1 ).identify().repair().fix().collect();
-//        new RoundShield().upgrade(1).identify().repair().fix().collect();
-//        new Ankh().quantity(20).collect();
 
         new PotionOfOvergrowth().identify().collect();
         new CraftingKit().collect();

@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
@@ -60,6 +61,8 @@ public class Explosion {
 
             if (Bestiary.isBoss(ch)) {
                 dmg /= 4;
+            } else if ( ch instanceof Hero) {
+                dmg /= 2;
             }
 
             if (dmg > 0) {

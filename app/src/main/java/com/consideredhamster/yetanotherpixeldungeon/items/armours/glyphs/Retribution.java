@@ -79,8 +79,8 @@ public class Retribution extends Armour.Glyph {
 
             int effValue = Math.min( Random.IntRange(damage / 4, damage / 3), attacker.HT - attacker.HP );
 
-            if( effValue > attacker.HP ) {
-                effValue = attacker.HP;
+            if( effValue > defender.HP ) {
+                effValue = defender.HP;
             }
 
             if ( effValue > 0 ) {

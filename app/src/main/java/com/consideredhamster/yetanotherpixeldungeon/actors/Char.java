@@ -89,6 +89,10 @@ public abstract class Char extends Actor {
 	protected static final String TXT_BLOCKED	= "blocked";
 	protected static final String TXT_PARRIED	= "parried";
 
+	protected static final String TXT_GUARD 	= "guard";
+	protected static final String TXT_AMBUSH	= "sneak attack!";
+	protected static final String TXT_COUNTER	= "counter attack!";
+
 //	private static final String TXT_YOU_MISSED	= "%s %s your attack";
 //	private static final String TXT_SMB_MISSED	= "%s %s %s's attack";
 
@@ -183,7 +187,7 @@ public abstract class Char extends Actor {
 
             int damageRoll = damageRoll();
 
-            if( guardEffectiveness == 0 || !guard( damageRoll, guardEffectiveness * 3 ) ) {
+            if( guardEffectiveness == 0 || !guard( damageRoll, guardEffectiveness * 2 ) ) {
 
                 // FIXME
                 int dr = damageType() == null && !ignoresAC() ? Random.NormalIntRange(0, enemy.armorClass()) : 0;
@@ -255,13 +259,6 @@ public abstract class Char extends Actor {
 
                 enemy.defenseProc(this, damageRoll, true);
 
-                if (visibleFight) {
-
-                    enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.guardedVerb() );
-                    Sample.INSTANCE.play(Assets.SND_HIT, 1, 1, 0.5f);
-
-                }
-
                 return true;
             }
 			
@@ -281,33 +278,38 @@ public abstract class Char extends Actor {
 	
 	public static boolean hit( Char attacker, Char defender, boolean ranged, boolean magic ) {
 
+        if( !Dungeon.level.fieldOfView[ defender.pos] )
+            return false;
+
         if( defender.isOpenedTo(attacker) )
             return true;
 
         if( defender.isCharmedBy(attacker) )
             return true;
 
-        int acuRoll = ( magic ? attacker.magicSkill() : attacker.accuracy() ) * 2;
+        int attRoll = ( magic ? attacker.magicSkill() : attacker.accuracy() ) * 2;
 
         if( ranged ) {
-            int distance = Math.min(8, Level.distance(attacker.pos, defender.pos));
 
-            acuRoll = acuRoll * (10 - distance) / 10;
-        }
+            int distance = Math.min( 9, Level.distance(attacker.pos, defender.pos) );
 
-        int geoEff = 2;
-
-        for (int n : Level.NEIGHBOURS8) {
-            if( Actor.findChar( defender.pos + n ) == null && !Level.solid[defender.pos + n] && (!Level.chasm[defender.pos + n] || defender.flying ) ) {
-                geoEff++;
+            if( distance > 1 ) {
+                attRoll = attRoll * (9 - distance);
             }
         }
 
-        int defRoll = defender.dexterity() * geoEff / 10;
+        int defRoll = defender.dexterity();
+        int impassable = 16;
 
-//        GLog.i( acuRoll + " vs " + defRoll + " = " + Math.round((float)acuRoll/(acuRoll + defRoll)*100) + "%" );
+        for (int n : Level.NEIGHBOURS8) {
+            if( Actor.findChar( defender.pos + n ) != null || Level.solid[defender.pos + n] || Level.chasm[defender.pos + n] && !defender.flying ) {
+                impassable--;
+            }
+        }
 
-		return acuRoll > Random.Int( acuRoll + defRoll );
+        defRoll = defRoll * impassable / 16;
+
+		return attRoll > Random.Int( attRoll + defRoll );
 	}
 
     public static int absorb( int damage, int armorClass ) {
@@ -345,10 +347,6 @@ public abstract class Char extends Actor {
 	public String defenseVerb() {
 		return dexterity() > 0 ? TXT_DODGED : TXT_MISSED ;
 	}
-
-    public String guardedVerb() {
-        return shieldAC() > 0 ? TXT_BLOCKED : TXT_PARRIED ;
-    }
 
     public int armourAC() {
         return 0;
@@ -401,18 +399,31 @@ public abstract class Char extends Actor {
 	
 	public int defenseProc( Char enemy, int damage, boolean blocked ) {
 
-        if( blocked && Level.adjacent( pos, enemy.pos ) && hit( this, enemy, false, false ) ) {
+        if( blocked ) {
 
-            guarded = false;
-            enemy.counter = true;
+            if( Level.adjacent( pos, enemy.pos ) && hit( this, enemy, false, false ) ) {
 
-//            Riposte buff = Buff.affect(enemy, Riposte.class, 1f );
-//
-//            if( buff != null ) {
-//                buff.object = this.id();
-//
-////                enemy.sprite.showStatus( CharSprite.DEFAULT, "riposte!" );
-//            }
+                enemy.counter = true;
+
+                if (sprite.visible) {
+
+                    sprite.showStatus( CharSprite.NEUTRAL, TXT_PARRIED );
+                    Sample.INSTANCE.play(Assets.SND_EVOKE, 0.5f, 0.75f, 0.75f);
+
+                    if( Dungeon.hero == this )
+                        Camera.main.shake( 1, 0.1f );
+                }
+
+            } else {
+
+                if (sprite.visible) {
+                    sprite.showStatus(CharSprite.NEUTRAL, TXT_BLOCKED);
+                    Sample.INSTANCE.play(Assets.SND_HIT, 1, 1, 0.5f);
+                }
+
+                if( Dungeon.hero == this )
+                    Camera.main.shake( 2, 0.1f );
+            }
         }
 
 		return damage;
@@ -584,7 +595,7 @@ public abstract class Char extends Actor {
     }
 
 	@Override
-	protected void spend( float time ) {
+	public void spend( float time ) {
 		
 		float timeScale = 1f;
 		if (buff( Slow.class ) != null) {

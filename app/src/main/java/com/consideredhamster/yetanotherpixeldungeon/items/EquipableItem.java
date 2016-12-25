@@ -20,6 +20,12 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmor;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.Shield;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
+import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.GameMath;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
@@ -29,6 +35,7 @@ import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowPart
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments.Ethereal;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
@@ -39,8 +46,11 @@ public abstract class EquipableItem extends Item {
     protected static final String TXT_ISEQUIPPED	= "%s is already equipped";
 
 	private static final String TXT_UNEQUIP_CURSED = "You fail to remove cursed %s.";
-	private static final String TXT_UNEQUIP_CURSED_FAIL = "You fail to remove cursed %s. Try again!";
-	private static final String TXT_UNEQUIP_CURSED_SUCCESS	= "You successfully unequip cursed %s!";
+	private static final String TXT_DETECT_CURSED = "You manage to notice that %s is cursed just before you equip it!";
+
+    protected static final String TXT_EQUIP_CURSED_HAND = "your grip involuntarily tightens around your %s";
+    protected static final String TXT_EQUIP_CURSED_BODY = "your %s constricts around you painfully";
+    protected static final String TXT_EQUIP_CURSED_RING = "your %s suddenly tightens around your finger";
 
 	public static final String AC_EQUIP		= "EQUIP";
 	public static final String AC_UNEQUIP	= "UNEQUIP";
@@ -66,13 +76,15 @@ public abstract class EquipableItem extends Item {
 
     public int penaltyBase(Hero hero, int str) {
 
-        return str - hero.STR();
+        int delta = str - hero.STR();
+
+        return delta < 0 ? delta : delta * 2;
 
     }
 
     public float penaltyFactor( Hero hero, boolean identified ) {
 
-        return 1.0f - 0.05f * GameMath.gate( 0, penaltyBase(hero, strShown( identified ) ) -
+        return 1.0f - 0.025f * GameMath.gate( 0, penaltyBase(hero, strShown( identified ) ) -
             ( this instanceof Weapon && ((Weapon)this).enchantment instanceof Ethereal ? bonus : 0 ), 20 );
 
     }
@@ -128,11 +140,57 @@ public abstract class EquipableItem extends Item {
 //        super.onThrow(cell);
 //    }
 
-	protected static void equipCursed( Hero hero ) {
-		hero.sprite.emitter().burst( ShadowParticle.CURSE, 6 );
-		Sample.INSTANCE.play( Assets.SND_CURSED );
-	}
-	
+    protected static boolean detectCursed( Item item, Hero hero ) {
+
+        float chance = 0.2f;
+
+        if( item instanceof Weapon ) {
+
+            chance -= item.bonus * ( ((Weapon)item).isEnchanted() ? 0.1f : 0.05f );
+
+        } else if( item instanceof Armour ) {
+
+            chance -= item.bonus * ( ((Armour)item).isInscribed() ? 0.1f : 0.05f );
+
+        } else if( item instanceof Wand ) {
+
+            chance -= item.bonus * 0.1f ;
+
+        } else if( item instanceof Ring ) {
+
+            chance -= item.bonus * 0.05f ;
+
+        }
+
+        if( Random.Float() < chance * hero.awareness() ) {
+
+            item.identify(CURSED_KNOWN);
+            GLog.w( TXT_DETECT_CURSED, item.name() );
+
+            Sample.INSTANCE.play( Assets.SND_CURSED, 0.8f, 0.8f, 0.8f );
+            Camera.main.shake( 1, 0.1f );
+
+            return true;
+
+        } else {
+
+            if( item instanceof BodyArmor ) {
+                GLog.n( TXT_EQUIP_CURSED_BODY, item.name() );
+            } else if( item instanceof Ring ) {
+                GLog.n( TXT_EQUIP_CURSED_RING, item.name() );
+            } else {
+                GLog.n( TXT_EQUIP_CURSED_HAND, item.name() );
+            }
+
+            hero.sprite.emitter().burst( ShadowParticle.CURSE, 6 );
+
+            Sample.INSTANCE.play( Assets.SND_CURSED );
+
+            return false;
+
+        }
+    }
+
 	protected float time2equip( Hero hero ) {
 		return 1.0f / speedFactor( hero );
 	}

@@ -23,7 +23,6 @@ package com.consideredhamster.yetanotherpixeldungeon.scenes;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -200,7 +199,7 @@ public class GameScene extends PixelScene {
 		
 		spells = new Group();
 		add( spells );
-		
+
 		statuses = new Group();
 		add(statuses);
 		
@@ -351,8 +350,10 @@ public class GameScene extends PixelScene {
 		}
 			
 		super.update();
-		
-		water.offset( 0, -5 * Game.elapsed );
+
+        if( water != null ) {
+            water.offset(0, -5 * Game.elapsed);
+        }
 		
 		Actor.process();
 		
@@ -574,7 +575,7 @@ public class GameScene extends PixelScene {
 
                         Level.set( mob.pos, Terrain.OPEN_DOOR );
 
-                        GameScene.updateMap( mob.pos );
+//                        GameScene.updateMap( mob.pos );
 
                         ScrollOfClairvoyance.discover( mob.pos );
 
@@ -584,9 +585,11 @@ public class GameScene extends PixelScene {
                         mob.noticed = true;
                     }
 
-                    updateMap(mob.pos);
+//                    updateMap(mob.pos);
                 }
 			}
+
+            updateMap(Dungeon.visible);
 		}
 	}
 	

@@ -27,13 +27,14 @@ A mobile roguelike RPG, based on the source code of Pixel Dungeon, by Watabou. M
 
 Yet Another Pixel Dungeon uses gradle and is most easily compiled/edited using Android Studio.
 
-Yet Another Pixel Dungeon is not yet available on Google Play, Amazon or F-Droid.
+You can download it on Google Play:
+https://play.google.com/store/apps/details?id=com.consideredhamster.yetanotherpixeldungeon
 
-Contact e-mail:
-consideredhamster@gmail.com
+Source code of original Pixel Dungeon:
+https://github.com/watabou/pixel-dungeon
 
 Reddit's page:
 https://www.reddit.com/user/ConsideredHamster/
 
-Source code of original Pixel Dungeon:
-https://github.com/watabou/pixel-dungeon
+Contact e-mail:
+consideredhamster@gmail.com

@@ -64,7 +64,7 @@ public abstract class Ring extends EquipableItem {
 		RingOfAccuracy.class,
 		RingOfEvasion.class,
 		RingOfSatiety.class,
-		RingOfHaste.class,
+		RingOfDurability.class,
 		RingOfFortune.class,
 		RingOfProtection.class,
 		RingOfSorcery.class
@@ -154,12 +154,19 @@ public abstract class Ring extends EquipableItem {
                         if( QuickSlot.quickslot2.value == Ring.this && equipped.bonus >= 0 )
                             QuickSlot.quickslot2.value = equipped ;
 
+                        if( QuickSlot.quickslot3.value == Ring.this && equipped.bonus >= 0 )
+                            QuickSlot.quickslot3.value = equipped ;
+
 						if (equipped.doUnequip( hero, true, false )) {
 
-							doEquip( hero );
+							if( !doEquip( hero ) ) {
+                                equipped.doEquip( hero );
+                            }
 
 						} else {
+
 							collect( hero.belongings.backpack );
+
 						}
 					}
 				} );
@@ -167,35 +174,45 @@ public abstract class Ring extends EquipableItem {
 			return false;
 			
 		} else {
-			
-			if (hero.belongings.ring1 == null) {
-				hero.belongings.ring1 = this;
-			} else {
-				hero.belongings.ring2 = this;
-			}
 
-            if( QuickSlot.quickslot1.value == Ring.this )
-                QuickSlot.quickslot1.value = null ;
+            if( ( bonus >= 0 || isCursedKnown() || !detectCursed( this, hero ) ) ) {
 
-            if( QuickSlot.quickslot2.value == Ring.this )
-                QuickSlot.quickslot2.value = null ;
-			
-			detach( hero.belongings.backpack );
+                if (hero.belongings.ring1 == null) {
+                    hero.belongings.ring1 = this;
+                } else {
+                    hero.belongings.ring2 = this;
+                }
 
-            GLog.i(TXT_EQUIP, name());
+                if (QuickSlot.quickslot1.value == Ring.this)
+                    QuickSlot.quickslot1.value = null;
 
-			activate(hero);
+                if (QuickSlot.quickslot2.value == Ring.this)
+                    QuickSlot.quickslot2.value = null;
 
-            identify(CURSED_KNOWN);
+                if (QuickSlot.quickslot3.value == Ring.this)
+                    QuickSlot.quickslot3.value = null;
 
-			if ( bonus < 0 ) {
-				equipCursed( hero );
-				GLog.n( "your " + this + " tightens around your finger painfully" );
-			}
-			
-			hero.spendAndNext( TIME_TO_EQUIP );
-			return true;
-			
+                detach(hero.belongings.backpack);
+
+                identify( CURSED_KNOWN );
+
+                GLog.i(TXT_EQUIP, name());
+
+                activate(hero);
+
+                hero.spendAndNext( TIME_TO_EQUIP );
+
+                return true;
+
+            } else {
+
+                collect( hero.belongings.backpack );
+
+                hero.spendAndNext( TIME_TO_EQUIP * 0.5f );
+
+                return false;
+
+            }
 		}
 	}
 
@@ -380,13 +397,9 @@ public abstract class Ring extends EquipableItem {
 
 		int price = 100;
 
-		if (bonus < 0 || !isIdentified()) {
-			price /= 2;
-		}
-
-        if (isIdentified()) {
+        if ( isIdentified() ) {
             price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
-        } else {
+        } else if( !isCursedKnown() || bonus < 0 ) {
             price /= 2;
         }
 

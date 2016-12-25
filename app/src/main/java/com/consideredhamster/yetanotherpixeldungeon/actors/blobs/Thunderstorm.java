@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
@@ -200,7 +201,10 @@ public class Thunderstorm extends Blob {
 
                 if( Bestiary.isBoss(ch) ) {
                     power = power / 4;
+                } else if ( ch instanceof Hero ) {
+                    power = power / 2;
                 }
+
 
                 ch.damage(n == 0 ? power : power / 2, blob, DamageType.SHOCK);
 

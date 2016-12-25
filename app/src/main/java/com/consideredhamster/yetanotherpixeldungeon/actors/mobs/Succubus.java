@@ -85,7 +85,7 @@ public class Succubus extends MobPrecise {
 
         if ( hit( this, enemy, true, true ) ) {
 
-            Charm buff = Buff.affect(enemy, Charm.class, Random.IntRange(5, 10) * 1f);
+            Charm buff = Buff.affect(enemy, Charm.class, (float)Random.IntRange( 3, 6 ));
 
             if( buff != null ) {
                 buff.object = this.id();
@@ -100,26 +100,6 @@ public class Succubus extends MobPrecise {
 
         return true;
     }
-
-//    protected boolean doAttack( Char enemy ) {
-//
-//        if (Level.adjacent(pos, enemy.pos)) {
-//
-//            return super.doAttack( enemy );
-//
-//        } else {
-//
-//            boolean visible = Level.fieldOfView[pos] || Level.fieldOfView[enemy.pos];
-//            if (visible) {
-//                sprite.cast( enemy.pos );
-//            } else {
-//                cast();
-//            }
-//
-//            return !visible;
-//        }
-//    }
-
 
     @Override
     public int attackProc( Char enemy, int damage ) {
@@ -148,7 +128,9 @@ public class Succubus extends MobPrecise {
 	
 	@Override
 	protected boolean getCloser( int target ) {
-		if (delay <= 0 && enemySeen && enemy != null && Level.fieldOfView[target] && Level.distance( pos, target ) > 1 && enemy.isCharmedBy( this ) ) {
+		if (delay <= 0 && enemySeen && enemy != null && Level.fieldOfView[target]
+            && Level.distance( pos, target ) > 1 && enemy.isCharmedBy( this )
+            && Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos ) {
 
 			blink( target );
 			spend( -2 / moveSpeed() );
@@ -164,7 +146,7 @@ public class Succubus extends MobPrecise {
 	
 	private void blink( int target ) {
 		
-		int cell = Ballistica.cast( pos, target, true, true );
+		int cell = Ballistica.cast( pos, target, false, true );
 		
 		if (Actor.findChar( cell ) != null && Ballistica.distance > 1) {
 			cell = Ballistica.trace[Ballistica.distance - 2];

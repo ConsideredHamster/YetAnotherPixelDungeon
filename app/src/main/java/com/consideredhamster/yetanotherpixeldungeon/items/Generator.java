@@ -192,7 +192,7 @@ public class Generator {
                 RingOfProtection.class,
                 RingOfFortune.class,
                 RingOfKnowledge.class,
-                RingOfHaste.class,
+                RingOfDurability.class,
                 RingOfSorcery.class,
         };
 
@@ -376,33 +376,56 @@ public class Generator {
 	public static Armour randomArmor() throws Exception {
 
         Category cat = Category.ARMOR;
+        int chapter = Dungeon.chapter();
 
         Armour a = (Armour)Random.element( cat.classes ).newInstance();
         a.random();
-        int delta = 0;
 
-        while ( ( Dungeon.depth - a.lootLevel() > delta ) || ( a.lootLevel() - Dungeon.depth > delta ) ) {
-            a = (Armour)Random.element( cat.classes ).newInstance();
-            a.random();
-            delta++;
+        int r = Random.Int( 20 );
+        int allowedDelta = (r < 1 ? 3 : r < 3 ? 2 : r < 6 ? 1 : 0);
+
+        if( chapter > 4 ) {
+            allowedDelta += chapter - 4;
         }
 
-        // FIXME
+        while ( ( chapter - a.lootChapter() > allowedDelta ) ||
+                ( a.lootChapter() - chapter > allowedDelta ) )
+        {
+            a = (Armour)Random.element( cat.classes ).newInstance();
+            a.random();
+        }
 
-        if ( a.bonus < 0 && Random.Int( 2 ) == 0 ) {
+        int relativeStrength = Math.max( -3, Math.min( 3, a.lootChapter() - chapter ) );
 
-            a.bonus++;
+        a.randomize_state( Math.max( 0, 0 - relativeStrength ), Math.min( 3, 3 - relativeStrength )  );
 
-            if ( a.bonus < 0 && Random.Int( 2 ) == 0 ) {
+        int chanceToUpgraded = relativeStrength <= 0 ? ( -relativeStrength + 2 ) * ( -relativeStrength + 1 ) / 2 : 0 ;
+        int chanceToBeCursed = relativeStrength >= 0 ? ( relativeStrength + 2 ) * ( relativeStrength + 1 ) / 2 : 0 ;
 
-                a.bonus++;
+        r = Random.Int( 10 );
 
-                if ( a.bonus < 0 && Random.Int( 2 ) == 0 ) {
+        if( r > 9 - chanceToUpgraded ) {
 
-                    a.bonus++;
+            int upgradeValue = Random.IntRange( 1, 1 - relativeStrength );
 
-                }
+            if( upgradeValue > Random.Int( 4 ) ) {
+                a.inscribe();
+                upgradeValue--;
             }
+
+            a.upgrade( upgradeValue );
+
+        } else if( r < chanceToBeCursed  ) {
+
+            int degradeValue = Random.IntRange( 1, 1 + relativeStrength );
+
+            if( degradeValue > Random.Int( 3 ) + 1 ) {
+                a.inscribe();
+                degradeValue--;
+            }
+
+            a.curse( degradeValue );
+
         }
 
         return a;
@@ -412,33 +435,55 @@ public class Generator {
 	public static Weapon randomWeapon() throws Exception {
 		
 		Category cat = Category.WEAPON;
+        int chapter = Dungeon.chapter();
 
         Weapon w = (Weapon)Random.element( cat.classes ).newInstance();
         w.random();
-        int delta = 0;
+        int r = Random.Int( 20 );
+        int allowedDelta = (r < 1 ? 3 : r < 3 ? 2 : r < 6 ? 1 : 0);
 
-        while ( ( Dungeon.depth - w.lootLevel() > delta ) || ( w.lootLevel() - Dungeon.depth > delta ) ) {
-            w = (Weapon)Random.element( cat.classes ).newInstance();
-            w.random();
-            delta++;
+        if( chapter > 4 ) {
+            allowedDelta += chapter - 4;
         }
 
-        // FIXME
+        while ( ( chapter - w.lootChapter() > allowedDelta ) ||
+                ( w.lootChapter() - chapter > allowedDelta ) )
+        {
+            w = (Weapon) Random.element( cat.classes ).newInstance();
+            w.random();
+        }
 
-        if ( w.bonus < 0 && Random.Int( 2 ) == 0 ) {
+        int relativeStrength = Math.max( -3, Math.min( 3, w.lootChapter() - chapter ) );
 
-            w.bonus++;
+        w.randomize_state( Math.max( 0, 0 - relativeStrength ), Math.min( 3, 3 - relativeStrength )  );
 
-            if ( w.bonus < 0 && Random.Int( 2 ) == 0 ) {
+        int chanceToUpgraded = relativeStrength <= 0 ? ( -relativeStrength + 2 ) * ( -relativeStrength + 1 ) / 2 : 0 ;
+        int chanceToBeCursed = relativeStrength >= 0 ? ( relativeStrength + 2 ) * ( relativeStrength + 1 ) / 2 : 0 ;
 
-                w.bonus++;
+        r = Random.Int( 10 );
 
-                if ( w.bonus < 0 && Random.Int( 2 ) == 0 ) {
+        if( r > 9 - chanceToUpgraded ) {
 
-                    w.bonus++;
+            int upgradeValue = Random.IntRange( 1, 1 - relativeStrength );
 
-                }
+            if( upgradeValue > Random.Int( 4 ) ) {
+                w.enchant();
+                upgradeValue--;
             }
+
+            w.upgrade( upgradeValue );
+
+        } else if( r < chanceToBeCursed  ) {
+
+            int degradeValue = Random.IntRange( 1, 1 + relativeStrength );
+
+            if( degradeValue > Random.Int( 3 ) + 1 ) {
+                w.enchant();
+                degradeValue--;
+            }
+
+            w.curse( degradeValue );
+
         }
 
         return w;
@@ -447,15 +492,21 @@ public class Generator {
     public static Weapon randomThrowing() throws Exception {
 
         Category cat = Category.THROWING;
+        int chapter = Dungeon.chapter();
 
         Weapon w = (Weapon)Random.element( cat.classes ).newInstance();
         w.random();
-        int delta = 0;
 
-        while ( ( Dungeon.depth - w.lootLevel() > delta ) || ( w.lootLevel() - Dungeon.depth > delta ) ) {
+        int r = Random.Int( 20 );
+        int allowedDelta = (r < 1 ? 3 : r < 3 ? 2 : r < 6 ? 1 : 0);
+
+        if( chapter > 4 ) {
+            allowedDelta += chapter - 4;
+        }
+
+        while ( ( chapter - w.lootChapter() > allowedDelta ) || ( w.lootChapter() - chapter > allowedDelta ) ) {
             w = (Weapon)Random.element( cat.classes ).newInstance();
             w.random();
-            delta++;
         }
 
         return w;

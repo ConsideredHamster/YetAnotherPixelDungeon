@@ -41,6 +41,7 @@ import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.DM300Sprite;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.watabou.noosa.Camera;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -83,6 +84,8 @@ public class DM300 extends MobHealthy {
             BoulderTrap.boulders( step + Level.NEIGHBOURS8[ Random.Int( Level.NEIGHBOURS8.length ) ], damageRoll() / 2 );
 
             BoulderTrap.boulders( step + Level.NEIGHBOURS12[ Random.Int( Level.NEIGHBOURS12.length ) ], damageRoll() / 3 );
+
+            Camera.main.shake( 2, 0.1f );
 
         } else if (Dungeon.level.map[step] == Terrain.INACTIVE_TRAP && HP < HT) {
 			

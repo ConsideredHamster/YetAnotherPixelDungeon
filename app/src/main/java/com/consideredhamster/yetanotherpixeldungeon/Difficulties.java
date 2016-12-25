@@ -43,17 +43,17 @@ public class Difficulties {
 
             "- Enemies deal normal damage\n" +
             "- Mob's health is randomized\n" +
-            "- Bosses have 100% health\n" +
-            "- Allows unlocking new classes!",
+            "- Bosses have 100% health\n"+
+            "- Unlocks Hardcore difficulty!\n",
 
             "- Enemies deal more damage\n" +
             "- Mob's health is maximized\n" +
             "- Bosses have 120% health\n"+
-            "- Complete the game on Normal difficulty to unlock!",
+            "- Unlocks Impossible difficulty!\n",
 
             "- All Hardcore features apply\n" +
             "- Mobs spawn twice as often\n" +
-            "- Bosses have 150% health\n" +
-            "- Complete the game on Hardcore difficulty to unlock!",
+            "- Bosses have 150% health\n"+
+            "- Are you really sure?\n",
     };
 }

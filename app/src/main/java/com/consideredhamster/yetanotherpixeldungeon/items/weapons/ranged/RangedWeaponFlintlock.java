@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.HeroSprite;
 import com.consideredhamster.yetanotherpixeldungeon.ui.AttackIndicator;
 import com.watabou.noosa.Camera;
@@ -96,7 +97,7 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
     @Override
     public int penaltyBase(Hero hero, int str) {
-        return super.penaltyBase(hero, str) + tier * 2 + 2;
+        return super.penaltyBase(hero, str) + tier * 4 + 4;
     }
 
     @Override
@@ -106,7 +107,7 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
     @Override
     public float breakingRateWhenShot() {
-        return 0.2f;
+        return 0.2f / Dungeon.hero.ringBuffs( RingOfDurability.Durability.class );
     }
 
     @Override

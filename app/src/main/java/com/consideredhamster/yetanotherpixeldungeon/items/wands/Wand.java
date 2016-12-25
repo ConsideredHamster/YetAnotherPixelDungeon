@@ -160,8 +160,6 @@ public abstract class Wand extends EquipableItem {
         wood	= handler.label( this );
     }
 
-    private static final String TXT_EQUIP_CURSED	= "you wince as your grip involuntarily tightens around your %s";
-
     @Override
     public boolean doEquip( Hero hero ) {
 
@@ -173,7 +171,11 @@ public abstract class Wand extends EquipableItem {
         if( QuickSlot.quickslot2.value == this && ( hero.belongings.weap2 == null || hero.belongings.weap2.bonus >= 0 ) )
             QuickSlot.quickslot2.value = hero.belongings.weap2 != null && hero.belongings.weap2.stackable ? hero.belongings.weap2.getClass() : hero.belongings.weap2 ;
 
-        if (hero.belongings.weap2 == null || hero.belongings.weap2.doUnequip( hero, true, false )) {
+        if( QuickSlot.quickslot3.value == this && ( hero.belongings.weap2 == null || hero.belongings.weap2.bonus >= 0 ) )
+            QuickSlot.quickslot3.value = hero.belongings.weap2 != null && hero.belongings.weap2.stackable ? hero.belongings.weap2.getClass() : hero.belongings.weap2 ;
+
+        if ( ( hero.belongings.weap2 == null || hero.belongings.weap2.doUnequip( hero, true, false ) ) &&
+                ( bonus >= 0 || isCursedKnown() || !detectCursed( this, hero ) ) ) {
 
             hero.belongings.weap2 = this;
             activate(hero);
@@ -181,11 +183,6 @@ public abstract class Wand extends EquipableItem {
             GLog.i(TXT_EQUIP, name());
 
             identify( CURSED_KNOWN );
-
-            if (bonus < 0) {
-                equipCursed( hero );
-                GLog.n( TXT_EQUIP_CURSED, toString() );
-            }
 
             QuickSlot.refresh();
 
@@ -584,9 +581,9 @@ public abstract class Wand extends EquipableItem {
 
         int price = 30 + state * 15;
 
-        if (isIdentified()) {
+        if ( isIdentified() ) {
             price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
-        } else {
+        } else if( !isCursedKnown() || bonus < 0 ) {
             price /= 2;
         }
 

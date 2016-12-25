@@ -62,7 +62,7 @@ public class StoragePainter extends Painter {
 			do {
 				pos = room.random();
 			} while (level.map[pos] != Terrain.EMPTY);
-			level.drop( prize( level ), pos, true );
+			level.drop( prize( level ), pos, true ).type = Heap.Type.BONES;
 		}
 
         int pos;
@@ -70,7 +70,7 @@ public class StoragePainter extends Painter {
             pos = room.random();
         } while (level.map[pos] != floor);
         level.drop( prize( level ), pos, true ).type = Heap.Type.CHEST;
-		
+
 		room.entrance().set( Room.Door.Type.REGULAR );
 		level.addItemToSpawn( new PotionOfLiquidFlame() );
 	}

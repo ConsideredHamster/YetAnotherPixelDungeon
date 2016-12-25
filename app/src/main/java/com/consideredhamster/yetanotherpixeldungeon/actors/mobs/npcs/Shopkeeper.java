@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Journal;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -83,6 +84,12 @@ public class Shopkeeper extends NPC {
 	
 	@Override
 	protected boolean act() {
+
+        if( noticed ) {
+
+            noticed = false;
+
+        }
 
         if (!seenBefore && Dungeon.visible[pos]) {
             Journal.add( Journal.Feature.SHOP );

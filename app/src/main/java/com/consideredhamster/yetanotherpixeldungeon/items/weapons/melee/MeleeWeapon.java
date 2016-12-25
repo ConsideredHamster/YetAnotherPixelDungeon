@@ -122,7 +122,7 @@ public abstract class MeleeWeapon extends Weapon {
     @Override
     public int penaltyBase(Hero hero, int str) {
 
-        return super.penaltyBase(hero, str) + tier * 2;
+        return super.penaltyBase(hero, str) + tier * 4;
 
     }
 
@@ -133,13 +133,13 @@ public abstract class MeleeWeapon extends Weapon {
 
         price *= lootChapter();
 
-        if (isIdentified()) {
+        if ( isIdentified() ) {
             price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
-        } else {
+        } else if( !isCursedKnown() || bonus < 0 ) {
             price /= 2;
         }
 
-        if( enchantment != null ) {
+        if( enchantment != null && isEnchantKnown() ) {
             price += price / 4;
         }
 
@@ -171,20 +171,19 @@ public abstract class MeleeWeapon extends Weapon {
         return known >= CURSED_KNOWN;
     }
 
-	@Override
-	public Item random() {
-//		super.random();
-
-        bonus = Random.NormalIntRange( -3, +3 );
-
-		if (Random.Int( 7 + bonus ) == 0) {
-			enchant();
-		}
-
-        randomize_state();
-		
-		return this;
-	}
+//	@Override
+//	public Item random() {
+//
+//        bonus = Random.NormalIntRange( -3, +3 );
+//
+//		if (Random.Int( 7 + bonus ) == 0) {
+//			enchant();
+//		}
+//
+//        randomize_state();
+//
+//		return this;
+//	}
 
 
 }

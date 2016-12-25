@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
@@ -386,6 +388,9 @@ public class Item implements Bundlable {
     }
 
 	public void use( int amount, boolean notify ) {
+
+
+
 		if (state > 0 && !( bonus >= 0 && (
             this instanceof Weapon && ((Weapon)this).enchantment instanceof Tempered && Weapon.Enchantment.procced(bonus) ||
             this instanceof Armour && ((Armour)this).glyph instanceof Durability && Armour.Glyph.procced(bonus) ) ) ) {
@@ -393,7 +398,22 @@ public class Item implements Bundlable {
 			int threshold = maxDurability() / 5;
 
             for (int i=0; i < amount; i++) {
-                if ( durability >= 0 && Random.Int( 10 ) > 4 + bonus ) {
+
+                float chanceToDecrease = 0.5f - bonus * 0.1f;
+
+                if( notify ) {
+
+                    float modifier = Dungeon.hero.ringBuffs( RingOfDurability.Durability.class );
+
+                    if ( modifier > 1.0f ) {
+                        chanceToDecrease /= modifier;
+                    } else if ( modifier < 1.0f ) {
+                        chanceToDecrease += (1.0f - chanceToDecrease) * ( 1.0f + modifier );
+                    }
+                }
+
+                if ( durability >= 0 && Random.Float() < chanceToDecrease ) {
+
                     durability --;
 
                     if( durability == threshold && notify ) {
@@ -446,9 +466,14 @@ public class Item implements Bundlable {
 	}
 
 	public void randomize_state() {
-		state = Random.NormalIntRange( 0, 3 );
+		state = Random.IntRange( 0, 3 );
         durability = maxDurability();
 	}
+
+    public void randomize_state( int min, int max ) {
+        state = Random.IntRange( Math.max( 0, min ), Math.min( 3, max ) );
+        durability = maxDurability();
+    }
 
     protected String stateToString( int state ) {
         switch(state) {
@@ -618,13 +643,17 @@ public class Item implements Bundlable {
 			Class<? extends Item> cl = getClass();
 			if (QuickSlot.quickslot0 != null && QuickSlot.quickslot0.value == cl ||
                 QuickSlot.quickslot1 != null && QuickSlot.quickslot1.value == cl ||
-                QuickSlot.quickslot2 != null && QuickSlot.quickslot2.value == cl) {
+                QuickSlot.quickslot2 != null && QuickSlot.quickslot2.value == cl ||
+                QuickSlot.quickslot3 != null && QuickSlot.quickslot3.value == cl
+            ) {
 				QuickSlot.refresh();
 			}
 		} else if (
-                QuickSlot.quickslot0 != null && QuickSlot.quickslot0.value == this ||
-                QuickSlot.quickslot1 != null && QuickSlot.quickslot1.value == this ||
-                QuickSlot.quickslot2 != null && QuickSlot.quickslot2.value == this) {
+            QuickSlot.quickslot0 != null && QuickSlot.quickslot0.value == this ||
+            QuickSlot.quickslot1 != null && QuickSlot.quickslot1.value == this ||
+            QuickSlot.quickslot2 != null && QuickSlot.quickslot2.value == this ||
+            QuickSlot.quickslot3 != null && QuickSlot.quickslot3.value == this
+        ) {
 			QuickSlot.refresh();
 		}
 	}

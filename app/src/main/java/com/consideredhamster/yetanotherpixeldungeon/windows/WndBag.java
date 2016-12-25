@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.windows;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.EquipableItem;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmorCloth;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.ClothArmor;
 import com.watabou.gltextures.SmartTexture;
@@ -67,7 +68,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class WndBag extends WndTabbed {
-	
+
+
+    private static final String TXT_SELECT_TITLE = "Select quickslot";
+    private static final String TXT_SELECT_CANCEL = "Nevermind";
+    private static final String TXT_SELECT_MESSAGE =
+            "Which quickslot do you want to set for this item?";
+
 	public static enum Mode {
 		ALL,
 		UNIDENTIFED,
@@ -451,17 +458,26 @@ public class WndBag extends WndTabbed {
 
 				bg.texture( TextureCache.createSolid( item.isEquipped( Dungeon.hero ) ? EQUIPPED : NORMAL ) );
 
+                // FIXME
+
                 if (item instanceof Bag) {
                     bg.ra = +0.2f;
                     bg.ga = +0.2f;
                     bg.ba = +0.2f;
-                } else if (item.bonus < 0 && item.isCursedKnown()) {
-                    bg.ra = +0.2f;
-                    bg.ga = -0.1f;
-                } else if (!item.isIdentified()) {
-					bg.ra = 0.1f;
-					bg.ba = 0.1f;
-				}
+                } else if ( !item.isCursedKnown() || !(item instanceof EquipableItem) && !item.isIdentified() ) {
+                    bg.ra = +0.15f;
+                    bg.ba = +0.15f;
+                } else if ( !item.isIdentified() || item.bonus < 0) {
+
+                    if( item.bonus < 0 ) {
+                        bg.ra = +0.2f;
+                        bg.ga = -0.1f;
+                    } else {
+                        bg.ba = +0.2f;
+                        bg.ra = +0.05f;
+//                        bg.ga = -0.1f;
+                    }
+                }
 				
 				if ( item.maxDurability() > 0 ) {
 
@@ -486,7 +502,7 @@ public class WndBag extends WndTabbed {
 					enable( 
 						mode == Mode.QUICKSLOT && (item.quickAction() != null) ||
 						mode == Mode.OFFHAND && (item instanceof MeleeWeaponLightOH || item instanceof ThrowingWeapon || item instanceof Shield || item instanceof Wand) ||
-						mode == Mode.FOR_SALE && (item.price() > 0) && (!item.isEquipped( Dungeon.hero ) || item.bonus >= 0) ||
+						mode == Mode.FOR_SALE && (item.visible && item.price() > 0) && (!item.isEquipped( Dungeon.hero ) || item.bonus >= 0) ||
 						mode == Mode.UPGRADEABLE && ( item.isUpgradeable() && ( !item.isIdentified() || item.bonus < 3 ) || item.isRepairable() && item.state < 3 ) ||
 						mode == Mode.REPAIRABLE && item.isRepairable() && item.state < 3 ||
 						mode == Mode.UNIDENTIFED && !item.isIdentified() ||
@@ -496,7 +512,8 @@ public class WndBag extends WndTabbed {
 						mode == Mode.ARMORERS_KIT && (item instanceof Armour && !(item instanceof BodyArmorCloth) && item.state < 3) ||
 						mode == Mode.ARCANE_BATTERY && (item instanceof Wand && item.state < 3) ||
 						mode == Mode.ENCHANTABLE && (item instanceof MeleeWeapon || item instanceof RangedWeapon || item instanceof Armour) ||
-						mode == Mode.TRANSMUTABLE && (item instanceof MeleeWeapon || item instanceof BodyArmor || item instanceof Wand || item instanceof Ring) ||
+						mode == Mode.TRANSMUTABLE && ( item.bonus >= 0 || !item.isCursedKnown() ) && (item instanceof MeleeWeapon ||
+                            item instanceof RangedWeapon || item instanceof BodyArmor || item instanceof Wand || item instanceof Ring) ||
 						mode == Mode.WAND && (item instanceof Wand) ||
 						mode == Mode.HERB && (item instanceof Herb) ||
 						mode == Mode.ALL
@@ -534,8 +551,50 @@ public class WndBag extends WndTabbed {
 		@Override
 		protected boolean onLongClick() {
 			if (listener == null && item.quickAction() != null) {
-				hide();
-				QuickSlot.quickslot1.value = item.stackable ? item.getClass() : item;
+
+                if( QuickSlot.quickslot1.select() == null ) {
+                    QuickSlot.quickslot1.value = item.stackable ? item.getClass() : item;
+                    hide();
+                } else if( QuickSlot.quickslot2.select() == null ) {
+                    QuickSlot.quickslot2.value = item.stackable ? item.getClass() : item;
+                    hide();
+                } else if( QuickSlot.quickslot3.select() == null ) {
+                    QuickSlot.quickslot3.value = item.stackable ? item.getClass() : item;
+                    hide();
+                } else {
+                    YetAnotherPixelDungeon.scene().add(
+                        new WndOptions( TXT_SELECT_TITLE, TXT_SELECT_MESSAGE,
+                                Utils.capitalize( QuickSlot.quickslot1.value instanceof Item ? QuickSlot.quickslot1.value.toString() :
+                                        Item.virtual( (Class<? extends Item>)QuickSlot.quickslot1.value).toString() ),
+                                Utils.capitalize( QuickSlot.quickslot2.value instanceof Item ? QuickSlot.quickslot2.value.toString() :
+                                        Item.virtual( (Class<? extends Item>)QuickSlot.quickslot2.value).toString() ),
+                                Utils.capitalize( QuickSlot.quickslot3.value instanceof Item ? QuickSlot.quickslot3.value.toString() :
+                                        Item.virtual( (Class<? extends Item>)QuickSlot.quickslot3.value).toString() ),
+                                TXT_SELECT_CANCEL
+                        ) {
+
+                            @Override
+                            protected void onSelect(int index) {
+
+                                switch (index) {
+                                    case 0:
+                                        QuickSlot.quickslot1.value = null;
+                                        break;
+                                    case 1:
+                                        QuickSlot.quickslot2.value = null;
+                                        break;
+                                    case 2:
+                                        QuickSlot.quickslot3.value = null;
+                                        break;
+                                }
+
+                                onLongClick();
+                            }
+                        }
+                    );
+                }
+
+
 				QuickSlot.refresh();
 				return true;
 			} else {

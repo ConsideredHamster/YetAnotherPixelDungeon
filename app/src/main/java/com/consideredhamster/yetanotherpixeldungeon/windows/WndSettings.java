@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.windows;
 
+import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
@@ -43,9 +44,13 @@ public class WndSettings extends Window {
 	private static final String TXT_SOUND	        = "Sound FX";
 	
 	private static final String TXT_BRIGHTNESS	    = "Brightness";
-	private static final String TXT_LOADING_TIPS    = "Loading tips";
-
-	private static final String TXT_QUICKSLOT   	= "Second quickslot";
+	private static final String TXT_LOADING_TIPS  = "Loading tips: %s";
+	private static final String[] TXT_TIPS_DELAY  = {
+            "Disabled",
+            "Normal delay",
+            "Doubled delay",
+            "Until tapped",
+    };
 
 	private static final String TXT_SWITCH_PORT 	= "Switch to portrait";
     private static final String TXT_SWITCH_LAND 	= "Switch to landscape";
@@ -148,21 +153,6 @@ public class WndSettings extends Window {
 		btnSound.setRect( 0, btnMusic.bottom() + GAP, WIDTH, BTN_HEIGHT );
 		btnSound.checked( YetAnotherPixelDungeon.soundFx() );
 		add( btnSound );
-		
-//		if (inGame) {
-			
-
-
-        CheckBox btnDelayTips = new CheckBox(TXT_LOADING_TIPS) {
-            @Override
-            protected void onClick() {
-                super.onClick();
-                YetAnotherPixelDungeon.loadingTips(checked());
-            }
-        };
-        btnDelayTips.setRect(0, btnSound.bottom() + GAP, WIDTH, BTN_HEIGHT);
-        btnDelayTips.checked(YetAnotherPixelDungeon.loadingTips());
-        add(btnDelayTips);
 
         btnImmersive = new CheckBox( TXT_IMMERSIVE ) {
             @Override
@@ -171,12 +161,29 @@ public class WndSettings extends Window {
                 YetAnotherPixelDungeon.immerse(checked());
             }
         };
-        btnImmersive.setRect( 0, btnDelayTips.bottom() + GAP, WIDTH, BTN_HEIGHT );
+        btnImmersive.setRect( 0, btnSound.bottom() + GAP, WIDTH, BTN_HEIGHT );
         btnImmersive.checked(YetAnotherPixelDungeon.immersed());
         btnImmersive.enable(android.os.Build.VERSION.SDK_INT >= 19);
         add(btnImmersive);
 
-        resize(WIDTH, (int) btnImmersive.bottom());
+        RedButton btnTipsDelay = new RedButton( loadingTipsText( YetAnotherPixelDungeon.loadingTips() ) ) {
+            @Override
+            protected void onClick() {
+
+                int val = YetAnotherPixelDungeon.loadingTips();
+
+                val = val < 3 ? val + 1 : 0;
+                YetAnotherPixelDungeon.loadingTips( val );
+
+                text.text( loadingTipsText( val ) );
+                text.measure();
+                layout();
+            }
+        };
+        btnTipsDelay.setRect(0, btnImmersive.bottom() + GAP, WIDTH, BTN_HEIGHT);
+        add(btnTipsDelay);
+
+        resize(WIDTH, (int) btnTipsDelay.bottom());
 
 //			CheckBox btnQuickslot = new CheckBox( TXT_QUICKSLOT ) {
 //				@Override
@@ -190,12 +197,7 @@ public class WndSettings extends Window {
 //			add( btnQuickslot );
 
 //			resize( WIDTH, (int)btnQuickslot.bottom() );
-			
-//		} else {
-			
 
-			
-//		}
 	}
 	
 	private void zoom( float value ) {
@@ -215,4 +217,8 @@ public class WndSettings extends Window {
 	private String orientationText() {
 		return YetAnotherPixelDungeon.landscape() ? TXT_SWITCH_PORT : TXT_SWITCH_LAND;
 	}
+
+    private String loadingTipsText( int val ) {
+        return Utils.format( TXT_LOADING_TIPS, TXT_TIPS_DELAY[ val ] );
+    }
 }

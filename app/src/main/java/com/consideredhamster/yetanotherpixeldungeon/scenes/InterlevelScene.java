@@ -20,14 +20,19 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.scenes;
 
+import android.content.Intent;
+import android.net.Uri;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.watabou.input.Touchscreen;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.BitmapTextMultiline;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.TouchArea;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
@@ -52,7 +57,8 @@ public class InterlevelScene extends PixelScene {
 	private static final String TXT_RESURRECTING= "Resurrecting...";
 	private static final String TXT_RETURNING	= "Returning...";
 	private static final String TXT_FALLING		= "Falling...";
-	
+	private static final String TXT_CONTINUE	= "Tap to continue!";
+
 	private static final String ERR_FILE_NOT_FOUND	= "File not found. For some reason.";
 	private static final String ERR_GENERIC			= "Something went wrong..."	;	
 	
@@ -75,19 +81,26 @@ public class InterlevelScene extends PixelScene {
             "There is a shop on every fifth level of the dungeon, you can spend your gold there",
             "There are only 3 ankhs in the dungeon but there is a low chance to find more",
 
+            "Trapped and flooded vaults are less likely to have cursed item in them",
+            "Special rooms with tombs or statues will never have their prize to be cursed",
+
             "Detection determines the time it takes to search for traps and secret doors",
             "Detection affects your chances to notice a trap or a secret door by walking near it",
             "Detection affects your chances to hear nearby enemies through walls and doors",
             "Your chance to wake up when there is a someone nearby depends on your Detection",
+            "Your chance to detect cursed item when equipping it depends on your Detection",
 
             "Stealth determines your chances of being noticed by enemies",
-            "Stealth affects your chances to ambush an enemy to deal surprise hit",
+            "Stealth affects your chances to ambush an enemy to deal a sneak attack",
 
             "Magic power affects recharge rate of all of your wands",
             "Magic power affects effectiveness of some of the scrolls",
 
-            "Your wand skill affects your accuracy with most combat wands",
+            "Your wand skill affects your accuracy with combat wands",
             "Your wand skill improves damage of your wand of Magic Missile",
+
+            "Your chance to parry an attack instead of blocking it depends on your Accuracy",
+            "Parries leave your enemies open to cunter attacks which deal 50% bonus damage",
 
             "High Strength increases your chances to break free when being ensnared",
             "Your health regeneration rate grows with levels and potions of Strength used",
@@ -112,8 +125,8 @@ public class InterlevelScene extends PixelScene {
             "Using an armor or shield which is too heavy for you decreases your movement speed",
             "Stronger shields and body armors usually decrease your dexterity and stealth",
 
-            "Your chance to block or parry an attack depends on armor class of your shield and damage of your weapon",
-            "Your chance to counterattack equals to your chance to hit the target",
+            "Your chance to block an attack depends on armor class of your shield and damage of your weapon",
+            "Successful block can become a parry, depending on your chance to hit the target",
 
             "Excessive strength decreases penalties from heavy equipment",
             "Stronger flintlock weapons spend more gunpowder on reload",
@@ -156,7 +169,7 @@ public class InterlevelScene extends PixelScene {
             "Potion of Mending also cures most physical debuffs such as poison or bleeding",
 
             "Potions of Mind Vision allow you to ignore most of disadvantages of being blind",
-            "Potions of Mind Vision can be very powerful when used under right circumstances",
+            "Potions of Mind Vision allow you to detect hidden mimics if they are out of line of sight",
 
             "Potion of Levitation gives you a bonus to your movement speed",
             "Potion of Levitation can be used to descend safely when jumping into a chasm",
@@ -165,7 +178,7 @@ public class InterlevelScene extends PixelScene {
             "Enemies can dispel effect of potion of Invisibility if they stumble into you",
 
             "Drinking a potion of Blessing increases your armor class by 20% of your max health",
-            "Potion of Blessing can be thrown on adjacent tile to completely uncurse equipped items",
+            "Throw a potion of Blessing on adjacent tile to weaken curses on items in your inventory",
 
             "Potions of Liquid Flame never spread on nearby water tiles",
             "Potions of Liquid Flame always affect nearby flammable tiles",
@@ -185,7 +198,7 @@ public class InterlevelScene extends PixelScene {
             // SCROLLS
 
             "There is only 1 scroll of Enchantment per chapter but there is a low chance to find more",
-            "Using a scroll of Enchantment on a cursed item will remove all enchantments on it",
+            "Using a scroll of Enchantment on a cursed item will significantly weaken its curse",
 
             "There are only 2 scrolls of Upgrade per chapter but there is a low chance to find more",
             "Uncursing an enchanted item with scroll of Upgrade allows you to keep the enchantment",
@@ -226,7 +239,7 @@ public class InterlevelScene extends PixelScene {
             "Some kinds of monsters can drop a raw meat or even a small ration",
 
             "Full stomach allows you to recover from wounds faster than normal",
-            "Eating raw meat can poison you - better cook it one way or another",
+            "Eating raw meat can poison you - better cook it by burning or freezing it",
 
             "Chargrilled meat doesn't have any additional advantages besides being edible",
             "Frozen carpaccio is so tasty it recovers some of your health when eaten",
@@ -240,7 +253,7 @@ public class InterlevelScene extends PixelScene {
             "Bosses are less vulnerable to damage which is based on target's maximum health",
 
             "Mind that miasma released by Goo is highly flammable",
-            "Dwarven King's ritual can be disrupted by certain spell...",
+            "Dwarven King's ritual can be disrupted by a certain spell...",
 
             "Tengu teleports more often when threatened",
             "DM-300 is neither organic nor magical creature.",
@@ -257,7 +270,7 @@ public class InterlevelScene extends PixelScene {
             "Monsters inhabiting this dungeon are aware of all of its traps and secret doors",
 
             "Sleeping in the water is much less efficient than sleeping anywhere else",
-            "Your evasion chance is decreased for every occupied or impassable tile near you",
+            "Evasion chance is decreased for every adjacent tile which is occupied or impassable",
 
     };
 	
@@ -273,7 +286,8 @@ public class InterlevelScene extends PixelScene {
 
 	private Thread thread;
 	private String error = null;
-	
+	private boolean pause = false;
+
 	@Override
 	public void create() {
 		super.create();
@@ -319,13 +333,13 @@ public class InterlevelScene extends PixelScene {
 		
 		message = PixelScene.createText( text, 10 );
 		message.measure();
-		message.x = (Camera.main.width - message.width()) / 2; 
+		message.x = (Camera.main.width - message.width()) / 2;
 		message.y = (Camera.main.height - message.height()) / 2;
 		add(message);
 
         tipBox = new ArrayList<>();
 
-        if( YetAnotherPixelDungeon.loadingTips() ) {
+        if( YetAnotherPixelDungeon.loadingTips() > 0 ) {
 
             BitmapTextMultiline tip = PixelScene.createMultiline(TIPS[Random.Int(TIPS.length)], 6);
             tip.maxWidth = Camera.main.width * 9 / 10;
@@ -392,6 +406,8 @@ public class InterlevelScene extends PixelScene {
                     YetAnotherPixelDungeon.reportException(e);
 					
 				}
+
+//                error = ERR_FILE_NOT_FOUND;
 				
 				if (phase == Phase.STATIC && error == null) {
 					phase = Phase.FADE_OUT;
@@ -419,15 +435,31 @@ public class InterlevelScene extends PixelScene {
             }
 
 			if ((timeLeft -= Game.elapsed) <= 0) {
-				if (!thread.isAlive() && error == null) {
+				if (thread.isAlive() || error != null || YetAnotherPixelDungeon.loadingTips() > 2 ) {
+                    phase = Phase.STATIC;
 
+                    if( !thread.isAlive() && error == null) {
+                        message.text(TXT_CONTINUE);
+                        message.measure();
+                        message.x = (Camera.main.width - message.width()) / 2;
+                        message.y = (Camera.main.height - message.height()) / 2;
 
+                        TouchArea hotArea = new TouchArea(0, 0, Camera.main.width, Camera.main.height) {
+                            @Override
+                            protected void onClick(Touchscreen.Touch touch) {
+                                phase = Phase.FADE_OUT;
+                                timeLeft = TIME_TO_FADE;
+                                this.destroy();
+                            }
+                        };
+                        add(hotArea);
+                    }
 
-					phase = Phase.FADE_OUT;
-                    timeLeft = TIME_TO_FADE * ( YetAnotherPixelDungeon.loadingTips() ? 4 : 1 );
-				} else {
-					phase = Phase.STATIC;
-				}
+                } else {
+                    phase = Phase.FADE_OUT;
+                    timeLeft = ( YetAnotherPixelDungeon.loadingTips() > 0 ?
+                            TIME_TO_FADE * YetAnotherPixelDungeon.loadingTips() * 3 : TIME_TO_FADE );
+                }
 			}
 			break;
 			
@@ -448,15 +480,19 @@ public class InterlevelScene extends PixelScene {
 			break;
 			
 		case STATIC:
-			if (error != null) {
-				add( new WndError( error ) {
-					public void onBackPressed() {
-						super.onBackPressed();
-						Game.switchScene( StartScene.class );
-					}
-				} );
-				error = null;
-			}
+
+            if (error != null) {
+
+                add(new WndError(error) {
+                    public void onBackPressed() {
+                        super.onBackPressed();
+                        Game.switchScene(StartScene.class);
+                    }
+                });
+
+                error = null;
+
+            }
 			break;
 		}
 	}

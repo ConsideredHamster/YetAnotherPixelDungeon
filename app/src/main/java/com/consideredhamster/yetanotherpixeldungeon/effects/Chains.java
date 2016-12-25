@@ -54,7 +54,7 @@ public class Chains extends Group {
         float rotation = (float)(Math.atan2( dy, dx ) * A);
 
         spent = 0f;
-        duration = distance / 60f + 0.0f;
+        duration = distance / 90f + 0.0f;
 
         chains = new Image[ Math.round( distance / 4f ) + 1 ];
         for (int i = 0; i < chains.length; i++){

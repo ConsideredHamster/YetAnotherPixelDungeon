@@ -220,7 +220,4 @@ public class ItemSpriteSheet {
     public static final int HARPOON_THROWN    	= 181;
     public static final int HARPOON_RETURN    	= 182;
 
-    public static final int PIE_PUMPKIN    	    = 150;
-    public static final int BOTTLE_OF_MILK    	= 151;
-
 }

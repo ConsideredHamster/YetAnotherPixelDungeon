@@ -34,7 +34,6 @@ import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 
 public abstract class Shield extends Armour {
 
-	private static final String TXT_EQUIP_CURSED	= "you wince as your grip involuntarily tightens around your %s";
 
     public Shield(int tier) {
 
@@ -100,18 +99,17 @@ public abstract class Shield extends Armour {
         if( QuickSlot.quickslot2.value == this && ( hero.belongings.weap2 == null || hero.belongings.weap2.bonus >= 0 ) )
             QuickSlot.quickslot2.value = hero.belongings.weap2 != null && hero.belongings.weap2.stackable ? hero.belongings.weap2.getClass() : hero.belongings.weap2 ;
 
-		if (hero.belongings.weap2 == null || hero.belongings.weap2.doUnequip( hero, true, false )) {
+        if( QuickSlot.quickslot3.value == this && ( hero.belongings.weap2 == null || hero.belongings.weap2.bonus >= 0 ) )
+            QuickSlot.quickslot3.value = hero.belongings.weap2 != null && hero.belongings.weap2.stackable ? hero.belongings.weap2.getClass() : hero.belongings.weap2 ;
+
+        if ( ( hero.belongings.weap2 == null || hero.belongings.weap2.doUnequip( hero, true, false ) ) &&
+                ( bonus >= 0 || isCursedKnown() || !detectCursed( this, hero ) ) ) {
 
 			hero.belongings.weap2 = this;
 
             GLog.i(TXT_EQUIP, name());
-			
-			identify( CURSED_KNOWN );
 
-			if (bonus < 0) {
-				equipCursed( hero );
-				GLog.n( TXT_EQUIP_CURSED, toString() );
-			}
+            identify( CURSED_KNOWN );
 
             QuickSlot.refresh();
 			
@@ -119,7 +117,9 @@ public abstract class Shield extends Armour {
 			return true;
 			
 		} else {
-			
+
+            QuickSlot.refresh();
+            hero.spendAndNext(time2equip(hero) * 0.5f);
 			collect( hero.belongings.backpack );
 			return false;
 			
@@ -161,7 +161,7 @@ public abstract class Shield extends Armour {
 
     @Override
     public int penaltyBase(Hero hero, int str) {
-        return super.penaltyBase(hero, str) + tier * 4 - 4 ;
+        return super.penaltyBase(hero, str) + tier * 8 - 8 ;
     }
 
     @Override
@@ -186,10 +186,11 @@ public abstract class Shield extends Armour {
 	public String info() {
 
         final String p = "\n\n";
+        final String s = " ";
 
         int heroStr = Dungeon.hero.STR();
         int itemStr = strShown( isIdentified() );
-        int penalty = GameMath.gate(0, penaltyBase(Dungeon.hero, strShown(isIdentified())), 20) * 5;
+        float penalty = GameMath.gate(0, penaltyBase(Dungeon.hero, strShown(isIdentified())), 20) * 2.5f;
         float armor = Math.max(0, isIdentified() ? dr() : dr(0) );
 
         StringBuilder info = new StringBuilder( desc() );
@@ -254,38 +255,31 @@ public abstract class Shield extends Armour {
 
             info.append( "You hold the " + name + " at the ready." );
 
-            if( isCursedKnown() && bonus < 0 ) {
-                info.append( " Because it is _cursed_, you are powerless to remove it." );
-            } else if( isIdentified() ) {
-                info.append( bonus > 0 ? " It appears to be _upgraded_." : " It appears to be _non-cursed_." );
-            } else {
-                info.append( " This " + name + " is _unidentified_." );
-            }
-
-            if( isEnchantKnown() && glyph != null ) {
-                info.append( " " + ( isIdentified() && bonus != 0 ? "Also" : "However" ) + ", it seems to be _enchanted to " + glyph.desc(this) + "_." );
-            }
-
         } else if( Dungeon.hero.belongings.backpack.items.contains(this) ) {
 
-            info.append( "The " + name + " is in your backpack. " );
-
-            if( isCursedKnown() && bonus < 0 ) {
-                info.append( "A malevolent _curse_ seems to be lurking within this " + name +". Equipping it will be most likely a very bad idea." );
-            } else if( isIdentified() ) {
-                info.append( bonus > 0 ? " It appears to be _upgraded_." : " It appears to be _non-cursed_." );
-            } else {
-                info.append( " This " + name + " is _unidentified_." );
-            }
-
-            if( isEnchantKnown() && glyph != null ) {
-                info.append( " " + ( isIdentified() && bonus != 0 ? "Also" : "However" ) + ", it seems to be _enchanted to " + glyph.desc(this) + "_." );
-            }
+            info.append( "The " + name + " is in your backpack." );
 
         } else {
 
             info.append( "The " + name + " lies on the dungeon's floor." );
 
+        }
+
+        info.append( s );
+
+        if( isIdentified() && bonus > 0 ) {
+            info.append( "It appears to be _upgraded_." );
+        } else if( isCursedKnown() ) {
+            info.append( bonus >= 0 ? "It appears to be _non-cursed_." :
+                    "A malevolent _curse_ seems to be lurking within this " + name +"." );
+        } else {
+            info.append( " This " + name + " is _unidentified_." );
+        }
+
+        info.append( s );
+
+        if( isEnchantKnown() && glyph != null ) {
+            info.append( " " + ( isIdentified() && bonus != 0 ? "Also" : "However" ) + ", it seems to be _enchanted to " + glyph.desc(this) + "_." );
         }
 
         return info.toString();
@@ -303,13 +297,13 @@ public abstract class Shield extends Armour {
 
         price *= lootChapter();
 
-		if (isIdentified()) {
+        if ( isIdentified() ) {
             price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
-		} else {
+        } else if( !isCursedKnown() || bonus < 0 ) {
             price /= 2;
         }
 
-        if( glyph != null ) {
+        if( glyph != null && isEnchantKnown() ) {
             price += price / 4;
         }
 

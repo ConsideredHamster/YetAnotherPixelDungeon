@@ -22,7 +22,9 @@ package com.consideredhamster.yetanotherpixeldungeon.items.misc;
 
 import java.util.ArrayList;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -40,6 +42,8 @@ public class Whetstone extends Item {
 	
 	private static final String TXT_SELECT_WEAPON	= "Select a melee weapon to repair";
 	private static final String TXT_REPAIR_WEAPON	= "Your %s looks much better now!";
+	private static final String TXT_CHARGE_KEEPED	= "Your ring helped you with repair!";
+	private static final String TXT_CHARGE_WASTED	= "Your ring prevented proper repair.";
 
 	private static final float TIME_TO_APPLY = 2f;
 	
@@ -104,13 +108,23 @@ public class Whetstone extends Item {
 	
 	private void apply( Weapon weapon ) {
 
-        if( --value <= 0 ) {
-            detach(curUser.belongings.backpack);
+        float bonus = Dungeon.hero.ringBuffsBaseZero( RingOfDurability.Durability.class ) * 0.5f;
+
+        if( bonus > 0.0f && Random.Float() < bonus ) {
+            GLog.p(TXT_CHARGE_KEEPED);
+        } else {
+            if( --value <= 0 ) {
+                detach(curUser.belongings.backpack);
+            }
         }
-		
-		weapon.repair(1);
-        GLog.p(TXT_REPAIR_WEAPON, weapon.name());
-		
+
+        if( bonus < 0.0f && Random.Float() > -bonus ) {
+            GLog.n(TXT_CHARGE_WASTED);
+        } else {
+            weapon.repair(1);
+            GLog.p(TXT_REPAIR_WEAPON, weapon.name());
+        }
+
 		curUser.sprite.operate(curUser.pos);
 		Sample.INSTANCE.play(Assets.SND_MISS);
 

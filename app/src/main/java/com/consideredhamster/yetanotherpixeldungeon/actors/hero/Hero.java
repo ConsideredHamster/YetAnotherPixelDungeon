@@ -218,7 +218,6 @@ public class Hero extends Char {
 	private static final String STRENGTH	= "STR";
 	private static final String STR_BONUS	= "strBonus";
 	private static final String LVL_BONUS	= "lvlBonus";
-	private static final String PIE_BONUS	= "pieBonus";
 	private static final String LEVEL		= "lvl";
 	private static final String EXPERIENCE	= "exp";
 	
@@ -395,15 +394,30 @@ public class Hero extends Char {
 
             if (belongings.weap1 instanceof MeleeWeapon) {
                 result += belongings.weap1.min();
+
+                int exStr = STR() - belongings.weap1.str();
+
+                if (exStr > 0) {
+                    result += belongings.weap2 == null ?
+                        Random.IntRange( 0, exStr ) :
+                        Random.IntRange( 0, exStr ) / 2;
+                }
+
             }
 
             if (belongings.weap2 instanceof MeleeWeapon) {
                 result += ((MeleeWeapon) belongings.weap2).min();
+
+                int exStr = STR() - belongings.weap2.str();
+
+                if (exStr > 0) {
+                    result += Random.IntRange( 0, exStr ) / 2;
+                }
             }
 
-            if (belongings.weap2 == null) {
-                result *= 2;
-            }
+//            if (belongings.weap2 == null) {
+//                result *= 2;
+//            }
 
             return result;
 
@@ -493,26 +507,23 @@ public class Hero extends Char {
 
 		int dmg;
 
+        Combo buff = buff( Combo.class );
+
 		if (wep != null) {
 
-			dmg = wep.damageRoll();
+			dmg = wep.damageRoll( this );
 
-            if( wep.enchantment instanceof Heroic) {
-                dmg += wep.bonus >= 0
-                    ? dmg * (HT - HP) * (wep.bonus + 1) / HT / 8
-                    : dmg * (HT - HP) * (wep.bonus) / HT / 6;
-            }
-
-            int exStr = STR() - wep.strShown( true );
-
-            if (exStr > 0) {
-                dmg += Random.IntRange( 0, exStr );
+            if( buff != null ) {
+                dmg += (int) (wep.damageRoll( this ) * buff.modifier() * ringBuffs( RingOfAccuracy.Accuracy.class ));
             }
 
 		} else {
 
 			dmg = Random.IntRange(0, Math.max(0, STR() - 5));
 
+            if( buff != null ) {
+                dmg += (int) (Random.IntRange(0, Math.max(0, STR() - 5)) * buff.modifier() * ringBuffs( RingOfAccuracy.Accuracy.class ));
+            }
 		}
 
         if( buff( Withered.class ) != null )
@@ -550,12 +561,12 @@ public class Hero extends Char {
 		}
 	}
 	
-	@Override
-	public void spend( float time ) {
-
-        super.spend(time / ringBuffsHalved(RingOfHaste.Haste.class));
-
-	};
+//	@Override
+//	public void spend( float time ) {
+//
+//        super.spend(time / ringBuffsHalved(RingOfHaste.Haste.class));
+//
+//	};
 	
 	public void spendAndNext( float time ) {
 		busy();
@@ -1188,7 +1199,9 @@ public class Hero extends Char {
 	}
 	
 	public void rest( boolean sleep ) {
+
 		spendAndNext( TIME_TO_REST );
+
 		if (!sleep) {
 			sprite.showStatus(CharSprite.DEFAULT, TXT_WAIT);
             search( false );
@@ -1200,13 +1213,13 @@ public class Hero extends Char {
 	@Override
 	public int attackProc( Char enemy, int damage ) {
         Weapon wep = rangedWeapon != null ? rangedWeapon : currentWeapon;
-		if (wep != null) {
 
-            damage += Buff.affect( this, Combo.class ).hit( (int)(damage * ringBuffs( RingOfAccuracy.Accuracy.class ) ) );
+        Buff.affect( this, Combo.class ).hit();
+
+		if (wep != null) {
 
             wep.proc(this, enemy, damage);
 
-//            wep.use();
 		}
 		
 		return damage;
@@ -1240,8 +1253,6 @@ public class Hero extends Char {
 		
 		if (currentArmour != null) {
 			damage = currentArmour.proc( enemy, this, damage );
-
-//            belongings.armor.use();
 		}
 		
 		return super.defenseProc( enemy, damage, blocked);
@@ -1743,7 +1754,7 @@ public class Hero extends Char {
         BodyArmor armor = belongings.armor;
         Shield shield = belongings.weap2 instanceof Shield ? (Shield)belongings.weap2 : null ;
 
-        if( armor != null && armor.glyph instanceof Revival && Armour.Glyph.procced(armor.bonus) && Random.Int(5) > 0 ) {
+        if( armor != null && armor.glyph instanceof Revival && Armour.Glyph.procced(armor.bonus) && Random.Int(2) == 0 ) {
 
             if( armor.bonus >= 0 ) {
 
@@ -1753,7 +1764,7 @@ public class Hero extends Char {
 
             }
 
-        } else if( shield != null && shield.glyph instanceof Revival && Armour.Glyph.procced(shield.bonus) && Random.Int(5) > 0 ) {
+        } else if( shield != null && shield.glyph instanceof Revival && Armour.Glyph.procced(shield.bonus) && Random.Int(2) == 0 ) {
 
             if( shield.bonus >= 0 ) {
 

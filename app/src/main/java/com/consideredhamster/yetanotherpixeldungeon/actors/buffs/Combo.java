@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedWeaponFlintlock;
@@ -42,7 +43,6 @@ public class Combo extends Buff {
     public void storeInBundle( Bundle bundle ) {
         super.storeInBundle( bundle );
         bundle.put( COUNT, count );
-
     }
 
     @Override
@@ -56,40 +56,37 @@ public class Combo extends Buff {
 		return "Combo";
 	}
 	
-	public int hit( int damage ) {
-		
+	public void hit( ) {
+
 		count++;
 
-        if( target instanceof Hero && ((Hero) target).rangedWeapon instanceof RangedWeaponFlintlock) {
+        if (count >= 3) {
+            target.sprite.showStatus(CharSprite.DEFAULT, TXT_COMBO, count);
+        }
 
-            postpone( target.attackDelay() * 3 / 2 );
+        if( target instanceof Hero && ((Hero) target).rangedWeapon instanceof RangedWeaponFlintlock ) {
+
+            postpone( target.attackDelay() * 3 / 2 + Float.MIN_VALUE );
 
         } else {
 
-            postpone(target.attackDelay());
+            postpone( target.attackDelay() + Float.MIN_VALUE );
 
         }
-
-        if (count >= 3) {
-
-//            if(target instanceof Hero) {
-//
-//                Badges.validateMasteryCombo(count);
-//
-//            }
-
-            target.sprite.showStatus( CharSprite.DEFAULT, TXT_COMBO, count );
-
-			return (int)(damage * (count - 2) / 10f);
-			
-		} else {
-
-			return 0;
-			
-		}
-
-
 	}
+
+    public float modifier() {
+
+        if (count >= 2) {
+
+            return (count - 1) * 0.125f;
+
+        } else {
+
+            return 0.0f;
+
+        }
+    }
 	
 	@Override
 	public boolean act() {

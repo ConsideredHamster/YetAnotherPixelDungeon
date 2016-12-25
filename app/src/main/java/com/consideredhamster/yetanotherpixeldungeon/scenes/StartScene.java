@@ -381,57 +381,7 @@ public class StartScene extends PixelScene {
 
     private void askDifficulty() {
 
-        StartScene.this.add( new WndOptions( TXT_DIFF_TITLE, TXT_DIFF_ABOUT, Difficulties.NAMES ) {
-
-            @Override
-            protected ArrayList<Integer> disabled() {
-
-                ArrayList<Integer> disabled = new ArrayList<>();
-
-                if( !Badges.isUnlocked( Badges.Badge.VICTORY_1 ) ) {
-
-                    disabled.add( Difficulties.HARDCORE );
-
-                }
-
-                if( !Badges.isUnlocked( Badges.Badge.VICTORY_2 ) ) {
-
-                    disabled.add(Difficulties.IMPOSSIBLE);
-
-                }
-
-                return disabled;
-            }
-
-
-            @Override
-            protected void onSelect( int index ) {
-
-                if( disabled.contains( index ) && index > 0 ) {
-
-                    StartScene.this.add( new WndOptions( Utils.format( TXT_DIFFICULTY, Difficulties.NAMES[ index ] ),
-                            Difficulties.ABOUT[ index ], TXT_LOCKED
-                    ));
-
-                } else {
-
-                    Dungeon.difficulty = index;
-
-                    StartScene.this.add( new WndOptions( Utils.format( TXT_DIFFICULTY, Difficulties.NAMES[ index ] ),
-                            Difficulties.ABOUT[ index ], TXT_YES, TXT_NO
-                    ) {
-                        @Override
-                        protected void onSelect( int index ) {
-                            if (index == 0) {
-
-                                startNewGame();
-
-                            }
-                        }
-                    } );
-                }
-            }
-        } );
+        StartScene.this.add( new WndDifficulty() );
     }
 	
 	private void startNewGame() {
@@ -663,4 +613,67 @@ public class StartScene extends PixelScene {
 //            Sample.INSTANCE.play(Assets.SND_CLICK );
 //        }
 //    }
+
+
+    private class WndDifficulty extends WndOptions {
+
+        public WndDifficulty() {
+            super( TXT_DIFF_TITLE, TXT_DIFF_ABOUT, Difficulties.NAMES );
+        }
+
+
+        @Override
+        protected ArrayList<Integer> disabled() {
+
+            ArrayList<Integer> disabled = new ArrayList<>();
+
+            if( !Badges.isUnlocked( Badges.Badge.VICTORY_1 ) ) {
+
+                disabled.add( Difficulties.HARDCORE );
+
+            }
+
+            if( !Badges.isUnlocked( Badges.Badge.VICTORY_2 ) ) {
+
+                disabled.add(Difficulties.IMPOSSIBLE);
+
+            }
+
+            return disabled;
+        }
+
+
+        @Override
+        protected void onSelect( int index ) {
+
+            if( disabled.contains( index ) && index > 0 ) {
+
+                StartScene.this.add( new WndOptions( Utils.format( TXT_DIFFICULTY, Difficulties.NAMES[ index ] ),
+                        Difficulties.ABOUT[ index ], TXT_LOCKED
+                ) {
+                    @Override
+                    protected void onSelect( int index ) {
+                        StartScene.this.add( new WndDifficulty() );
+                    }
+                } );
+
+            } else {
+
+                Dungeon.difficulty = index;
+
+                StartScene.this.add( new WndOptions( Utils.format( TXT_DIFFICULTY, Difficulties.NAMES[ index ] ),
+                        Difficulties.ABOUT[ index ], TXT_YES, TXT_NO
+                ) {
+                    @Override
+                    protected void onSelect( int index ) {
+                        if (index == 0) {
+
+                            startNewGame();
+
+                        }
+                    }
+                } );
+            }
+        }
+    }
 }

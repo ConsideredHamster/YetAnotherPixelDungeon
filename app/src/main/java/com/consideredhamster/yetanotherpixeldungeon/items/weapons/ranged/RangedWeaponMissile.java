@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
 import com.consideredhamster.yetanotherpixeldungeon.ui.AttackIndicator;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
@@ -80,13 +81,13 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
     @Override
     public int penaltyBase(Hero hero, int str) {
 
-        return super.penaltyBase(hero, str) + tier * 2 - 2;
+        return super.penaltyBase(hero, str) + tier * 4 - 4;
 
     }
 
     @Override
     public float breakingRateWhenShot() {
-        return 0.1f;
+        return 0.1f / Dungeon.hero.ringBuffs( RingOfDurability.Durability.class );
     }
 
 //    @Override

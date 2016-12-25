@@ -78,7 +78,7 @@ public class EvilEye extends MobRanged {
 
     @Override
 	protected boolean getCloser( int target ) {
-		if (state == HUNTING && (enemySeen || enemy != null && detected( enemy ))) {
+		if (state == HUNTING && HP >= HT && (enemySeen || enemy != null && detected( enemy ))) {
 			return getFurther( target );
 		} else {
 			return super.getCloser( target );

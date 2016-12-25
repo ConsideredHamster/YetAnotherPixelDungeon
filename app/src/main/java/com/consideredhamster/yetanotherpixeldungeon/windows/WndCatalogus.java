@@ -53,8 +53,6 @@ public class WndCatalogus extends WndTabbed {
 	
 	private static final int ITEM_HEIGHT	= 18;
 	
-	private static final int TAB_WIDTH		= 24;
-	
 	private static final String TXT_TITLE	= "Journal";
 	private static final String TXT_NOTES	= "Notes";
 	private static final String TXT_PHARM	= "Potions";
@@ -95,15 +93,18 @@ public class WndCatalogus extends WndTabbed {
 		add( txtTitle );
 		
 		list = new ScrollPane( new Component() ) {
-//			@Override
-//			public void onClick( float x, float y ) {
-//				int size = items.size();
-//				for (int i=0; i < size; i++) {
-//					if (items.get( i ).onClick( x, y )) {
-//						break;
-//					}
-//				}
-//			}
+			@Override
+			public void onClick( float x, float y ) {
+				int size = items.size();
+				for (int i=0; i < size; i++) {
+					if (
+                        items.get(i) instanceof ListItem &&
+                        ((ListItem)items.get( i )).onClick( x, y )
+                    ) {
+						break;
+					}
+				}
+			}
 		};
 		add( list );
 		list.setRect( 0, txtTitle.height(), width, height - txtTitle.height() );
@@ -165,10 +166,13 @@ public class WndCatalogus extends WndTabbed {
                 };
             },
 		};
-		for (Tab tab : tabs) {
-			tab.setSize( TAB_WIDTH, tabHeight() );
-			add( tab );
-		}
+
+        int tabWidth = ( width + 12 ) / tabs.length ;
+
+        for (Tab tab : tabs) {
+            tab.setSize( tabWidth, tabHeight() );
+            add( tab );
+        }
 		
 		select( 0 );
 	}
@@ -338,7 +342,7 @@ public class WndCatalogus extends WndTabbed {
 			label.x = sprite.x + sprite.width;
 			label.y = PixelScene.align( y + (height - label.baseLine()) / 2 );
 		}
-		
+
 		public boolean onClick( float x, float y ) {
 			if (inside( x, y )) {
 				GameScene.show( new WndInfoItem( item ) );

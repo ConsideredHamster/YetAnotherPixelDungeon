@@ -46,6 +46,7 @@ public class QuickSlot extends Button implements WndBag.Listener {
     public static QuickSlot quickslot0;
     public static QuickSlot quickslot1;
     public static QuickSlot quickslot2;
+    public static QuickSlot quickslot3;
 
     public Object value;
     private boolean targeting = false;
@@ -60,6 +61,7 @@ public class QuickSlot extends Button implements WndBag.Listener {
 
     public static Object quickslotValue_1;
     public static Object quickslotValue_2;
+    public static Object quickslotValue_3;
 
     public void setAsQuickSlot0() {
 
@@ -79,6 +81,12 @@ public class QuickSlot extends Button implements WndBag.Listener {
 		quickslot2 = this;
 		item( select() );
 	}
+
+    public void setAsQuickSlot3() {
+        this.value = quickslotValue_3;
+        quickslot3 = this;
+        item( select() );
+    }
 	
 	@Override
 	public void destroy() {
@@ -88,6 +96,8 @@ public class QuickSlot extends Button implements WndBag.Listener {
             quickslot1 = null;
         } else if (this == quickslot2) {
             quickslot2 = null;
+        } else  if (this == quickslot3) {
+            quickslot3 = null;
         } else {
 			quickslot0 = null;
 		}
@@ -180,7 +190,7 @@ public class QuickSlot extends Button implements WndBag.Listener {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Item select() {
+	public Item select() {
 		
 //		Object content = (this == setAsQuickSlot1 ? quickslotValue_1 : quickslotValue_2);
 
@@ -197,6 +207,10 @@ public class QuickSlot extends Button implements WndBag.Listener {
         } else if ( this == quickslot2 ) {
 
             quickslotValue_2 = value;
+
+        } else if ( this == quickslot3 ) {
+
+            quickslotValue_3 = value;
 
         }
 
@@ -316,9 +330,12 @@ public class QuickSlot extends Button implements WndBag.Listener {
 		if (quickslot1 != null) {
 			quickslot1.item( quickslot1.select() );
 		}
-		if (quickslot2 != null) {
-			quickslot2.item( quickslot2.select() );
-		}
+        if (quickslot2 != null) {
+            quickslot2.item( quickslot2.select() );
+        }
+        if (quickslot3 != null) {
+            quickslot3.item( quickslot3.select() );
+        }
 	}
 	
 	public static void target( Item item, Char target ) {
@@ -332,6 +349,7 @@ public class QuickSlot extends Button implements WndBag.Listener {
 //			} else if (item == quickslot2.lastItem) {
 
                 quickslot2.currentTarget = target;
+                quickslot3.currentTarget = target;
 				HealthIndicator.instance.target(target);
 				
 			}
@@ -349,15 +367,21 @@ public class QuickSlot extends Button implements WndBag.Listener {
 			quickslot1.crossM.remove();
             quickslot1.targeting = false;
 		}
-		if (quickslot2 != null && quickslot2.targeting) {
-			quickslot2.crossB.visible = false;
-			quickslot2.crossM.remove();
+        if (quickslot2 != null && quickslot2.targeting) {
+            quickslot2.crossB.visible = false;
+            quickslot2.crossM.remove();
             quickslot2.targeting = false;
-		}
+        }
+        if (quickslot3 != null && quickslot3.targeting) {
+            quickslot3.crossB.visible = false;
+            quickslot3.crossM.remove();
+            quickslot3.targeting = false;
+        }
 	}
 
 	private static final String QUICKSLOT1	= "quickslot1";
 	private static final String QUICKSLOT2	= "quickslot2";
+	private static final String QUICKSLOT3	= "quickslot3";
 
 	@SuppressWarnings("unchecked")
 	public static void save( Bundle bundle ) {
@@ -368,10 +392,15 @@ public class QuickSlot extends Button implements WndBag.Listener {
 			bundle.put( QUICKSLOT1, ((Class<?>) quickslot1.value).getName() );
 		}
 
-		if (quickslot2 != null && QuickSlot.quickslot2.value instanceof Class) {
+        if (quickslot2 != null && QuickSlot.quickslot2.value instanceof Class) {
             quickslotValue_2 = quickslot2.value;
-			bundle.put( QUICKSLOT2, ((Class<?>) quickslot2.value).getName() );
-		}
+            bundle.put( QUICKSLOT2, ((Class<?>) quickslot2.value).getName() );
+        }
+
+        if (quickslot3 != null && QuickSlot.quickslot3.value instanceof Class) {
+            quickslotValue_3 = quickslot3.value;
+            bundle.put( QUICKSLOT3, ((Class<?>) quickslot3.value).getName() );
+        }
 	}
 	
 	public static void save( Bundle bundle, Item item ) {
@@ -380,17 +409,23 @@ public class QuickSlot extends Button implements WndBag.Listener {
 			bundle.put( QuickSlot.QUICKSLOT1, true );
 		}
 
-		if (quickslot2 != null && item == quickslot2.value) {
+        if (quickslot2 != null && item == quickslot2.value) {
             quickslotValue_2 = quickslot2.value;
-			bundle.put( QuickSlot.QUICKSLOT2, true );
-		}
+            bundle.put( QuickSlot.QUICKSLOT2, true );
+        }
+
+        if (quickslot3 != null && item == quickslot3.value) {
+            quickslotValue_3 = quickslot3.value;
+            bundle.put( QuickSlot.QUICKSLOT3, true );
+        }
 	}
 	
 	public static void restore( Bundle bundle ) {
 
         quickslotValue_1 = null;
         quickslotValue_2 = null;
-		
+        quickslotValue_3 = null;
+
 		String qsClass = bundle.getString( QUICKSLOT1 );
 		if (qsClass != null) {
 			try {
@@ -398,31 +433,33 @@ public class QuickSlot extends Button implements WndBag.Listener {
 			} catch (ClassNotFoundException e) {
 			}
 		}
-		
-		qsClass = bundle.getString( QUICKSLOT2 );
-		if (qsClass != null) {
-			try {
+
+        qsClass = bundle.getString( QUICKSLOT2 );
+        if (qsClass != null) {
+            try {
                 quickslotValue_2 = Class.forName( qsClass );
-			} catch (ClassNotFoundException e) {
-			}
-		}
+            } catch (ClassNotFoundException e) {
+            }
+        }
+
+        qsClass = bundle.getString( QUICKSLOT3 );
+        if (qsClass != null) {
+            try {
+                quickslotValue_3 = Class.forName( qsClass );
+            } catch (ClassNotFoundException e) {
+            }
+        }
 	}
 	
 	public static void restore( Bundle bundle, Item item ) {
 		if (bundle.getBoolean( QUICKSLOT1 )) {
             quickslotValue_1 = item;
 		}
-		if (bundle.getBoolean( QUICKSLOT2 )) {
+        if (bundle.getBoolean( QUICKSLOT2 )) {
             quickslotValue_2 = item;
-		}
+        }
+        if (bundle.getBoolean( QUICKSLOT3 )) {
+            quickslotValue_3 = item;
+        }
 	}
-	
-//	public static void compress() {
-//		if ((quickslot1.value == null && quickslot2.value != null) ||
-//			(quickslot1.value == quickslot2.value)) {
-//
-//            quickslot1.value = quickslot2.value;
-//            quickslot2.value = null;
-//		}
-//	}
 }

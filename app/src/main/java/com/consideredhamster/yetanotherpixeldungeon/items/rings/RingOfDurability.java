@@ -20,34 +20,35 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
-public class RingOfAccuracy extends Ring {
+public class RingOfDurability extends Ring {
 
 	{
-		name = "Ring of Accuracy";
-        shortName = "Ac";
+		name = "Ring of Durability";
+        shortName = "Du";
 	}
 	
 	@Override
 	protected RingBuff buff( ) {
-		return new Accuracy();
+		return new Durability();
 	}
 	
 	@Override
 	public String desc() {
-		return isTypeKnown() ?
-                ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
-                "improves your combat skills when worn, increasing your chance to hit the enemy with melee or ranged weapons and " +
-                "increasing bonus damage from series of combo attacks." +
+        return isTypeKnown() ?
+            ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
+                "decreases rate at which everything around it degrades with use. It will make your " +
+                "weapons, shields and armour last longer, make your ammunition break less often and " +
+                "even allow you to use your repair tools more effectively." +
                 ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
-			super.desc();
+            super.desc();
 	}
 	
-	public class Accuracy extends RingBuff {
+	public class Durability extends RingBuff {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "You feel that your fighting prowess is enhanced." :
-                    "You feel that your fighting prowess is dulled." ;
+                    "You feel how some kind of protective aura surrounds your equipment." :
+                    "You feel how some kind of disruptive aura surrounds your equipment." ;
         }
 	}
 }

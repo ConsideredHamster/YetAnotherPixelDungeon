@@ -229,6 +229,7 @@ public class WndTradeItem extends Window {
 		if (item.isEquipped( hero ) && !((EquipableItem)item).doUnequip( hero, false, false )) {
 			return;
 		}
+
 		item.detachAll( hero.belongings.backpack );
 		
 		int price = item.price();

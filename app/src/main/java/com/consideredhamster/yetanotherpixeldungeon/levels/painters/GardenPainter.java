@@ -36,8 +36,6 @@ public class GardenPainter extends Painter {
 		fill( level, room, Terrain.WALL );
 		fill( level, room, 1, Terrain.HIGH_GRASS );
 		fill( level, room, 2, Terrain.WATER );
-		
-		room.entrance().set( Room.Door.Type.REGULAR );
 
         for (Point door : room.connected.values()) {
             if (door.x == room.left) {
@@ -95,6 +93,6 @@ public class GardenPainter extends Painter {
 //		}
 //		bonus.blobs.put( Foliage.class, light );
 
-        room.entrance().set(Room.Door.Type.HIDDEN );
+        room.entrance().set( Dungeon.depth > 1 ? Room.Door.Type.HIDDEN : Room.Door.Type.REGULAR );
 	}
 }

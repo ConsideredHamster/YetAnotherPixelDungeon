@@ -123,7 +123,7 @@ public abstract class Level implements Bundlable {
 
     };
 
-	protected static final float TIME_TO_RESPAWN	= 55f;
+	protected static final float TIME_TO_RESPAWN	= 65f;
 	
 	private static final String TXT_HIDDEN_PLATE_CLICKS = "A hidden pressure plate clicks!";
 
@@ -135,7 +135,7 @@ public abstract class Level implements Bundlable {
 	public boolean[] mapped;
 	
 //	public int viewDistance = 8;
-	public int mobsKilled = 0;
+	public int mobsSpawned = 0;
 
 	public static boolean[] fieldOfView = new boolean[LENGTH];
 	
@@ -176,7 +176,7 @@ public abstract class Level implements Bundlable {
 	private static final String MAP			= "map";
 	private static final String VISITED		= "visited";
 	private static final String MAPPED		= "mapped";
-	private static final String MOBS_KILLED	= "mobs_killed";
+	private static final String MOBS_SPAWNED = "mobs_killed";
 	private static final String ENTRANCE	= "entrance";
 	private static final String EXIT		= "exit";
 	private static final String HEAPS		= "heaps";
@@ -243,8 +243,13 @@ public abstract class Level implements Bundlable {
                 Dungeon.rings++;
             }
 
+            if (Dungeon.ammosNeeded()) {
+                addItemToSpawn( Generator.random( Generator.Category.AMMO ) );
+                Dungeon.ammos++;
+            }
+
             if (Dungeon.torchesNeeded()) {
-                addItemToSpawn( new Torch());
+                addItemToSpawn( new Torch() );
                 Dungeon.torches++;
             }
 
@@ -337,7 +342,7 @@ public abstract class Level implements Bundlable {
 		visited	= bundle.getBooleanArray( VISITED );
 		mapped	= bundle.getBooleanArray( MAPPED );
 		
-		mobsKilled	= bundle.getInt( MOBS_KILLED );
+		mobsSpawned = bundle.getInt(MOBS_SPAWNED);
 
 		entrance	= bundle.getInt( ENTRANCE );
 		exit		= bundle.getInt( EXIT );
@@ -396,7 +401,7 @@ public abstract class Level implements Bundlable {
 		bundle.put( PLANTS, plants.values() );
 		bundle.put( MOBS, mobs );
 		bundle.put( BLOBS, blobs.values() );
-		bundle.put( MOBS_KILLED, mobsKilled );
+		bundle.put( MOBS_SPAWNED, mobsSpawned );
 	}
 	
 	public int tunnelTile() {
@@ -505,6 +510,7 @@ public abstract class Level implements Bundlable {
 		return new Actor() {	
 			@Override
 			protected boolean act() {
+
 				if (mobs.size() < nMobs()) {
 
                     Mob mob  = (feeling == Feeling.HAUNT && Random.Int(5) == 0 ?
@@ -518,10 +524,13 @@ public abstract class Level implements Bundlable {
 							mob.beckon( Dungeon.hero.pos );
 						}
 					}
+
+                    mobsSpawned++;
+
 				}
 //				spend( Dungeon.nightMode || Statistics.amuletObtained ? TIME_TO_RESPAWN / 2 : TIME_TO_RESPAWN );
 
-				spend( ( TIME_TO_RESPAWN - Dungeon.chapter() * 5 - ( feeling == Feeling.TRAPS ? 10 : 0 ) + mobsKilled ) *
+				spend( ( TIME_TO_RESPAWN - Dungeon.chapter() * 5 - ( feeling == Feeling.TRAPS ? 10 : 0 ) + mobsSpawned) *
                         ( Dungeon.difficulty < Difficulties.IMPOSSIBLE ? 1.0f : 0.5f ) );
 				return true;
 			}
@@ -1150,6 +1159,9 @@ public abstract class Level implements Bundlable {
                             }
                         }
 
+
+                        fieldOfView[mob.pos] = true;
+
                     } else {
 
                         for (int n : Level.NEIGHBOURS8) {
@@ -1159,7 +1171,6 @@ public abstract class Level implements Bundlable {
                                 mob.noticed = true;
                             }
                         }
-
                     }
                 }
             }

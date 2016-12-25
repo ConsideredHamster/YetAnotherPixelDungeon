@@ -98,20 +98,20 @@ public abstract class RangedWeapon extends Weapon {
         return known >= CURSED_KNOWN;
     }
 
-	@Override
-	public Item random() {
+//	@Override
+//	public Item random() {
 //		super.random();
-
-        bonus = Random.NormalIntRange( -3, +3 );
-
-		if (Random.Int( 7 + bonus ) == 0) {
-			enchant();
-		}
-
-        randomize_state();
-		
-		return this;
-	}
+//
+//        bonus = Random.NormalIntRange( -3, +3 );
+//
+//		if (Random.Int( 7 + bonus ) == 0) {
+//			enchant();
+//		}
+//
+//        randomize_state();
+//
+//		return this;
+//	}
 
     @Override
     public int price() {
@@ -120,13 +120,13 @@ public abstract class RangedWeapon extends Weapon {
 
         price *= lootChapter();
 
-        if (isIdentified()) {
+        if ( isIdentified() ) {
             price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
-        } else {
+        } else if( !isCursedKnown() || bonus < 0 ) {
             price /= 2;
         }
 
-        if( enchantment != null ) {
+        if( enchantment != null && isEnchantKnown() ) {
             price += price / 4;
         }
 

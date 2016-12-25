@@ -76,7 +76,7 @@ public abstract class MeleeWeaponHeavyTH extends MeleeWeapon {
 
     @Override
     public int penaltyBase(Hero hero, int str) {
-        return super.penaltyBase(hero, str) + 2;
+        return super.penaltyBase(hero, str) + 4;
     }
 
     @Override

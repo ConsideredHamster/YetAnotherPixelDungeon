@@ -70,8 +70,6 @@ public abstract class Weapon extends EquipableItem {
 //    }
 
 
-
-    protected static final String TXT_EQUIP_CURSED	= "you wince as your grip involuntarily tightens around your %s";
 //    private static final String TXT_EQUIP	= "you equip %s";
 //    private static final String TXT_UNEQUIP	= "you unequip %s";
 
@@ -103,19 +101,18 @@ public abstract class Weapon extends EquipableItem {
             if( QuickSlot.quickslot2.value == this && ( hero.belongings.weap1 == null || hero.belongings.weap1.bonus >= 0 ) )
                 QuickSlot.quickslot2.value = hero.belongings.weap1 != null && hero.belongings.weap1.stackable ? hero.belongings.weap1.getClass() : hero.belongings.weap1 ;
 
-            if (hero.belongings.weap1 == null || hero.belongings.weap1.doUnequip(hero, true, false)) {
+            if( QuickSlot.quickslot3.value == this && ( hero.belongings.weap1 == null || hero.belongings.weap1.bonus >= 0 ) )
+                QuickSlot.quickslot3.value = hero.belongings.weap1 != null && hero.belongings.weap1.stackable ? hero.belongings.weap1.getClass() : hero.belongings.weap1 ;
+
+            if ( ( hero.belongings.weap1 == null || hero.belongings.weap1.doUnequip(hero, true, false) ) &&
+                    ( bonus >= 0 || isCursedKnown() || !detectCursed( this, hero ) ) ) {
 
                 hero.belongings.weap1 = this;
                 activate(hero);
 
                 GLog.i(TXT_EQUIP, name());
 
-                identify(CURSED_KNOWN);
-
-                if (bonus < 0) {
-                    equipCursed(hero);
-                    GLog.n(TXT_EQUIP_CURSED, name());
-                }
+                identify( CURSED_KNOWN );
 
                 QuickSlot.refresh();
 
@@ -124,6 +121,8 @@ public abstract class Weapon extends EquipableItem {
 
             } else {
 
+                QuickSlot.refresh();
+                hero.spendAndNext(time2equip(hero) * 0.5f);
                 collect(hero.belongings.backpack);
                 return false;
 
@@ -200,9 +199,24 @@ public abstract class Weapon extends EquipableItem {
 		imbue = bundle.getEnum( IMBUE, Imbue.class );
 	}
 
-	public int damageRoll() {
+	public int damageRoll( Hero hero ) {
 
-		return Math.max( 0, Random.NormalIntRange( min(), max() ) );
+		int dmg = Math.max( 0, Random.NormalIntRange( min(), max() ) );
+
+
+        int exStr = hero.STR() - strShown( true );
+
+        if (exStr > 0) {
+            dmg += Random.IntRange( 0, exStr );
+        }
+
+        if( enchantment instanceof Heroic) {
+            dmg += bonus >= 0
+                    ? dmg * (hero.HT - hero.HP) * (bonus + 1) / hero.HT / 8
+                    : dmg * (hero.HT - hero.HP) * (bonus) / hero.HT / 6;
+        }
+
+        return dmg;
 
 	}
 
@@ -435,11 +449,12 @@ public abstract class Weapon extends EquipableItem {
     public String info() {
 
         final String p = "\n\n";
+        final String s = " ";
 
         int heroStr = Dungeon.hero.STR();
         int itemStr = strShown( isIdentified() );
-        int penalty = GameMath.gate( 0, penaltyBase(Dungeon.hero, strShown(isIdentified())) -
-                ( isEnchantKnown() && enchantment instanceof Ethereal ? bonus : 0 ), 20 ) * 5;
+        float penalty = GameMath.gate( 0, penaltyBase(Dungeon.hero, strShown(isIdentified())) -
+                ( isEnchantKnown() && enchantment instanceof Ethereal ? bonus : 0 ), 20 ) * 2.5f;
 //        float power = Math.max(0, isIdentified() ? (float)(min() + max()) / 2 : ((float)(min(0) + max(0)) / 2) );
 
         StringBuilder info = new StringBuilder( desc() );
@@ -503,43 +518,37 @@ public abstract class Weapon extends EquipableItem {
 
         if (isEquipped( Dungeon.hero )) {
 
-            info.append( "You hold the " + name + " at the ready." );
-
-            if( isCursedKnown() && bonus < 0 ) {
-                info.append( " Because it is _cursed_, you are powerless to remove it." );
-            } else if( isIdentified() ) {
-                info.append( bonus > 0 ? " It appears to be _upgraded_." : " It appears to be _non-cursed_." );
-            } else {
-                info.append( " This " + name + " is _unidentified_." );
-            }
-
-            if( isEnchantKnown() && enchantment != null ) {
-                info.append( " " + ( isIdentified() && bonus != 0 ? "Also" : "However" ) +
-                        ", it seems to be _enchanted to " + enchantment.desc(this) + "_." );
-            }
+            info.append("You hold the " + name + " at the ready.");
 
         } else if( Dungeon.hero.belongings.backpack.items.contains(this) ) {
 
-            info.append( "The " + name + " is in your backpack. " );
-
-            if( isCursedKnown() && bonus < 0 ) {
-                info.append( "A malevolent _curse_ seems to be lurking within this " + name +". Equipping it will be most likely a very bad idea." );
-            } else if( isIdentified() ) {
-                info.append( bonus > 0 ? " It appears to be _upgraded_." : " It appears to be _non-cursed_." );
-            } else {
-                info.append( " This " + name + " is _unidentified_." );
-            }
-
-            if( isEnchantKnown() && enchantment != null ) {
-                info.append( " " + ( isIdentified() && bonus != 0 ? "Also" : "However" ) +
-                        ", it seems to be _enchanted to " + enchantment.desc(this) + "_." );
-            }
+            info.append( "The " + name + " is in your backpack." );
 
         } else {
 
             info.append( "The " + name + " lies on the dungeon's floor." );
 
         }
+
+        info.append( s );
+
+        if( isIdentified() && bonus > 0 ) {
+            info.append( "It appears to be _upgraded_." );
+        } else if( isCursedKnown() ) {
+            info.append( bonus >= 0 ? "It appears to be _non-cursed_." :
+                    "A malevolent _curse_ seems to be lurking within this " + name +"." );
+        } else {
+            info.append( " This " + name + " is _unidentified_." );
+        }
+
+        info.append( s );
+
+        if( isEnchantKnown() && enchantment != null ) {
+            info.append( " " + ( isIdentified() && bonus != 0 ? "Also" : "However" ) +
+                    ", it seems to be _enchanted to " + enchantment.desc(this) + "_." );
+        }
+
+
 
         return info.toString();
     }

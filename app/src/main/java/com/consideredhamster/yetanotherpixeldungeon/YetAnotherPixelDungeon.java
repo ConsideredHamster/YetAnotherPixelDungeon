@@ -40,10 +40,10 @@ public class YetAnotherPixelDungeon extends Game {
 	
 	public YetAnotherPixelDungeon() {
 		super( TitleScene.class );
-		
-		com.watabou.utils.Bundle.addAlias( 
-			com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfClairvoyance.class,
-			"com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfMagicMapping" );
+
+        com.watabou.utils.Bundle.addAlias(
+                com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability.class,
+                "com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfHaste" );
 
 	}
 	
@@ -251,12 +251,12 @@ public class YetAnotherPixelDungeon extends Game {
 		return Preferences.INSTANCE.getBoolean( Preferences.KEY_BRIGHTNESS, false );
 	}
 
-    public static void loadingTips(boolean value) {
+    public static void loadingTips( int value ) {
         Preferences.INSTANCE.put( Preferences.KEY_LOADING_TIPS, value );
     }
 
-    public static boolean loadingTips() {
-        return Preferences.INSTANCE.getBoolean( Preferences.KEY_LOADING_TIPS, true );
+    public static int loadingTips() {
+        return Preferences.INSTANCE.getInt( Preferences.KEY_LOADING_TIPS, 3 );
     }
 	
 	public static void donated( String value ) {
@@ -281,6 +281,14 @@ public class YetAnotherPixelDungeon extends Game {
 
     public static int lastDifficulty() {
         return Preferences.INSTANCE.getInt( Preferences.KEY_DIFFICULTY, 0 );
+    }
+
+    public static void lastVersion( int value ) {
+        Preferences.INSTANCE.put( Preferences.KEY_LAST_VERSION, value );
+    }
+
+    public static int lastVersion() {
+        return Preferences.INSTANCE.getInt( Preferences.KEY_LAST_VERSION, 0 );
     }
 	
 	public static void challenges( int value ) {

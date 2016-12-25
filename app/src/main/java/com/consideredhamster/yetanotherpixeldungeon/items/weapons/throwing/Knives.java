@@ -40,13 +40,6 @@ public class Knives extends ThrowingWeaponLight {
 	}
 	
 	@Override
-    public int penaltyBase( Hero hero, int str ) {
-
-        return super.penaltyBase(hero, str) - 2;
-
-    }
-	
-	@Override
 	public String desc() {
 		return 
 			"These simple metal blades are weighted to fly true and " +

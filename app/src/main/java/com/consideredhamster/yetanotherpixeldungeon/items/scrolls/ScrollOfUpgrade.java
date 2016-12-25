@@ -24,15 +24,19 @@ import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.ui.QuickSlot;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.windows.WndBag;
+import com.watabou.utils.Random;
 
 public class ScrollOfUpgrade extends InventoryScroll {
 
+	private static final String TXT_CURSE_WEAKENED = "your %s was cursed, but now the curse seems to be weaker";
+	private static final String TXT_CURSE_DISPELLED	= "your %s was cursed, but now the curse seems to be removed";
 	private static final String TXT_LOOKS_BETTER	= "your %s certainly looks better now";
-	
+
 	{
 		name = "Scroll of Upgrade";
         shortName = "Up";
@@ -47,22 +51,38 @@ public class ScrollOfUpgrade extends InventoryScroll {
 	@Override
 	protected void onItemSelected( Item item ) {
 
-//		ScrollOfExorcism.uncurse(Dungeon.hero, item);
+        item.identify( CURSED_KNOWN );
 
-		item.upgrade();
+        if( item.bonus >= 0 ) {
+
+            item.upgrade();
+            GLog.p( TXT_LOOKS_BETTER, item.name() );
+            curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 3);
+
+        } else {
+
+            item.bonus++;
+
+            if( item.bonus < 0 ) {
+
+                GLog.w( TXT_CURSE_WEAKENED, item.name() );
+                curUser.sprite.emitter().burst(ShadowParticle.CURSE, 4);
+
+            } else {
+
+                GLog.p( TXT_CURSE_DISPELLED, item.name() );
+                curUser.sprite.emitter().burst(ShadowParticle.CURSE, 6);
+
+            }
+        }
+
 		item.repair(1);
 
         QuickSlot.refresh();
 		
-		upgrade( curUser );
-		GLog.p( TXT_LOOKS_BETTER, item.name() );
-		
 		Badges.validateItemLevelAcquired(item);
 	}
-	
-	public static void upgrade( Hero hero ) {
-		hero.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 3);
-	}
+
 	
 	@Override
 	public String desc() {

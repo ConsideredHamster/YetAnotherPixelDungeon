@@ -153,7 +153,15 @@ public class StandardPainter extends Painter {
 				level.map[i * Level.WIDTH + j] = t;
 			}
 		}
-	}
+
+        if( Dungeon.depth > 1 ) {
+            for (Room.Door door : room.connected.values()) {
+                if (Random.Int(2) == 0) {
+                    door.set(Room.Door.Type.HIDDEN);
+                }
+            }
+        }
+    }
 	
 	private static void paintGraveyard( Level level, Room room ) {
 		fill( level, room.left + 1, room.top + 1, room.width() - 1, room.height() - 1 , Terrain.GRASS );
@@ -169,8 +177,12 @@ public class StandardPainter extends Painter {
 			int pos = w > h ?
 				room.left + 1 + shift + i * 2 + (room.top + 2 + Random.Int( h-2 )) * Level.WIDTH :
 				(room.left + 2 + Random.Int( w-2 )) + (room.top + 1 + shift + i * 2) * Level.WIDTH;	
-			level.drop( i == index ? Generator.random() : new Gold().random(), pos, true ).type = Heap.Type.TOMB;
+			level.drop( new Gold().random(), pos, true ).type = Heap.Type.TOMB;
 		}
+
+        for (Room.Door door : room.connected.values()) {
+            door.set( Room.Door.Type.EMPTY );
+        }
 	}
 	
 	private static void paintStriped( Level level, Room room ) {
@@ -296,6 +308,10 @@ public class StandardPainter extends Painter {
             fill( level, room.left + 2, room.top + 2, room.width() - 3, room.height() - 3,
                     level.feeling == Level.Feeling.WATER ?
                             Terrain.WATER : Terrain.CHASM );
+        }
+
+        for (Room.Door door : room.connected.values()) {
+            door.set( Room.Door.Type.REGULAR );
         }
 	}
 	

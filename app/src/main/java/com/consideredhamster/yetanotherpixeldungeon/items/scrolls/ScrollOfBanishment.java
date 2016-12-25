@@ -124,17 +124,15 @@ public class ScrollOfBanishment extends Scroll {
 
                 if (item.bonus < 0) {
 
-                    if( item instanceof Weapon && ((Weapon)item).enchantment != null ) {
+                    item.bonus = Random.IntRange( item.bonus + 1, 0 );
 
-                        ((Weapon)item).enchant( null );
-
-                    } else if( item instanceof Armour && ((Armour)item).glyph != null ) {
-
-                        ((Armour)item).inscribe( null );
-
+                    if( item.bonus == 0) {
+                        if( item instanceof Weapon && ((Weapon)item).enchantment != null ) {
+                            ((Weapon)item).enchant( null );
+                        } else if( item instanceof Armour && ((Armour)item).glyph != null ) {
+                            ((Armour)item).inscribe( null );
+                        }
                     }
-
-                    item.bonus = Math.min( 0, item.bonus + Random.IntRange( 1, 3 ) );
 
                     procced = true;
 

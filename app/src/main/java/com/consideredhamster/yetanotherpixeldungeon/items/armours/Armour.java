@@ -189,19 +189,19 @@ public abstract class Armour extends EquipableItem {
         return super.uncurse();
     }
 
-	@Override
-	public Item random() {
+//	@Override
+//	public Item random() {
 
-        bonus = Random.NormalIntRange( -3, +3 );
+//        bonus = Random.NormalIntRange( -3, +3 );
+//
+//        if (Random.Int( 7 + bonus ) == 0) {
+//			inscribe();
+//		}
+//
+//        randomize_state();
 
-        if (Random.Int( 7 + bonus ) == 0) {
-			inscribe();
-		}
-
-        randomize_state();
-
-		return this;
-	}
+//		return this;
+//	}
 
 	public Armour inscribe( Glyph glyph ) {
 

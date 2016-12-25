@@ -105,11 +105,11 @@ public class Assets {
     public static final String BEE		= "npc_bee.png";
     public static final String SHEEP	= "npc_sheep.png";
     public static final String RATKING	= "npc_ratking.png";
-    public static final String MRSKELTAL= "mob_mrskeltal.png";
 
-	public static final String ITEMS	= "items.png";
-	public static final String PLANTS	= "plants.png";
-	
+    public static final String HELP 	= "help.png";
+    public static final String ITEMS	= "items.png";
+    public static final String PLANTS	= "plants.png";
+
 	public static final String TILES_SEWERS	= "tiles0.png";
 	public static final String TILES_PRISON	= "tiles1.png";
 	public static final String TILES_CAVES	= "tiles2.png";

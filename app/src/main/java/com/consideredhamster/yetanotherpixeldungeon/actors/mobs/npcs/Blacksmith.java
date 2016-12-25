@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
 import java.util.Collection;
 
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
@@ -200,9 +201,9 @@ public class Blacksmith extends NPC {
 			second = item2;
 		}
 
-		Sample.INSTANCE.play( Assets.SND_EVOKE );
-		ScrollOfUpgrade.upgrade( Dungeon.hero );
-		Item.evoke( Dungeon.hero );
+        Dungeon.hero.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 3);
+        Sample.INSTANCE.play( Assets.SND_EVOKE );
+        Item.evoke( Dungeon.hero );
 
 		if (first.isEquipped( Dungeon.hero )) {
 			((EquipableItem)first).doUnequip( Dungeon.hero, true );

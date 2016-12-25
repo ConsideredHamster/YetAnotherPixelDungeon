@@ -57,7 +57,8 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 	public static float density = 1;
 	
 	public static String version;
-	
+	public static int versionNum;
+
 	// Current scene
 	protected Scene scene;
 	// New scene we are going to switch to
@@ -101,8 +102,10 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 		
 		try {
 			version = getPackageManager().getPackageInfo( getPackageName(), 0 ).versionName;
+			versionNum = getPackageManager().getPackageInfo( getPackageName(), 0 ).versionCode;
 		} catch (NameNotFoundException e) {
 			version = "???";
+            versionNum = 0;
 		}
 		
 		setVolumeControlStream( AudioManager.STREAM_MUSIC );

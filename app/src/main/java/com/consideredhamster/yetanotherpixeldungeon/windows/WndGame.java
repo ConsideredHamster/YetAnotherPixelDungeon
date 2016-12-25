@@ -40,10 +40,10 @@ import com.consideredhamster.yetanotherpixeldungeon.ui.Window;
 public class WndGame extends Window {
 	
 	private static final String TXT_SETTINGS	= "Settings";
-//    private static final String TXT_CATALOGUS	= "Catalogus";
     private static final String TXT_JOURNAL		= "Journal";
 	private static final String TXT_CHALLENGES  = "Challenges";
 	private static final String TXT_RANKINGS	= "Rankings";
+	private static final String TXT_TUTORIAL	= "Tutorial";
 	private static final String TXT_START		= "Start New Game";
 	private static final String TXT_MENU		= "Main Menu";
 	private static final String TXT_EXIT		= "Exit Game";
@@ -78,6 +78,14 @@ public class WndGame extends Window {
                 GameScene.show(new WndCatalogus());
             }
         } );
+
+        addButton( new RedButton( TXT_TUTORIAL ) {
+            @Override
+            protected void onClick() {
+                hide();
+                GameScene.show(new WndTutorial());
+            }
+        } );
 		
 //		if (Dungeon.challenges > 0) {
 //			addButton( new RedButton(TXT_CHALLENGES) {
@@ -107,13 +115,13 @@ public class WndGame extends Window {
                 }
             });
 			
-			addButton( new RedButton( TXT_RANKINGS ) {
-				@Override
-				protected void onClick() {
-					InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
-					Game.switchScene( RankingsScene.class );
-				}
-			} );
+//			addButton( new RedButton( TXT_RANKINGS ) {
+//				@Override
+//				protected void onClick() {
+//					InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
+//					Game.switchScene( RankingsScene.class );
+//				}
+//			} );
 //		} else {
 
 
@@ -164,7 +172,6 @@ public class WndGame extends Window {
         showDifficulty.x = ( WIDTH - showDifficulty.width() ) / 2 + GAP;
         showDifficulty.y = pos + ( BTN_HEIGHT / 2 - showDifficulty.height() ) / 2 + GAP * 2;
         add(showDifficulty);
-
 
         BitmapTextMultiline showVersion = PixelScene.createMultiline(
                 Utils.format( TXT_VERSION, Game.version ), 6

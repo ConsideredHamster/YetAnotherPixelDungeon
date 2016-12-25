@@ -55,7 +55,7 @@ public abstract class MeleeWeaponLightOH extends MeleeWeapon {
 
     @Override
     public int penaltyBase(Hero hero, int str) {
-        return super.penaltyBase(hero, str) - 4;
+        return super.penaltyBase(hero, str) - 8;
     }
 
     @Override
@@ -141,7 +141,11 @@ public abstract class MeleeWeaponLightOH extends MeleeWeapon {
             if( QuickSlot.quickslot2.value == this && ( hero.belongings.weap2 == null || hero.belongings.weap2.bonus >= 0 ) )
                 QuickSlot.quickslot2.value = hero.belongings.weap2 != null && hero.belongings.weap2.stackable ? hero.belongings.weap2.getClass() : hero.belongings.weap2 ;
 
-            if (hero.belongings.weap2 == null || hero.belongings.weap2.doUnequip(hero, true, false)) {
+            if( QuickSlot.quickslot3.value == this && ( hero.belongings.weap2 == null || hero.belongings.weap2.bonus >= 0 ) )
+                QuickSlot.quickslot3.value = hero.belongings.weap2 != null && hero.belongings.weap2.stackable ? hero.belongings.weap2.getClass() : hero.belongings.weap2 ;
+
+            if ( ( hero.belongings.weap2 == null || hero.belongings.weap2.doUnequip(hero, true, false) ) &&
+                ( bonus >= 0 || isCursedKnown() || !detectCursed( this, hero ) ) ) {
 
                 hero.belongings.weap2 = this;
                 activate(hero);
@@ -149,11 +153,6 @@ public abstract class MeleeWeaponLightOH extends MeleeWeapon {
                 GLog.i(TXT_EQUIP, name());
 
                 identify( CURSED_KNOWN );
-
-                if (bonus < 0) {
-                    equipCursed(hero);
-                    GLog.n(TXT_EQUIP_CURSED, name());
-                }
 
                 QuickSlot.refresh();
 

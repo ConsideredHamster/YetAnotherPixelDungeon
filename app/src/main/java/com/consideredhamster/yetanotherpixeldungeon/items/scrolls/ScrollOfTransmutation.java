@@ -23,6 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
@@ -33,6 +34,8 @@ import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandUtility;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.MeleeWeapon;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.MeleeWeaponLightOH;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedWeapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeapon;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.HeroSprite;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
@@ -41,6 +44,7 @@ import com.consideredhamster.yetanotherpixeldungeon.windows.WndBag;
 public class ScrollOfTransmutation extends InventoryScroll {
 
 	private static final String TXT_ITEM_TRANSMUTED	= "your %s is transmuted into %s!";
+    private static final String TXT_ITEM_RESISTS	= "Your %s is cursed and resists being transmuted!";
 	private static final String TXT_ITEM_UNKNOWN	= "%s cannot be transmuted!";
 
 	{
@@ -59,7 +63,14 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
         boolean success = true;
 
-        if (item instanceof MeleeWeapon) {
+        if( item.bonus < 0  ) {
+
+            success = false;
+            item.identify( CURSED_KNOWN );
+            GLog.w(TXT_ITEM_RESISTS, item.name());
+            curUser.sprite.emitter().burst(ShadowParticle.CURSE, 6);
+
+        } else if (item instanceof MeleeWeapon || item instanceof RangedWeapon) {
 
             Item newItem = changeWeapon((Weapon) item);
 
@@ -71,7 +82,19 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
             } else if( curUser.belongings.weap2 == item ) {
 
-                curUser.belongings.weap2 = (Weapon)newItem;
+                if( newItem instanceof MeleeWeaponLightOH ) {
+
+                    curUser.belongings.weap2 = (Weapon) newItem;
+
+                } else {
+
+                    curUser.belongings.weap2 = null;
+
+                    if (!newItem.doPickUp(curUser)) {
+                        Dungeon.level.drop(newItem, curUser.pos).sprite.drop();
+                    }
+
+                }
 
             } else {
 

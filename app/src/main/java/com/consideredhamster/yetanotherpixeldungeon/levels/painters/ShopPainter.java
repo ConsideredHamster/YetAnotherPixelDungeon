@@ -285,7 +285,7 @@ public class ShopPainter extends Painter {
             Wand wand = (Wand)Generator.random(Generator.Category.WAND);
             if( wand != null ) {
                 wand.bonus = Random.Int( Dungeon.chapter() );
-                wand.repair().fix();
+                wand.recharge().repair().fix();
                 items.add(wand);
             }
 

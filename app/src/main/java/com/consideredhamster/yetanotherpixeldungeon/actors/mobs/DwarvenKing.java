@@ -23,6 +23,16 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Bleeding;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ensnared;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Stun;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
@@ -236,6 +246,15 @@ public class DwarvenKing extends MobPrecise {
                         yell( LINE_CHANNELING );
                         GLog.w( TXT_CHANNEL );
 
+                        Buff.detach(this, Withered.class);
+                        Buff.detach(this, Burning.class);
+                        Buff.detach(this, Ooze.class);
+                        Buff.detach(this, Poison.class);
+                        Buff.detach(this, Bleeding.class);
+                        Buff.detach(this, Blindness.class);
+                        Buff.detach(this, Charm.class);
+                        Buff.detach(this, Ensnared.class);
+                        Buff.detach(this, Confusion.class);
 
                     } else {
 

@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
 import com.consideredhamster.yetanotherpixeldungeon.ui.AttackIndicator;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
@@ -84,7 +85,7 @@ public abstract class ThrowingWeapon extends Weapon {
     @Override
     public int penaltyBase(Hero hero, int str) {
 
-        return super.penaltyBase(hero, str) + tier * 2;
+        return super.penaltyBase(hero, str) + tier * 4 - 4;
 
     }
 
@@ -117,7 +118,7 @@ public abstract class ThrowingWeapon extends Weapon {
 
     @Override
     public float breakingRateWhenShot() {
-        return 0.05f;
+        return 0.05f / Dungeon.hero.ringBuffs( RingOfDurability.Durability.class );
     }
 	
 //	@Override
@@ -181,28 +182,16 @@ public abstract class ThrowingWeapon extends Weapon {
             if( QuickSlot.quickslot2.value == getClass() && ( hero.belongings.weap2 == null || hero.belongings.weap2.bonus >= 0 ) )
                 QuickSlot.quickslot2.value = hero.belongings.weap2 != null && hero.belongings.weap2.stackable ? hero.belongings.weap2.getClass() : hero.belongings.weap2 ;
 
-//            if( QuickSlot.quickslot1.value == this && ( hero.belongings.weap2 == null || hero.belongings.weap2.bonus >= 0 ) )
-//                QuickSlot.quickslot1.value = hero.belongings.weap2 != null && hero.belongings.weap2.stackable ? hero.belongings.weap2.getClass() : hero.belongings.weap2 ;
-//
-//            if( QuickSlot.quickslot2.value == this && ( hero.belongings.weap2 == null || hero.belongings.weap2.bonus >= 0 ) )
-//                QuickSlot.quickslot2.value = hero.belongings.weap2 != null && hero.belongings.weap2.stackable ? hero.belongings.weap2.getClass() : hero.belongings.weap2 ;
+            if( QuickSlot.quickslot3.value == getClass() && ( hero.belongings.weap2 == null || hero.belongings.weap2.bonus >= 0 ) )
+                QuickSlot.quickslot3.value = hero.belongings.weap2 != null && hero.belongings.weap2.stackable ? hero.belongings.weap2.getClass() : hero.belongings.weap2 ;
 
             if (hero.belongings.weap2 == null || hero.belongings.weap2.doUnequip(hero, true, false)) {
 
                 hero.belongings.weap2 = this;
                 activate(hero);
 
-                GLog.i(TXT_EQUIP, name());
-
-                identify( CURSED_KNOWN );
-
-                if (bonus < 0) {
-                    equipCursed(hero);
-                    GLog.n(TXT_EQUIP_CURSED, name());
-                }
-
                 QuickSlot.refresh();
-
+                GLog.i(TXT_EQUIP, name());
                 hero.spendAndNext(time2equip(hero));
                 return true;
 
@@ -253,8 +242,7 @@ public abstract class ThrowingWeapon extends Weapon {
 
         int heroStr = Dungeon.hero.STR();
         int itemStr = strShown( isIdentified() );
-        int penalty = GameMath.gate(0, penaltyBase(Dungeon.hero, strShown(isIdentified())), 20) * 5;
-        float power = Math.max(0, isIdentified() ? (float)(min() + max()) / 2 : ((float)(min(0) + max(0)) / 2) );
+        float penalty = GameMath.gate(0, penaltyBase(Dungeon.hero, strShown(isIdentified())), 20) * 2.5f;
 
         StringBuilder info = new StringBuilder( desc() );
 

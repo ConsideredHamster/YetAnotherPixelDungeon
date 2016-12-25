@@ -44,12 +44,11 @@ public abstract class BodyArmorHeavy extends BodyArmor {
 
     @Override
     public int penaltyBase(Hero hero, int str) {
-        return super.penaltyBase(hero, str) + tier * 2 + 2;
+        return super.penaltyBase(hero, str) + tier * 4 + 4;
     }
 
     @Override
     public String descType() {
-//        return "This is a _tier-" + appearance + " heavy armor_. It offers greater protection, but hinders your evasion and stealth significantly.";
         return "heavy";
     }
 }

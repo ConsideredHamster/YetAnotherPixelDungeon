@@ -85,7 +85,8 @@ public class Dungeon {
 //	public static int vials;
 	public static int wands;
 	public static int rings;
-	public static int torches;
+    public static int ammos;
+    public static int torches;
 //	public static boolean dewVial;		// true if the dew vial can be spawned
 	public static int transmutation;	// depth number for a well of transmutation
 	
@@ -138,6 +139,7 @@ public class Dungeon {
 //		vials = 0;
 		wands = 0;
 		rings = 0;
+		ammos = 0;
 		torches = 0;
 //		dewVial = true;
 //		transmutation = Random.IntRange( 6, 14 );
@@ -153,7 +155,8 @@ public class Dungeon {
 
 		QuickSlot.quickslotValue_1 = null;
 		QuickSlot.quickslotValue_2 = null;
-		
+		QuickSlot.quickslotValue_3 = null;
+
 		hero = new Hero();
 		hero.live();
 		hero.buff( Hunger.class ).satisfy( 0, true );
@@ -173,13 +176,6 @@ public class Dungeon {
 		Actor.clear();
 		
 		depth++;
-//		depth = 6;
-//		depth = 12;
-//		depth = 18;
-//		depth = 24;
-//		depth = 25;
-//		depth = 30;
-//		depth = 31;
 
 		if (depth > Statistics.deepestFloor) {
 			Statistics.deepestFloor = depth;
@@ -383,6 +379,12 @@ public class Dungeon {
         return chance( quota, rings );
     }
 
+    public static boolean ammosNeeded() {
+        int[] quota = {1, 0, 5, 1, 11, 2, 17, 3, 23, 4, 29, 5};
+
+        return chance( quota, ammos);
+    }
+
     public static boolean torchesNeeded() {
         int[] quota = {5, 0, 11, 1, 17, 3, 23, 6, 29, 10};
 
@@ -430,6 +432,7 @@ public class Dungeon {
 	private static final String VIALS		= "vials";
 	private static final String WANDS		= "wands";
 	private static final String RINGS		= "rings";
+	private static final String AMMOS		= "ammos";
 	private static final String TORCHES		= "torches";
 	private static final String WT			= "transmutation";
 	private static final String CHAPTERS	= "chapters";
@@ -487,6 +490,7 @@ public class Dungeon {
 //			bundle.put( VIALS, vials );
 			bundle.put( WANDS, wands );
 			bundle.put( RINGS, rings );
+			bundle.put( AMMOS, ammos);
 			bundle.put( TORCHES, torches );
 
 			int count = 0;
@@ -596,6 +600,7 @@ public class Dungeon {
 //		vials = bundle.getInt( VIALS );
 		wands = bundle.getInt( WANDS );
 		rings = bundle.getInt( RINGS );
+		ammos = bundle.getInt( AMMOS );
 		torches = bundle.getInt(TORCHES);
 
 		if (fullLoad) {

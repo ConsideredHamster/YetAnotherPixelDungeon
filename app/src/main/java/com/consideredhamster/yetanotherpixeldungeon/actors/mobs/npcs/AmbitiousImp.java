@@ -34,6 +34,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.quest.DwarfToken;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAccuracy;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEnergy;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEvasion;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfFortune;
@@ -262,11 +263,11 @@ public class AmbitiousImp extends NPC {
                             !( reward instanceof RingOfEvasion || reward instanceof RingOfShadows || reward instanceof RingOfFortune)
                     ) ||
                     ( Dungeon.hero.heroClass == HeroClass.ACOLYTE &&
-                            !( reward instanceof RingOfAccuracy || reward instanceof RingOfPerception || reward instanceof RingOfHaste)
+                            !( reward instanceof RingOfAccuracy || reward instanceof RingOfPerception || reward instanceof RingOfDurability)
                     )
                 );
 
-				reward.bonus = 3;
+				reward.bonus = Dungeon.questsCompleted();
 //				reward.cursed = true;
 			}
 		}

@@ -29,12 +29,13 @@ import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.windows.WndBag;
+import com.watabou.utils.Random;
 
 public class ScrollOfEnchantment extends InventoryScroll {
 
 	private static final String TXT_ITEM_ENCHANT	= "Your %s glows in the dark.";
-	private static final String TXT_ITEM_RESISTS	= "Your cursed %s resists being enchanted!";
-	private static final String TXT_ITEM_UNCURSE	= "Malicious enchantment is lifted from your %s!";
+	private static final String TXT_ITEM_RESISTS	= "Your %s is cursed, but the curse was weakened!";
+	private static final String TXT_ITEM_UNCURSE	= "Your %s was cursed, but the curse was removed!";
 	private static final String TXT_ITEM_UNKNOWN	= "%s cannot be enchanted!";
 
 	{
@@ -62,6 +63,7 @@ public class ScrollOfEnchantment extends InventoryScroll {
             if( weapon.bonus >= 0 ) {
 
                 weapon.enchant();
+                weapon.identify( ENCHANT_KNOWN );
                 GLog.w(TXT_ITEM_ENCHANT, weapon.name());
 
                 curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
@@ -69,16 +71,20 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
             } else {
 
-                if( weapon.enchantment != null ) {
-                    weapon.enchant( null );
-                    GLog.w(TXT_ITEM_UNCURSE, weapon.name());
-                    weapon.identify(CURSED_KNOWN);
-                    curUser.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
+                weapon.identify( CURSED_KNOWN );
+                item.bonus = Random.IntRange( item.bonus + 1, 0 );
+                curUser.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
+
+                if( item.bonus < 0 ) {
+
+                    GLog.w( TXT_ITEM_RESISTS, item.name() );
+                    curUser.sprite.emitter().burst(ShadowParticle.CURSE, 4);
 
                 } else {
-                    GLog.w(TXT_ITEM_RESISTS, weapon.name());
-                    weapon.identify( CURSED_KNOWN );
+
+                    GLog.p( TXT_ITEM_UNCURSE, item.name() );
                     curUser.sprite.emitter().burst(ShadowParticle.CURSE, 6);
+
                 }
             }
 
@@ -89,6 +95,7 @@ public class ScrollOfEnchantment extends InventoryScroll {
             if( armour.bonus >= 0 ) {
 
                 armour.inscribe();
+                armour.identify( ENCHANT_KNOWN );
                 GLog.w(TXT_ITEM_ENCHANT, armour.name());
 
                 curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
@@ -97,13 +104,20 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
             } else {
 
-                if( armour.glyph != null ) {
-                    armour.inscribe(null);
-                    GLog.w(TXT_ITEM_UNCURSE, armour.name());
-                    curUser.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
+                armour.identify( CURSED_KNOWN );
+                item.bonus = Random.IntRange( item.bonus + 1, 0 );
+                curUser.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
+
+                if( item.bonus < 0 ) {
+
+                    GLog.w( TXT_ITEM_RESISTS, item.name() );
+                    curUser.sprite.emitter().burst(ShadowParticle.CURSE, 4);
+
                 } else {
-                    GLog.w(TXT_ITEM_RESISTS, armour.name());
+
+                    GLog.p( TXT_ITEM_UNCURSE, item.name() );
                     curUser.sprite.emitter().burst(ShadowParticle.CURSE, 6);
+
                 }
             }
 
@@ -118,7 +132,9 @@ public class ScrollOfEnchantment extends InventoryScroll {
 	public String desc() {
 		return
 			"This scroll is able to imbue a weapon or an armor with a random enchantment, " +
-            "granting it some special powers.";
+            "granting it some special powers. If used on a cursed item, it will try to " +
+            "dispel its curse and will even turn its enchantment into benevolent one " +
+            "in case of success.";
 	}
 
 
