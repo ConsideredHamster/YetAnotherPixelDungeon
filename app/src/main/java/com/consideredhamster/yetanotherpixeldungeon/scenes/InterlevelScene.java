@@ -78,11 +78,11 @@ public class InterlevelScene extends PixelScene {
 
             // GENERAL
 
-            "There is a shop on every fifth level of the dungeon, you can spend your gold there",
+            "There is a shop on every fifth level of the dungeon; you can spend your gold there",
             "There are only 3 ankhs in the dungeon but there is a low chance to find more",
 
             "Trapped and flooded vaults are less likely to have cursed item in them",
-            "Special rooms with tombs or statues will never have their prize to be cursed",
+            "Special rooms with tombs or animated statues will never have their prize cursed",
 
             "Detection determines the time it takes to search for traps and secret doors",
             "Detection affects your chances to notice a trap or a secret door by walking near it",
@@ -102,7 +102,7 @@ public class InterlevelScene extends PixelScene {
             "Your chance to parry an attack instead of blocking it depends on your Accuracy",
             "Parries leave your enemies open to counter attacks which deal 50% bonus damage",
 
-            "High Strength increases your chances to break free when being ensnared",
+            "High Strength increases your chances to break free when ensnared",
             "Your health regeneration rate grows with levels and potions of Strength used",
 
             "Your health regeneration is tripled while you are sleeping on land",
@@ -112,7 +112,7 @@ public class InterlevelScene extends PixelScene {
             "Try to keep your character level higher or equal to the current depth",
 
             "Item upgrade levels are capped at +3 - don't worry, that's enough",
-            "Upgraded items are more durable but cursed items break much faster",
+            "Upgraded items are more durable, but cursed items break much faster",
 
             "Remember that you always can turn these tooltips off in the game settings!",
             "More tips will be added later!",
@@ -126,19 +126,19 @@ public class InterlevelScene extends PixelScene {
             "Stronger shields and body armors usually decrease your dexterity and stealth",
 
             "Your chance to block an attack depends on armor class of your shield and damage of your weapon",
-            "Successful block can become a parry, depending on your chance to hit the target",
+            "A successful block can become a parry, depending on your chance to hit the target",
 
-            "Excessive strength decreases penalties from heavy equipment",
-            "Stronger flintlock weapons spend more gunpowder on reload",
+            "Excess strength decreases penalties from heavy equipment",
+            "Stronger flintlock weapons require more gunpowder to reload",
 
-            "Being hit by a lightning can force you to drop your current weapon on the ground",
+            "Being hit by lightning can force you to drop your current weapon on the ground",
             "You can identify weapons, armors, wands and rings by using them long enough",
 
-            "Flintlock weapons ignore distance penalties and target's armor",
+            "Flintlock weapons ignore distance penalties and the target's armor",
             "You can craft makeshift bombs from excess gunpowder",
 
             "You can combine bomb sticks into bomb bundles which pack some extra punch",
-            "You can dismantle bomb bundles and sticks to obtain some of its components",
+            "You can dismantle bomb bundles or sticks to obtain some of their components",
 
             "Upgraded cloth armor will increase its corresponding attribute even more",
             "Stealth penalty from your equipment is not applied while you are asleep",
@@ -165,17 +165,17 @@ public class InterlevelScene extends PixelScene {
             "There are only 2 potions of Strength per chapter but there is a low chance to find more",
             "Potion of Strength can be used to dispel weakness",
 
-            "Potions of Mending also can dispel Withered status effect",
-            "Potion of Mending also cures most physical debuffs such as poison or bleeding",
+            "Potions of Mending also can dispel the Withered status effect",
+            "Potions of Mending also cure most physical debuffs such as poison or bleeding",
 
             "Potions of Mind Vision allow you to ignore most of disadvantages of being blind",
             "Potions of Mind Vision allow you to detect hidden mimics if they are out of line of sight",
 
-            "Potion of Levitation gives you a bonus to your movement speed",
-            "Potion of Levitation can be used to descend safely when jumping into a chasm",
+            "Potions of Levitation give you a bonus to your movement speed",
+            "Potions of Levitation can be used to descend safely when jumping into a chasm",
 
-            "Using a scroll or a wand dispels the effect of potion of Invisibility",
-            "Enemies can dispel effect of potion of Invisibility if they stumble into you",
+            "Using a scroll or a wand dispels the effect of a potion of Invisibility",
+            "Enemies can dispel the effect of a potion of Invisibility by stumbling into you",
 
             "Drinking a potion of Blessing increases your armor class by 20% of your max health",
             "Throw a potion of Blessing on adjacent tile to weaken curses on items in your inventory",
@@ -193,7 +193,7 @@ public class InterlevelScene extends PixelScene {
             "You can farm plants for alchemy with help of potions of Overgrowth",
 
             "Using a potion of Thunderstorm can attract wandering monsters",
-            "Potions of Thunderstorm can be used to flood the dungeon floor or extinguish fires",
+            "Potions of Thunderstorm can be used to flood the dungeon floor or to extinguish fires",
 
             // SCROLLS
 
@@ -238,7 +238,7 @@ public class InterlevelScene extends PixelScene {
             "There is always at least 1 ration of food per depth, but look out for hidden rooms",
             "Some kinds of monsters can drop a raw meat or even a small ration",
 
-            "Full stomach allows you to recover from wounds faster than normal",
+            "A full stomach allows you to recover from wounds faster than normal",
             "Eating raw meat can poison you - better cook it by burning or freezing it",
 
             "Chargrilled meat doesn't have any additional advantages besides being edible",
