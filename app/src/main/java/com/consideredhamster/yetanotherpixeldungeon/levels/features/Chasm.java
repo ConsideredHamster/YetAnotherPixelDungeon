@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.features;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
@@ -107,7 +108,11 @@ public class Chasm {
 		jumpConfirmed = false;
 
         if( !useLevitation ) {
-            Sample.INSTANCE.play(Assets.SND_FALLING);
+            if( Dungeon.hero.heroClass == HeroClass.ACOLYTE ) {
+                Sample.INSTANCE.play(Assets.SND_FALLING, 1.0f, 1.0f, 1.2f);
+            } else {
+                Sample.INSTANCE.play(Assets.SND_FALLING);
+            }
         }
 		
 		if (Dungeon.hero.isAlive()) {

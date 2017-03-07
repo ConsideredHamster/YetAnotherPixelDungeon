@@ -161,7 +161,13 @@ public abstract class MeleeWeaponLightOH extends MeleeWeapon {
 
             } else {
 
-                collect(hero.belongings.backpack);
+                QuickSlot.refresh();
+                hero.spendAndNext(time2equip(hero) * 0.5f);
+
+                if ( !collect( hero.belongings.backpack ) ) {
+                    Dungeon.level.drop( this, hero.pos ).sprite.drop();
+                }
+
                 return false;
 
             }

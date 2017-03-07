@@ -135,7 +135,9 @@ public abstract class MeleeWeapon extends Weapon {
 
         if ( isIdentified() ) {
             price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
-        } else if( !isCursedKnown() || bonus < 0 ) {
+        } else if( isCursedKnown() && bonus >= 0 ) {
+            price -= price / 4;
+        } else {
             price /= 2;
         }
 

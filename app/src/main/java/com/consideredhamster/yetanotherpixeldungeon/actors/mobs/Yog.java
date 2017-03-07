@@ -23,8 +23,10 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
@@ -67,19 +69,23 @@ public class Yog extends Mob {
 		state = PASSIVE;
 	}
 
-    private final static int FIST_RESPAWN_MIN = 75;
-    private final static int FIST_RESPAWN_MAX = 100;
+    private final static int FIST_RESPAWN_MIN = 25;
+    private final static int FIST_RESPAWN_MAX = 30;
 
 	private static final String TXT_DESC =
 		"Yog-Dzewa is an Old God, a powerful entity from the realms of chaos. A century ago, the ancient dwarves " +
 		"barely won the war against its army of demons, but were unable to kill the god itself. Instead, they then " +
-		"imprisoned it in the halls below their city, believing it to be too weak to rise ever again.";	
-	
-//	private static int fistsCount = 0;
+		"imprisoned it in the halls below their city, believing it to be too weak to rise ever again.";
 
     @Override
     public float awareness(){
         return 2.0f;
+    }
+
+
+    @Override
+    public boolean immovable(){
+        return true;
     }
 	
 	public Yog() {
@@ -96,78 +102,39 @@ public class Yog extends Mob {
 		} while (!Level.passable[fist1.pos] || !Level.passable[fist2.pos] || fist1.pos == fist2.pos);
 		
 		GameScene.add( fist1 );
-		GameScene.add( fist2 );
+		GameScene.add(fist2);
 	}
-
-    @Override
-    public boolean act() {
-//
-//        boolean RFisAlive = false;
-//        boolean BFisAlive = false;
-//
-//        if (Dungeon.level.mobs.size() > 0) {
-//            for (Mob mob : Dungeon.level.mobs) {
-//                if( enemySeen ) {
-//                    mob.beckon( pos );
-//                }
-//
-//                if (mob instanceof BurningFist) {
-//                    BFisAlive = true;
-//                }
-//
-//                if (mob instanceof RottingFist) {
-//                    RFisAlive = true;
-//                }
-//            }
-//        }
-//
-        spend( TICK );
-        return true;
-
-//        return super.act();
-    }
 	
 	@Override
 	public void damage( int dmg, Object src, DamageType type ) {
 
-        int fistsCount = 0;
+        int decreaseValue = 1;
 
 		if (Dungeon.level.mobs.size() > 0) {
 			for (Mob mob : Dungeon.level.mobs) {
 				if (mob instanceof BurningFist || mob instanceof RottingFist) {
-					mob.beckon( pos );
-                    fistsCount++;
+
+                    if( src instanceof Char ) {
+                        mob.beckon( ((Char)src).pos );
+                    }
+
+                    decreaseValue += 2;
 				}
 			}
 		}
 
-        dmg /= Math.pow( 2, fistsCount );
-		
-		super.damage( dmg, src, type );
+        dmg /= decreaseValue;
+
+		super.damage(dmg, src, type);
 	}
-	
-//	@Override
-//	public int defenseProc( Char enemy, int damage ) {
-//
-//		ArrayList<Integer> spawnPoints = new ArrayList<Integer>();
-//
-//		for (int i=0; i < Level.NEIGHBOURS8.length; i++) {
-//			int p = pos + Level.NEIGHBOURS8[i];
-//			if (Actor.findChar( p ) == null && (Level.passable[p] || Level.avoid[p])) {
-//				spawnPoints.add( p );
-//			}
-//		}
-//
-//		if (spawnPoints.size() > 0) {
-//			Larva larva = new Larva();
-//			larva.pos = Random.element( spawnPoints );
-//
-//			GameScene.add( larva );
-//			Actor.addDelayed( new Pushing( larva, pos, larva.pos ), -1 );
-//		}
-//
-//		return super.defenseProc(enemy, damage);
-//	}
+
+    @Override
+    protected boolean act() {
+
+        state = PASSIVE;
+
+        return super.act();
+    }
 	
 	@Override
 	public void beckon( int cell ) {
@@ -190,14 +157,14 @@ public class Yog extends Mob {
 		yell( "..." );
 	}
 	
-	@Override
-	public void notice() {
-		super.notice();
-
-        if( enemySeen ) {
-            yell( "Hope is an illusion..." );
-        }
-	}
+//	@Override
+//	public void notice() {
+//		super.notice();
+//
+//        if( enemySeen ) {
+//            yell( "Greetings, mortal. Are you ready to die?" );
+//        }
+//	}
 	
 	@Override
 	public String description() {
@@ -219,31 +186,18 @@ public class Yog extends Mob {
     }
 	
 	public static class RottingFist extends MobHealthy {
-	
-//		private static final int REGENERATION	= 4;
 
         public RottingFist() {
 
             super( 5, 25, true );
 			name = "rotting fist";
 			spriteClass = RottingFistSprite.class;
-			
-//			HP = HT = 3;
-//			dexterity = 25;
-
-//			minDamage /= 2;
-//			maxDamage /= 2;
 
 			EXP = 0;
 			
 			state = WANDERING;
 		}
-		
-//		public RottingFist() {
-//			super();
-//			fistsCount++;
-//		}
-//
+
         @Override
         public void die( Object cause, DamageType dmg ) {
             super.die( cause, dmg );
@@ -251,31 +205,14 @@ public class Yog extends Mob {
             for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
                 if ( mob instanceof Yog && mob.isAlive() ) {
                     Buff.affect( mob, RespawnRotting.class, Random.IntRange( FIST_RESPAWN_MIN, FIST_RESPAWN_MAX ) );
-                    GLog.w( "Rotting fist will be resurrected!" );
                 }
             }
         }
-		
-//		@Override
-//		public int accuracy() {
-//			return 36;
-//		}
-		
-//		@Override
-//		public int damageRoll() {
-//			return Random.NormalIntRange( 24, 36 );
-//		}
-		
-//		@Override
-//		public int armorClass() {
-//			return 15;
-//		}
-//
+
 		@Override
 		public int attackProc( Char enemy, int damage ) {
 
             Buff.affect( enemy, Ooze.class );
-//            enemy.sprite.burst( 0xFF000000, 5 );
 
 			return damage;
 		}
@@ -308,24 +245,11 @@ public class Yog extends Mob {
             return !(buff instanceof Ooze) && super.add( buff );
 
         }
-		
-//		@Override
-//		public boolean act() {
-
-//			if (Level.water[pos] && HP < HT) {
-//				sprite.emitter().burst( ShadowParticle.UP, 2 );
-//				HP += REGENERATION;
-//			}
-
-//            GameScene.add( Blob.seed( pos, 5, com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas.class ) );
-
-//			return super.act();
-//		}
 
         @Override
         public int defenseProc( Char enemy, int damage,  boolean blocked ) {
 
-            GameScene.add( Blob.seed( pos, 25, com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas.class ) );
+            GameScene.add( Blob.seed( pos, 25, CorrosiveGas.class ) );
 
             return damage;
         }
@@ -366,21 +290,10 @@ public class Yog extends Mob {
 			name = "burning fist";
 			spriteClass = BurningFistSprite.class;
 			
-//			HP = HT = 2;
-//			dexterity = 25;
-
-//            minDamage /= 2;
-//            maxDamage /= 2;
-			
 			EXP = 0;
 			
 			state = WANDERING;
 		}
-		
-//		public BurningFist() {
-//			super();
-//			fistsCount++;
-//		}
 		
 		@Override
 		public void die( Object cause, DamageType dmg ) {
@@ -389,25 +302,9 @@ public class Yog extends Mob {
             for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
                 if ( mob instanceof Yog && mob.isAlive() ) {
                     Buff.affect( mob, RespawnBurning.class, Random.IntRange( FIST_RESPAWN_MIN, FIST_RESPAWN_MAX ) );
-                    GLog.w( "Burning fist will be resurrected!" );
                 }
             }
 		}
-		
-//		@Override
-//		public int accuracy() {
-//			return 36;
-//		}
-//
-//		@Override
-//		public int damageRoll() {
-//			return Random.NormalIntRange( 20, 32 );
-//		}
-//
-//		@Override
-//		public int armorClass() {
-//			return 15;
-//		}
 
         @Override
         public boolean act() {
@@ -454,38 +351,6 @@ public class Yog extends Mob {
             return true;
         }
 
-//        @Override
-//        public int defenseProc( Char enemy, int damage,  boolean blocked ) {
-//
-//            for (int i=0; i < Level.NEIGHBOURS9.length; i++) {
-//                GameScene.add( Blob.seed( pos + Level.NEIGHBOURS9[i], 2, com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire.class ) );
-//            }
-//
-//            return damage;
-//        }
-
-//        @Override
-//        public void damage( int dmg, Object src, DamageType type ) {
-//
-//            if ( type == DamageType.FLAME ) {
-//
-//                if (HP < HT) {
-//                    int reg = Math.min( dmg / 2, HT - HP );
-//
-//                    if (reg > 0) {
-//                        HP += reg;
-//                        sprite.showStatus(CharSprite.POSITIVE, Integer.toString(reg));
-//                        sprite.emitter().burst(Speck.factory(Speck.HEALING), (int) Math.sqrt(reg));
-//                    }
-//                }
-//
-//            } else {
-//
-//                super.damage(dmg, src, type);
-//
-//            }
-//        }
-
         @Override
         public boolean add( Buff buff ) {
 
@@ -520,75 +385,63 @@ public class Yog extends Mob {
             return IMMUNITIES;
         }
 	}
-	
-//	public static class Larva extends Mob {
-//
-//		{
-//			name = "god's larva";
-//			spriteClass = LarvaSprite.class;
-//
-//			HP = HT = 25;
-//			dexterity = 20;
-//
-//			EXP = 0;
-//
-//			state = HUNTING;
-//		}
-//
-//		@Override
-//		public int accuracy( Char target ) {
-//			return 30;
-//		}
-//
-//		@Override
-//		public int damageRoll() {
-//			return Random.NormalIntRange( 15, 20 );
-//		}
-//
-//		@Override
-//		public int armorClass() {
-//			return 8;
-//		}
-//
-//		@Override
-//		public String description() {
-//			return TXT_DESC;
-//
-//		}
-//	}
 
     public static class RespawnBurning extends PassiveBuff {
+
+        private boolean warned = false;
+
+        private static final String WARNED	= "warned";
+
+        @Override
+        public void storeInBundle( Bundle bundle ) {
+            super.storeInBundle( bundle );
+            bundle.put( WARNED, warned );
+        }
+
+        @Override
+        public void restoreFromBundle( Bundle bundle ) {
+            super.restoreFromBundle(bundle);
+            warned = bundle.getBoolean( WARNED );
+        }
 
         @Override
         public void detach() {
 
             if( target.isAlive() ) {
 
-                BurningFist fist = new BurningFist();
+                if( warned ) {
 
-                ArrayList<Integer> candidates = new ArrayList<Integer>();
+                    BurningFist fist = new BurningFist();
 
-                for (int n : Level.NEIGHBOURS8) {
-                    int cell = target.pos + n;
-                    if (!Level.solid[cell] && Actor.findChar(cell) == null) {
-                        candidates.add(cell);
+                    ArrayList<Integer> candidates = new ArrayList<Integer>();
+
+                    for (int n : Level.NEIGHBOURS8) {
+                        int cell = target.pos + n;
+                        if (!Level.solid[cell] && Actor.findChar(cell) == null) {
+                            candidates.add(cell);
+                        }
                     }
-                }
 
-                if (candidates.size() > 0) {
-                    fist.pos = candidates.get(Random.Int(candidates.size()));
+                    if (candidates.size() > 0) {
+                        fist.pos = candidates.get(Random.Int(candidates.size()));
+                    } else {
+                        fist.pos = Dungeon.level.randomRespawnCell();
+                    }
+
+                    GameScene.add(fist);
+
+                    fist.sprite.alpha(0);
+                    fist.sprite.parent.add(new AlphaTweener(fist.sprite, 1, 0.5f));
+                    fist.sprite.emitter().burst(FlameParticle.FACTORY, 15);
+
+                    GLog.w("Burning fist was resurrected!");
+
                 } else {
-                    fist.pos = Dungeon.level.randomRespawnCell();
+
+                    GLog.w( "Burning fist will be resurrected soon!" );
+                    spend( Random.IntRange( FIST_RESPAWN_MIN, FIST_RESPAWN_MAX ) );
+
                 }
-
-                GameScene.add(fist);
-
-                fist.sprite.alpha(0);
-                fist.sprite.parent.add(new AlphaTweener(fist.sprite, 1, 0.5f));
-                fist.sprite.emitter().burst(FlameParticle.FACTORY, 15);
-
-                GLog.w("Burning fist was resurrected!");
-
             }
 
             super.detach();
@@ -597,37 +450,61 @@ public class Yog extends Mob {
 
     public static class RespawnRotting extends PassiveBuff {
 
+        private boolean warned = false;
+
+        private static final String WARNED	= "warned";
+
+        @Override
+        public void storeInBundle( Bundle bundle ) {
+            super.storeInBundle( bundle );
+            bundle.put( WARNED, warned );
+        }
+
+        @Override
+        public void restoreFromBundle( Bundle bundle ) {
+            super.restoreFromBundle(bundle);
+            warned = bundle.getBoolean( WARNED );
+        }
+
         @Override
         public void detach() {
 
             if( target.isAlive() ) {
 
-                RottingFist fist = new RottingFist();
+                if (warned) {
 
-                ArrayList<Integer> candidates = new ArrayList<Integer>();
+                    RottingFist fist = new RottingFist();
 
-                for (int n : Level.NEIGHBOURS8) {
-                    int cell = target.pos + n;
-                    if (!Level.solid[cell] && Actor.findChar(cell) == null) {
-                        candidates.add(cell);
+                    ArrayList<Integer> candidates = new ArrayList<Integer>();
+
+                    for (int n : Level.NEIGHBOURS8) {
+                        int cell = target.pos + n;
+                        if (!Level.solid[cell] && Actor.findChar(cell) == null) {
+                            candidates.add(cell);
+                        }
                     }
-                }
 
-                if (candidates.size() > 0) {
-                    fist.pos = candidates.get(Random.Int(candidates.size()));
+                    if (candidates.size() > 0) {
+                        fist.pos = candidates.get(Random.Int(candidates.size()));
+                    } else {
+                        fist.pos = Dungeon.level.randomRespawnCell();
+                    }
+
+                    GameScene.add(fist);
+
+                    fist.sprite.alpha(0);
+                    fist.sprite.parent.add(new AlphaTweener(fist.sprite, 1, 0.5f));
+                    fist.sprite.emitter().burst(Speck.factory(Speck.TOXIC), 15);
+
+
+                    GLog.w("Rotting fist was resurrected!");
+
                 } else {
-                    fist.pos = Dungeon.level.randomRespawnCell();
+
+                    GLog.w("Rotting fist will be resurrected soon!");
+                    spend(Random.IntRange(FIST_RESPAWN_MIN, FIST_RESPAWN_MAX));
+
                 }
-
-                GameScene.add(fist);
-
-                fist.sprite.alpha(0);
-                fist.sprite.parent.add(new AlphaTweener(fist.sprite, 1, 0.5f));
-                fist.sprite.emitter().burst(Speck.factory(Speck.TOXIC), 15);
-
-
-                GLog.w("Rotting fist was resurrected!");
-
             }
 
             super.detach();

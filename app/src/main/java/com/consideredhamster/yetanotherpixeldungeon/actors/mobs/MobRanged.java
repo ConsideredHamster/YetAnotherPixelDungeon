@@ -40,11 +40,11 @@ public abstract class MobRanged extends Mob {
         minDamage = tier * 2;
         maxDamage = tier * 3 + 3;
 
-        if( Dungeon.difficulty < Difficulties.NORMAL ) {
-            maxDamage -= tier;
-        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
-            minDamage += tier;
-        }
+//        if( Dungeon.difficulty < Difficulties.NORMAL ) {
+//            maxDamage -= tier;
+//        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
+//            minDamage += tier;
+//        }
 
         // old values
         // 1-7     2-10    3-13    4-16    5-19

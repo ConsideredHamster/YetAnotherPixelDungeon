@@ -60,8 +60,8 @@ public class Elemental extends MobPrecise {
         flying = true;
         armorClass = 0;
 
-		loot = Explosives.Gunpowder.class;
-		lootChance = 0.25f;
+//		loot = Explosives.Gunpowder.class;
+//		lootChance = 0.25f;
     }
 
     @Override

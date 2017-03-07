@@ -100,7 +100,7 @@ public class InterlevelScene extends PixelScene {
             "Your wand skill improves damage of your wand of Magic Missile",
 
             "Your chance to parry an attack instead of blocking it depends on your Accuracy",
-            "Parries leave your enemies open to cunter attacks which deal 50% bonus damage",
+            "Parries leave your enemies open to counter attacks which deal 50% bonus damage",
 
             "High Strength increases your chances to break free when being ensnared",
             "Your health regeneration rate grows with levels and potions of Strength used",

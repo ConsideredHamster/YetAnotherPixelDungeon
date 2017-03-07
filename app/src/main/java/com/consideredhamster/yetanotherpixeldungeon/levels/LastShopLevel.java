@@ -125,9 +125,9 @@ public class LastShopLevel extends RegularLevel {
 		paintWater();
 		paintGrass();
 
-        if (AmbitiousImp.Quest.isCompleted()) {
-            placeSign();
-        }
+//        if (AmbitiousImp.Quest.isCompleted()) {
+//            placeSign();
+//        }
 
 		return true;
 	}

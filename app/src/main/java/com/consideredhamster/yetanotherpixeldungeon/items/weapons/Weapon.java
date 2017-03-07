@@ -123,7 +123,11 @@ public abstract class Weapon extends EquipableItem {
 
                 QuickSlot.refresh();
                 hero.spendAndNext(time2equip(hero) * 0.5f);
-                collect(hero.belongings.backpack);
+
+                if ( !collect( hero.belongings.backpack ) ) {
+                    Dungeon.level.drop( this, hero.pos ).sprite.drop();
+                }
+
                 return false;
 
             }
@@ -479,7 +483,7 @@ public abstract class Weapon extends EquipableItem {
             if (itemStr > heroStr) {
                 info.append(
                         "Because of your inadequate strength, your stealth and accuracy with it " +
-                        "will be _decreased by " + penalty + "%_ and attacking with it will be _" + (100 - 10000 / (100 + penalty)) + "% slower_." );
+                        "will be _decreased by " + penalty + "%_ and attacking with it will be _" + (int)(100 - 10000 / (100 + penalty)) + "% slower_." );
             } else if (itemStr < heroStr) {
                 info.append(
                         "Because of your excess strength, your stealth and accuracy with it " +
@@ -500,7 +504,7 @@ public abstract class Weapon extends EquipableItem {
             if (itemStr > heroStr) {
                 info.append(
                         "Because of your inadequate strength, your stealth and accuracy with it " +
-                                "probably will be _decreased by " + penalty + "%_ and attacking with it will be _" + (100 - 10000 / (100 + penalty)) + "% slower_." );
+                                "probably will be _decreased by " + penalty + "%_ and attacking with it will be _" + (int)(100 - 10000 / (100 + penalty)) + "% slower_." );
             } else if (itemStr < heroStr) {
                 info.append(
                         "Because of your excess strength, your stealth and accuracy with it " +
@@ -548,7 +552,7 @@ public abstract class Weapon extends EquipableItem {
                     ", it seems to be _enchanted to " + enchantment.desc(this) + "_." );
         }
 
-
+        info.append( " This is a _" + lootChapterAsString() +"_ weapon." );
 
         return info.toString();
     }

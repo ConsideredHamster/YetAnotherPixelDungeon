@@ -72,9 +72,9 @@ public abstract class Explosives extends Item {
         return null;
     };
 
-    public int damageRoll( int strength ) { return Random.IntRange( strength / 10, strength / 5 ); }
+    public int damage( int strength ) { return strength / 3; }
 
-    public int radius( int strength ) { return strength < 100 ? 0 : strength < 300 ? 1 : strength < 600 ? 2 : strength < 1000 ? 3 : 4 ; }
+    public int radius( int strength ) { return strength < 50 ? 0 : strength < 150 ? 1 : strength < 300 ? 2 : strength < 500 ? 3 : 4 ; }
 
     @Override
     public int priceModifier() { return 2; }
@@ -252,7 +252,7 @@ public abstract class Explosives extends Item {
 
             Char ch = Actor.findChar(c);
 
-            if( ch != null ) {
+            if( ch != null && !ch.immovable() ) {
 
                 int newPos = ch.pos + n;
 
@@ -327,7 +327,8 @@ public abstract class Explosives extends Item {
         @Override
         public String info() {
             return
-                    "This is a container of black powder. Gunpowder can be used to reload flintlock weapons or to make some makeshift explosives.\n\n" +
+                    "This is a container of black powder. Gunpowder can be used to reload flintlock " +
+                    "weapons or to make some makeshift explosives.\n\n" +
                     "You need " + BombStick.powderMax + " portions of gunpowder to create a bomb.";
         }
 
@@ -336,6 +337,7 @@ public abstract class Explosives extends Item {
             ArrayList<String> actions = super.actions( hero );
 
             actions.remove( AC_SALVAGE );
+            actions.remove( AC_THROW );
 
             return actions;
         }
@@ -361,9 +363,10 @@ public abstract class Explosives extends Item {
         @Override
         public String info() {
             return
-                    "This is a makeshift pipe bomb, filled with black powder. Conveniently, its fuse is lit automatically when the bomb is thrown.\n\n" +
-                            "You can get " + powderMin + "-" + powderMax + " portions of gunpowder by salvaging " + name + "s.\n" +
-                            "You can get bomb bundle by combining " + BombBundle.sticksMax + " " + name + "s." ;
+                "This is a makeshift pipe bomb, filled with black powder. Conveniently, its fuse is " +
+                "lit automatically when the bomb is thrown.\n\n" +
+                "You can get " + powderMin + "-" + powderMax + " portions of gunpowder by salvaging this.\n" +
+                "You can get a bomb bundle by combining " + BombBundle.sticksMax + " " + name + "s." ;
         }
 
         @Override
@@ -400,7 +403,7 @@ public abstract class Explosives extends Item {
 
             } else {
 
-               GLog.n(TXT_MORE_BOMBS_NEEDED);
+               GLog.n( TXT_MORE_BOMBS_NEEDED );
 
                return null;
 
@@ -427,22 +430,24 @@ public abstract class Explosives extends Item {
 
         @Override
         protected void onThrow( int cell ) {
+
             if (Level.chasm[cell]) {
+
                 super.onThrow( cell );
+
             } else {
 
                 Explosives bomb = (Explosives)detach(curUser.belongings.backpack);
 
                 if( bomb != null ) {
 
-                    int strength = bomb.price() * 2;
+                    int strength = bomb.price();
 
-                    explode(cell, bomb.damageRoll(strength), bomb.radius(strength), curUser);
+                    explode(cell, bomb.damage(strength), bomb.radius(strength), curUser);
 
                 }
             }
         }
-
     }
 
     public static class BombBundle extends Explosives {
@@ -459,8 +464,8 @@ public abstract class Explosives extends Item {
         @Override
         public String info() {
             return
-                    "This is a huge bomb made of several other bombs. It is a very powerful explosive.\n\n" +
-                    "You can get " + sticksMin + "-" + sticksMax + " bomb sticks by salvaging " + name + "s.";
+                "This is a huge bomb made of several other bombs. It is a very powerful explosive.\n\n" +
+                "You can get " + sticksMin + "-" + sticksMax + " bomb sticks by salvaging this.";
         }
 
         @Override
@@ -511,9 +516,9 @@ public abstract class Explosives extends Item {
 
                 if( bomb != null ) {
 
-                    int strength = bomb.price() * 2;
+                    int strength = bomb.price();
 
-                    explode(cell, bomb.damageRoll(strength), bomb.radius(strength), curUser);
+                    explode(cell, bomb.damage(strength), bomb.radius(strength), curUser);
 
                 }
             }

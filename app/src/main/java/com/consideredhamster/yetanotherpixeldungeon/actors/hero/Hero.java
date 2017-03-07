@@ -29,6 +29,7 @@ import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Bookshelf;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.HeroSprite;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
@@ -1313,7 +1314,7 @@ public class Hero extends Char {
 	}
 	
 	public Mob visibleEnemy( int index ) {
-		return visibleEnemies.get( index % visibleEnemies.size() );
+		return visibleEnemies.size() > 0 ? visibleEnemies.get( index % visibleEnemies.size() ) : null;
 	}
 	
 	private boolean getCloser( final int target ) {
@@ -1985,10 +1986,10 @@ public class Hero extends Char {
         }
 		
 		if (intentional) {
-			sprite.showStatus( CharSprite.DEFAULT, TXT_SEARCH );
-			sprite.operate( pos );
-			spendAndNext( TIME_TO_SEARCH / ( 1.0f + awareness() ) );
-		}
+            sprite.showStatus( CharSprite.DEFAULT, TXT_SEARCH );
+            spendAndNext( TIME_TO_SEARCH / ( 1.0f + awareness() ) );
+            sprite.search();
+        }
 		
 		if (smthFound) {
 			GLog.w( TXT_NOTICED_SMTH );

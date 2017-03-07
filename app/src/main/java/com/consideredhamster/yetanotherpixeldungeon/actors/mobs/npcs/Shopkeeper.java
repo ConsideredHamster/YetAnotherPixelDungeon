@@ -116,7 +116,7 @@ public class Shopkeeper extends NPC {
     }
 
     protected void greetings() {
-        yell( Utils.format(TXT_GREETINGS) );
+        yell(Utils.format(TXT_GREETINGS));
     }
 	
 	protected void react() {
@@ -181,8 +181,13 @@ public class Shopkeeper extends NPC {
 		sprite.killAndErase();
 		
 		Journal.remove( Journal.Feature.SHOP );
-		CellEmitter.get( pos ).burst( Speck.factory( Speck.WOOL ), 10 );
+		CellEmitter.get( pos ).burst(Speck.factory(Speck.WOOL), 10);
 	}
+
+    @Override
+    public boolean immovable() {
+        return true;
+    }
 	
 	@Override
 	public boolean reset() {

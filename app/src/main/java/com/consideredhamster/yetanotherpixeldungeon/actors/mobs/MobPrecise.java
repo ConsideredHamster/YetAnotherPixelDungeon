@@ -39,11 +39,11 @@ public abstract class MobPrecise extends Mob {
         minDamage = tier + 1;
         maxDamage = tier * 4 + 1;
 
-        if( Dungeon.difficulty < Difficulties.NORMAL ) {
-            maxDamage -= tier;
-        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
-            minDamage += tier;
-        }
+//        if( Dungeon.difficulty < Difficulties.NORMAL ) {
+//            maxDamage -= tier;
+//        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
+//            minDamage += tier;
+//        }
 
         // old values
         // 2-8     3-11    4-15    5-18    6-22

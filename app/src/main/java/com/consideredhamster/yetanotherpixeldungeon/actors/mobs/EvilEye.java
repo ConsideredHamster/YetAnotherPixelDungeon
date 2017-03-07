@@ -87,7 +87,7 @@ public class EvilEye extends MobRanged {
 
     @Override
     protected boolean canAttack( Char enemy ) {
-        return !Level.adjacent( pos, enemy.pos ) && !isCharmedBy( enemy ) &&
+        return ( HP < HT || !Level.adjacent( pos, enemy.pos ) ) && !isCharmedBy( enemy ) &&
                 Ballistica.cast( pos, enemy.pos, false, false ) == enemy.pos;
     }
 

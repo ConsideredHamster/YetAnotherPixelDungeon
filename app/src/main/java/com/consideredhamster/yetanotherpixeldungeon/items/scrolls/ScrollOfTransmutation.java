@@ -105,9 +105,9 @@ public class ScrollOfTransmutation extends InventoryScroll {
                 }
             }
 
-        } else if (item instanceof BodyArmor) {
+        } else if (item instanceof Armour) {
 
-            Item newItem = changeArmor((BodyArmor) item);
+            Item newItem = changeArmour((BodyArmor) item);
 
             GLog.w(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
 
@@ -207,7 +207,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
         return n;
     }
 
-    private Armour changeArmor( Armour a ) {
+    private Armour changeArmour( Armour a ) {
 
         Armour n;
         do {

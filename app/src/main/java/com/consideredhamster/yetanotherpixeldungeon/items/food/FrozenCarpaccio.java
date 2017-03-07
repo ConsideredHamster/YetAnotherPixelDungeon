@@ -35,37 +35,16 @@ public class FrozenCarpaccio extends Food {
 	}
 	
 	@Override
-	public void execute( Hero hero, String action ) {
-		
-		super.execute( hero, action );
-		
-		if (action.equals( AC_EAT )) {
-			
-//			switch (Random.Int( 2 )) {
-//			case 0:
-//				GLog.i( "You see your hands turn invisible!" );
-//				Buff.affect( hero, Invisibility.class, Invisibility.DURATION );
-//				break;
-//			case 1:
-//				GLog.i( "You feel your skin hardens!" );
-//				Buff.affect( hero, Barkskin.class ).bonus( hero.HT / 4 );
-//				break;
-//			case 2:
-				GLog.i( "Refreshing!" );
-//				Buff.detach( hero, Poison.class );
-//				Buff.detach( hero, Cripple.class );
-//				Buff.detach( hero, Withered.class );
-//				Buff.detach( hero, Bleeding.class );
-//				break;
-//			case 3:
-//				GLog.i( "You feel better!" );
-				if (hero.HP < hero.HT) {
-					hero.HP = Math.min( hero.HP + hero.HT / 10, hero.HT );
-					hero.sprite.emitter().burst( Speck.factory(Speck.HEALING), 1 );
-				}
-//				break;
-//			}
-		}
+    public void onConsume( Hero hero ) {
+
+        super.onConsume( hero );
+
+        GLog.i( "Refreshing!" );
+
+        if (hero.HP < hero.HT) {
+            hero.HP = Math.min( hero.HP + hero.HT / 10, hero.HT );
+            hero.sprite.emitter().burst( Speck.factory(Speck.HEALING), 1 );
+        }
 	}
 	
 	@Override

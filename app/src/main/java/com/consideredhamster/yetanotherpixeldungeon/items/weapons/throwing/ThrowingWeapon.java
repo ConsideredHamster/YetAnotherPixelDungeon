@@ -257,7 +257,7 @@ public abstract class ThrowingWeapon extends Weapon {
         if (itemStr > heroStr) {
             info.append(
                     "Because of your inadequate strength, your stealth and accuracy with it " +
-                            "will be _decreased by " + penalty + "%_ and attacking with it will be _" + (100 - 10000 / (100 + penalty)) + "% slower_." );
+                            "will be _decreased by " + penalty + "%_ and attacking with it will be _" + (int)(100 - 10000 / (100 + penalty)) + "% slower_." );
         } else if (itemStr < heroStr) {
             info.append(
                     "Because of your excess strength, your stealth and accuracy with it " +
@@ -284,6 +284,8 @@ public abstract class ThrowingWeapon extends Weapon {
             info.append( "These " + name + " are on the dungeon's floor." );
 
         }
+
+        info.append( " This is a _" + lootChapterAsString() +"_ weapon." );
 
         return info.toString();
     }

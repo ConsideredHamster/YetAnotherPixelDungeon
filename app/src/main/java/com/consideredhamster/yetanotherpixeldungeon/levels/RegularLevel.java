@@ -697,7 +697,7 @@ public abstract class RegularLevel extends Level {
 
             for ( int i = Random.IntRange( itemsMin, itemsMax ); i > 0 ; i-- ) {
 
-                drop(Generator.randomEquipment(), randomDropCell( false ), true).type = Random.Int( 6 - chapter ) == 0 ? Heap.Type.TOMB : Heap.Type.BONES ;
+                drop(Generator.randomEquipment(), randomDropCell( false ), true).type = Random.Int( 6 - chapter ) == 0 ? Heap.Type.BONES_CURSED : Heap.Type.BONES ;
 
             }
         }

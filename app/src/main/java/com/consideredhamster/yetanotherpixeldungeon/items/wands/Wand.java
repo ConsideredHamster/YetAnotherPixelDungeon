@@ -191,7 +191,13 @@ public abstract class Wand extends EquipableItem {
 
         } else {
 
-            collect(hero.belongings.backpack);
+            QuickSlot.refresh();
+            hero.spendAndNext(time2equip(hero) * 0.5f);
+
+            if ( !collect( hero.belongings.backpack ) ) {
+                Dungeon.level.drop( this, hero.pos ).sprite.drop();
+            }
+
             return false;
 
         }
@@ -583,7 +589,9 @@ public abstract class Wand extends EquipableItem {
 
         if ( isIdentified() ) {
             price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
-        } else if( !isCursedKnown() || bonus < 0 ) {
+        } else if( isCursedKnown() && bonus >= 0 ) {
+            price -= price / 4;
+        } else {
             price /= 2;
         }
 

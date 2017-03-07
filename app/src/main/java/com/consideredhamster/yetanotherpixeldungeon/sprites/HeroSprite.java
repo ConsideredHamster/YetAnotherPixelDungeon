@@ -41,7 +41,7 @@ public class HeroSprite extends CharSprite {
 	private static final int RUN_FRAMERATE	= 20;
 	
 	private static TextureFilm tiers;
-	
+
 	private Animation shoot;
 	private Animation fly;
 
@@ -82,6 +82,9 @@ public class HeroSprite extends CharSprite {
 
         pickup = new Animation( 15, false );
         pickup.frames( film, 0, 15, 16, 17, 0 );
+
+        search = new Animation( 2, false );
+        search.frames( film, 0, 1, 0, 1  );
 		
 		fly = new Animation( 1, true );
 		fly.frames( film, 18 );
@@ -126,7 +129,7 @@ public class HeroSprite extends CharSprite {
 		
 		super.update();
 	}
-	
+
 	public boolean sprint( boolean on ) {
 		run.delay = on ? 0.625f / RUN_FRAMERATE : 1f / RUN_FRAMERATE;
 		return on;

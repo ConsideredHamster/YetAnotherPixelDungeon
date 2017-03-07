@@ -170,7 +170,10 @@ public class ShopPainter extends Painter {
             ).random());
 
             items.add(Random.oneOf(
-                    new Bullets(), new Arrows(), new Quarrels(),
+                    new Bullets(), new Arrows(), new Quarrels()
+            ).random());
+
+            items.add(Random.oneOf(
                     new Explosives.Gunpowder(), new Explosives.BombStick(), new Explosives.BombBundle()
             ).random());
 
@@ -196,7 +199,8 @@ public class ShopPainter extends Painter {
             Armour armour = null;
             Item ranged = null;
             ThrowingWeapon thrown = null;
-            Item ammo = null;
+            Item ammo1 = null;
+            Item ammo2 = null;
 
             if (level instanceof SewerLevel) {
 
@@ -206,7 +210,8 @@ public class ShopPainter extends Painter {
                 armour = Random.oneOf(new MageArmor(), new RogueArmor(), new HuntressArmor());
                 ranged = Random.oneOf(new Sling(), new Bolas());
                 thrown = Random.oneOf(new PoisonDarts(), new Knives());
-                ammo = new Bullets();
+                ammo1   = Random.oneOf(new Arrows(), new Quarrels());
+                ammo2   = Random.oneOf(new Bullets(), new Explosives.Gunpowder());
 
             } else if (level instanceof PrisonLevel) {
 
@@ -216,7 +221,8 @@ public class ShopPainter extends Painter {
                 armour = Random.oneOf(new StuddedArmor(), new DiscArmor(), new RoundShield());
                 ranged = Random.oneOf(new Bow(), new Pistole());
                 thrown = Random.oneOf(new Javelins(), new Shurikens());
-                ammo = new Arrows();
+                ammo1   = Random.oneOf(new Arrows(), new Quarrels());
+                ammo2   = Random.oneOf(new Bullets(), new Explosives.Gunpowder());
 
             } else if (level instanceof CavesLevel) {
 
@@ -226,7 +232,8 @@ public class ShopPainter extends Painter {
                 armour = Random.oneOf(new MailArmor(), new SplintArmor(), new KiteShield());
                 ranged = Random.oneOf(new Arbalest(), new Arquebuse());
                 thrown = Random.oneOf(new Boomerangs(), new Tomahawks());
-                ammo = new Quarrels();
+                ammo1   = Random.oneOf(new Arrows(), new Quarrels());
+                ammo2   = Random.oneOf(new Bullets(), new Explosives.Gunpowder());
 
             } else if (level instanceof CityLevel) {
 
@@ -236,7 +243,8 @@ public class ShopPainter extends Painter {
                 armour = Random.oneOf(new ScaleArmor(), new PlateArmor(), new TowerShield());
                 ranged = Random.oneOf(new Handcannon(), new Explosives.BombStick());
                 thrown = Random.oneOf(new Harpoons(), new Chakrams());
-                ammo = new Explosives.Gunpowder();
+                ammo1   = Random.oneOf(new Arrows(), new Quarrels());
+                ammo2   = Random.oneOf(new Bullets(), new Explosives.Gunpowder());
 
             }
 
@@ -267,13 +275,19 @@ public class ShopPainter extends Painter {
                 items.add(thrown);
             }
 
-            if( ammo != null ) {
-                ammo.random();
+            if( ammo1 != null ) {
+                ammo1.random();
 
-                if( ammo instanceof Explosives.Gunpowder )
-                    ammo.quantity( ammo.quantity * 2 );
+                items.add(ammo1);
+            }
 
-                items.add(ammo);
+            if( ammo2 != null ) {
+                ammo2.random();
+
+                if( ammo2 instanceof Explosives.Gunpowder )
+                    ammo2.quantity( ammo2.quantity * 2 );
+
+                items.add(ammo2);
             }
 
             Ring ring = (Ring)Generator.random(Generator.Category.RING);

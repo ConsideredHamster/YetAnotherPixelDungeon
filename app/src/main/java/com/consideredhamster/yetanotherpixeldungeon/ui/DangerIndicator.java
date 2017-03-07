@@ -146,8 +146,10 @@ public class DangerIndicator extends Tag {
 
         Mob target = Dungeon.hero.visibleEnemy( enemyIndex++ );
 
-        AttackIndicator.instance.target( target );
-        HealthIndicator.instance.target( target );
+        if( target != null ) {
+            AttackIndicator.instance.target(target);
+            HealthIndicator.instance.target(target);
+        }
 
         return target;
 

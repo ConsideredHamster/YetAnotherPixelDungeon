@@ -349,7 +349,7 @@ public class DwarvenKing extends MobPrecise {
 
     @Override
     public int attackProc( Char enemy, int damage ) {
-        if ( enemy != null && buff( Enraged.class ) != null ) {
+        if ( enemy != null && !enemy.immovable() && buff( Enraged.class ) != null ) {
             Camera.main.shake(1, 0.1f);
             damage = knockBack( enemy, damage);
         }

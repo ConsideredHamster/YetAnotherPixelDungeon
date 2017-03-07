@@ -45,34 +45,47 @@ public class WndChangelog extends Window {
 	private static final int WIDTH_L	= 160;
 	private static final int HEIGHT_L	= 128;
 
-	private static final String TXT_TITLE	= "Changelog";
+	private static final String TXT_TITLE	= "What's new?";
 
     private static final String TXT_DESCR =
-        "v0.3.0\n" +
+        "v0.3.0a\n" +
         "\n" +
-        "- all classes are now unlocked by default\n" +
+        "General\n" +
         "\n" +
-        "- amount of cursed items was decreased overall\n" +
-        "- scrolls of Enchantment now can weaken curses\n" +
-        "- items revealed as non-cursed now cost more\n" +
-        "- added visual clue for items revealed as non-cursed\n" +
+        "- you can hit targets out of your field of view again, but with 50% accuracy penalty\n" +
+        "- rebalanced rewards of sad ghost and ambitious imp quests\n" +
+        "- rewards of sad ghost and old wandmaker quests are visible to the player now\n" +
+        "- player character now receives 50% less damage on Easy difficulty\n" +
+        "- player character now receives 50% more damage on Impossible difficulty\n" +
         "\n" +
-        "- Goo now spawns minions less often when hit\n" +
-        "- Goo's minions now have less health overall\n" +
-        "- Goo now is more susceptible to energy damage\n" +
-        "- Goo now is more susceptible to shock damage\n" +
+        "Items & Shops\n" +
         "\n" +
-        "- increased effectiveness of combo attacks\n" +
-        "- counter attacks now deal bonus damage\n" +
-        "- added ring of Durability\n" +
-        "- removed ring of Haste\n" +
+        "- all basic shops now sell arrows or quarrels\n" +
+        "- all basic shops now sell bullets or gunpowder\n" +
+        "- decreased base price of ammunitions\n" +
+        "- partially identified (non-cursed) items now cost less than fully identified ones\n" +
+        "- rebalanced bomb damage, bomb sticks are less powerful than bundles now\n" +
         "\n" +
-        "- added option to show loading tips until tapped\n" +
-        "- journal allows reading item descriptions\n" +
-        "- added third quickslot and tutorial section\n" +
-        "- examine button now searches on a single tap\n"+
+        "- scrolls of Enchantment now can be used to upgrade/uncurse wands and rings\n" +
+        "- scrolls of Enchantment now upgrade already enchanted weapons/armors\n" +
+        "- scrolls of Enchantment now re-enchant only if item is already at +3\n" +
+        "- scrolls of Sunlight now heal more the longer you stay in their area of effect\n" +
+        "- effect of scrolls of Sunlight now lasts less longer\n" +
+        "- thunderstorm clouds now deal low damage to the fire elementals\n" +
         "\n" +
-        "- lots of other improvements";
+        "Mobs & Bosses\n" +
+        "\n" +
+        "- mob damage is not affected by difficulty anymore\n" +
+        "- mob respawn rate is not affected by difficulty anymore\n" +
+        "- tweaked last boss battle to be a bit more difficult\n" +
+        "- buffed damage growth rate of miasma cloud\n" +
+        "- carrion swarms now drain 1% of your satiety per hit\n" +
+        "- fire elementals do not drop gunpowder anymore\n" +
+        "- golems now become less armored while burning\n" +
+        "- wraiths now deal physical damage in melee instead of unholy, but still ignore target's armor\n" +
+        "- increased drop chance of raw meat from sewer crabs, giant spiders and cave scorpions\n" +
+        "\n" +
+        "- lots of minor tweaks and bugfixes";
 
 	private BitmapText txtTitle;
 	private ScrollPane list;

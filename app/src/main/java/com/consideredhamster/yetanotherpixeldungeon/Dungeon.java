@@ -176,6 +176,7 @@ public class Dungeon {
 		Actor.clear();
 		
 		depth++;
+//		depth=30;
 
 		if (depth > Statistics.deepestFloor) {
 			Statistics.deepestFloor = depth;

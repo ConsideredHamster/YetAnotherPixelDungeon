@@ -40,11 +40,11 @@ public abstract class MobEvasive extends Mob {
         minDamage = tier - 1;
         maxDamage = tier * 3 + 1;
 
-        if( Dungeon.difficulty < Difficulties.NORMAL ) {
-            maxDamage -= tier;
-        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
-            minDamage += tier;
-        }
+//        if( Dungeon.difficulty < Difficulties.NORMAL ) {
+//            maxDamage -= tier;
+//        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
+//            minDamage += tier;
+//        }
 
         // old values
         // 0-6     1-8     2-11    3-13    4-16

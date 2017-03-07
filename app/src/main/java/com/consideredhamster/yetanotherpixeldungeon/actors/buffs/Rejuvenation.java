@@ -20,11 +20,15 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
+import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 
-public class Suffocation extends PassiveBuff {
+public class Rejuvenation extends PassiveBuff {
 	
 	protected int left = 0;
 	
@@ -51,7 +55,21 @@ public class Suffocation extends PassiveBuff {
             this.left++;
         }
 
-        target.damage( left, this, DamageType.BODY );
+        if( target != null && target.HP < target.HT ) {
+
+            int healing = Math.min(target.HT - target.HP, left );
+
+            // FIXME
+
+            if( target instanceof Hero && ((Hero)target).restoreHealth && ( target.HP + healing >= target.HT ) ) {
+                ((Hero)target).interrupt();
+            }
+
+            target.HP += healing;
+
+            target.sprite.showStatus(CharSprite.POSITIVE, Integer.toString(healing));
+
+        }
     };
 	
 //	@Override
