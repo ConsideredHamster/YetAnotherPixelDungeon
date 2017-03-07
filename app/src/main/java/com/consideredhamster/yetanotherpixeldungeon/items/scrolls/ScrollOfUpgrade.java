@@ -33,9 +33,21 @@ import com.watabou.utils.Random;
 
 public class ScrollOfUpgrade extends InventoryScroll {
 
-	private static final String TXT_CURSE_WEAKENED = "your %s was cursed, but now the curse seems to be weaker";
-	private static final String TXT_CURSE_DISPELLED	= "your %s was cursed, but now the curse seems to be removed";
-	private static final String TXT_LOOKS_BETTER	= "your %s certainly looks better now";
+
+    private static final String TXT_KNOWN_UPGRADED	=
+            "your %s looks much better now! It was upgraded and repaired.";
+    private static final String TXT_KNOWN_REPAIRED  =
+            "your %s can't be upgraded any further, but it looks a bit better now.";
+
+	private static final String TXT_UNKNW_REPAIRED  =
+            "your %s looks a bit better now. But maybe you should have identified it first?";
+	private static final String TXT_UNKNW_WHOKNOWS	=
+            "your %s doesn't looks different. Maybe you should have identified it first?";
+
+    private static final String TXT_CURSE_WEAKENED =
+            "your %s was cursed, but now the curse seems to be weaker.";
+    private static final String TXT_CURSE_DISPELLED	=
+            "your %s was cursed, but now the curse seems to be removed.";
 
 	{
 		name = "Scroll of Upgrade";
@@ -55,13 +67,18 @@ public class ScrollOfUpgrade extends InventoryScroll {
 
         if( item.bonus >= 0 ) {
 
+            if( item.isIdentified() ) {
+                GLog.p( item.bonus < 3 ? TXT_KNOWN_UPGRADED : TXT_KNOWN_REPAIRED, item.name() );
+            } else {
+                GLog.p( item.state < 3 ? TXT_UNKNW_REPAIRED : TXT_UNKNW_WHOKNOWS, item.name() );
+            }
+
             item.upgrade();
-            GLog.p( TXT_LOOKS_BETTER, item.name() );
             curUser.sprite.emitter().start(Speck.factory(Speck.UP), 0.2f, 3);
 
         } else {
 
-            item.bonus++;
+            item.upgrade();
 
             if( item.bonus < 0 ) {
 
@@ -76,7 +93,8 @@ public class ScrollOfUpgrade extends InventoryScroll {
             }
         }
 
-		item.repair(1);
+
+        item.repair(1);
 
         QuickSlot.refresh();
 		

@@ -248,27 +248,19 @@ public class AmbitiousImp extends NPC {
 				
 				given = false;
 
-				do {
+                int random = Random.Int( 3 );
 
-					reward = (Ring)Generator.random( Generator.Category.RING );
+                if( Dungeon.hero.heroClass == HeroClass.WARRIOR ) {
+                    reward = random == 2 ? new RingOfSatiety() : random == 1 ? new RingOfVitality() : new RingOfProtection();
+                } else if( Dungeon.hero.heroClass == HeroClass.BRIGAND ) {
+                    reward = random == 2 ? new RingOfFortune() : random == 1 ? new RingOfShadows() : new RingOfEvasion();
+                } else if( Dungeon.hero.heroClass == HeroClass.SCHOLAR ) {
+                    reward = random == 2 ? new RingOfKnowledge() : random == 1 ? new RingOfEnergy() : new RingOfSorcery();
+                } else if( Dungeon.hero.heroClass == HeroClass.ACOLYTE ) {
+                    reward = random == 2 ? new RingOfDurability() : random == 1 ? new RingOfPerception() : new RingOfAccuracy();
+                }
 
-				} while (
-                    ( Dungeon.hero.heroClass == HeroClass.WARRIOR &&
-                            !( reward instanceof RingOfVitality || reward instanceof RingOfSatiety || reward instanceof RingOfProtection)
-                    ) ||
-                    ( Dungeon.hero.heroClass == HeroClass.SCHOLAR &&
-                            !( reward instanceof RingOfSorcery || reward instanceof RingOfEnergy || reward instanceof RingOfKnowledge)
-                    ) ||
-                    ( Dungeon.hero.heroClass == HeroClass.BRIGAND &&
-                            !( reward instanceof RingOfEvasion || reward instanceof RingOfShadows || reward instanceof RingOfFortune)
-                    ) ||
-                    ( Dungeon.hero.heroClass == HeroClass.ACOLYTE &&
-                            !( reward instanceof RingOfAccuracy || reward instanceof RingOfPerception || reward instanceof RingOfDurability)
-                    )
-                );
-
-				reward.bonus = Dungeon.questsCompleted();
-//				reward.cursed = true;
+				reward.bonus = random + 1;
 			}
 		}
 		
@@ -286,7 +278,7 @@ public class AmbitiousImp extends NPC {
 			reward = null;
 			completed = true;
 			
-			Journal.remove( Journal.Feature.IMP );
+			Journal.remove(Journal.Feature.IMP);
 		}
 		
 		public static boolean isCompleted() {

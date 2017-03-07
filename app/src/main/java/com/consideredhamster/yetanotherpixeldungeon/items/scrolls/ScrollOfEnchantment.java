@@ -26,6 +26,8 @@ import com.consideredhamster.yetanotherpixeldungeon.effects.particles.EnergyPart
 import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.windows.WndBag;
@@ -33,10 +35,14 @@ import com.watabou.utils.Random;
 
 public class ScrollOfEnchantment extends InventoryScroll {
 
-	private static final String TXT_ITEM_ENCHANT	= "Your %s glows in the dark.";
-	private static final String TXT_ITEM_RESISTS	= "Your %s is cursed, but the curse was weakened!";
-	private static final String TXT_ITEM_UNCURSE	= "Your %s was cursed, but the curse was removed!";
+    private static final String TXT_ITEM_CHANGED	= "your %s can't be upgraded any further, !";
+    private static final String TXT_ITEM_ENCHANT	= "your %s was enchanted.";
+    private static final String TXT_ITEM_UPGRADE	= "your %s was upgraded.";
+    private static final String TXT_ITEM_RESISTS	= "your %s is cursed, but the curse was weakened!";
+    private static final String TXT_ITEM_UNCURSE	= "your %s was cursed, but the curse was removed!";
 	private static final String TXT_ITEM_UNKNOWN	= "%s cannot be enchanted!";
+
+
 
 	{
 		name = "Scroll of Enchantment";
@@ -62,17 +68,27 @@ public class ScrollOfEnchantment extends InventoryScroll {
             
             if( weapon.bonus >= 0 ) {
 
-                weapon.enchant();
-                weapon.identify( ENCHANT_KNOWN );
-                GLog.w(TXT_ITEM_ENCHANT, weapon.name());
+                weapon.identify(ENCHANT_KNOWN);
+
+                if (weapon.isEnchanted() && weapon.bonus < 3 ) {
+
+                    weapon.upgrade();
+                    GLog.w(TXT_ITEM_UPGRADE, weapon.name());
+
+                } else {
+
+                    weapon.enchant();
+                    GLog.w(TXT_ITEM_ENCHANT, weapon.name());
+
+                }
 
                 curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
                 Badges.validateItemLevelAcquired(item);
 
             } else {
 
+                weapon.bonus = Random.IntRange( item.bonus + 1, 0 );
                 weapon.identify( CURSED_KNOWN );
-                item.bonus = Random.IntRange( item.bonus + 1, 0 );
                 curUser.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
 
                 if( item.bonus < 0 ) {
@@ -94,9 +110,19 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
             if( armour.bonus >= 0 ) {
 
-                armour.inscribe();
-                armour.identify( ENCHANT_KNOWN );
-                GLog.w(TXT_ITEM_ENCHANT, armour.name());
+                armour.identify(ENCHANT_KNOWN);
+
+                if (armour.isInscribed() && armour.bonus < 3 ) {
+
+                    armour.upgrade();
+                    GLog.w(TXT_ITEM_UPGRADE, armour.name());
+
+                } else {
+
+                    armour.inscribe();
+                    GLog.w(TXT_ITEM_ENCHANT, armour.name());
+
+                }
 
                 curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
 
@@ -105,6 +131,39 @@ public class ScrollOfEnchantment extends InventoryScroll {
             } else {
 
                 armour.identify( CURSED_KNOWN );
+                armour.bonus = Random.IntRange( item.bonus + 1, 0 );
+                curUser.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
+
+                if( item.bonus < 0 ) {
+
+                    GLog.w( TXT_ITEM_RESISTS, item.name() );
+                    curUser.sprite.emitter().burst(ShadowParticle.CURSE, 4);
+
+                } else {
+
+                    GLog.p( TXT_ITEM_UNCURSE, item.name() );
+                    curUser.sprite.emitter().burst(ShadowParticle.CURSE, 6);
+
+                }
+            }
+
+
+        } else if ( item instanceof Wand || item instanceof Ring) {
+
+            item.identify( CURSED_KNOWN );
+
+            if( item.bonus >= 0 ) {
+
+                item.upgrade();
+
+                GLog.w(TXT_ITEM_UPGRADE, item.name());
+
+                curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
+
+                Badges.validateItemLevelAcquired(item);
+
+            } else {
+
                 item.bonus = Random.IntRange( item.bonus + 1, 0 );
                 curUser.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
 
@@ -131,10 +190,10 @@ public class ScrollOfEnchantment extends InventoryScroll {
 	@Override
 	public String desc() {
 		return
-			"This scroll is able to imbue a weapon or an armor with a random enchantment, " +
-            "granting it some special powers. If used on a cursed item, it will try to " +
-            "dispel its curse and will even turn its enchantment into benevolent one " +
-            "in case of success.";
+			"This scroll is able to imbue unenchanted weapon or armor with random enchantment, or " +
+            "even upgrade already enchanted item. Wands and rings count as enchanted items by default. " +
+            "If used on a cursed item, it will try to dispel the curse and will even turn its " +
+            "enchantment into benevolent one in case of success.";
 	}
 
 

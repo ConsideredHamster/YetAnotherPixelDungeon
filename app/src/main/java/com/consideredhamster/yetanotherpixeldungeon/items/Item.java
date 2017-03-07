@@ -603,6 +603,25 @@ public class Item implements Bundlable {
         return this;
 	}
 
+
+
+    public String lootChapterAsString() {
+        switch( lootChapter() ){
+            case 1:
+                return "common";
+            case 2:
+                return "regular";
+            case 3:
+                return "infrequent";
+            case 4:
+                return "exceptional";
+            case 5:
+                return "mythical";
+            default:
+                return "unknown";
+        }
+    }
+
     public int lootChapter() {
         return 0;
     }

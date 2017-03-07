@@ -169,6 +169,8 @@ public enum Rankings {
 			}
 			
 		} catch (Exception e) {
+            totalNumber = 0;
+            wonNumber = 0;
 		}
 	}
 	

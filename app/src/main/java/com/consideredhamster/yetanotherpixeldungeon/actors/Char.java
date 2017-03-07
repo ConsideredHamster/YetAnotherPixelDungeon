@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors;
 
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
@@ -278,8 +279,6 @@ public abstract class Char extends Actor {
 	
 	public static boolean hit( Char attacker, Char defender, boolean ranged, boolean magic ) {
 
-        if( !Dungeon.level.fieldOfView[ defender.pos] )
-            return false;
 
         if( defender.isOpenedTo(attacker) )
             return true;
@@ -287,7 +286,10 @@ public abstract class Char extends Actor {
         if( defender.isCharmedBy(attacker) )
             return true;
 
-        int attRoll = ( magic ? attacker.magicSkill() : attacker.accuracy() ) * 2;
+        int attRoll = ( magic ? attacker.magicSkill() : attacker.accuracy() );
+
+        if( Level.fieldOfView[ defender.pos ] )
+            attRoll *= 2;
 
         if( ranged ) {
 
@@ -441,6 +443,10 @@ public abstract class Char extends Actor {
         return false;
     }
 
+    public boolean immovable() {
+        return false;
+    }
+
 	public float moveSpeed() {
 		return ( buff( Levitation.class ) == null ? ( buff( Cripple.class ) == null ? baseSpeed : baseSpeed * 0.5f ) : baseSpeed * 1.5f );
 	}
@@ -470,6 +476,14 @@ public abstract class Char extends Actor {
 		if (HP <= 0) {
 			return;
 		}
+
+        if( this instanceof Hero ){
+            if( Dungeon.difficulty == Difficulties.EASY ) {
+                dmg = dmg / 2 + Random.Int(dmg % 2 + 1);
+            } else if( Dungeon.difficulty == Difficulties.IMPOSSIBLE ) {
+                dmg += dmg / 2 + Random.Int(dmg % 2 + 1);
+            }
+        }
 
         int textColor = CharSprite.NEGATIVE;
 

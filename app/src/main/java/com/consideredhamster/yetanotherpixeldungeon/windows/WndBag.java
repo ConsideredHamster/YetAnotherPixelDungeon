@@ -511,7 +511,7 @@ public class WndBag extends WndTabbed {
 						mode == Mode.CRAFTING_KIT && ((item instanceof RangedWeapon || item instanceof BodyArmorCloth)&& item.state < 3) ||
 						mode == Mode.ARMORERS_KIT && (item instanceof Armour && !(item instanceof BodyArmorCloth) && item.state < 3) ||
 						mode == Mode.ARCANE_BATTERY && (item instanceof Wand && item.state < 3) ||
-						mode == Mode.ENCHANTABLE && (item instanceof MeleeWeapon || item instanceof RangedWeapon || item instanceof Armour) ||
+						mode == Mode.ENCHANTABLE && (item instanceof MeleeWeapon || item instanceof RangedWeapon || item instanceof Armour || item instanceof Wand || item instanceof Ring) ||
 						mode == Mode.TRANSMUTABLE && ( item.bonus >= 0 || !item.isCursedKnown() ) && (item instanceof MeleeWeapon ||
                             item instanceof RangedWeapon || item instanceof BodyArmor || item instanceof Wand || item instanceof Ring) ||
 						mode == Mode.WAND && (item instanceof Wand) ||

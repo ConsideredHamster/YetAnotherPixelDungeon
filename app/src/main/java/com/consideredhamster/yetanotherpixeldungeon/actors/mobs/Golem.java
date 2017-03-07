@@ -23,6 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.AmbitiousImp;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.GolemSprite;
 
@@ -38,6 +39,13 @@ public class Golem extends MobHealthy {
         dexterity /= 2;
 
 	}
+
+
+
+    @Override
+    public int armourAC() {
+        return buffs( Burning.class ) == null ? super.armourAC() : 0 ;
+    }
 
     @Override
     public int shieldAC() {
@@ -66,7 +74,8 @@ public class Golem extends MobHealthy {
 		return
 			"The Dwarves tried to combine their knowledge of mechanisms with their newfound power of elemental binding. " +
 			"They used spirits of earth as the \"soul\" for the mechanical bodies of golems, which were believed to be " +
-			"most controllable of all. Despite this, the tiniest mistake in the ritual could cause an outbreak.";
+			"most controllable of all. Despite this, the tiniest mistake in the ritual could cause an outbreak. Their " +
+            "metallic bodies can become less durable while under high temperatures.";
 	}
 
     public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();

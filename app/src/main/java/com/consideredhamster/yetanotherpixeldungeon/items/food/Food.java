@@ -73,13 +73,12 @@ public class Food extends Item {
             if( hunger != null && !hunger.isOverfed() ) {
 
                 hunger.satisfy(energy);
-                detach( hero.belongings.backpack );
-                GLog.i( message );
+                detach(hero.belongings.backpack);
+                onConsume( hero );
 
                 hero.sprite.operate( hero.pos );
                 hero.busy();
                 SpellSprite.show( hero, SpellSprite.FOOD );
-//                SpellSprite.show( hero, SpellSprite.MAP );
                 Sample.INSTANCE.play( Assets.SND_EAT );
 
                 hero.spend(TIME_TO_EAT);
@@ -99,22 +98,6 @@ public class Food extends Item {
                 GLog.i( TXT_STUFFED );
 
             }
-
-//			switch (hero.heroClass) {
-//			case WARRIOR:
-//				if (hero.HP < hero.HT) {
-//					hero.HP = Math.min( hero.HP + 5, hero.HT );
-//					hero.sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
-//				}
-//				break;
-//			case SCHOLAR:
-//				hero.belongings.charge( false );
-//				ScrollOfRecharging.charge( hero );
-//				break;
-//			case BRIGAND:
-//			case ACOLYTE:
-//				break;
-//			}
 			
 		} else {
 		
@@ -134,4 +117,8 @@ public class Food extends Item {
 	public int price() {
 		return 30 * quantity;
 	}
+
+    public void onConsume( Hero hero ) {
+        GLog.i( message );
+    }
 }

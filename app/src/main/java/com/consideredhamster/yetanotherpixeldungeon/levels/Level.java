@@ -530,8 +530,7 @@ public abstract class Level implements Bundlable {
 				}
 //				spend( Dungeon.nightMode || Statistics.amuletObtained ? TIME_TO_RESPAWN / 2 : TIME_TO_RESPAWN );
 
-				spend( ( TIME_TO_RESPAWN - Dungeon.chapter() * 5 - ( feeling == Feeling.TRAPS ? 10 : 0 ) + mobsSpawned) *
-                        ( Dungeon.difficulty < Difficulties.IMPOSSIBLE ? 1.0f : 0.5f ) );
+				spend( ( TIME_TO_RESPAWN - Dungeon.chapter() * 5 - ( feeling == Feeling.TRAPS ? 10 : 0 ) + mobsSpawned) );
 				return true;
 			}
 		};

@@ -60,7 +60,7 @@ public class Harpoons extends ThrowingWeaponHeavy {
 
         if( !Level.adjacent( attacker.pos, defender.pos ) ) {
 
-            if( attacker.STR() >= defender.STR() ) {
+            if( attacker.STR() >= defender.STR() && !defender.immovable() ) {
 
                 int distance = attacker.STR() - defender.STR() + 1;
 

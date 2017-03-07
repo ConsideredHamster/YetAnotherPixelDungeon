@@ -40,11 +40,11 @@ public abstract class MobHealthy extends Mob {
         minDamage = tier + 3;
         maxDamage = tier * 5 + 2;
 
-        if( Dungeon.difficulty < Difficulties.NORMAL ) {
-            maxDamage -= tier;
-        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
-            minDamage += tier;
-        }
+//        if( Dungeon.difficulty < Difficulties.NORMAL ) {
+//            maxDamage -= tier;
+//        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
+//            minDamage += tier;
+//        }
 
         // old values
         // 4-9     6-13    8-17    10-21   12-25

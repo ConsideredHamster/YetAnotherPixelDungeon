@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Elemental;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
@@ -117,7 +118,11 @@ public class Thunderstorm extends Blob {
                     Char ch = Actor.findChar(i);
 
                     if (ch != null) {
-                        Buff.detach(ch, Burning.class);
+                        if( ch instanceof Elemental ) {
+                            ch.damage( Random.IntRange( 1, (int)Math.sqrt( ch.HT / 2 + 1 ) ), this, null );
+                        } else {
+                            Buff.detach(ch, Burning.class);
+                        }
                     }
 
                     count++;

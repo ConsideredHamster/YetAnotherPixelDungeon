@@ -92,9 +92,9 @@ public class AttackIndicator extends Tag {
 
 		for (int i=0; i < v; i++) {
 			Mob mob = Dungeon.hero.visibleEnemy( i );
-//			if (Level.adjacent( heroPos, mob.pos )) {
+			if (mob != null) {
 				candidates.add( mob );
-//			}
+			}
 		}
 		
 		if (!candidates.contains( lastTarget )) {

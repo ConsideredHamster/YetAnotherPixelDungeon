@@ -21,6 +21,8 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.SwarmSprite;
 
 import java.util.HashSet;
@@ -52,6 +54,19 @@ public class CarrionSwarm extends MobEvasive {
                 "have uncanny sense of smell when it comes to anything edible.";
     }
 
+    @Override
+    public int attackProc( Char enemy, int damage ) {
+
+        Hunger hunger = enemy.buff(Hunger.class);
+
+        if ( hunger != null ) {
+
+            hunger.satisfy(Hunger.STARVING / 100f * (-1));
+
+        }
+
+        return damage;
+    }
 
 //	@Override
 //	public void die( Object cause ) {

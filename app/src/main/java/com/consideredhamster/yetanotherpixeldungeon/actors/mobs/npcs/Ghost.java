@@ -297,50 +297,19 @@ public class Ghost extends NPC {
 				given = false;
 				processed = false;
 				depth = Dungeon.depth;
-				
-				for (int i=0; i < 4; i++) {
-                    Weapon another;
-                    do {
-                        another = (Weapon) Generator.random(Generator.Category.WEAPON);
-                    } while (another instanceof ThrowingWeapon || another.bonus < 0);
 
-                    if (weapon == null || another.lootLevel() > weapon.lootLevel()) {
-                        weapon = another;
-                    }
-                }
+                Weapon weapon;
+                do {
+                    weapon = (Weapon) Generator.random(Generator.Category.WEAPON);
+                } while (weapon instanceof ThrowingWeapon || weapon.lootChapter() < 2 || weapon.bonus < 0);
 
-				
-				if (Dungeon.isChallenged( Challenges.NO_ARMOR )) {
-					armor = (Armour)new ClothArmor().curse();
-				} else {
+                Armour armour;
+                do {
+                    armour = (Armour)Generator.random( Generator.Category.ARMOR );
+                } while (armour instanceof BodyArmorCloth || armour.bonus < 0 );
 
-                    for (int i=0; i < 4; i++) {
-                        Armour another;
-                        do {
-                            another = (Armour)Generator.random( Generator.Category.ARMOR );
-                        } while (another instanceof BodyArmorCloth || another.bonus < 0 );
-
-                        if (armor == null || another.lootLevel() > armor.lootLevel()) {
-                            armor = another;
-                        }
-                    }
-
-//					armor = (Armor)Generator.random( Generator.Category.ARMOR );
-//
-//                    do {
-//                        another = (Weapon)Generator.random( Generator.Category.WEAPON );
-//                    } while (another instanceof ThrowingWeapon);
-//
-//					for (int i=0; i < 3; i++) {
-//						Armor another = (Armor)Generator.random( Generator.Category.ARMOR );
-//						if (another.lootLevel() > armor.lootLevel()) {
-//							armor = another;
-//						}
-//					}
-				}
-				
 				weapon.identify().repair();
-				armor.identify().repair();
+                armour.identify().repair();
 			}
 		}
 

@@ -62,7 +62,9 @@ public abstract class BodyArmor extends Armour {
 
             QuickSlot.refresh();
             hero.spendAndNext(time2equip(hero) * 0.5f);
-			collect( hero.belongings.backpack );
+            if ( !collect( hero.belongings.backpack ) ) {
+                Dungeon.level.drop( this, hero.pos ).sprite.drop();
+            }
 			return false;
 			
 		}
@@ -144,7 +146,7 @@ public abstract class BodyArmor extends Armour {
             if (itemStr > heroStr) {
                 info.append(
                         "Because of your inadequate strength, your stealth and dexterity in this armor " +
-                                "will be _decreased by " + penalty + "%_ and your movement will be _" + (100 - 10000 / (100 + penalty)) + "% slower_." );
+                                "will be _decreased by " + penalty + "%_ and your movement will be _" + (int)(100 - 10000 / (100 + penalty)) + "% slower_." );
             } else if (itemStr < heroStr) {
                 info.append(
                         "Because of your excess strength, your stealth and dexterity while you are wearing this armor " +
@@ -165,7 +167,7 @@ public abstract class BodyArmor extends Armour {
             if (itemStr > heroStr) {
                 info.append(
                         "Because of your inadequate strength, your stealth and dexterity in this armor " +
-                                "probably will be _decreased by " + penalty + "%_ and your movement will be _" + (100 - 10000 / (100 + penalty)) + "% slower_." );
+                                "probably will be _decreased by " + penalty + "%_ and your movement will be _" + (int)(100 - 10000 / (100 + penalty)) + "% slower_." );
             } else if (itemStr < heroStr) {
                 info.append(
                         "Because of your excess strength, your stealth and dexterity while you are wearing this armor " +
@@ -212,6 +214,8 @@ public abstract class BodyArmor extends Armour {
             info.append( " " + ( isIdentified() && bonus != 0 ? "Also" : "However" ) + ", it seems to be _enchanted to " + glyph.desc(this) + "_." );
         }
 
+        info.append( " This is a _" + lootChapterAsString() +"_ armor." );
+
         return info.toString();
 
 	}
@@ -222,9 +226,11 @@ public abstract class BodyArmor extends Armour {
 
         price *= lootChapter() + 1;
 
-		if ( isIdentified() ) {
+        if ( isIdentified() ) {
             price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
-		} else if( !isCursedKnown() || bonus < 0 ) {
+        } else if( isCursedKnown() && bonus >= 0 ) {
+            price -= price / 4;
+        } else {
             price /= 2;
         }
 

@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Rejuvenation;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
@@ -105,23 +107,21 @@ public class Sunlight extends Blob {
                 if (cur[i] > 0 ) {
                     Char ch = Actor.findChar(i);
 
-                    if(  ch != null && ch.HP < ch.HT && !ch.isMagical()) {
+                    if( ch != null && !ch.isMagical() ) {
 
-                        int healingRate = (int) ( ( !Bestiary.isBoss(ch) ? ch.HT * 2 : ch.HT / 2 ) *
-                                ch.ringBuffsHalved(RingOfVitality.Vitality.class));
+                        Rejuvenation buff = Buff.prolong(ch, Rejuvenation.class, TICK);
 
-                        int healing = Math.min(ch.HT - ch.HP, healingRate / 25 + (healingRate % 25 > Random.Int(25) ? 1 : 0));
+                        if ( buff != null ) {
 
-                        // FIXME
+                            int healingRate = (int) ( ( !Bestiary.isBoss(ch) ? ch.HT * 2 : ch.HT / 2 ) *
+                                    ch.ringBuffsHalved(RingOfVitality.Vitality.class));
 
-                        if( ch instanceof Hero && ((Hero)ch).restoreHealth && ( ch.HP + healing >= ch.HT ) ) {
-                            ((Hero)ch).interrupt();
+                            Buff.prolong(ch, Rejuvenation.class, TICK).proliferate(
+
+                                    healingRate / 25 + (healingRate % 25 > Random.Int(25) ? 1 : 0)
+
+                            );
                         }
-
-                        ch.HP += healing;
-
-                        ch.sprite.showStatus(CharSprite.POSITIVE, Integer.toString(healing));
-
                     }
                 }
             }

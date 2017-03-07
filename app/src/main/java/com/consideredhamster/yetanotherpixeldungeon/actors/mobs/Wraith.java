@@ -74,8 +74,8 @@ public class Wraith extends MobRanged {
     }
 
     @Override
-    public DamageType damageType() {
-        return DamageType.BODY;
+    public boolean ignoresAC() {
+        return true;
     }
 
     private int jumpDelay() {

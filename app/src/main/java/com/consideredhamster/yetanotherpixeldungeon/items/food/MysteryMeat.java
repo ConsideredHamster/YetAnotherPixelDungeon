@@ -24,6 +24,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Random;
@@ -36,39 +37,22 @@ public class MysteryMeat extends Food {
 		energy = Hunger.STARVING / 4;
 		message = "That food tasted... strange.";
 	}
-	
-	@Override
-	public void execute( Hero hero, String action ) {
-		
-		super.execute( hero, action );
-		
-		if (action.equals( AC_EAT )) {
-			
-			switch (Random.Int( 2 )) {
-			case 0:
-//				GLog.w( "Oh it's hot!" );
-//				Buff.affect( hero, Burning.class ).reignite( hero );
-//				break;
-//			case 1:
-//				GLog.w( "You can't feel your legs!" );
-//				Buff.prolong( hero, Roots.class, Paralysis.duration( hero ) );
-//				break;
-//			case 2:
-				GLog.w( "You are not feeling well." );
 
-                Poison buff = Buff.affect( hero, Poison.class );
+    @Override
+    public void onConsume( Hero hero ) {
 
-                if( buff != null ) {
-                    buff.addDuration( Random.Int( 5, 10 ) );
-                }
+        super.onConsume( hero );
 
-				break;
-//			case 3:
-//				GLog.w( "You are stuffed." );
-//				Buff.prolong( hero, Slow.class, Slow.duration( hero ) );
-//				break;
-			}
-		}
+        if( Random.Int( 1 ) == 0 ) {
+
+            GLog.w("You are not feeling well.");
+
+            Poison buff = Buff.affect(hero, Poison.class);
+
+            if (buff != null) {
+                buff.addDuration(Random.Int(5, 10));
+            }
+        }
 	}
 	
 	@Override

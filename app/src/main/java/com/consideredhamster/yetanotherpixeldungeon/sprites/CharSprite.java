@@ -68,6 +68,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected Animation run;
 	protected Animation attack;
 	protected Animation operate;
+	protected Animation search;
 	protected Animation pickup;
 	protected Animation cast;
 	protected Animation die;
@@ -195,6 +196,10 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		turnTo( ch.pos, cell );
 		play( operate );
 	}
+
+    public void search() {
+        play( search );
+    }
 
     public void pickup( int cell ) {
         turnTo( ch.pos, cell );
@@ -576,6 +581,10 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 
                 idle();
                 ch.onOperateComplete();
+
+            } if (anim == search) {
+
+                idle();
 
             }
 			

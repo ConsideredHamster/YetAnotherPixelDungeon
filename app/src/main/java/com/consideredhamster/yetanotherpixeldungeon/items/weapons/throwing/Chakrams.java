@@ -56,6 +56,7 @@ public class Chakrams extends ThrowingWeaponLight {
 
     @Override
     public String desc() {
-        return "This razor-edged missile is made in such curious way that it always returns to the hands of the thrower.";
+        return "This razor-edged missile is made in such curious way that skilled user returns to " +
+                "the hands of the thrower on successful hit.";
     }
 }

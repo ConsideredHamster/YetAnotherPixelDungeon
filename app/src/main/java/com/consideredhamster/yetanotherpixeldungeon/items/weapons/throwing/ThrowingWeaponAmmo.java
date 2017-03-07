@@ -68,7 +68,7 @@ public abstract class ThrowingWeaponAmmo extends ThrowingWeapon {
     @Override
     public int price() {
 
-        return quantity * tier * 5;
+        return quantity * ( tier + 1 ) * ( tier + 2 ) / 2;
 
     }
 

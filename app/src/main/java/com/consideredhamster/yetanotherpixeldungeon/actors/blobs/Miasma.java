@@ -49,7 +49,7 @@ public class Miasma extends Blob {
 		for (int i=0; i < LENGTH; i++) {
 			if (cur[i] > 0 && (ch = Actor.findChar( i )) != null) {
 
-                if( !ch.immunities().contains( DamageType.Body.class ) ) {
+                if( !ch.isMagical() ) {
 
                     Suffocation buff = Buff.prolong(ch, Suffocation.class, TICK);
 

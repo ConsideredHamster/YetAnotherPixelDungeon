@@ -37,7 +37,7 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 
 public class Explosion {
-	
+
 	// Returns true, if this cell is visible
 	public static boolean affect( int c, int r, int radius, int damage, Object source ) {
 
@@ -55,18 +55,19 @@ public class Explosion {
         }
 
         Char ch = Actor.findChar(c);
+
         if (ch != null) {
 
-            int dmg = (damage + Random.IntRange(ch.HT / 2, ch.HT)) / (r + 1);
+            int mod = ch.HT * damage /
+                ( Bestiary.isBoss(ch) ? 200 : ch instanceof Hero ? 100 : 50 );
 
-            if (Bestiary.isBoss(ch)) {
-                dmg /= 4;
-            } else if ( ch instanceof Hero) {
-                dmg /= 2;
-            }
+            int dmg = Random.IntRange( mod / 2, mod );
+            dmg += Random.IntRange( damage / 2, damage );
+            dmg *= ( radius - r + 2 );
+            dmg /= ( radius + 2 );
 
             if (dmg > 0) {
-                ch.damage(Char.absorb(dmg, ch.armorClass()), source, null);
+                ch.damage(Char.absorb(dmg, ch.armorClass()/2), source, null);
                 if (ch.isAlive()) {
                     Buff.prolong(ch, Stun.class, radius - r + 2);
                 }

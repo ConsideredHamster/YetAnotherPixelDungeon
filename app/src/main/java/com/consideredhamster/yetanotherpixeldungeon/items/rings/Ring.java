@@ -206,7 +206,9 @@ public abstract class Ring extends EquipableItem {
 
             } else {
 
-                collect( hero.belongings.backpack );
+                if ( !collect( hero.belongings.backpack ) ) {
+                    Dungeon.level.drop( this, hero.pos ).sprite.drop();
+                }
 
                 hero.spendAndNext( TIME_TO_EQUIP * 0.5f );
 
@@ -399,7 +401,9 @@ public abstract class Ring extends EquipableItem {
 
         if ( isIdentified() ) {
             price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
-        } else if( !isCursedKnown() || bonus < 0 ) {
+        } else if( isCursedKnown() && bonus >= 0 ) {
+            price -= price / 4;
+        } else {
             price /= 2;
         }
 
