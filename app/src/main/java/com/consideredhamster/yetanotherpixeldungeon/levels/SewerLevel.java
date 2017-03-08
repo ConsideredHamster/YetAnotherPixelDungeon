@@ -110,7 +110,6 @@ public class SewerLevel extends RegularLevel {
 		super.createMobs();
 
 		Ghost.Quest.spawn(this);
-//        AmbitiousImp.Quest.spawn(this, roomEntrance);
 
 	}
 	

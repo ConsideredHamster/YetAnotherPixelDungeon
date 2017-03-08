@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.ui;
 
+import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Image;
@@ -89,16 +90,22 @@ public class Toolbar extends Component {
 		add( btnSearch = new Tool( 20, 0, 20, 24 ) {
 			@Override
 			protected void onClick() {
-//                if( GameScene.checkListener( informer ) ) {
+
+                if( YetAnotherPixelDungeon.searchButton() ) {
                     Dungeon.hero.search( true );
-//                } else {
-//                    GameScene.selectCell(informer);
-//                }
+                } else {
+                    GameScene.selectCell(informer);
+                }
 
 			};
             protected boolean onLongClick() {
-//                Dungeon.hero.search( true );
-                GameScene.selectCell(informer);
+
+                if( !YetAnotherPixelDungeon.searchButton() ) {
+                    Dungeon.hero.search( true );
+                } else {
+                    GameScene.selectCell(informer);
+                }
+
                 return true;
             };
 		} );

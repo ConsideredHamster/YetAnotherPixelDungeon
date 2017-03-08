@@ -44,12 +44,21 @@ public class WndSettings extends Window {
 	private static final String TXT_SOUND	        = "Sound FX";
 	
 	private static final String TXT_BRIGHTNESS	    = "Brightness";
+
 	private static final String TXT_LOADING_TIPS  = "Loading tips: %s";
+
 	private static final String[] TXT_TIPS_DELAY  = {
             "Disabled",
             "Normal delay",
             "Doubled delay",
             "Until tapped",
+    };
+
+    private static final String TXT_SEARCH_BTN  = "Search btn: %s";
+
+    private static final String[] TXT_SEARCH_VAR  = {
+            "Tap to search, press to examine",
+            "Tap to examine, press to search",
     };
 
 	private static final String TXT_SWITCH_PORT 	= "Switch to portrait";
@@ -140,7 +149,7 @@ public class WndSettings extends Window {
 		};
 		btnMusic.setRect( 0, ( BTN_HEIGHT + GAP ) * 2, WIDTH, BTN_HEIGHT );
 		btnMusic.checked( YetAnotherPixelDungeon.music() );
-		add( btnMusic );
+		add(btnMusic);
 		
 		CheckBox btnSound = new CheckBox( TXT_SOUND ) {
 			@Override
@@ -150,9 +159,9 @@ public class WndSettings extends Window {
 				Sample.INSTANCE.play(Assets.SND_CLICK);
 			}
 		};
-		btnSound.setRect( 0, btnMusic.bottom() + GAP, WIDTH, BTN_HEIGHT );
-		btnSound.checked( YetAnotherPixelDungeon.soundFx() );
-		add( btnSound );
+		btnSound.setRect(0, btnMusic.bottom() + GAP, WIDTH, BTN_HEIGHT);
+		btnSound.checked(YetAnotherPixelDungeon.soundFx());
+		add(btnSound);
 
         btnImmersive = new CheckBox( TXT_IMMERSIVE ) {
             @Override
@@ -161,10 +170,26 @@ public class WndSettings extends Window {
                 YetAnotherPixelDungeon.immerse(checked());
             }
         };
-        btnImmersive.setRect( 0, btnSound.bottom() + GAP, WIDTH, BTN_HEIGHT );
+        btnImmersive.setRect(0, btnSound.bottom() + GAP, WIDTH, BTN_HEIGHT);
         btnImmersive.checked(YetAnotherPixelDungeon.immersed());
         btnImmersive.enable(android.os.Build.VERSION.SDK_INT >= 19);
         add(btnImmersive);
+
+        RedButton btnSearchBtn = new RedButton( searchButtonsText(YetAnotherPixelDungeon.searchButton()) ) {
+            @Override
+            protected void onClick() {
+
+                boolean val = !YetAnotherPixelDungeon.searchButton();
+
+                YetAnotherPixelDungeon.searchButton( val );
+
+                text.text( searchButtonsText( val ) );
+                text.measure();
+                layout();
+            }
+        };
+        btnSearchBtn.setRect(0, btnImmersive.bottom() + GAP, WIDTH, BTN_HEIGHT);
+        add(btnSearchBtn);
 
         RedButton btnTipsDelay = new RedButton( loadingTipsText( YetAnotherPixelDungeon.loadingTips() ) ) {
             @Override
@@ -173,14 +198,14 @@ public class WndSettings extends Window {
                 int val = YetAnotherPixelDungeon.loadingTips();
 
                 val = val < 3 ? val + 1 : 0;
-                YetAnotherPixelDungeon.loadingTips( val );
+                YetAnotherPixelDungeon.loadingTips(val);
 
                 text.text( loadingTipsText( val ) );
                 text.measure();
                 layout();
             }
         };
-        btnTipsDelay.setRect(0, btnImmersive.bottom() + GAP, WIDTH, BTN_HEIGHT);
+        btnTipsDelay.setRect(0, btnSearchBtn.bottom() + GAP, WIDTH, BTN_HEIGHT);
         add(btnTipsDelay);
 
         resize(WIDTH, (int) btnTipsDelay.bottom());
@@ -210,13 +235,17 @@ public class WndSettings extends Window {
 	
 	private void updateEnabled() {
 		float zoom = Camera.main.zoom;
-		btnZoomIn.enable( zoom < PixelScene.maxZoom );
-		btnZoomOut.enable( zoom > PixelScene.minZoom );
+		btnZoomIn.enable(zoom < PixelScene.maxZoom);
+		btnZoomOut.enable(zoom > PixelScene.minZoom);
 	}
 	
 	private String orientationText() {
 		return YetAnotherPixelDungeon.landscape() ? TXT_SWITCH_PORT : TXT_SWITCH_LAND;
 	}
+
+    private String searchButtonsText( boolean val ) {
+        return Utils.format( TXT_SEARCH_BTN, TXT_SEARCH_VAR[ val ? 1 : 0 ] );
+    }
 
     private String loadingTipsText( int val ) {
         return Utils.format( TXT_LOADING_TIPS, TXT_TIPS_DELAY[ val ] );

@@ -48,6 +48,38 @@ public class WndChangelog extends Window {
 	private static final String TXT_TITLE	= "What's new?";
 
     private static final String TXT_DESCR =
+        "PLEASE READ: due to some of the suggestions being more frequent than others, I want to " +
+        "address them once and for all.\n" +
+        "\n" +
+        "First, I definitely want to implement international localization in this mod, and I will " +
+        "definitely implement it... But not right now. Thing is, implementing localization would " +
+        "require a huge amount of effort, and I would rather start working on things like this " +
+        "AFTER I'll implement the things I deem to be more important. Which means that it will " +
+        "happen somewhere after the 0.4.0 update.\n" +
+        "\n" +
+        "Second, I do not plan to include multiplayer in this mod at all. That's because I don't " +
+        "see any reasonable way to make it work with current game mechanics - especially with how " +
+        "turns work in the game. I am aware that there may be a way to include at least some " +
+        "amount of interaction between players, but for now I am fine with the game being pure single " +
+        "player (like most roguelikes out there). \n" +
+        "\n" +
+        "Finally, I already have (quite vague) plans about which classes I want to add in this mod, " +
+        "thank you all foryour suggestions. However, all of this is irrelevant right now anyway " +
+        "because I need to bring back subclasses before it will become a good idea to introduce " +
+        "new classes to the game. Which is planned exactly for the 0.4.0 update.\n" +
+        "\n" +
+        "Of course, there is a long road between updates 0.3.0 and 0.4.0. There " +
+        "is still a lots of things to rework first - herbs, torches, wands, traps, bosses, story, " +
+        "and even the game's music. Please, be understanding and patient. Thank you ;)\n" +
+        "\n" +
+        "v0.3.0b\n" +
+        "\n" +
+        "- added an option to change the \"Search\" button behaviour in the game settings\n" +
+        "- wandmaker now shows actual wand names even if they were not identified yet\n" +
+        "- completing the sad ghost quest will not crash the game anymore (restart the run if he still does)\n" +
+        "- some loading tips were reworded (thanks to Dustin Jacobsen)\n" +
+        "- fixed some of the descriptions and issues\n" +
+        "\n" +
         "v0.3.0a\n" +
         "\n" +
         "General\n" +
@@ -63,7 +95,7 @@ public class WndChangelog extends Window {
         "- all basic shops now sell arrows or quarrels\n" +
         "- all basic shops now sell bullets or gunpowder\n" +
         "- decreased base price of ammunitions\n" +
-        "- partially identified (non-cursed) items now cost less than fully identified ones\n" +
+        "- partially identified non-cursed items now cost less than fully identified ones\n" +
         "- rebalanced bomb damage, bomb sticks are less powerful than bundles now\n" +
         "\n" +
         "- scrolls of Enchantment now can be used to upgrade/uncurse wands and rings\n" +
@@ -82,8 +114,9 @@ public class WndChangelog extends Window {
         "- carrion swarms now drain 1% of your satiety per hit\n" +
         "- fire elementals do not drop gunpowder anymore\n" +
         "- golems now become less armored while burning\n" +
-        "- wraiths now deal physical damage in melee instead of unholy, but still ignore target's armor\n" +
-        "- increased drop chance of raw meat from sewer crabs, giant spiders and cave scorpions\n" +
+        "- wraiths now deal physical damage in melee instead of body damage\n" +
+        "- wraiths still ignore target's armor\n" +
+        "- increased drop chance of raw meat from mobs\n" +
         "\n" +
         "- lots of minor tweaks and bugfixes";
 

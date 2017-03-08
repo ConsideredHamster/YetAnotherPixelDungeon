@@ -670,6 +670,10 @@ public class StartScene extends PixelScene {
 
                             startNewGame();
 
+                        } else {
+
+                            StartScene.this.add( new WndDifficulty() );
+
                         }
                     }
                 } );

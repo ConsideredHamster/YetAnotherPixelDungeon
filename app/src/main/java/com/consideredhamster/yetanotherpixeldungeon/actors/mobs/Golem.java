@@ -75,7 +75,7 @@ public class Golem extends MobHealthy {
 			"The Dwarves tried to combine their knowledge of mechanisms with their newfound power of elemental binding. " +
 			"They used spirits of earth as the \"soul\" for the mechanical bodies of golems, which were believed to be " +
 			"most controllable of all. Despite this, the tiniest mistake in the ritual could cause an outbreak. Their " +
-            "metallic bodies can become less durable while under high temperatures.";
+            "metallic bodies can become less durable under high temperatures.";
 	}
 
     public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();

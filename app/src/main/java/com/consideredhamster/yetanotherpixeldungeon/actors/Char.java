@@ -479,9 +479,9 @@ public abstract class Char extends Actor {
 
         if( this instanceof Hero ){
             if( Dungeon.difficulty == Difficulties.EASY ) {
-                dmg = dmg / 2 + Random.Int(dmg % 2 + 1);
+                dmg -= ( dmg / 2 + ( Random.Int(2) < dmg % 2 ? 1 : 0 ) );
             } else if( Dungeon.difficulty == Difficulties.IMPOSSIBLE ) {
-                dmg += dmg / 2 + Random.Int(dmg % 2 + 1);
+                dmg += ( dmg / 2 + ( Random.Int(2) < dmg % 2 ? 1 : 0 ) );
             }
         }
 

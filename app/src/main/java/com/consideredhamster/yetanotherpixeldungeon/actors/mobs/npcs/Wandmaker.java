@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
 import java.util.ArrayList;
 
+import com.consideredhamster.yetanotherpixeldungeon.levels.SewerLevel;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
@@ -228,7 +229,7 @@ public class Wandmaker extends NPC {
 		
 		public static void spawn( PrisonLevel level, Room room ) {
 			if (!spawned && Dungeon.depth > 7 && Random.Int( 12 - Dungeon.depth ) == 0) {
-				
+
 				Wandmaker npc = new Wandmaker();
 				do {
 					npc.pos = room.random();
@@ -308,7 +309,7 @@ public class Wandmaker extends NPC {
 					}
 					
 					Heap heap = Dungeon.level.drop( new CorpseDust(), pos );
-					heap.type = Heap.Type.TOMB;
+					heap.type = Heap.Type.BONES_CURSED;
 					heap.sprite.link();
 				}
 				
@@ -338,64 +339,64 @@ public class Wandmaker extends NPC {
 	}
 	
 	public static class Rotberry extends Plant {
-		
-		private static final String TXT_DESC = 
+
+		private static final String TXT_DESC =
 			"Berries of this shrub taste like sweet, sweet death.";
-		
+
 		{
 			image = 7;
 			plantName = "Rotberry";
 		}
-		
+
 		@Override
 		public void activate( Char ch ) {
 			super.activate( ch );
-			
+
 			GameScene.add( Blob.seed( pos, 100, CorrosiveGas.class ) );
-			
+
 			Dungeon.level.drop( new Seed(), pos ).sprite.drop();
-			
+
 			if (ch != null) {
 				Buff.prolong( ch, Ensnared.class, TICK * 3 );
 			}
 		}
-		
+
 		@Override
 		public String desc() {
 			return TXT_DESC;
 		}
-		
+
 		public static class Seed extends Plant.Seed {
 			{
 				plantName = "Rotberry";
-				
+
 				name = "seed of " + plantName;
 				image = ItemSpriteSheet.HERB_ROTBERRY;
-				
+
 				plantClass = Rotberry.class;
 				alchemyClass = PotionOfStrength.class;
 			}
-			
+
 			@Override
 			public boolean collect( Bag container ) {
 				if (super.collect( container )) {
-					
+
 					if (Dungeon.level != null) {
 						for (Mob mob : Dungeon.level.mobs) {
 							mob.beckon( Dungeon.hero.pos );
 						}
-						
+
 						GLog.w( "The seed emits a roar that echoes throughout the dungeon!" );
 						CellEmitter.center( Dungeon.hero.pos ).start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
 						Sample.INSTANCE.play( Assets.SND_CHALLENGE );
 					}
-					
+
 					return true;
 				} else {
 					return false;
 				}
 			}
-			
+
 			@Override
 			public String desc() {
 				return TXT_DESC;

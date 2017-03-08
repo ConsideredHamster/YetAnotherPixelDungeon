@@ -37,7 +37,7 @@ public class RingOfDurability extends Ring {
         return isTypeKnown() ?
             ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
                 "decreases rate at which everything around it degrades with use. It will make your " +
-                "weapons, shields and armour last longer, make your ammunition break less often and " +
+                "wands, weapons, shields and armour last longer, make your ammunition break less often and " +
                 "even allow you to use your repair tools more effectively." +
                 ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();

@@ -404,11 +404,15 @@ public abstract class Wand extends EquipableItem {
 		
 		return sb.toString();
 	}
-	
-	@Override
-	public String name() {
-		return isTypeKnown() ? super.name() : wood + " wand";
-	}
+
+    @Override
+    public String name() {
+        return name( isTypeKnown() );
+    }
+
+    public String name( boolean isTypeKnown ) {
+        return isTypeKnown ? super.name() : wood + " wand";
+    }
 	
 	@Override
 	public String info() {

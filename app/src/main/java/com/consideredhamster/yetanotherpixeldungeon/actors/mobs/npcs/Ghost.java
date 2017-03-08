@@ -20,6 +20,9 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
+import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Challenges;
@@ -79,7 +82,7 @@ public class Ghost extends NPC {
 	public Ghost() {
 		super();
 
-		Sample.INSTANCE.load( Assets.SND_GHOST );
+		Sample.INSTANCE.load(Assets.SND_GHOST);
 	}
 
     private void flee() {
@@ -278,12 +281,12 @@ public class Ghost extends NPC {
 		}
 		
 		public static void spawn( SewerLevel level ) {
-			if (!spawned && Dungeon.depth > 1 && Random.Int( 6 - Dungeon.depth ) == 0) {
+			if (!spawned && Dungeon.depth > 1 && Random.Int( 6 - Dungeon.depth ) == 0 ) {
 				
 				Ghost ghost = new Ghost();
 				do {
 					ghost.pos = level.randomRespawnCell();
-				} while (ghost.pos == -1);
+				} while (ghost.pos == -1 );
 				level.mobs.add( ghost );
 				Actor.occupyCell( ghost );
 				
@@ -298,18 +301,16 @@ public class Ghost extends NPC {
 				processed = false;
 				depth = Dungeon.depth;
 
-                Weapon weapon;
                 do {
                     weapon = (Weapon) Generator.random(Generator.Category.WEAPON);
                 } while (weapon instanceof ThrowingWeapon || weapon.lootChapter() < 2 || weapon.bonus < 0);
 
-                Armour armour;
                 do {
-                    armour = (Armour)Generator.random( Generator.Category.ARMOR );
-                } while (armour instanceof BodyArmorCloth || armour.bonus < 0 );
+                    armor = (Armour)Generator.random( Generator.Category.ARMOR );
+                } while (armor instanceof BodyArmorCloth || armor.lootChapter() < 2 || armor.bonus < 0 );
 
 				weapon.identify().repair();
-                armour.identify().repair();
+                armor.identify().repair();
 			}
 		}
 

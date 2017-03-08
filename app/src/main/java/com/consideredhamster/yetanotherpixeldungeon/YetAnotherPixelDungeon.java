@@ -255,6 +255,14 @@ public class YetAnotherPixelDungeon extends Game {
         Preferences.INSTANCE.put( Preferences.KEY_LOADING_TIPS, value );
     }
 
+    public static boolean searchButton() {
+        return Preferences.INSTANCE.getBoolean(Preferences.KEY_SEARCH_BTN, false);
+    }
+
+    public static void searchButton( boolean value ) {
+        Preferences.INSTANCE.put( Preferences.KEY_SEARCH_BTN, value );
+    }
+
     public static int loadingTips() {
         return Preferences.INSTANCE.getInt( Preferences.KEY_LOADING_TIPS, 3 );
     }
