@@ -119,6 +119,11 @@ public class Ghost extends NPC {
     public boolean isMagical() {
         return true;
     }
+
+    @Override
+    public boolean immovable() {
+        return true;
+    }
 	
 	@Override
 	public float moveSpeed() {

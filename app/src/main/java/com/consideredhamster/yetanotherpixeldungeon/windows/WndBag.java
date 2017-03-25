@@ -588,7 +588,9 @@ public class WndBag extends WndTabbed {
                                         break;
                                 }
 
-                                onLongClick();
+                                if( index < 3 ) {
+                                    onLongClick();
+                                }
                             }
                         }
                     );

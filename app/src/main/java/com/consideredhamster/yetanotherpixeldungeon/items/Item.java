@@ -230,9 +230,9 @@ public class Item implements Bundlable {
 //		if (items.size() < container.size) {
 		if ( container.countVisibleItems() < container.size || !visible ) {
 
-			if (Dungeon.hero != null && Dungeon.hero.isAlive()) {
-				Badges.validateItemLevelAcquired(this);
-			}
+//			if (Dungeon.hero != null && Dungeon.hero.isAlive()) {
+//				Badges.validateItemLevelAcquired(this);
+//			}
 
 			items.add( this );
 			QuickSlot.refresh();

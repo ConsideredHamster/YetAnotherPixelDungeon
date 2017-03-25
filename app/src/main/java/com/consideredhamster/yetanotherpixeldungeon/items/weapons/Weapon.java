@@ -176,7 +176,7 @@ public abstract class Weapon extends EquipableItem {
 			if (hitsToKnow <= 0) {
 				identify();
 				GLog.i( TXT_IDENTIFY, name(), toString() );
-				Badges.validateItemLevelAcquired(this);
+//				Badges.validateItemLevelAcquired(this);
 			}
 		}
 	}

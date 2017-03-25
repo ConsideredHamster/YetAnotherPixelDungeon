@@ -186,10 +186,6 @@ public class TitleScene extends PixelScene {
         emitter.pos( version.x, version.y, version.width(), version.height() );
         add( emitter );
 
-        if( YetAnotherPixelDungeon.lastVersion() < Game.versionNum ) {
-            version.hardlight( COLOR_BRIGHT );
-            emitter.pour( Speck.factory( Speck.LIGHT ), 0.3f );
-        }
 
         TouchArea changelog = new TouchArea( version ) {
             @Override
@@ -214,6 +210,18 @@ public class TitleScene extends PixelScene {
 		add( btnExit );
 		
 		fadeIn();
+
+
+        if( YetAnotherPixelDungeon.lastVersion() < Game.versionNum ) {
+//            version.hardlight( COLOR_BRIGHT );
+//            emitter.pour( Speck.factory( Speck.LIGHT ), 0.3f );
+
+            YetAnotherPixelDungeon.lastVersion( Game.versionNum );
+
+//            emitter.on = false;
+//            version.hardlight( COLOR_NORMAL );
+            add(new WndChangelog());
+        }
 	}
 	
 	private void placeTorch( float x, float y ) {

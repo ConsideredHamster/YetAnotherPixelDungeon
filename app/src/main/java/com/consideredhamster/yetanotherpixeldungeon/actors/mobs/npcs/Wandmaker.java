@@ -104,6 +104,11 @@ public class Wandmaker extends NPC {
 //	public int dexterity( Char enemy ) {
 //		return 1000;
 //	}
+
+    @Override
+    public boolean immovable() {
+        return true;
+    }
 	
 	@Override
 	public String defenseVerb() {

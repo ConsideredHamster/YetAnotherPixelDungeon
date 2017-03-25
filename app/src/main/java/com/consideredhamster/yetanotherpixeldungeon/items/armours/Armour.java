@@ -167,7 +167,7 @@ public abstract class Armour extends EquipableItem {
 			if (hitsToKnow <= 0) {
 				identify();
 				GLog.w( TXT_IDENTIFY, name(), toString() );
-				Badges.validateItemLevelAcquired(this);
+//				Badges.validateItemLevelAcquired(this);
 			}
 		}
 

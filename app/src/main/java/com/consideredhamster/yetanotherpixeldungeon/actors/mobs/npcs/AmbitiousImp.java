@@ -126,6 +126,11 @@ public class AmbitiousImp extends NPC {
     public boolean add( Buff buff ) {
         return false;
     }
+
+    @Override
+    public boolean immovable() {
+        return true;
+    }
 	
 	@Override
 	public boolean reset() {

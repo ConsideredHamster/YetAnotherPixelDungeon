@@ -44,7 +44,7 @@ public class PotionOfStrength extends Potion {
         hero.STR++;
         hero.strBonus++;
 
-		int hpBonus = hero.heroClass == HeroClass.WARRIOR ? 3 : hero.heroClass == HeroClass.ACOLYTE ? 1 : 2 ;
+		int hpBonus = 2 ;
 
         int restore = hero.HT - hero.HP;
 

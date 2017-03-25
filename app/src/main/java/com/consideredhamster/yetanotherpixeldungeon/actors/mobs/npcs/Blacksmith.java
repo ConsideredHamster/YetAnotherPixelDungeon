@@ -75,6 +75,11 @@ public class Blacksmith extends NPC {
 		name = "troll blacksmith";
 		spriteClass = BlacksmithSprite.class;
 	}
+
+    @Override
+    public boolean immovable() {
+        return true;
+    }
 	
 	@Override
 	protected boolean act() {
@@ -216,7 +221,7 @@ public class Blacksmith extends NPC {
 		GLog.p( TXT_LOOKS_BETTER, first.name() );
 
 		Dungeon.hero.spendAndNext( 2f );
-		Badges.validateItemLevelAcquired(first);
+//		Badges.validateItemLevelAcquired(first);
 
 		if (second.isEquipped( Dungeon.hero )) {
 			((EquipableItem)second).doUnequip( Dungeon.hero, false );

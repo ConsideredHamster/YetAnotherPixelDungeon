@@ -94,7 +94,11 @@ public class Toolbar extends Component {
                 if( YetAnotherPixelDungeon.searchButton() ) {
                     Dungeon.hero.search( true );
                 } else {
-                    GameScene.selectCell(informer);
+                    if( GameScene.checkListener( informer ) ) {
+                        Dungeon.hero.search( true );
+                    } else {
+                        GameScene.selectCell(informer);
+                    }
                 }
 
 			};
@@ -110,30 +114,10 @@ public class Toolbar extends Component {
             };
 		} );
 
-//        add( btnJump = new Tool( 40, 0, 20, 24 ) {
-//            @Override
-//            protected void onClick() {
-//                GameScene.selectCell( informer );
-//
-//            };
-//            protected boolean onLongClick() {
-//                Dungeon.hero.search( true );
-//                return true;
-//            };
-//        } );
-//
-//		add( btnInfo = new Tool( 40, 7, 21, 24 ) {
-//			@Override
-//			protected void onClick() {
-//				GameScene.selectCell( informer );
-//			}
-//		} );
-
         add( btnQuick0 = new QuickslotTool( 82, 0, 22, 24 ) );
         add( btnQuick1 = new QuickslotTool( 82, 0, 22, 24, 1 ) );
         add( btnQuick2 = new QuickslotTool( 82, 0, 22, 24, 2 ) );
         add( btnQuick3 = new QuickslotTool( 82, 0, 22, 24, 3 ) );
-//		btnQuick2.visible = (QuickSlot.quickslotValue_2 != null);
 
 		add( btnInventory = new Tool( 60, 0, 22, 24 ) {
 			private GoldIndicator gold;
@@ -144,7 +128,6 @@ public class Toolbar extends Component {
 			}
 			protected boolean onLongClick() {
                 GameScene.show( new WndBag( Dungeon.hero.belongings.getItem( Keyring.class ), null, WndBag.Mode.ALL, null ) );
-//				GameScene.show( new WndCatalogus() );
 				return true;
 			};
 			@Override

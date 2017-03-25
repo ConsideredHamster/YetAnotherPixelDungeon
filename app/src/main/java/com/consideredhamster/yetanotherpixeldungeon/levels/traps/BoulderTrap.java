@@ -85,6 +85,9 @@ public class BoulderTrap extends Trap {
 
     public static void boulders( int pos, int power ) {
 
+        if( pos < 0 || pos >= 1024 )
+            return;
+
         if( Level.solid[pos] )
             return;
 

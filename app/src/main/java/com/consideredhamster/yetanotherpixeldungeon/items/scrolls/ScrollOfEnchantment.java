@@ -83,7 +83,7 @@ public class ScrollOfEnchantment extends InventoryScroll {
                 }
 
                 curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
-                Badges.validateItemLevelAcquired(item);
+//                Badges.validateItemLevelAcquired(item);
 
             } else {
 
@@ -126,7 +126,7 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
                 curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
 
-                Badges.validateItemLevelAcquired(item);
+//                Badges.validateItemLevelAcquired(item);
 
             } else {
 
@@ -160,7 +160,7 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
                 curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
 
-                Badges.validateItemLevelAcquired(item);
+//                Badges.validateItemLevelAcquired(item);
 
             } else {
 

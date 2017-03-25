@@ -188,23 +188,26 @@ public class HallsBossLevel extends Level {
 				doMagic( (ROOM_TOP - 1) * WIDTH + i );
 				doMagic( (ROOM_BOTTOM + 1) * WIDTH + i );
 			}
+
 			for (int i=ROOM_TOP; i < ROOM_BOTTOM + 1; i++) {
 				doMagic( i * WIDTH + ROOM_LEFT - 1 );
 				doMagic( i * WIDTH + ROOM_RIGHT + 1 );
 			}
+
 			doMagic( entrance );
 			GameScene.updateMap();
 
 			Dungeon.observe();
 			
 			Yog boss = new Yog();
+
 			do {
 				boss.pos = Random.Int( LENGTH );
-			} while (
-				!passable[boss.pos] ||
-				Dungeon.visible[boss.pos]);
+			} while ( !passable[boss.pos] || Dungeon.visible[boss.pos] );
+
 			GameScene.add( boss );
 			boss.spawnFists();
+            boss.yell( "Greetings, mortal. Are you ready to die?" );
 			
 			stairs = entrance;
 			entrance = -1;

@@ -452,7 +452,7 @@ public abstract class Ring extends EquipableItem {
 			if (target instanceof Hero && !isTypeKnown()) {
 				setKnown();
 				GLog.i( desc() );
-				Badges.validateItemLevelAcquired(Ring.this);
+//				Badges.validateItemLevelAcquired(Ring.this);
 			}
 
 			return super.attachTo(target);
@@ -472,7 +472,7 @@ public abstract class Ring extends EquipableItem {
                     String gemName = name();
                     identify();
                     GLog.w(Ring.this.bonus >= 0 ? TXT_IDENTIFY_NORMAL : TXT_IDENTIFY_CURSED, gemName, Ring.this.name(), Math.abs(Ring.this.bonus));
-                    Badges.validateItemLevelAcquired(Ring.this);
+//                    Badges.validateItemLevelAcquired(Ring.this);
                 }
             }
 

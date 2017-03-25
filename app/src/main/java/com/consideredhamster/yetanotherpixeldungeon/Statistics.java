@@ -25,6 +25,7 @@ import com.watabou.utils.Bundle;
 public class Statistics {
 	
 	public static int goldCollected;
+	public static int itemsUpgraded;
 	public static int deepestFloor;
 	public static int enemiesSlain;
 	public static int foodEaten;
@@ -43,6 +44,7 @@ public class Statistics {
 	public static void reset() {
 		
 		goldCollected	= 0;
+		itemsUpgraded	= 0;
 		deepestFloor	= 0;
 		enemiesSlain	= 0;
 		foodEaten		= 0;
@@ -60,6 +62,7 @@ public class Statistics {
 	}
 	
 	private static final String GOLD		= "score";
+	private static final String UPGRADES	= "itemsUpgraded";
 	private static final String DEEPEST		= "maxDepth";
 	private static final String SLAIN		= "enemiesSlain";
 	private static final String FOOD		= "foodEaten";
@@ -72,6 +75,7 @@ public class Statistics {
 	
 	public static void storeInBundle( Bundle bundle ) {
 		bundle.put( GOLD,		goldCollected );
+		bundle.put( UPGRADES,	itemsUpgraded );
 		bundle.put( DEEPEST,	deepestFloor );
 		bundle.put( SLAIN,		enemiesSlain );
 		bundle.put( FOOD,		foodEaten );
@@ -85,6 +89,7 @@ public class Statistics {
 	
 	public static void restoreFromBundle( Bundle bundle ) {
 		goldCollected	= bundle.getInt( GOLD );
+        itemsUpgraded	= bundle.getInt( UPGRADES );
 		deepestFloor	= bundle.getInt( DEEPEST );
 		enemiesSlain	= bundle.getInt( SLAIN );
 		foodEaten		= bundle.getInt( FOOD );

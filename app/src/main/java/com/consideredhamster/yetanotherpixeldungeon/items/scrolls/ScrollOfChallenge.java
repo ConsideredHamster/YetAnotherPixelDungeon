@@ -61,7 +61,7 @@ public class ScrollOfChallenge extends Scroll {
 
         int amount = Dungeon.level.nMobs() + Dungeon.chapter();
 
-        if (!Dungeon.bossLevel()) {
+        if (!Dungeon.bossLevel() && Dungeon.level.nMobs() > 0) {
 
             while( Dungeon.level.mobs.size() < amount ) {
 

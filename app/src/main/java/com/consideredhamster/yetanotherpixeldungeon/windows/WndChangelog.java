@@ -45,67 +45,87 @@ public class WndChangelog extends Window {
 	private static final int WIDTH_L	= 160;
 	private static final int HEIGHT_L	= 128;
 
-	private static final String TXT_TITLE	= "What's new?";
+	private static final String TXT_TITLE	= "PLEASE READ";
 
     private static final String TXT_DESCR =
-        "PLEASE READ: due to some of the suggestions being more frequent than others, I want to " +
-        "address them once and for all.\n" +
+        "This window is supposed to tell you about the changes made to the game in the " +
+        "last updates, but due to some of the suggestions being more frequent than others, I want to " +
+        "address them once and for all here, where everyone can see them.\n" +
         "\n" +
-        "First, I definitely want to implement international localization in this mod, and I will " +
-        "definitely implement it... But not right now. Thing is, implementing localization would " +
-        "require a huge amount of effort, and I would rather start working on things like this " +
-        "AFTER I'll implement the things I deem to be more important. Which means that it will " +
-        "happen somewhere after the 0.4.0 update.\n" +
+        "First, I will definitely implement international localization in this mod, but not right " +
+        "now. Thing is, implementing localization would require a huge amount of effort, and I " +
+        "would rather start working on things like this AFTER I implement the things I deem to " +
+        "be more important. Which means that it will happen somewhere AFTER the 0.4.0 update.\n" +
         "\n" +
         "Second, I do not plan to include multiplayer in this mod at all. That's because I don't " +
-        "see any reasonable way to make it work with current game mechanics - especially with how " +
-        "turns work in the game. I am aware that there may be a way to include at least some " +
-        "amount of interaction between players, but for now I am fine with the game being pure single " +
-        "player (like most roguelikes out there). \n" +
+        "see any reasonable way to make it work with the current game mechanics. I am aware that there " +
+        "may be another way to include at least some amount of interaction between players, but for now " +
+        "I am fine with the game being single player only (like most roguelikes out there).\n" +
         "\n" +
-        "Finally, I already have (quite vague) plans about which classes I want to add in this mod, " +
-        "thank you all foryour suggestions. However, all of this is irrelevant right now anyway " +
-        "because I need to bring back subclasses before it will become a good idea to introduce " +
+        "Finally, I already have my own plans about the classes I want to add in this mod, " +
+        "thank you all for your suggestions. However, all of this is irrelevant right now anyway " +
+        "because I need to bring back subclasses before it becomes a good idea to introduce " +
         "new classes to the game. Which is planned exactly for the 0.4.0 update.\n" +
         "\n" +
-        "Of course, there is a long road between updates 0.3.0 and 0.4.0. There " +
-        "is still a lots of things to rework first - herbs, torches, wands, traps, bosses, story, " +
-        "and even the game's music. Please, be understanding and patient. Thank you ;)\n" +
+        "Of course, there is a long road between updates 0.3.0 and 0.4.0. There is still a lots of " +
+        "things to rework first - torches, traps, bosses, story, music... Version 0.3.1, for example, " +
+        "will be about wands, herbs and debuffs. Please, be understanding and patient. Thank you ;)\n" +
+        "\n" +
+        "P.S. Also, I want to bring to your attention that you can bring up this window any time by " +
+        "tapping the version number in the bottom right of the title screen. Okay, all said and " +
+        "done, here comes the actual changelog...\n" +
+        "\n" +
+        "CHANGES IN THE LAST UPDATES:\n" +
+        "\n" +
+        "v0.3.0c\n" +
+        "\n" +
+        "- the \"search button\" switch in the settings now works like this:\n" +
+        "- \"default behaviour\" - tap to examine, press or tap again to search\n" +
+        "- \"reversed behaviour\" - tap to search, press to examine\n" +
+        "\n" +
+        "- removed the \"Enchanted item with +X bonus acquired\" badge\n" +
+        "- added the \"X scrolls of Upgrade used\" badge\n" +
+        "\n" +
+        "- Warrior now gets 2 bonus HP from potions of Strength\n" +
+        "- Acolyte now gets 2 bonus HP from potions of Strength\n" +
+        "\n" +
+        "- scrolls of Banishment now affect wands in the wand holder\n" +
+        "- potions of Blessing now affect wands in the wand holder\n" +
+        "\n" +
+        "- decreased skeleton respawn rate in the fourth boss fight\n" +
+        "- fixed various crashes and other issues\n" +
         "\n" +
         "v0.3.0b\n" +
         "\n" +
-        "- added an option to change the \"Search\" button behaviour in the game settings\n" +
-        "- wandmaker now shows actual wand names even if they were not identified yet\n" +
-        "- completing the sad ghost quest will not crash the game anymore (restart the run if he still does)\n" +
+        "- added an option to change the \"Search\" button behaviour\n" +
         "- some loading tips were reworded (thanks to Dustin Jacobsen)\n" +
+        "- wandmaker reward now shows proper wand names\n" +
+        "- fixed the sad ghost quest crashing the game\n" +
         "- fixed some of the descriptions and issues\n" +
         "\n" +
         "v0.3.0a\n" +
         "\n" +
-        "General\n" +
-        "\n" +
-        "- you can hit targets out of your field of view again, but with 50% accuracy penalty\n" +
+        "- you can hit targets out of your field of view again...\n" +
+        "- ...but you get 50% accuracy penalty in this case\n" +
         "- rebalanced rewards of sad ghost and ambitious imp quests\n" +
-        "- rewards of sad ghost and old wandmaker quests are visible to the player now\n" +
-        "- player character now receives 50% less damage on Easy difficulty\n" +
-        "- player character now receives 50% more damage on Impossible difficulty\n" +
-        "\n" +
-        "Items & Shops\n" +
+        "- rewards for the sad ghost's quest are revealed to the player now\n" +
+        "- rewards for the wandmaker's quest are revealed to the player now\n" +
+        "- player now receives 50% less damage on Easy difficulty\n" +
+        "- player now receives 50% more damage on Impossible difficulty\n" +
         "\n" +
         "- all basic shops now sell arrows or quarrels\n" +
         "- all basic shops now sell bullets or gunpowder\n" +
-        "- decreased base price of ammunitions\n" +
-        "- partially identified non-cursed items now cost less than fully identified ones\n" +
-        "- rebalanced bomb damage, bomb sticks are less powerful than bundles now\n" +
+        "- decreased base price of ammunitions in shops\n" +
+        "- partially identified non-cursed items now cost less\n" +
+        "- rebalanced bomb damage to be less OP against bosses\n" +
+        "- bomb sticks are less powerful than bundles now\n" +
         "\n" +
-        "- scrolls of Enchantment now can be used to upgrade/uncurse wands and rings\n" +
-        "- scrolls of Enchantment now upgrade already enchanted weapons/armors\n" +
+        "- scrolls of Enchantment now can be used on wands and rings\n" +
+        "- scrolls of Enchantment now upgrade enchanted weapons/armors\n" +
         "- scrolls of Enchantment now re-enchant only if item is already at +3\n" +
-        "- scrolls of Sunlight now heal more the longer you stay in their area of effect\n" +
+        "- scrolls of Sunlight now heal more if you stay in their area of effect\n" +
         "- effect of scrolls of Sunlight now lasts less longer\n" +
         "- thunderstorm clouds now deal low damage to the fire elementals\n" +
-        "\n" +
-        "Mobs & Bosses\n" +
         "\n" +
         "- mob damage is not affected by difficulty anymore\n" +
         "- mob respawn rate is not affected by difficulty anymore\n" +

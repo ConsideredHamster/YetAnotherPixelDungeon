@@ -830,7 +830,7 @@ public class DwarvenKing extends MobPrecise {
     }
 
     private static int spawnDelay( int breaks ) {
-        return Random.IntRange( 10, 15 ) - Random.IntRange( breaks * 2, breaks * 3 ); // 10-15 8-12 6-9 4-6
+        return Random.IntRange( 10, 15 ) - Random.IntRange( breaks * 1, breaks * 2 ); // 10-15 8-12 6-9 4-6
     }
 
     private static float armorDuration( int breaks ) {

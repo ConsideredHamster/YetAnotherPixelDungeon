@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
+import com.consideredhamster.yetanotherpixeldungeon.Statistics;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
@@ -97,8 +98,10 @@ public class ScrollOfUpgrade extends InventoryScroll {
         item.repair(1);
 
         QuickSlot.refresh();
+
+        Statistics.itemsUpgraded++;
 		
-		Badges.validateItemLevelAcquired(item);
+		Badges.validateItemsUpgraded();
 	}
 
 	

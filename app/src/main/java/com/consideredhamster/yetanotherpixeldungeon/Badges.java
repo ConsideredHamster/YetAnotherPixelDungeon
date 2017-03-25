@@ -98,7 +98,7 @@ public class Badges {
 			"3rd boss slain by Gladiator, Berserker, Warlock, Battlemage, Freerunner, Assassin, Sniper & Warden", 33, true ),
 		RING_OF_HAGGLER( "Ring of Haggler obtained", 20 ),
 		RING_OF_THORNS( "Ring of Thorns obtained", 21 ),
-		STRENGTH_ATTAINED_1( "1 potions of Strength used", 40 ),
+		STRENGTH_ATTAINED_1( "1 potion of Strength used", 40 ),
 		STRENGTH_ATTAINED_2( "3 potions of Strength used", 41 ),
 		STRENGTH_ATTAINED_3( "6 potions of Strength used", 42 ),
 		STRENGTH_ATTAINED_4( "10 potions of Strength used", 43 ),
@@ -110,10 +110,10 @@ public class Badges {
         MASTERY_SCHOLAR,
         MASTERY_BRIGAND,
         MASTERY_ACOLYTE,
-		ITEM_LEVEL_1( "Enchanted item with +0 bonus acquired", 48 ),
-		ITEM_LEVEL_2( "Enchanted item with +1 bonus acquired", 49 ),
-		ITEM_LEVEL_3( "Enchanted item with +2 bonus acquired", 50 ),
-		ITEM_LEVEL_4( "Enchanted item with +3 bonus acquired", 51 ),
+		ITEMS_UPGRADED_1( "1 scroll of Upgrade used", 48 ),
+        ITEMS_UPGRADED_2( "3 scrolls of Upgrade used", 49 ),
+        ITEMS_UPGRADED_3( "6 scrolls of Upgrade used", 50 ),
+        ITEMS_UPGRADED_4( "10 scrolls of Upgrade used", 51 ),
 		RARE_ALBINO,
 		RARE_BANDIT,
 		RARE_SHIELDED,
@@ -239,7 +239,7 @@ public class Badges {
 			store(bundle, global);
 			
 			try {
-				OutputStream output = Game.instance.openFileOutput( BADGES_FILE, Game.MODE_PRIVATE );
+				OutputStream output = Game.instance.openFileOutput(BADGES_FILE, Game.MODE_PRIVATE);
 				Bundle.write( bundle, output );
 				output.close();
 				saveNeeded = false;
@@ -330,8 +330,8 @@ public class Badges {
             displayBadge(badge);
         }
 	}
-	
-	public static void validateStrengthAttained() {
+
+    public static void validateStrengthAttained() {
 
         if ( Dungeon.difficulty > Difficulties.EASY ) {
 
@@ -356,7 +356,34 @@ public class Badges {
 
             displayBadge(badge);
         }
-	}
+    }
+
+    public static void validateItemsUpgraded() {
+
+        if ( Dungeon.difficulty > Difficulties.EASY ) {
+
+            Badge badge = null;
+
+            if (!local.contains(Badge.ITEMS_UPGRADED_1) && Statistics.itemsUpgraded >= 1) {
+                badge = Badge.ITEMS_UPGRADED_1;
+                local.add(badge);
+            }
+            if (!local.contains(Badge.ITEMS_UPGRADED_2) && Statistics.itemsUpgraded >= 3) {
+                badge = Badge.ITEMS_UPGRADED_2;
+                local.add(badge);
+            }
+            if (!local.contains(Badge.ITEMS_UPGRADED_3) && Statistics.itemsUpgraded >= 6) {
+                badge = Badge.ITEMS_UPGRADED_3;
+                local.add(badge);
+            }
+            if (!local.contains(Badge.ITEMS_UPGRADED_4) && Statistics.itemsUpgraded >= 10) {
+                badge = Badge.ITEMS_UPGRADED_4;
+                local.add(badge);
+            }
+
+            displayBadge(badge);
+        }
+    }
 	
 	public static void validateFoodEaten() {
 
@@ -427,45 +454,45 @@ public class Badges {
         }
 	}
 	
-	public static void validateItemLevelAcquired(Item item) {
-
-        if ( Dungeon.difficulty > Difficulties.EASY ) {
-
-
-            // This method should be called:
-            // 1) When an item gets obtained (Item.collect)
-            // 2) When an item gets upgraded (ScrollOfUpgrade, ScrollOfWeaponUpgrade, ShortSword, WandOfMagicMissile)
-            // 3) When an item gets identified
-            if (item.known < Item.UPGRADE_KNOWN) {
-                return;
-            }
-
-            Badge badge = null;
-
-            if (item instanceof Weapon && ((Weapon) item).isEnchanted() ||
-                    item instanceof Armour && ((Armour) item).isInscribed()) {
-
-                if (!local.contains(Badge.ITEM_LEVEL_1) && item.bonus >= 0) {
-                    badge = Badge.ITEM_LEVEL_1;
-                    local.add(badge);
-                }
-                if (!local.contains(Badge.ITEM_LEVEL_2) && item.bonus >= 1) {
-                    badge = Badge.ITEM_LEVEL_2;
-                    local.add(badge);
-                }
-                if (!local.contains(Badge.ITEM_LEVEL_3) && item.bonus >= 2) {
-                    badge = Badge.ITEM_LEVEL_3;
-                    local.add(badge);
-                }
-                if (!local.contains(Badge.ITEM_LEVEL_4) && item.bonus >= 3) {
-                    badge = Badge.ITEM_LEVEL_4;
-                    local.add(badge);
-                }
-            }
-
-            displayBadge(badge);
-        }
-	}
+//	public static void validateItemLevelAcquired(Item item) {
+//
+//        if ( Dungeon.difficulty > Difficulties.EASY ) {
+//
+//
+//            // This method should be called:
+//            // 1) When an item gets obtained (Item.collect)
+//            // 2) When an item gets upgraded (ScrollOfUpgrade, ScrollOfWeaponUpgrade, ShortSword, WandOfMagicMissile)
+//            // 3) When an item gets identified
+//            if (item.known < Item.UPGRADE_KNOWN) {
+//                return;
+//            }
+//
+//            Badge badge = null;
+//
+//            if (item instanceof Weapon && ((Weapon) item).isEnchanted() ||
+//                    item instanceof Armour && ((Armour) item).isInscribed()) {
+//
+//                if (!local.contains(Badge.ITEM_LEVEL_1) && item.bonus >= 0) {
+//                    badge = Badge.ITEM_LEVEL_1;
+//                    local.add(badge);
+//                }
+//                if (!local.contains(Badge.ITEM_LEVEL_2) && item.bonus >= 1) {
+//                    badge = Badge.ITEM_LEVEL_2;
+//                    local.add(badge);
+//                }
+//                if (!local.contains(Badge.ITEM_LEVEL_3) && item.bonus >= 2) {
+//                    badge = Badge.ITEM_LEVEL_3;
+//                    local.add(badge);
+//                }
+//                if (!local.contains(Badge.ITEM_LEVEL_4) && item.bonus >= 3) {
+//                    badge = Badge.ITEM_LEVEL_4;
+//                    local.add(badge);
+//                }
+//            }
+//
+//            displayBadge(badge);
+//        }
+//	}
 	
 	public static void validateAllPotionsIdentified() {
 
@@ -1027,7 +1054,7 @@ public class Badges {
 		leaveBest( filtered, Badge.LEVEL_REACHED_1, Badge.LEVEL_REACHED_2, Badge.LEVEL_REACHED_3, Badge.LEVEL_REACHED_4 );
 		leaveBest( filtered, Badge.STRENGTH_ATTAINED_1, Badge.STRENGTH_ATTAINED_2, Badge.STRENGTH_ATTAINED_3, Badge.STRENGTH_ATTAINED_4 );
 		leaveBest( filtered, Badge.FOOD_EATEN_1, Badge.FOOD_EATEN_2, Badge.FOOD_EATEN_3, Badge.FOOD_EATEN_4 );
-		leaveBest( filtered, Badge.ITEM_LEVEL_1, Badge.ITEM_LEVEL_2, Badge.ITEM_LEVEL_3, Badge.ITEM_LEVEL_4 );
+		leaveBest( filtered, Badge.ITEMS_UPGRADED_1, Badge.ITEMS_UPGRADED_2, Badge.ITEMS_UPGRADED_3, Badge.ITEMS_UPGRADED_4 );
 		leaveBest( filtered, Badge.POTIONS_COOKED_1, Badge.POTIONS_COOKED_2, Badge.POTIONS_COOKED_3, Badge.POTIONS_COOKED_4 );
 		leaveBest( filtered, Badge.BOSS_SLAIN_1_ALL_CLASSES, Badge.BOSS_SLAIN_3_ALL_SUBCLASSES );
 		leaveBest( filtered, Badge.DEATH_FROM_FIRE, Badge.YASD );

@@ -62,9 +62,7 @@ public class Harpoons extends ThrowingWeaponHeavy {
 
             if( attacker.STR() >= defender.STR() && !defender.immovable() ) {
 
-                int distance = attacker.STR() - defender.STR() + 1;
-
-//                GLog.i( Integer.toString( attacker.STR() ) + " vs " + Integer.toString( defender.STR() ) + " = " + Integer.toString( distance ) );
+                int distance = Math.max( 0, attacker.STR() - defender.STR() + 1 );
 
                 int newPos = Ballistica.trace[Math.max( 1, Ballistica.distance - distance - 1 )];
 
@@ -72,19 +70,13 @@ public class Harpoons extends ThrowingWeaponHeavy {
 
                 defender.pos = newPos;
 
-//                if (defender instanceof Mob) {
-//                    Dungeon.level.mobPress( (Mob)defender );
-//                } else {
                 Dungeon.level.press( newPos, defender );
-//                }
 
                 defender.delay( 1f );
 
             } else {
 
-                int distance = defender.STR() - attacker.STR();
-
-//                GLog.i( Integer.toString( attacker.STR() ) + " vs " + Integer.toString( defender.STR() ) + " = " + Integer.toString( distance ) );
+                int distance = Math.max(0, defender.STR() - attacker.STR());
 
                 int newPos = Ballistica.trace[Math.min( Ballistica.distance - 2, distance )];
 
@@ -92,12 +84,7 @@ public class Harpoons extends ThrowingWeaponHeavy {
 
                 attacker.pos = newPos;
 
-//                if (attacker instanceof Mob) {
-//                    Dungeon.level.mobPress( (Mob)attacker );
-//                } else {
                 Dungeon.level.press( newPos, attacker );
-//                }
-
 
             }
         }

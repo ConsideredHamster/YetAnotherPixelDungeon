@@ -57,8 +57,8 @@ public class WndSettings extends Window {
     private static final String TXT_SEARCH_BTN  = "Search btn: %s";
 
     private static final String[] TXT_SEARCH_VAR  = {
-            "Tap to search, press to examine",
-            "Tap to examine, press to search",
+            "Default behv.",
+            "Reversed behv.",
     };
 
 	private static final String TXT_SWITCH_PORT 	= "Switch to portrait";

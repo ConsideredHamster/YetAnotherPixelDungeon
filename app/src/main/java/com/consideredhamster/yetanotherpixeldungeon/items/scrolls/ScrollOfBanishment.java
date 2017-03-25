@@ -32,6 +32,7 @@ import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
 import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
+import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
@@ -120,22 +121,29 @@ public class ScrollOfBanishment extends Scroll {
 
 			if (item != null) {
 
-                item.identify( CURSED_KNOWN );
+                if( item instanceof Bag ) {
 
-                if (item.bonus < 0) {
+                    uncurse( hero, ((Bag)item).items.toArray( new Item[0] )  );
 
-                    item.bonus = Random.IntRange( item.bonus + 1, 0 );
+                } else {
 
-                    if( item.bonus == 0) {
-                        if( item instanceof Weapon && ((Weapon)item).enchantment != null ) {
-                            ((Weapon)item).enchant( null );
-                        } else if( item instanceof Armour && ((Armour)item).glyph != null ) {
-                            ((Armour)item).inscribe( null );
+                    item.identify(CURSED_KNOWN);
+
+                    if (item.bonus < 0) {
+
+                        item.bonus = Random.IntRange(item.bonus + 1, 0);
+
+                        if (item.bonus == 0) {
+                            if (item instanceof Weapon && ((Weapon) item).enchantment != null) {
+                                ((Weapon) item).enchant(null);
+                            } else if (item instanceof Armour && ((Armour) item).glyph != null) {
+                                ((Armour) item).inscribe(null);
+                            }
                         }
+
+                        procced = true;
+
                     }
-
-                    procced = true;
-
                 }
             }
 		}

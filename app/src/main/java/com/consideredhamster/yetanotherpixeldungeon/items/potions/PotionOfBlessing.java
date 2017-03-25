@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
@@ -136,28 +137,35 @@ public class PotionOfBlessing extends Potion {
         for(Item item : items) {
             if (item != null) {
 
-                item.identify( CURSED_KNOWN );
+                if( item instanceof Bag) {
 
-                if (item.bonus < 0) {
+                    uncurse( pos, ((Bag)item).items.toArray( new Item[0] )  );
 
-                    item.bonus = Random.IntRange( item.bonus + 1, 0 );
+                } else {
 
-                    if( item.bonus == 0) {
-                        if( item instanceof Weapon && ((Weapon)item).enchantment != null ) {
-                            ((Weapon)item).enchant( null );
-                        } else if( item instanceof Armour && ((Armour)item).glyph != null ) {
-                            ((Armour)item).inscribe( null );
+                    item.identify(CURSED_KNOWN);
+
+                    if (item.bonus < 0) {
+
+                        item.bonus = Random.IntRange(item.bonus + 1, 0);
+
+                        if (item.bonus == 0) {
+                            if (item instanceof Weapon && ((Weapon) item).enchantment != null) {
+                                ((Weapon) item).enchant(null);
+                            } else if (item instanceof Armour && ((Armour) item).glyph != null) {
+                                ((Armour) item).inscribe(null);
+                            }
                         }
+
+                        procced++;
+
                     }
-
-                    procced++;
-
                 }
             }
         }
 
         if ( procced > 0 ) {
-            CellEmitter.get( pos ).burst( ShadowParticle.UP, procced * 5 );
+            CellEmitter.get( pos ).burst(ShadowParticle.UP, procced * 5);
         }
 
         return procced > 0;
