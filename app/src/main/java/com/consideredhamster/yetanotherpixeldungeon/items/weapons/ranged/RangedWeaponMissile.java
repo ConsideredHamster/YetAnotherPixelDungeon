@@ -54,7 +54,7 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
 
     @Override
     public int maxDurability() {
-        return 100 ;
+        return 150 ;
     }
 
     @Override
@@ -189,6 +189,8 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
                                     ((ThrowingWeaponAmmo) curUser.belongings.weap2).onShoot(cell, curWeap);
                                 }
                             });
+
+                        curWeap.use( 2 );
                     }
                 });
 

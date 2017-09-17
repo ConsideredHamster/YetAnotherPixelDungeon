@@ -46,7 +46,7 @@ public class Larva extends MobEvasive {
     }
 
     @Override
-    public int attackProc( Char enemy, int damage ) {
+    public int attackProc( Char enemy, int damage, boolean blocked ) {
 
         int reg = Math.min( Random.Int(damage + 1), HT - HP );
 

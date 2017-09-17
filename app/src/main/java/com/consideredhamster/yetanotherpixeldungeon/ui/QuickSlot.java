@@ -243,10 +243,12 @@ public class QuickSlot extends Button implements WndBag.Listener {
                     if (equipable instanceof MeleeWeaponLightOH) {
                         ((MeleeWeaponLightOH) item).doEquipSecondary(Dungeon.hero);
                     } else {
-                        equipable.doEquip(Dungeon.hero);
+                        equipable.execute(Dungeon.hero, EquipableItem.AC_EQUIP );
                     }
+
                 } else {
-                    equipable.doUnequip(Dungeon.hero, true, true);
+
+                    equipable.execute(Dungeon.hero, EquipableItem.AC_UNEQUIP );
 
                 }
             } else {

@@ -39,6 +39,11 @@ public class Sling extends RangedWeaponMissile {
     public Class<? extends ThrowingWeaponAmmo> ammunition() {
         return Bullets.class;
     }
+
+	@Override
+	public Type weaponType() {
+		return Type.R_MISSILE;
+	}
 	
 	@Override
 	public String desc() {

@@ -33,14 +33,20 @@ public class Dagger extends MeleeWeaponLightOH {
 		super( 2 );
 	}
 
-	@Override
-	public String desc() {
-		return "A simple iron dagger with a well worn wooden handle. It is ideal for backstabbing, "+
-                "dealing doubled damage to unsuspecting or ambushed targets.";
-	}
-
     @Override
     public boolean canBackstab() {
         return true;
     }
+
+	@Override
+	public Type weaponType() {
+		return Type.M_SWORD;
+	}
+
+	@Override
+	public String desc() {
+		return "A simple iron dagger with a well worn wooden handle. It is ideal for backstabbing, "+
+				"dealing doubled damage to unsuspecting or ambushed targets. It is not really that " +
+				"good att parrying, however.";
+	}
 }

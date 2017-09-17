@@ -52,7 +52,7 @@ public class Bookshelf {
 
 			// DENIZENS 
 
-			"an old book which describes gnolls and their savage habits and rituals. It concludes that they usually don't pose a threat... unless they find a warchief to lead them.", 
+			"an old book which describes gnolls and their savage habits and rituals. Apparently, gnolls believe that they can absorb qualities of those who they are eating.",
 
 			"a half-torn book which describes various encounters with trolls. These creatures seem to be as reclusive in their daily life as they are ferocious when threatened.", 
 
@@ -60,17 +60,17 @@ public class Bookshelf {
 
 			"a grimoire which describes the horrible demonic creatures inhabiting the bowels of this world, one of the most powerful of which is called Yog-Dzewa.", 
 
-			"a mouldy tome which, it seems, told about the rituals to summon different creatures of magical origin - undead, golems, elementals... It is too worn to be of any use.", 
+			"a mouldy tome which, it seems, told about the rituals to summon different creatures of magical origin - undead, golems, elementals... It is too worn out to be of any use.",
 
 			// CHARACTERS 
 
 			"a history book which tells stories of the ill-tempered, but brave and honourable people of the Thule. No other land is as famous for its warriors and sea traders.", 
 
-			"a geography book which contains description of somewhat wild and barbaric, but cunning and mischievous tribes inhabiting Southlands.", 
+			"a geography book which contains description of somewhat wild and barbaric, but cunning and mischievous tribes inhabiting vast southern deserts.",
 
 			"a philosophy book which was written by one of the many sorcerers of the Eastern Empire, which is famous for valuing knowledge above everything else.", 
 
-			"an autobiography book which describes lives of the people of the West - simple, but capable folk who live by the will and blessing of their numerous gods.", 
+			"an autobiography book which describes lives of the people of the West - simple, but capable folk who live by the will and blessing of their druidic leaders.",
 
 			// CREDITS 
 
@@ -84,9 +84,24 @@ public class Bookshelf {
 
 			"a story about R'byj, a cunning troll warlord who, with his knowledge of tactics and strategies, made a huge impact on the current state of this world.", 
 
-			"a tome which was written by Evan the Shattered, a great sage who worked tirelessly to improve his world. His deeds inspired many, and were adored by even more.", 
+			"a tome which was written by Evan the Shattered, a great sage who worked tirelessly to improve his world. His deeds inspired many, and were adored by even more.",
 
-			// MISC 
+            // CONTEST WINNERS
+
+            "a book on the adventures of the legendary Connor Johnson, a persistent fellow who have routinely beaten truly impossible odds due to his numerous talents.",
+
+            "a legend of High Priest Heimdazell, the First of a Hundred. He was wise as an owl and tough as a walnut. New worlds were shaped with his stories.",
+
+            "a myth about Nero, a mad dwarven warrior-king known for his short temper and a terrifying long-handled axe. No challenge was too difficult for him.",
+
+            "an epic story of Krautwich the Brigand who, with his trusty dagger and arbalest at his side, had managed to triumph where all others had failed before.",
+
+            "old tales about the perilous Maze which was created by a sadistic demon god. Sounds interesting, but it is located somewhere on the other side of the world.",
+
+            "a fable telling about great Illion the Three Thousandth and his neverending quest to obtain the almighty Ultimate Mace.",
+
+
+            // MISC
 
 			"scribbles of some ancient philosopher which are filled with thoughts about how this world is off its balance because it is not in its completed state yet.", 
 

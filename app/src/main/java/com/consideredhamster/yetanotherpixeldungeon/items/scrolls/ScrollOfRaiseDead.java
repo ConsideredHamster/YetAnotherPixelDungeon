@@ -22,16 +22,11 @@ package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Summoned;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Wraith;
 import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
-import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 
 import java.util.ArrayList;
 
@@ -64,7 +59,7 @@ public class ScrollOfRaiseDead extends Scroll {
 
 //            w.EXP = 0;
 
-            float duration = Random.Int( 16, 20 ) * curUser.magicPower();
+            float duration = Random.Int( 16, 20 ) * ( 110 + curUser.magicSkill() ) / 100;
 
 //            Buff.affect( w, Summoned.class, duration );
 
@@ -89,7 +84,8 @@ public class ScrollOfRaiseDead extends Scroll {
                 "Malicious magics hidden within this scroll allow its reader to commune with unspeakable, " +
                 "giving him or her an ability to summon lost souls from the underworld, and even " +
                 "control them for a short period. However, these phantasms would happily tear their " +
-                "master to pieces once control over them is lost.";
+                "master to pieces once control over them is lost." +
+                "\n\nDuration of controlling effect depends on magic skill of the reader.";
 	}
 
     @Override

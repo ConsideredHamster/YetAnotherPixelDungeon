@@ -45,11 +45,11 @@ public class Senior extends DwarfMonk {
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc( Char enemy, int damage, boolean blocked ) {
 		if (Random.Int( 10 ) == 0) {
 			Buff.prolong( enemy, Stun.class, 1.1f );
 		}
-		return super.attackProc( enemy, damage );
+		return damage;
 	}
 	
 //	@Override

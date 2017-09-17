@@ -98,9 +98,11 @@ public class Gold extends Item {
         quantity = (int)( Random.IntRange( 30 + Dungeon.depth * 4, 60 + Dungeon.depth * 8 )
                 * Dungeon.hero.ringBuffs( RingOfFortune.Fortune.class ) );
 
-        // 150-300
-
         return this;
+    }
+
+    public String status() {
+        return Integer.toString( quantity );
     }
 	
 	private static final String VALUE	= "value";

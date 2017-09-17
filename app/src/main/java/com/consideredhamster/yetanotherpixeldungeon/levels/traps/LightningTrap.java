@@ -24,11 +24,15 @@ import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.effects.Lightning;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.effects.particles.SparkParticle;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
+import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Random;
 
 public class LightningTrap extends Trap {
@@ -38,39 +42,63 @@ public class LightningTrap extends Trap {
 	
 	// 00x66CCEE
 	
-	public static void trigger( int pos ) {
+	public static void trigger( int cell ) {
 
-        // FIXME
+        Level.set( cell, Terrain.INACTIVE_TRAP );
 
-        Level.set( pos, Terrain.INACTIVE_TRAP );
+        boolean visible = false;
+        boolean cross = Random.Int( 2 ) == 0;
 
-        Char ch = Actor.findChar( pos );
+        int[] tiles = cross ? Level.NEIGHBOURS5 : Level.NEIGHBOURSX ;
 
-		if (ch != null) {
+        for( int n : tiles ) {
 
-            int power = 10 + Dungeon.chapter() * 3;
+            Char ch = Actor.findChar( cell + n );
 
-			ch.damage( Math.max( 1, Random.IntRange( power / 2, power ) ), TRAP, DamageType.SHOCK);
+            if (ch != null) {
 
-//			if (ch == Dungeon.hero) {
-//				if (!ch.isAlive()) {
-//					Dungeon.fail( Utils.format( ResultDescriptions.TRAP, name, Dungeon.depth ) );
-//					GLog.n( "You were killed by a discharge of a lightning trap..." );
-//				}
-//			}
-			
-			int[] points = new int[2];
-			
-			points[0] = pos - Level.WIDTH;
-			points[1] = pos + Level.WIDTH;
-			ch.sprite.parent.add( new Lightning( points, 2, null ) );
-			
-			points[0] = pos - 1;
-			points[1] = pos + 1;
-			ch.sprite.parent.add( new Lightning( points, 2, null ) );
-		}
-		
-		CellEmitter.center( pos ).burst( SparkParticle.FACTORY, Random.IntRange( 3, 4 ) );
-		
+                int power = 10 + Dungeon.chapter() * 3;
+
+                power = Random.IntRange( power / 2, power );
+
+                ch.damage(n == 0 ? power : power / 2, TRAP, DamageType.SHOCK);
+
+            }
+
+            visible = visible || Dungeon.visible[ cell ];
+
+        }
+
+        if( visible ) {
+
+            Emitter emitter = CellEmitter.center( cell );
+
+            int[] points1 = new int[2];
+            int[] points2 = new int[2];
+
+            if( cross ) {
+
+                points1[0] = cell - Level.WIDTH;
+                points1[1] = cell + Level.WIDTH;
+
+                points2[0] = cell - 1;
+                points2[1] = cell + 1;
+
+            } else {
+
+                points1[0] = cell - Level.WIDTH - 1;
+                points1[1] = cell + Level.WIDTH + 1;
+
+                points2[0] = cell - Level.WIDTH + 1;
+                points2[1] = cell + Level.WIDTH - 1;
+
+            }
+
+            emitter.parent.add( new Lightning( points1, 2, null ) );
+            emitter.parent.add( new Lightning( points2, 2, null ) );
+
+            emitter.burst( SparkParticle.FACTORY, Random.Int( 4, 6 ) );
+
+        }
 	}
 }

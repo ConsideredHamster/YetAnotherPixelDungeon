@@ -75,7 +75,7 @@ public class ScrollOfChallenge extends Scroll {
         }
 
         for (Mob mob : Dungeon.level.mobs) {
-            if( mob.hostile ) {
+            if( mob.hostile && mob.state != mob.PASSIVE ) {
                 mob.HP = mob.HT;
 
                 mob.beckon(curUser.pos);

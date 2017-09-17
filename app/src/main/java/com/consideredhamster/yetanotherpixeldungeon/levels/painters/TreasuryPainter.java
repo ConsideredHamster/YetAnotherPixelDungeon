@@ -54,7 +54,7 @@ public class TreasuryPainter extends Painter {
 
             } else {
 
-                level.drop( prize( level ), pos, true ).type = Heap.Type.CHEST_MIMIC;
+                level.drop( prize( level ), pos, true ).type = Random.Int( 6 - Dungeon.chapter() ) == 0 ? Heap.Type.CHEST_MIMIC : Heap.Type.CHEST ;
 
             }
         }

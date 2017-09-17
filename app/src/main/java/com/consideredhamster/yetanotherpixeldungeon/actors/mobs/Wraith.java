@@ -78,6 +78,11 @@ public class Wraith extends MobRanged {
         return true;
     }
 
+    @Override
+    public int armorClass() {
+        return 0;
+    }
+
     private int jumpDelay() {
 
         return viewDistance();
@@ -117,10 +122,10 @@ public class Wraith extends MobRanged {
     }
 
 	private static final String DELAY = "delay";
-	
+
 	@Override
 	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle(bundle);
+		super.storeInBundle( bundle );
 		bundle.put(DELAY, timeToJump);
 	}
 
@@ -130,11 +135,6 @@ public class Wraith extends MobRanged {
         timeToJump = bundle.getInt( DELAY );
 	}
 
-    @Override
-    public int armorClass() {
-        return 0;
-    }
-
 	@Override
 	public String description() {
 		return
@@ -143,7 +143,7 @@ public class Wraith extends MobRanged {
             "of unholy energy. The touch of a wraith drains life from its victims, bypassing " +
             "any armor and restoring it's own foul strength.";
 	}
-	
+
 
 
     @Override
@@ -176,7 +176,7 @@ public class Wraith extends MobRanged {
 
         } else {
 
-            enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
+            enemy.missed();
 
         }
 
@@ -215,8 +215,9 @@ public class Wraith extends MobRanged {
     }
 
     @Override
-    public int attackProc( Char enemy, int damage ) {
-        if ( distance( enemy ) <= 1 && !enemy.isMagical() && isAlive() ) {
+    public int attackProc( Char enemy, int damage, boolean blocked ) {
+
+        if ( !blocked && distance( enemy ) <= 1 && !enemy.isMagical() && isAlive() ) {
             int reg = Math.min( Random.Int( damage + 1 ), HT - HP );
 
             if (reg > 0) {
@@ -228,7 +229,8 @@ public class Wraith extends MobRanged {
                 }
             }
         }
-        return super.attackProc( enemy, damage );
+
+        return damage;
     }
 
     @Override

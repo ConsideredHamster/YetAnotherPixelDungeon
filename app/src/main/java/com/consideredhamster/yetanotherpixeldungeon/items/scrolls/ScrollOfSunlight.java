@@ -47,7 +47,7 @@ public class ScrollOfSunlight extends Scroll {
         curUser.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
         Sample.INSTANCE.play( Assets.SND_LULLABY );
 
-        GameScene.add( Blob.seed( curUser.pos, (int)( 250 * curUser.magicPower() ), Sunlight.class ) );
+        GameScene.add( Blob.seed( curUser.pos, 250 * ( 110 + curUser.magicSkill() ) / 100, Sunlight.class ) );
 
         GLog.i( TXT_MESSAGE );
 
@@ -60,7 +60,8 @@ public class ScrollOfSunlight extends Scroll {
 			"Reading this scroll will light the area with a bright sunlight. Normally, this would be a very " +
             "situational ability, but here deep in the dungeon, sunlight can mean much more than simple illumination. " +
             "Everything that lives which is touched by this light, will flourish and regenerate health at accelerated " +
-            "rate, just as grass and herbs will regrow in mere moments.";
+            "rate, just as grass and herbs will regrow in mere moments." +
+            "\n\nDuration of this effect of depends on magic skill of the reader.";
 	}
 	
 	@Override

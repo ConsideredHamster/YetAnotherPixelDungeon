@@ -20,14 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfSorcery;
 import com.watabou.utils.GameMath;
-import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.EquipableItem;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEnergy;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfKnowledge;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments.*;
@@ -56,10 +55,10 @@ public abstract class Weapon extends EquipableItem {
 //	public float	ACU	= 1;
 //	public float	DLY	= 1f;
 
-	public enum Imbue {
-		NONE, SPEED, ACCURACY
-	}
-	public Imbue imbue = Imbue.NONE;
+    public enum Type {
+        M_SWORD, M_BLUNT, M_POLEARM,
+        R_MISSILE, R_FLINTLOCK, UNSPECIFIED
+    }
 	
 	private int hitsToKnow = Random.IntRange(HITS_TO_KNOW, HITS_TO_KNOW * 2);
 	
@@ -110,9 +109,7 @@ public abstract class Weapon extends EquipableItem {
                 hero.belongings.weap1 = this;
                 activate(hero);
 
-                GLog.i(TXT_EQUIP, name());
-
-                identify( CURSED_KNOWN );
+                onEquip( hero );
 
                 QuickSlot.refresh();
 
@@ -159,7 +156,7 @@ public abstract class Weapon extends EquipableItem {
     }
 
     public void proc( Char attacker, Char defender, int damage ) {
-		
+
 		if ( enchantment != null ) {
 			if( enchantment.proc( this, attacker, defender, damage ) && !isEnchantKnown() ) {
                 identify(ENCHANT_KNOWN);
@@ -190,17 +187,15 @@ public abstract class Weapon extends EquipableItem {
 		super.storeInBundle( bundle );
 		bundle.put( UNFAMILIRIARITY, hitsToKnow );
 		bundle.put( ENCHANTMENT, enchantment );
-		bundle.put( IMBUE, imbue );
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle(bundle);
+		super.restoreFromBundle( bundle );
 		if ((hitsToKnow = bundle.getInt( UNFAMILIRIARITY )) == 0) {
 			hitsToKnow = HITS_TO_KNOW;
 		}
-		enchant((Enchantment) bundle.get(ENCHANTMENT));
-		imbue = bundle.getEnum( IMBUE, Imbue.class );
+		enchant( (Enchantment) bundle.get( ENCHANTMENT ) );
 	}
 
 	public int damageRoll( Hero hero ) {
@@ -280,6 +275,12 @@ public abstract class Weapon extends EquipableItem {
 	public String name() {
         return enchantment != null && isEnchantKnown() ? enchantment.name( this ) : super.name();
     }
+
+    public String simpleName() {
+        return super.name();
+    }
+
+    public Type weaponType() { return Type.UNSPECIFIED; }
 	
 	public Weapon enchant( Enchantment ench ) {
 
@@ -396,7 +397,8 @@ public abstract class Weapon extends EquipableItem {
         public static boolean procced( int bonus ) {
 
             return Random.Float() < 0.125f * ( 1 + Math.abs( bonus ) )
-                    * ( bonus >= 0 ? Dungeon.hero.ringBuffs( RingOfEnergy.Energy.class ) : 1.0f );
+                    * ( bonus >= 0 ? Dungeon.hero.ringBuffs( RingOfSorcery.Sorcery.class ) : 1.0f )
+                    ;
 
         }
 

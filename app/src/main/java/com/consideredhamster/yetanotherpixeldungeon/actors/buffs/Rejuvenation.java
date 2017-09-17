@@ -111,9 +111,9 @@ public class Rejuvenation extends PassiveBuff {
 //        GLog.n( "You died from a toxic gas.." );
 //	}
 
-    @Override
-    public Class<? extends DamageType> buffType() {
-        return DamageType.Body.class;
-    }
+//    @Override
+//    public Class<? extends DamageType> buffType() {
+//        return DamageType.Body.class;
+//    }
 
 }

@@ -35,9 +35,10 @@ public class RingOfVitality extends Ring {
 	@Override
 	public String desc() {
         return isTypeKnown() ?
-                ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
-                "increases the body's regenerative properties, augmenting effects of both natural and unnatural sources of healing." +
-                ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
+                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
+                "increases the body's regenerative properties, augmenting effects of both natural " +
+                "and unnatural sources of healing." +
+                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();
 	}
 	

@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
+import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
 import com.watabou.noosa.Game;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
@@ -34,8 +35,8 @@ import com.watabou.utils.Random;
 
 public class Bones {
 
-	private static final String BONES_FILE	= "bones.dat";
-	
+	private static final String BONES_FILE	= "bones_%d.dat";
+
 	private static final String LEVEL	= "level";
 	private static final String ITEM	= "item";
 	
@@ -74,11 +75,13 @@ public class Bones {
 		depth = Dungeon.depth;
 		
 		Bundle bundle = new Bundle();
-		bundle.put( LEVEL, depth );
+		bundle.put( LEVEL, Statistics.deepestFloor );
 		bundle.put( ITEM, item );
-		
+
+        String bonesFile = Utils.format( BONES_FILE, Dungeon.difficulty );
+
 		try {
-			OutputStream output = Game.instance.openFileOutput( BONES_FILE, Game.MODE_PRIVATE );
+			OutputStream output = Game.instance.openFileOutput( bonesFile, Game.MODE_PRIVATE );
 			Bundle.write( bundle, output );
 			output.close();
 		} catch (IOException e) {
@@ -87,10 +90,14 @@ public class Bones {
 	}
 	
 	public static Item get() {
+
+        String bonesFile = Utils.format( BONES_FILE, Dungeon.difficulty );
+
 		if (depth == -1) {
 			
 			try {
-				InputStream input = Game.instance.openFileInput( BONES_FILE ) ;
+
+				InputStream input = Game.instance.openFileInput( bonesFile ) ;
 				Bundle bundle = Bundle.read( input );
 				input.close();
 				
@@ -105,7 +112,7 @@ public class Bones {
 			
 		} else {
 			if (depth == Dungeon.depth) {
-				Game.instance.deleteFile( BONES_FILE );
+				Game.instance.deleteFile( bonesFile );
 				depth = 0;
 				
 //				if (!item.stackable) {

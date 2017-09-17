@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
@@ -125,7 +126,7 @@ public class Fiend extends MobRanged {
 
         } else {
 
-            enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
+            enemy.missed();
 
         }
 
@@ -146,6 +147,11 @@ public class Fiend extends MobRanged {
                 "Some demons seem to transcend their flesh and wear pure darkness as their form. Shadowy " +
                         "and menacing, these unholy abominations are born of malicious intent and are nothing " +
                         "more than incarnations of distilled evil, revelling only in death and pain.";
+    }
+
+    @Override
+    public boolean isMagical() {
+        return true;
     }
 
     public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();

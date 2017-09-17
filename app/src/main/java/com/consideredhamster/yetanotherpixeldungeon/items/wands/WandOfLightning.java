@@ -99,8 +99,8 @@ public class WandOfLightning extends Wand {
 
         } else {
 
-            ch.sprite.showStatus(CharSprite.NEUTRAL, ch.defenseVerb());
             Sample.INSTANCE.play(Assets.SND_MISS);
+            ch.missed();
 
         }
 	}

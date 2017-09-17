@@ -41,7 +41,6 @@ import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.ItemStatusHandler;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfKnowledge;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfSorcery;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Quarterstaff;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.mechanics.Ballistica;
@@ -180,9 +179,7 @@ public abstract class Wand extends EquipableItem {
             hero.belongings.weap2 = this;
             activate(hero);
 
-            GLog.i(TXT_EQUIP, name());
-
-            identify( CURSED_KNOWN );
+            onEquip( hero );
 
             QuickSlot.refresh();
 
@@ -329,9 +326,11 @@ public abstract class Wand extends EquipableItem {
 
         if( charger != null && charger.target instanceof Hero ) {
 
-            chance /= charger.target.ringBuffs( RingOfSorcery.Sorcery.class );
+            Hero hero = (Hero) charger.target;
 
-            if( ((Hero)charger.target).belongings.weap1 instanceof Quarterstaff ) {
+            chance /= hero.willpower();
+
+            if( hero.belongings.weap1 instanceof Quarterstaff ) {
                 chance /= 2.0f;
             }
         }
@@ -346,9 +345,11 @@ public abstract class Wand extends EquipableItem {
 
         if( charger != null && charger.target instanceof Hero ) {
 
-            chance *= charger.target.ringBuffs( RingOfSorcery.Sorcery.class );
+            Hero hero = (Hero) charger.target;
 
-            if( ((Hero)charger.target).belongings.weap1 instanceof Quarterstaff ) {
+            chance *= hero.willpower();
+
+            if( hero.belongings.weap1 instanceof Quarterstaff ) {
                 chance *= 2.0f;
             }
         }
@@ -746,7 +747,7 @@ public abstract class Wand extends EquipableItem {
 
         protected void delay() {
 
-            postpone( rechargeRate() / (float)Math.pow( ( (Hero)target ).magicPower(), 2 ) );
+            postpone( rechargeRate() / (float)Math.pow( ( (Hero)target ).willpower(), 2 ) );
 
         }
     }

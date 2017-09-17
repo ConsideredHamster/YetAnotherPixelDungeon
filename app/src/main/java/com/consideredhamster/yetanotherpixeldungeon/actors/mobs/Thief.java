@@ -35,11 +35,6 @@ import com.consideredhamster.yetanotherpixeldungeon.sprites.ThiefSprite;
 
 public class Thief extends MobPrecise {
 
-//	protected static final String TXT_STOLE	= "%s stole %s from you!";
-//	protected static final String TXT_CARRIES	= "\n\n%s is carrying a _%s_. Stolen obviously.";
-	
-//	public Item item;
-
     public Thief() {
 
         super( 2 );
@@ -82,7 +77,7 @@ public class Thief extends MobPrecise {
     }
 
     @Override
-    public String description() {
+    public String description(){
 
         return "The Sewers always been hiding place for all sorts of cutthroats and outlaws. "
 
@@ -100,74 +95,4 @@ public class Thief extends MobPrecise {
 
                 ;
     }
-	
-//	private static final String ITEM = "item";
-	
-//	@Override
-//	public void storeInBundle( Bundle bundle ) {
-//		super.storeInBundle( bundle );
-//		bundle.put( ITEM, item );
-//	}
-	
-//	@Override
-//	public void restoreFromBundle( Bundle bundle ) {
-//		super.restoreFromBundle( bundle );
-//		item = (Item)bundle.get( ITEM );
-//	}
-	
-//	@Override
-//	public void die( Object cause ) {
-//
-//		super.die( cause );
-//
-//		if (item != null) {
-//			Dungeon.bonus.drop( item, pos ).sprite.drop();
-//		}
-//	}
-	
-//	@Override
-//	public int attackProc( Char enemy, int damage ) {
-//		if (item == null && enemy instanceof Hero && steal( (Hero)enemy )) {
-//			state = FLEEING;
-//		}
-//
-//		return damage;
-//	}
-	
-//	@Override
-//	public int defenseProc(Char enemy, int damage) {
-//		if (state == FLEEING) {
-//			Dungeon.bonus.drop( new Gold(), pos ).sprite.drop();
-//		}
-//
-//		return damage;
-//	}
-	
-//	protected boolean steal( Hero hero ) {
-//
-//		Item item = hero.belongings.randomUnequipped();
-//		if (item != null && item.visible) {
-//
-//			GLog.w( TXT_STOLE, this.name, item.name() );
-//
-//			item.detachAll( hero.belongings.backpack );
-//			this.item = item;
-//
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
-	
-//	private class Fleeing extends Mob.Fleeing {
-//		@Override
-//		protected void nowhereToRun() {
-//			if (buff( Terror.class ) == null) {
-//				sprite.showStatus( CharSprite.NEGATIVE, TXT_RAGE );
-//				state = HUNTING;
-//			} else {
-//				super.nowhereToRun();
-//			}
-//		}
-//	}
 }

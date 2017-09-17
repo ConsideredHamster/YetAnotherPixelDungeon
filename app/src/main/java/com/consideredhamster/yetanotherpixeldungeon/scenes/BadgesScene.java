@@ -74,12 +74,10 @@ public class BadgesScene extends PixelScene {
 		title.x = align( (w - title.width()) / 2 );
 		title.y = align( (panel.y - title.baseLine()) / 2 );
 		add( title );
-		
-		Badges.loadGlobal();
-		
+
 		ScrollPane list = new BadgesList( true );
 		add( list );
-		
+
 		list.setRect( 
 			panel.x + panel.marginLeft(), 
 			panel.y + panel.marginTop(), 

@@ -34,9 +34,8 @@ import com.watabou.utils.Random;
 
 public class ScrollOfUpgrade extends InventoryScroll {
 
-
     private static final String TXT_KNOWN_UPGRADED	=
-            "your %s looks much better now! It was upgraded and repaired.";
+            "your %s looks much better now!";
     private static final String TXT_KNOWN_REPAIRED  =
             "your %s can't be upgraded any further, but it looks a bit better now.";
 

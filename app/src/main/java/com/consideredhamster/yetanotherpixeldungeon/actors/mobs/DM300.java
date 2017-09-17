@@ -165,6 +165,11 @@ public class DM300 extends MobHealthy {
 			"machines were typically used for construction and mining, and in some cases, for city defense.";
 	}
 
+    @Override
+    public boolean isMagical() {
+        return false;
+    }
+
     public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
     public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
 

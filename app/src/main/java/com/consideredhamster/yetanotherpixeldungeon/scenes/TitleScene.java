@@ -28,6 +28,7 @@ import android.opengl.GLES20;
 
 import com.consideredhamster.yetanotherpixeldungeon.effects.Flare;
 import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.ui.DonateButton;
 import com.consideredhamster.yetanotherpixeldungeon.windows.WndChangelog;
 import com.consideredhamster.yetanotherpixeldungeon.windows.WndSettings;
 import com.watabou.input.Touchscreen;
@@ -177,15 +178,14 @@ public class TitleScene extends PixelScene {
 		
 		final BitmapText version = new BitmapText( "v " + Game.version, font1x );
 		version.measure();
-		version.hardlight( COLOR_NORMAL );
+		version.hardlight(COLOR_NORMAL);
 		version.x = w - version.width();
 		version.y = h - version.height();
         add( version );
 
         final Emitter emitter = new Emitter();
         emitter.pos( version.x, version.y, version.width(), version.height() );
-        add( emitter );
-
+        add(emitter);
 
         TouchArea changelog = new TouchArea( version ) {
             @Override
@@ -199,27 +199,26 @@ public class TitleScene extends PixelScene {
 
             }
         };
-        add( changelog );
+        add(changelog);
+
+
+
+//        DonateButton btnDonate = new DonateButton();
+//        btnDonate.setPos(0, h - btnDonate.height());
+//        add(btnDonate);
 
         PrefsButton btnPrefs = new PrefsButton();
 		btnPrefs.setPos( 0, 0 );
-		add( btnPrefs );
+		add(btnPrefs);
 		
 		ExitButton btnExit = new ExitButton();
-		btnExit.setPos( w - btnExit.width(), 0 );
-		add( btnExit );
-		
-		fadeIn();
+		btnExit.setPos(w - btnExit.width(), 0);
+		add(btnExit);
 
+        fadeIn();
 
         if( YetAnotherPixelDungeon.lastVersion() < Game.versionNum ) {
-//            version.hardlight( COLOR_BRIGHT );
-//            emitter.pour( Speck.factory( Speck.LIGHT ), 0.3f );
-
             YetAnotherPixelDungeon.lastVersion( Game.versionNum );
-
-//            emitter.on = false;
-//            version.hardlight( COLOR_NORMAL );
             add(new WndChangelog());
         }
 	}

@@ -581,9 +581,9 @@ public class GameScene extends PixelScene {
 
                     }
 
-                    if( mob.hostile ) {
-                        mob.noticed = true;
-                    }
+//                    if( mob.hostile ) {
+//                        mob.noticed = true;
+//                    }
 
 //                    updateMap(mob.pos);
                 }

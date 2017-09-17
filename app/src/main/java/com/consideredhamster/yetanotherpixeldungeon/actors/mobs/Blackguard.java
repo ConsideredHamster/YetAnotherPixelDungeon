@@ -50,6 +50,11 @@ public class Blackguard extends MobHealthy {
 
         IMMUNITIES.add(DamageType.Body.class);
     }
+    
+    @Override
+    public boolean isMagical() {
+        return true;
+    }
 
     @Override
     public HashSet<Class<? extends DamageType>> resistances() {

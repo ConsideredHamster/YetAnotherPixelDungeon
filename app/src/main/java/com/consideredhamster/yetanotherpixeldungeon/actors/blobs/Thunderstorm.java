@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Elemental;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.SparkParticle;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
@@ -196,7 +197,12 @@ public class Thunderstorm extends Blob {
 
         Emitter emitter = CellEmitter.get( cell );
 
-        for( int n : Level.NEIGHBOURS5 ) {
+        boolean visible = false;
+        boolean cross = Random.Int( 2 ) == 0;
+
+        int[] tiles = cross ? Level.NEIGHBOURS5 : Level.NEIGHBOURSX ;
+
+        for( int n : tiles ) {
 
             Char ch = Actor.findChar( cell + n );
 
@@ -214,21 +220,38 @@ public class Thunderstorm extends Blob {
                 ch.damage(n == 0 ? power : power / 2, blob, DamageType.SHOCK);
 
             }
+
+            visible = visible || Dungeon.visible[ cell ];
+
         }
 
-        if( Dungeon.visible[ cell ] ) {
+        if( visible ) {
 
-            int[] points = new int[2];
+            int[] points1 = new int[2];
+            int[] points2 = new int[2];
 
-            points[0] = cell - Level.WIDTH;
-            points[1] = cell + Level.WIDTH;
-            emitter.parent.add(new Lightning(points, 2, null));
+            if( cross ) {
 
-            points[0] = cell - 1;
-            points[1] = cell + 1;
-            emitter.parent.add(new Lightning(points, 2, null));
+                points1[0] = cell - Level.WIDTH;
+                points1[1] = cell + Level.WIDTH;
 
-            emitter.burst(Speck.factory(Speck.DISCOVER), Random.Int(4, 6));
+                points2[0] = cell - 1;
+                points2[1] = cell + 1;
+
+            } else {
+
+                points1[0] = cell - Level.WIDTH - 1;
+                points1[1] = cell + Level.WIDTH + 1;
+
+                points2[0] = cell - Level.WIDTH + 1;
+                points2[1] = cell + Level.WIDTH - 1;
+
+            }
+
+            emitter.parent.add( new Lightning( points1, 2, null ) );
+            emitter.parent.add( new Lightning( points2, 2, null ) );
+
+            emitter.burst( SparkParticle.FACTORY, Random.Int( 4, 6 ) );
 
         }
 

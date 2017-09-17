@@ -78,7 +78,7 @@ public class WandOfDisintegration extends Wand {
 
                 } else {
 
-                    ch.sprite.showStatus(CharSprite.NEUTRAL, ch.defenseVerb());
+                    ch.missed();
 
                 }
 			}
@@ -123,9 +123,9 @@ public class WandOfDisintegration extends Wand {
 
 		for (Char ch : chars) {
 
-            ch.damage( damageRoll(), curUser, DamageType.ENERGY );
+            ch.damage( Char.absorb( damageRoll(), ch.armorClass(), true ), curUser, DamageType.ENERGY );
 
-		}
+        }
 	}
 
 	private int distance() {

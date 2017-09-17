@@ -7,21 +7,23 @@ android {
         applicationId "com.consideredhamster.yetanotherpixeldungeon"
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 303
-        versionName '0.3.0c'
+        versionCode 304
+        versionName '0.3.0d'
         archivesBaseName = "yapd-$versionName"
     }
 
     buildTypes {
-//        release {
-//            shrinkResources true
-//            minifyEnabled true
-//        }
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
 
-//        debug {
-//            shrinkResources true
-//            minifyEnabled true
-//        }
+        debug {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
 
 

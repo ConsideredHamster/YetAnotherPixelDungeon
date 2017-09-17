@@ -64,7 +64,7 @@ public class WandOfFreezing extends WandUtility {
         }
 
         for (int i : Level.NEIGHBOURS8) {
-            if( !Level.solid[cell + i] && !Level.chasm[cell + i] ) {
+            if( !Level.solid[cell + i] ) {
                 Freezing.affect( cell + i, curCharges, fire );
             }
         }

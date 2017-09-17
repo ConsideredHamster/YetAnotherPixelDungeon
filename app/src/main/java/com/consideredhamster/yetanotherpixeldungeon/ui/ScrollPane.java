@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.ui;
 
 import com.watabou.input.Touchscreen.Touch;
 import com.watabou.noosa.Camera;
+import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.TouchArea;
 import com.watabou.noosa.ui.Component;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.PixelScene;
@@ -29,9 +30,14 @@ import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
 
 public class ScrollPane extends Component {
-			
+
+    protected static final int INDICATOR_COLOR		= 0xFF7b8073;
+    protected static final float INDICATOR_ALPHA	= 0.5f;
+    protected static final float INDICATOR_SOLID	= 1.0f;
+
 	protected TouchController controller;
 	protected Component content;
+    protected ColorBlock indicator;
 	
 	protected float minX;
 	protected float minY;
@@ -65,6 +71,10 @@ public class ScrollPane extends Component {
 	protected void createChildren() {
 		controller = new TouchController();
 		add( controller );
+
+        indicator = new ColorBlock( 1, 1, INDICATOR_COLOR );
+        indicator.am = INDICATOR_ALPHA;
+        add(indicator);
 	}
 	
 	@Override
@@ -81,6 +91,13 @@ public class ScrollPane extends Component {
 		cs.x = p.x;
 		cs.y = p.y;
 		cs.resize( (int)width, (int)height );
+
+        indicator.visible = height < content.height();
+        if (indicator.visible) {
+            indicator.scale.set( 2, height * height / content.height() );
+            indicator.x = right() - indicator.width();
+            indicator.y = y;
+        }
 	}
 	
 	public Component content() {
@@ -104,6 +121,7 @@ public class ScrollPane extends Component {
 			if (dragging) {
 				
 				dragging = false;
+                indicator.am = INDICATOR_ALPHA;
 				
 			} else {
 				
@@ -135,15 +153,17 @@ public class ScrollPane extends Component {
 				if (c.scroll.y < 0) {
 					c.scroll.y = 0;
 				}
-				
+
+                indicator.y = y + height * c.scroll.y / content.height();
 				
 				lastPos.set( t.current );	
 				
 			} else if (PointF.distance( t.current, t.start ) > dragThreshold) {
-				
-				dragging = true;
-				lastPos.set( t.current );
-				
+
+                indicator.am = INDICATOR_SOLID;
+                dragging = true;
+                lastPos.set( t.current );
+
 			}
 		}	
 	}

@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.levels.painters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
@@ -94,6 +95,9 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.PrisonLevel;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
 import com.consideredhamster.yetanotherpixeldungeon.levels.SewerLevel;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.watabou.utils.Bundlable;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
@@ -101,7 +105,64 @@ public class ShopPainter extends Painter {
 
 	private static int pasWidth;
 	private static int pasHeight;
-	
+
+    private static ArrayList<Item> kits;
+    private static ArrayList<Item> ammo1;
+    private static ArrayList<Item> ammo2;
+
+    private static Item[] defaultKits = { new Whetstone(), new ArmorerKit(), new CraftingKit(), new Battery() };
+    private static Item[] defaultAmmo1 = { new Arrows(), new Arrows(), new Quarrels(), new Quarrels() };
+    private static Item[] defaultAmmo2 = { new Bullets(), new Bullets(), new Explosives.Gunpowder(), new Explosives.Gunpowder() };
+
+    private static final String KITS		= "shops_kits";
+    private static final String AMMO1		= "shops_ammo1";
+    private static final String AMMO2		= "shops_ammo2";
+
+    public static void initAssortment() {
+
+        kits = new ArrayList<>();
+        kits.addAll( Arrays.asList( defaultKits ) );
+
+        ammo1 = new ArrayList<>();
+        ammo1.addAll( Arrays.asList( defaultAmmo1 ) );
+
+        ammo2 = new ArrayList<>();
+        ammo2.addAll( Arrays.asList( defaultAmmo2 ) );
+
+    }
+
+    public static void saveAssortment( Bundle bundle) {
+
+        bundle.put( KITS, kits );
+        bundle.put( AMMO1, ammo1 );
+        bundle.put( AMMO2, ammo2 );
+
+    }
+
+    public static void loadAssortment( Bundle bundle ) {
+
+        kits = new ArrayList<>();
+        for (Bundlable item : bundle.getCollection( KITS )) {
+            if( item != null ){
+                kits.add( (Item)item );
+            }
+        };
+
+        ammo1 = new ArrayList<>();
+        for (Bundlable item : bundle.getCollection( AMMO1 )) {
+            if( item != null ){
+                ammo1.add( (Item)item );
+            }
+        };
+
+        ammo2 = new ArrayList<>();
+        for (Bundlable item : bundle.getCollection( AMMO2 )) {
+            if( item != null ){
+                ammo2.add( (Item)item );
+            }
+        };
+    }
+
 	public static void paint( Level level, Room room ) {
 		
 		fill(level, room, Terrain.WALL);
@@ -199,8 +260,6 @@ public class ShopPainter extends Painter {
             Armour armour = null;
             Item ranged = null;
             ThrowingWeapon thrown = null;
-            Item ammo1 = null;
-            Item ammo2 = null;
 
             if (level instanceof SewerLevel) {
 
@@ -210,8 +269,6 @@ public class ShopPainter extends Painter {
                 armour = Random.oneOf(new MageArmor(), new RogueArmor(), new HuntressArmor());
                 ranged = Random.oneOf(new Sling(), new Bolas());
                 thrown = Random.oneOf(new PoisonDarts(), new Knives());
-                ammo1   = Random.oneOf(new Arrows(), new Quarrels());
-                ammo2   = Random.oneOf(new Bullets(), new Explosives.Gunpowder());
 
             } else if (level instanceof PrisonLevel) {
 
@@ -221,8 +278,6 @@ public class ShopPainter extends Painter {
                 armour = Random.oneOf(new StuddedArmor(), new DiscArmor(), new RoundShield());
                 ranged = Random.oneOf(new Bow(), new Pistole());
                 thrown = Random.oneOf(new Javelins(), new Shurikens());
-                ammo1   = Random.oneOf(new Arrows(), new Quarrels());
-                ammo2   = Random.oneOf(new Bullets(), new Explosives.Gunpowder());
 
             } else if (level instanceof CavesLevel) {
 
@@ -232,8 +287,6 @@ public class ShopPainter extends Painter {
                 armour = Random.oneOf(new MailArmor(), new SplintArmor(), new KiteShield());
                 ranged = Random.oneOf(new Arbalest(), new Arquebuse());
                 thrown = Random.oneOf(new Boomerangs(), new Tomahawks());
-                ammo1   = Random.oneOf(new Arrows(), new Quarrels());
-                ammo2   = Random.oneOf(new Bullets(), new Explosives.Gunpowder());
 
             } else if (level instanceof CityLevel) {
 
@@ -243,8 +296,6 @@ public class ShopPainter extends Painter {
                 armour = Random.oneOf(new ScaleArmor(), new PlateArmor(), new TowerShield());
                 ranged = Random.oneOf(new Handcannon(), new Explosives.BombStick());
                 thrown = Random.oneOf(new Harpoons(), new Chakrams());
-                ammo1   = Random.oneOf(new Arrows(), new Quarrels());
-                ammo2   = Random.oneOf(new Bullets(), new Explosives.Gunpowder());
 
             }
 
@@ -258,7 +309,7 @@ public class ShopPainter extends Painter {
             }
 
             if( armour != null ) {
-                armour.repair().fix().upgrade(Random.Int(Dungeon.chapter()));
+                armour.repair().fix().upgrade( Random.Int( Dungeon.chapter() ) );
                 items.add(armour);
             }
 
@@ -275,20 +326,8 @@ public class ShopPainter extends Painter {
                 items.add(thrown);
             }
 
-            if( ammo1 != null ) {
-                ammo1.random();
-
-                items.add(ammo1);
-            }
-
-            if( ammo2 != null ) {
-                ammo2.random();
-
-                if( ammo2 instanceof Explosives.Gunpowder )
-                    ammo2.quantity( ammo2.quantity * 2 );
-
-                items.add(ammo2);
-            }
+            items.add( generateAmmo1() );
+            items.add( generateAmmo2() );
 
             Ring ring = (Ring)Generator.random(Generator.Category.RING);
             if( ring != null) {
@@ -309,18 +348,42 @@ public class ShopPainter extends Painter {
             items.add(new ScrollOfIdentify());
             items.add(Generator.random(Generator.Category.SCROLL));
 
-            items.add(Random.oneOf(new Whetstone(), new ArmorerKit(), new Battery(), new CraftingKit()));
+            items.add( generateKits() );
 
             items.add(new Pasty());
             items.add(new Waterskin());
             items.add(new Torch());
         }
 		
-		Item[] range =items.toArray( new Item[0] );
+		Item[] range = items.toArray( new Item[0] );
 //		Random.shuffle( range );
 		
 		return range;
 	}
+
+    private static Item generateAmmo1() {
+        if( !ammo1.isEmpty() ) {
+            return ammo1.remove( Random.Int( ammo1.size() ) ).random();
+        } else {
+            return Random.oneOf( defaultAmmo1 ).random();
+        }
+    }
+
+    private static Item generateAmmo2() {
+        if( !ammo2.isEmpty() ) {
+            return ammo2.remove( Random.Int( ammo2.size() ) ).random();
+        } else {
+            return Random.oneOf( defaultAmmo2 ).random();
+        }
+    }
+
+    private static Item generateKits() {
+        if( !kits.isEmpty() ) {
+            return kits.remove( Random.Int( kits.size() ) );
+        } else {
+            return Random.oneOf( defaultKits );
+        }
+    }
 	
 	private static void placeShopkeeper( Level level, Room room ) {
 

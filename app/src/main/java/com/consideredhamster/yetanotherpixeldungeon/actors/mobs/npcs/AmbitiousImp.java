@@ -30,16 +30,14 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Golem;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.DwarfMonk;
 import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ElmoParticle;
-import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.quest.DwarfToken;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAccuracy;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEnergy;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfConcentration;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEvasion;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfFortune;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfHaste;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfPerception;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAwareness;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfKnowledge;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfProtection;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
@@ -260,9 +258,9 @@ public class AmbitiousImp extends NPC {
                 } else if( Dungeon.hero.heroClass == HeroClass.BRIGAND ) {
                     reward = random == 2 ? new RingOfFortune() : random == 1 ? new RingOfShadows() : new RingOfEvasion();
                 } else if( Dungeon.hero.heroClass == HeroClass.SCHOLAR ) {
-                    reward = random == 2 ? new RingOfKnowledge() : random == 1 ? new RingOfEnergy() : new RingOfSorcery();
+                    reward = random == 2 ? new RingOfKnowledge() : random == 1 ? new RingOfConcentration() : new RingOfSorcery();
                 } else if( Dungeon.hero.heroClass == HeroClass.ACOLYTE ) {
-                    reward = random == 2 ? new RingOfDurability() : random == 1 ? new RingOfPerception() : new RingOfAccuracy();
+                    reward = random == 2 ? new RingOfDurability() : random == 1 ? new RingOfAwareness() : new RingOfAccuracy();
                 }
 
 				reward.bonus = random + 1;

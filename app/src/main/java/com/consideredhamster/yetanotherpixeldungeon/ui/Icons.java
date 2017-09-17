@@ -37,8 +37,7 @@ public enum Icons {
     DIFFICULTY_3,
 
     YAPD,
-    SUPPORT,
-//    SUPPORTED,
+    PERSONAL,
     TARGET,
     STAIRS,
     WARRIOR,
@@ -50,7 +49,10 @@ public enum Icons {
     MASTERY,
     PREFS,
     EXIT,
-
+    DONATE_DISABLED,
+    DONATE_ENABLED,
+    MIMIC_DAMAGED,
+    MIMIC_HEALTHY,
 
     CHECKED,
     UNCHECKED,
@@ -118,7 +120,7 @@ public enum Icons {
             case YAPD:
                 icon.frame( rect( icon, 0, 24, 16, 16) );
                 break;
-            case SUPPORT:
+            case PERSONAL:
                 icon.frame( rect( icon, 16, 24, 16, 16) );
                 break;
 //            case SUPPORTED:
@@ -154,6 +156,19 @@ public enum Icons {
                 break;
             case EXIT:
                 icon.frame( rect( icon, 42, 40, 14, 14) );
+                break;
+
+            case DONATE_DISABLED:
+                icon.frame( rect( icon, 56, 40, 14, 14) );
+                break;
+            case DONATE_ENABLED:
+                icon.frame( rect( icon, 70, 40, 14, 14) );
+                break;
+            case MIMIC_DAMAGED:
+                icon.frame( rect( icon, 84, 40, 14, 14) );
+                break;
+            case MIMIC_HEALTHY:
+                icon.frame( rect( icon, 98, 40, 14, 14) );
                 break;
 
             case CHECKED:

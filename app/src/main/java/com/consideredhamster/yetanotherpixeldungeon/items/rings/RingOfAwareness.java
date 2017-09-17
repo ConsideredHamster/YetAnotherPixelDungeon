@@ -20,33 +20,44 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
-public class RingOfKnowledge extends Ring {
+public class RingOfAwareness extends Ring {
 
 	{
-		name = "Ring of Knowledge";
-        shortName = "Kn";
+		name = "Ring of Awareness";
+        shortName = "Aw";
 	}
+	
+//	@Override
+//	public boolean doEquip( Hero hero ) {
+//		if (super.doEquip( hero )) {
+//			Dungeon.hero.search( false );
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 	
 	@Override
 	protected RingBuff buff( ) {
-		return new Knowledge();
+		return new Awareness();
 	}
 	
 	@Override
 	public String desc() {
         return isTypeKnown() ?
                 ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-                "increases amount of experience gained from combat when it is equipped, as well as decrease amount of time it takes to identify items." +
+                "boosts your alertness when worn, improving your perception and increasing bonus damage " +
+                "inflicted by your counterattacks. Useful for those who prefer defensive approach." +
                 ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();
 	}
 	
-	public class Knowledge extends RingBuff {
+	public class Awareness extends RingBuff {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "You feel that your mind starts working better, your memory improves." :
-                    "You start feeling stupid. It is like something prevents you from thinking clearly." ;
+                    "You feel that your alertness is improved." :
+                    "You feel that your alertness is dimmed." ;
         }
 	}
 }

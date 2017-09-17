@@ -144,8 +144,9 @@ public class Piranha extends MobEvasive {
     }
 
     @Override
-    public int attackProc( Char enemy, int damage ) {
-        if ( Random.Int( enemy.HT ) < damage ) {
+    public int attackProc( Char enemy, int damage, boolean blocked ) {
+
+        if ( !blocked && Random.Int( enemy.HT ) < damage ) {
 
             Buff.affect(this, Enraged.class, Random.IntRange(2, 3));
 

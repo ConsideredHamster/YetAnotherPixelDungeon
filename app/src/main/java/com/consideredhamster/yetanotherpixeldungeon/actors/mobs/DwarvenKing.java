@@ -128,14 +128,22 @@ public class DwarvenKing extends MobPrecise {
             },
             {
                     "You cannot kill me, " + Dungeon.hero.heroClass.title() + "... I am... immortal... ",
-                    "No. NO! How it can be? Killed... by... a " + Dungeon.hero.heroClass.title() + "...",
                     "I will return, " + Dungeon.hero.heroClass.title() + "... I will... return...",
+                    "No. NO! How it can be? Killed... by... a mortal...",
             },
     };
 
 
     private static final float SPAWN_DELAY	= 1f;
     private static final float BASE_ENRAGE	= 5f;
+
+    //FIXME
+
+    private static final BoneExplosion EXPLOSION  = new BoneExplosion();
+    private static final KnockBack KNOCKBACK  = new KnockBack();
+
+    public static class BoneExplosion {}
+    public static class KnockBack {}
 
     public DwarvenKing() {
 
@@ -184,8 +192,8 @@ public class DwarvenKing extends MobPrecise {
     }
 
     @Override
-    public int armorClass() {
-        return buff( UnholyArmor.class ) == null ? super.armorClass() : 0;
+    public int armourAC() {
+        return buff( UnholyArmor.class ) == null ? super.armourAC() : 0;
     }
 
     @Override
@@ -348,7 +356,8 @@ public class DwarvenKing extends MobPrecise {
 
 
     @Override
-    public int attackProc( Char enemy, int damage ) {
+    public int attackProc( Char enemy, int damage, boolean blocked ) {
+
         if ( enemy != null && !enemy.immovable() && buff( Enraged.class ) != null ) {
             Camera.main.shake(1, 0.1f);
             damage = knockBack( enemy, damage);
@@ -492,8 +501,8 @@ public class DwarvenKing extends MobPrecise {
         }
 
         @Override
-        public int armorClass() {
-            return buff( Enraged.class ) == null ? super.armorClass() : 0;
+        public int armourAC() {
+            return buff( Enraged.class ) == null ? super.armourAC() : 0;
         }
 
         @Override
@@ -552,7 +561,7 @@ public class DwarvenKing extends MobPrecise {
         }
 
 		@Override
-		public int attackProc( Char enemy, int damage ) {
+		public int attackProc( Char enemy, int damage, boolean blocked ) {
 
             if( damage * 2 > Random.Int( enemy.HT ) ) {
 
@@ -580,7 +589,7 @@ public class DwarvenKing extends MobPrecise {
                     Char ch = findChar(p);
 
                     if (ch != null && ch.isAlive()) {
-                        ch.damage(Char.absorb(damageRoll(), ch.armorClass() / 2), null, null);
+                        ch.damage(Char.absorb(damageRoll(), ch.armorClass() / 2), EXPLOSION, null);
                     }
                 }
 

@@ -55,13 +55,17 @@ public class CarrionSwarm extends MobEvasive {
     }
 
     @Override
-    public int attackProc( Char enemy, int damage ) {
+    public int attackProc( Char enemy, int damage, boolean blocked  ) {
 
-        Hunger hunger = enemy.buff(Hunger.class);
+        if( !blocked && damage > 0 ){
 
-        if ( hunger != null ) {
+            Hunger hunger = enemy.buff( Hunger.class );
 
-            hunger.satisfy(Hunger.STARVING / 100f * (-1));
+            if( hunger != null ){
+
+                hunger.satisfy( Hunger.STARVING / 100f * ( -1 ) );
+
+            }
 
         }
 

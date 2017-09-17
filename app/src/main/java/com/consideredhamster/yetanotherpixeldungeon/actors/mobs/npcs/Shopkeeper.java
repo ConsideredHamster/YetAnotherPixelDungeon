@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Journal;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Rejuvenation;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -111,7 +112,10 @@ public class Shopkeeper extends NPC {
 
 	@Override
     public boolean add( Buff buff ) {
-        react();
+        if( !( buff instanceof Rejuvenation ) ) {
+            react();
+        }
+
         return false;
     }
 

@@ -18,34 +18,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee;
+package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedWeaponFlintlock;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.watabou.utils.Bundle;
 
-public class Shortsword extends MeleeWeaponLightOH {
+public class Exposed extends PassiveBuff {
 
-	{
-		name = "shortsword";
-		image = ItemSpriteSheet.GLADIUS;
-	}
-	
-	public Shortsword() {
-		super( 3 );
-	}
+    public int object = 0;
+
+    private static final String OBJECT	= "object";
 
     @Override
-    public int max( int bonus ) {
-        return super.max(bonus) - 2;
+    public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle( bundle );
+        bundle.put( OBJECT, object );
+
     }
 
-	@Override
-	public Type weaponType() {
-		return Type.M_SWORD;
-	}
-	
-	@Override
-	public String desc() {
-		return 
-			"It is indeed quite short, just a few inches longer, than a dagger.";
-	}
+    @Override
+    public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle(bundle);
+        object = bundle.getInt( OBJECT );
+    }
+
 }

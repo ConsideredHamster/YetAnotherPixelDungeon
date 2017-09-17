@@ -32,14 +32,19 @@ public class Battleaxe extends MeleeWeaponHeavyTH {
 	public Battleaxe() {
 		super( 1 );
 	}
+
+	@Override
+	public int max( int bonus ) {
+		return super.max(bonus) + 2;
+	}
+
+	@Override
+	public Type weaponType() {
+		return Type.M_BLUNT;
+	}
 	
 	@Override
 	public String desc() {
 		return "The enormous steel head of this battle axe puts considerable heft behind each stroke.";
 	}
-
-    @Override
-    public int max( int bonus ) {
-        return super.max(bonus) + 2;
-    }
 }

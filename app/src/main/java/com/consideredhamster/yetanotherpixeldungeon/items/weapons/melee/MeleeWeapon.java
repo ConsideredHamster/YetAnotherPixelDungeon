@@ -21,11 +21,12 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Guard;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.Shield;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
-import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments.Ethereal;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments.Tempered;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
@@ -78,11 +79,10 @@ public abstract class MeleeWeapon extends Weapon {
 
             } else {
 
-//                Buff.affect(hero, Guard.class, Guard.DURATION);
-                hero.guarded = true;
+                Buff.affect( hero, Guard.class );
 
                 hero.sprite.showStatus(CharSprite.DEFAULT, TXT_GUARD);
-                hero.spendAndNext( 1.0f );
+                hero.spendAndNext( Actor.TICK );
 
             }
 
@@ -100,14 +100,14 @@ public abstract class MeleeWeapon extends Weapon {
 
     @Override
     public int min( int bonus ) {
-        return tier + state + bonus + ( enchantment instanceof Tempered ? bonus : 0 ) - 2;
+        return Math.max( 0, tier + state + bonus + ( enchantment instanceof Tempered ? bonus + tier - 1 : 0 ) - 2 );
     }
 
     @Override
     public int max( int bonus ) {
-        return tier * 2 + state * dmgMod() - 1
+        return Math.max( 0, tier * 2 + state * dmgMod() - 1
                 + ( enchantment instanceof Tempered || bonus >= 0 ? bonus * dmgMod() : 0 )
-                + ( enchantment instanceof Tempered && bonus >= 0 ? 1 + bonus : 0 ) ;
+                + ( enchantment instanceof Tempered && bonus >= 0 ? bonus + tier + 1 : 0 ) ) ;
     }
 
     public int dmgMod() {

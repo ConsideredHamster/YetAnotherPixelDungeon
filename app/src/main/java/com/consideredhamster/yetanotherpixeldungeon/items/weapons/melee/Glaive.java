@@ -32,6 +32,11 @@ public class Glaive extends MeleeWeaponLightTH {
 	public Glaive() {
 		super( 2 );
 	}
+
+	@Override
+	public Type weaponType() {
+		return Type.M_POLEARM;
+	}
 	
 	@Override
 	public String desc() {

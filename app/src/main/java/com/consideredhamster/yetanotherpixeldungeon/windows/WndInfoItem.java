@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.windows;
 
+import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.watabou.noosa.BitmapTextMultiline;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap.Type;
@@ -48,8 +49,9 @@ public class WndInfoItem extends Window {
 		"Maybe it's worth checking for any valuables.";
 	
 	private static final float GAP	= 2;
-	
-	private static final int WIDTH = 120;
+
+    private static final int WIDTH_P = 120;
+    private static final int WIDTH_L = 240;
 
     private BitmapTextMultiline normal;
     private BitmapTextMultiline highlighted;
@@ -113,16 +115,18 @@ public class WndInfoItem extends Window {
 	
 	private void fillFields( int image, ItemSprite.Glowing glowing, int titleColor, String title, String info ) {
 
+        int width = YetAnotherPixelDungeon.landscape() ? WIDTH_L : WIDTH_P ;
+
 		IconTitle titlebar = new IconTitle();
 		titlebar.icon(new ItemSprite(image, glowing));
 		titlebar.label(Utils.capitalize(title), titleColor);
-		titlebar.setRect( 0, 0, WIDTH, 0 );
+		titlebar.setRect( 0, 0, width, 0 );
 		add( titlebar );
 
         Highlighter hl = new Highlighter( info );
 
         normal = PixelScene.createMultiline( hl.text, 6 );
-        normal.maxWidth = WIDTH;
+        normal.maxWidth = width;
         normal.measure();
         normal.x = titlebar.left();
         normal.y = titlebar.bottom() + GAP;
@@ -150,6 +154,6 @@ public class WndInfoItem extends Window {
 //		add( txtInfo );
 		
 //		resize( WIDTH, (int)(txtInfo.y + txtInfo.height()) );
-        resize( WIDTH, (int)(normal.y + normal.height()) );
+        resize( width, (int)(normal.y + normal.height()) );
 	}
 }

@@ -56,7 +56,7 @@ public class Boomerangs extends ThrowingWeaponSpecial {
     public void proc( Char attacker, Char defender, int damage ) {
         super.proc(attacker, defender, damage);
 
-        if( Random.Int( defender.HT ) < damage * 2 ) {
+        if (Random.Int(defender.HT) < damage * 2) {
             Buff.prolong(defender, Stun.class, 1f);
         }
     }

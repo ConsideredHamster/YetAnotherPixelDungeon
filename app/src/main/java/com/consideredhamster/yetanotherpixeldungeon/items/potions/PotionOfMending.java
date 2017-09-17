@@ -30,10 +30,11 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.watabou.utils.Random;
 
 public class PotionOfMending extends Potion {
 
-    public static final float DURATION	= 20f;
+    public static final float DURATION	= 15f;
     public static final float MODIFIER	= 1.0f;
 
 	{
@@ -49,6 +50,15 @@ public class PotionOfMending extends Potion {
     }
 	
 	public static void heal( Hero hero ) {
+
+        int restore = Math.min( hero.HT - hero.HP, hero.HT / 4 + ( hero.HT % 4 > Random.Int(4) ? 1 : 0 ) ) ;
+
+        if( restore > 0 ) {
+            hero.HP += restore;
+            hero.sprite.showStatus(CharSprite.POSITIVE, "%d", restore);
+        }
+
+        hero.sprite.emitter().burst(Speck.factory(Speck.HEALING), 5);
 
         Mending buff = Buff.affect( hero, Mending.class );
 

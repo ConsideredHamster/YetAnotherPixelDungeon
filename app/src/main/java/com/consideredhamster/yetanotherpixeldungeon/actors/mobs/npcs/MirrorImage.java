@@ -89,8 +89,8 @@ public class MirrorImage extends NPC {
     }
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
-		int dmg = super.attackProc( enemy, damage );
+	public int attackProc( Char enemy, int damage, boolean blocked ) {
+		int dmg = super.attackProc( enemy, damage, blocked );
 
 		destroy();
 		sprite.die();

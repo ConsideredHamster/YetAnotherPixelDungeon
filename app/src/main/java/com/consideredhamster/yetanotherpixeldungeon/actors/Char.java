@@ -23,6 +23,9 @@ package com.consideredhamster.yetanotherpixeldungeon.actors;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Exposed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Guard;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
@@ -44,7 +47,6 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Light;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ensnared;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Riposte;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Sleep;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Speed;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Levitation;
@@ -57,23 +59,16 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.UnholyArmor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Succubus;
 import com.consideredhamster.yetanotherpixeldungeon.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.effects.particles.PoisonParticle;
-import com.consideredhamster.yetanotherpixeldungeon.items.EquipableItem;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs.Deflection;
-import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.Shield;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
-import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
-import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.MeleeWeapon;
-import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedWeapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Door;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
@@ -87,12 +82,11 @@ public abstract class Char extends Actor {
 
 	protected static final String TXT_DODGED	= "dodged";
 	protected static final String TXT_MISSED	= "missed";
-	protected static final String TXT_BLOCKED	= "blocked";
-	protected static final String TXT_PARRIED	= "parried";
 
 	protected static final String TXT_GUARD 	= "guard";
 	protected static final String TXT_AMBUSH	= "sneak attack!";
 	protected static final String TXT_COUNTER	= "counter attack!";
+	protected static final String TXT_EXPOSED	= "exposed!";
 
 //	private static final String TXT_YOU_MISSED	= "%s %s your attack";
 //	private static final String TXT_SMB_MISSED	= "%s %s %s's attack";
@@ -109,15 +103,15 @@ public abstract class Char extends Actor {
 	public int HP;
 	
 	protected float baseSpeed	= 1;
-	
+
 	public boolean stunned      = false;
 	public boolean rooted		= false;
 	public boolean flying		= false;
-	public boolean guarded      = false;
-	public boolean counter		= false;
-	public boolean moving		= false;
+    public boolean moving		= false;
+
+
+
 	public int invisible		= 0;
-//	public int weakened 		= 0;
 
 	private HashSet<Buff> buffs = new HashSet<Buff>();
 	
@@ -125,9 +119,13 @@ public abstract class Char extends Actor {
 	protected boolean act() {
 		Dungeon.level.updateFieldOfView( this );
 
-        guarded = false;
-        counter = false;
         moving = false;
+
+        Guard guard = buff( Guard.class );
+
+        if( guard != null ) {
+            Buff.detach( guard );
+        }
 
 		return false;
 	}
@@ -139,32 +137,26 @@ public abstract class Char extends Actor {
 	private static final String TAG_HP		= "HP";
 	private static final String TAG_HT		= "HT";
 	private static final String BUFFS		= "buffs";
-	private static final String GUARDED     = "guarded";
-	private static final String COUNTER		= "counter";
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		
 		super.storeInBundle( bundle );
 
-		bundle.put(POS, pos);
+		bundle.put( POS, pos );
 		bundle.put( TAG_HP, HP );
 		bundle.put( TAG_HT, HT );
 		bundle.put( BUFFS, buffs );
-		bundle.put( GUARDED, guarded );
-		bundle.put( COUNTER, counter );
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		
-		super.restoreFromBundle(bundle);
+		super.restoreFromBundle( bundle );
 		
 		pos = bundle.getInt( POS );
 		HP = bundle.getInt( TAG_HP );
 		HT = bundle.getInt( TAG_HT );
-		guarded = bundle.getBoolean(GUARDED);
-		counter = bundle.getBoolean(COUNTER);
 
 		for (Bundlable b : bundle.getCollection( BUFFS )) {
 			if (b != null) {
@@ -178,107 +170,90 @@ public abstract class Char extends Actor {
         return buff( Blindness.class ) == null ? VIEW_DISTANCE : 1 ;
     };
 	
-	public boolean attack( Char enemy ) {
-		
-		boolean visibleFight = Dungeon.visible[pos] || Dungeon.visible[enemy.pos];
+	public boolean attack( Char enemy ){
 
-		if ( hit( this, enemy, isRanged(), false ) ) {
+        boolean visibleFight = Dungeon.visible[ pos ] || Dungeon.visible[ enemy.pos ];
 
-            int guardEffectiveness = enemy.guardEffectiveness();
+        int damageRoll = damageRoll();
 
-            int damageRoll = damageRoll();
+        Guard guarded = enemy.buff( Guard.class );
 
-            if( guardEffectiveness == 0 || !guard( damageRoll, guardEffectiveness * 2 ) ) {
+        if( guarded != null && !ignoresAC() && ( !isRanged() || enemy.blocksRanged() ) &&
+            Random.Float() < enemy.guardChance() && guard( damageRoll, enemy.guardStrength() )
+        ) {
 
-                // FIXME
-                int dr = damageType() == null && !ignoresAC() ? Random.NormalIntRange(0, enemy.armorClass()) : 0;
-                int effectiveDamage = attackProc(enemy, absorb(enemy.defenseProc(this, damageRoll, false), dr));
+            guarded.proc( enemy.blocksRanged() );
 
-                if (enemy instanceof Hero) {
+            attackProc( enemy, damageRoll, true );
 
-                    Hero hero = ((Hero) enemy);
+            enemy.defenseProc( this, damageRoll, true );
 
-                    if( hero.currentArmour != null) {
-                        hero.currentArmour.use(effectiveDamage > 0 ? 2 : 1);
-                    }
+            if( !isRanged() && Random.Float() < counterChance() ){
+
+                Exposed exposed = Buff.affect( this, Exposed.class, TICK );
+
+                if( exposed != null ) {
+                    exposed.object = enemy.id();
                 }
 
-                if (this instanceof Hero) {
-
-                    Hero hero = ((Hero) this);
-
-                    if( hero.rangedWeapon instanceof RangedWeapon) {
-                        hero.rangedWeapon.use(effectiveDamage > 0 ? 2 : 1);
-                    } else if( hero.rangedWeapon == null && hero.currentWeapon != null) {
-                        hero.currentWeapon.use(effectiveDamage > 0 ? 2 : 1);
-                    }
-                }
-
-                enemy.damage(effectiveDamage, this, damageType());
-
-                if (visibleFight) {
-                    Sample.INSTANCE.play(Assets.SND_HIT, 1, 1, Random.Float(0.8f, 1.25f));
-                }
-
-                if (enemy == Dungeon.hero) {
-                    Dungeon.hero.interrupt( "You were awoken by an attack!" );
-                    if (effectiveDamage >= enemy.HP) {
-                        Camera.main.shake(GameMath.gate(1, effectiveDamage / (enemy.HT / 4), 5), 0.3f);
-                        GameScene.flash(0x330000);
-                    }
-                }
-
-                enemy.sprite.bloodBurstA(sprite.center(), effectiveDamage);
-//			enemy.sprite.flash();
-
-                return true;
-            } else {
-
-                if ( enemy instanceof Hero ) {
-
-                    Hero hero = ((Hero) enemy);
-
-                    EquipableItem used = null;
-
-                    if ( hero.isDualWielding() ) {
-                        used = Random.oneOf( hero.belongings.weap1, hero.belongings.weap2 );
-                    } else if( hero.belongings.weap2 instanceof MeleeWeapon || hero.belongings.weap2 instanceof Shield ) {
-                        used = hero.belongings.weap2;
-                    } else if( hero.belongings.weap1 instanceof MeleeWeapon ) {
-                        used = hero.belongings.weap1;
-                    }
-
-                    if( used != null) {
-                        used.use( 1 );
-                    }
-
-                    hero.currentWeapon = hero.isDualWielding() ? Random.oneOf( hero.belongings.weap1, (Weapon)hero.belongings.weap2 ) :
-                            hero.belongings.weap1 instanceof MeleeWeapon ? hero.belongings.weap1 :
-                                    hero.belongings.weap2 instanceof MeleeWeapon ? (Weapon)hero.belongings.weap2 :
-                                            null ;
-                }
-
-                enemy.defenseProc(this, damageRoll, true);
-
-                return true;
             }
-			
-		} else {
-			
-			if (visibleFight) {
 
-				enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
-				Sample.INSTANCE.play(Assets.SND_MISS);
+            return true;
 
-			}
-			
-			return false;
-			
-		}
+        } else if( hit( this, enemy, isRanged() && !ignoresDistancePenalty(), false ) ) {
+
+            boolean blocked = !ignoresAC() && ( guarded != null || Random.Float() < enemy.guardChance() * 0.5f );
+
+            damageRoll = enemy.defenseProc( this, damageRoll, false );
+
+            if( !ignoresAC() ) {
+
+                int dr = enemy.armorClass( blocked );
+
+                damageRoll = absorb( damageRoll, dr, damageType() != null );
+
+            }
+
+            damageRoll = attackProc( enemy, damageRoll, false );
+
+            enemy.damage( damageRoll, this, damageType());
+
+            if( guarded != null ) guarded.reset( enemy.blocksRanged() );
+
+            if (enemy == Dungeon.hero) {
+
+                if (damageRoll >= enemy.HP) {
+                    Camera.main.shake(GameMath.gate(1, damageRoll / (enemy.HT / 4), 5), 0.3f);
+                    GameScene.flash(0x330000);
+                }
+
+                Dungeon.hero.interrupt( "You were awoken by an attack!" );
+            }
+
+            if (visibleFight) {
+                Sample.INSTANCE.play( Assets.SND_HIT, 1, 1, Random.Float( 0.8f, 1.25f ) );
+                enemy.sprite.bloodBurstA(sprite.center(), damageRoll );
+            }
+
+            return true;
+
+        } else {
+
+            if ( visibleFight ) {
+                Sample.INSTANCE.play(Assets.SND_MISS);
+            }
+
+            enemy.missed();
+
+            return false;
+
+        }
 	}
 	
 	public static boolean hit( Char attacker, Char defender, boolean ranged, boolean magic ) {
 
+        if( defender.buff( Guard.class ) != null )
+            return true;
 
         if( defender.isOpenedTo(attacker) )
             return true;
@@ -315,15 +290,33 @@ public abstract class Char extends Actor {
 	}
 
     public static int absorb( int damage, int armorClass ) {
-
-        return armorClass > 0 && damage > 0 ? damage * damage / ( damage + Random.Int( armorClass * 2 + 1 ) ) : damage;
-
+        return absorb( damage, armorClass, false );
     }
 
+    public static int absorb( int damage, int armorClass, boolean penetrate ) {
+        return armorClass > 0 && damage > 0 ? damage * damage / ( damage + Random.Int(
+                ( penetrate ? armorClass : armorClass * 2 ) + 1 ) ) : damage;
+    }
+
+//    public static boolean guard( int damage, int guardStrength, boolean penetrate ) {
+//        return guardStrength > 0 && damage > 0 ? damage *  ) : damage;
+//    }
+
     public static boolean guard( int damage, int guard ) {
+        return damage < Random.Int( guard * 3 + 1 );
+    }
 
-        return guard > Random.Int( damage + guard );
 
+
+    public void missed() {
+
+        if ( sprite.visible ) {
+            sprite.showStatus( CharSprite.NEUTRAL, dexterity() > 0 ? TXT_DODGED : TXT_MISSED );
+        }
+
+        if ( this == Dungeon.hero ) {
+            Dungeon.hero.interrupt();
+        }
     }
 	
 	public int accuracy() {
@@ -345,10 +338,11 @@ public abstract class Char extends Actor {
     public float attackSpeed() {
         return 1.0f;
     }
-	
-	public String defenseVerb() {
-		return dexterity() > 0 ? TXT_DODGED : TXT_MISSED ;
-	}
+
+
+    public int damageRoll() {
+        return 0;
+    }
 
     public int armourAC() {
         return 0;
@@ -358,11 +352,17 @@ public abstract class Char extends Actor {
         return 0;
     }
 
-    public int guardEffectiveness() {
+    public int guardStrength() {
         return 0;
     }
 
-	public int armorClass() {
+    public int armorClass() {
+
+        return armorClass( false );
+
+    }
+
+	public int armorClass( boolean withShield ) {
 
         if (buff( Frozen.class ) != null) {
             return 0;
@@ -378,56 +378,37 @@ public abstract class Char extends Actor {
             armourMod *= 0.5f;
         }
 
-        float shieldMod = 1.0f;
+		return Math.round( armourAC() + ( withShield ? shieldAC() : 0 ) * armourMod );
 
-        if ( buff(Confusion.class) != null ) {
-            shieldMod *= 0.5f;
+	}
+
+    public float guardChance() {
+
+        if ( buff( Frozen.class ) != null || buff( Stun.class ) != null )
+            return 0.0f;
+
+        float guardChance = 1.0f;
+
+        if ( buff( Confusion.class ) != null ) {
+            guardChance *= 0.5f;
         }
 
-        if ( buff(Blindness.class) != null ) {
-            shieldMod *= 0.5f;
+        if ( buff( Blindness.class ) != null ) {
+            guardChance *= 0.5f;
         }
 
-		return Math.round( armourAC() * armourMod + shieldAC() * shieldMod );
-	}
+        return guardChance;
+    }
+
+    public float counterChance() {
+        return awareness() * 0.5f;
+    }
 	
-	public int damageRoll() {
-		return 0;
-	}
-	
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc( Char enemy, int damage, boolean blocked ) {
 		return damage;
 	}
 	
 	public int defenseProc( Char enemy, int damage, boolean blocked ) {
-
-        if( blocked ) {
-
-            if( Level.adjacent( pos, enemy.pos ) && hit( this, enemy, false, false ) ) {
-
-                enemy.counter = true;
-
-                if (sprite.visible) {
-
-                    sprite.showStatus( CharSprite.NEUTRAL, TXT_PARRIED );
-                    Sample.INSTANCE.play(Assets.SND_EVOKE, 0.5f, 0.75f, 0.75f);
-
-                    if( Dungeon.hero == this )
-                        Camera.main.shake( 1, 0.1f );
-                }
-
-            } else {
-
-                if (sprite.visible) {
-                    sprite.showStatus(CharSprite.NEUTRAL, TXT_BLOCKED);
-                    Sample.INSTANCE.play(Assets.SND_HIT, 1, 1, 0.5f);
-                }
-
-                if( Dungeon.hero == this )
-                    Camera.main.shake( 2, 0.1f );
-            }
-        }
-
 		return damage;
 	}
 
@@ -439,7 +420,9 @@ public abstract class Char extends Actor {
 		return null;
 	}
 
-    public boolean ignoresAC() {
+    public boolean ignoresAC() { return false; }
+
+    public boolean blocksRanged() {
         return false;
     }
 
@@ -463,6 +446,10 @@ public abstract class Char extends Actor {
         return false;
     }
 
+    public boolean ignoresDistancePenalty(){
+        return false;
+    }
+
     public boolean isMagical() {
         return immunities().contains( DamageType.Body.class );
     }
@@ -483,6 +470,8 @@ public abstract class Char extends Actor {
             } else if( Dungeon.difficulty == Difficulties.IMPOSSIBLE ) {
                 dmg += ( dmg / 2 + ( Random.Int(2) < dmg % 2 ? 1 : 0 ) );
             }
+
+            Dungeon.hero.interrupt( "You were awoken by an attack!" );
         }
 
         int textColor = CharSprite.NEGATIVE;
@@ -534,19 +523,14 @@ public abstract class Char extends Actor {
             Buff.detach(this, Frozen.class);
         }
 
-        if( src instanceof Char && isCharmedBy( (Char)src ) && !( src instanceof Succubus ) ) {
+        if( src instanceof Char && isCharmedBy( (Char)src ) ) {
             Buff.detach(this, Charm.class);
         }
 
-		if (HP <= 0) {
+		if ( !isAlive() ) {
 
 			die(src, type);
 
-            if (this != Dungeon.hero && Dungeon.visible[pos]) {
-
-                GLog.i(TXT_DEFEAT, name);
-
-            }
 		}
 	}
 	
@@ -686,10 +670,19 @@ public abstract class Char extends Actor {
 		return null;
 	}
 
+    public boolean isBlocking() {
+        for (Buff b : buffs) {
+            if (b instanceof Guard) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isOpenedTo( Char ch ) {
         int chID = ch.id();
         for (Buff b : buffs) {
-            if (b instanceof Riposte && ((Riposte)b).object == chID) {
+            if (b instanceof Exposed && ((Exposed)b).object == chID) {
                 return true;
             }
         }
@@ -796,6 +789,8 @@ public abstract class Char extends Actor {
             } else if (buff instanceof UnholyArmor) {
                 sprite.showStatus(CharSprite.POSITIVE, "unholy armor");
                 sprite.add(CharSprite.State.UNHOLYARMOR);
+            } else if (buff instanceof Exposed) {
+                sprite.showStatus( CharSprite.NEUTRAL, TXT_EXPOSED );
             }
 		}
 

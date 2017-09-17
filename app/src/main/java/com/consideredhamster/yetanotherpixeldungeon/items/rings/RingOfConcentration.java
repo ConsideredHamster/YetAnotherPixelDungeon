@@ -20,33 +20,44 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
-public class RingOfKnowledge extends Ring {
+import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 
+import java.util.HashSet;
+
+public class RingOfConcentration extends Ring {
+	
 	{
-		name = "Ring of Knowledge";
-        shortName = "Kn";
+		name = "Ring of Concentration";
+        shortName = "Co";
 	}
+
+    public static final HashSet<Class<? extends DamageType>> RESISTS = new HashSet<>();
+    static {
+        RESISTS.add(DamageType.Mind.class);
+    }
 	
 	@Override
 	protected RingBuff buff( ) {
-		return new Knowledge();
+		return new Concentration();
 	}
 	
 	@Override
 	public String desc() {
         return isTypeKnown() ?
                 ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-                "increases amount of experience gained from combat when it is equipped, as well as decrease amount of time it takes to identify items." +
+                "was enchanted to improve mental fortitude of it's wearer. Rings of this kind are often used by " +
+                "spellcasters of all kind, since greater willpower helps recharge magical wands much more efficiently. " +
+                "Additionally, it offers a minor benefit of making it easier to shrug off all kinds of mental debuffs." +
                 ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();
 	}
 	
-	public class Knowledge extends RingBuff {
+	public class Concentration extends RingBuff {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "You feel that your mind starts working better, your memory improves." :
-                    "You start feeling stupid. It is like something prevents you from thinking clearly." ;
+                "Suddenly, you are filled with determination." :
+                "Suddenly, you find it harder to concentrate." ;
         }
 	}
 }

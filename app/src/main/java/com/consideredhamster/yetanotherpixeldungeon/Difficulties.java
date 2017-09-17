@@ -36,24 +36,24 @@ public class Difficulties {
 
     public static final String[] ABOUT = {
 
-            "- You receive less damage\n" +
-            "- Mob's health is minimized\n" +
-            "- Bosses have 80% health\n" +
-            "- Prevents earning any badges!\n",
+            "- Player character receives less damage\n" +
+            "- Bosses have 20% less health\n" +
+            "- Mobs have their health minimized\n" +
+            "- Can't earn any badges on this difficulty!\n",
 
-            "- You receive normal damage\n" +
-            "- Mob's health is randomized\n" +
-            "- Bosses have 100% health\n"+
-            "- Nothing special here!\n",
+            "- Player character receives normal damage\n" +
+            "- Bosses have normal health\n"+
+            "- Mobs have their health randomized\n" +
+            "- This difficulty has no special features\n",
 
-            "- You receive normal damage\n" +
-            "- Mob's health is maximized\n" +
-            "- Bosses have 120% health\n"+
+            "- Player character receives normal damage\n" +
+            "- Bosses have 20% more health\n"+
+            "- Mobs have their health maximized\n" +
             "- Beat the game on Normal to unlock!\n",
 
-            "- You receive more damage\n" +
-            "- Mob's health is maximized\n" +
-            "- Bosses have 150% health\n"+
+            "- Player character receives more damage\n" +
+            "- Bosses have 50% more health\n"+
+            "- Mobs have their health maximized\n" +
             "- Beat the game on Hardcore to unlock!\n",
     };
 }

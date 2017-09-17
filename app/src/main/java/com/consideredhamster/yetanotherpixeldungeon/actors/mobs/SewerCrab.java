@@ -39,20 +39,7 @@ public class SewerCrab extends MobHealthy {
 		loot = new MysteryMeat();
 		lootChance = 0.25f;
 
-//        baseSpeed = 2f;
 	}
-
-//    @Override
-//    public int guardEffectiveness() {
-//
-//        return super.shieldAC() * 2;
-//
-//    }
-
-    @Override
-    public int shieldAC() {
-        return enemySeen && !stunned ? armorClass : 0 ;
-    }
 
     @Override
     public float moveSpeed() {

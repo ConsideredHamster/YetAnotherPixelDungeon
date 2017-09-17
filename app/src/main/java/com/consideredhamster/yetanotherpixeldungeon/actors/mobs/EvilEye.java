@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
@@ -55,6 +56,9 @@ public class EvilEye extends MobRanged {
 		
 //		loot = new Dewdrop();
 //		lootChance = 0.5f;
+
+        loot = new MysteryMeat();
+        lootChance = 0.35f;
 
 	}
 	
@@ -140,19 +144,20 @@ public class EvilEye extends MobRanged {
 
                 if (hit(this, ch, false, true)) {
 
-                    ch.damage(damageRoll(), this, DamageType.ENERGY);
+                    ch.damage( absorb( damageRoll(), enemy.armorClass(), true ), this, DamageType.ENERGY );
 
                     if (Dungeon.visible[pos]) {
                         ch.sprite.flash();
                         CellEmitter.center(pos).burst(PurpleParticle.BURST, Random.IntRange(1, 2));
                     }
 
+
 //                    if (!ch.isAlive() && ch == Dungeon.hero) {
 //                        Dungeon.fail(Utils.format(ResultDescriptions.MOB, Utils.indefinite(name), Dungeon.depth));
 //                        GLog.n(TXT_DEATHGAZE_KILLED, name);
 //                    }
                 } else {
-                    ch.sprite.showStatus(CharSprite.NEUTRAL, ch.defenseVerb());
+                    enemy.missed();
                 }
             }
         }

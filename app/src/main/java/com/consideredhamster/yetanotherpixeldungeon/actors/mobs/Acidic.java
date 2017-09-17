@@ -34,7 +34,7 @@ public class Acidic extends CaveScorpion {
 	}
 
     @Override
-    public int attackProc( Char enemy, int damage ) {
+    public int attackProc( Char enemy, int damage, boolean blocked ) {
         if (Random.Int( 3 ) == 0) {
             Buff.affect(enemy, Ooze.class);
             enemy.sprite.burst( 0x006600, 5 );

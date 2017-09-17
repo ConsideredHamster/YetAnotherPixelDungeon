@@ -39,16 +39,16 @@ public class RingOfProtection extends Ring {
 	@Override
 	public String desc() {
         return isTypeKnown() ?
-            ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
-            "increases your armor class and allow you to occasionally resist non-physical sources of damage." +
-            ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
+            ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
+            "greatly boosts your survivability by allowing you to occasionally resist different " +
+            "elemental threats such as fire, frost, electricity, acid, energy or withering. It " +
+            "also increases your armor class by amount depending on your physical strength." +
+            ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
         super.desc();
 	}
 
     public static final HashSet<Class<? extends DamageType>> RESISTS = new HashSet<>();
     static {
-        RESISTS.add(DamageType.Body.class);
-        RESISTS.add(DamageType.Mind.class);
         RESISTS.add(DamageType.Flame.class);
         RESISTS.add(DamageType.Frost.class);
         RESISTS.add(DamageType.Shock.class);

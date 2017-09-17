@@ -60,16 +60,16 @@ public class GnollBrute extends MobPrecise {
 //		return super.damageRoll() * ( HT * 2 - HP ) / HT ;
 //	}
 
-//    @Override
-//    public int guardEffectiveness() {
-//
-//        return super.shieldAC() * 3;
-//
-//    }
-
     @Override
     public int shieldAC() {
-        return enemySeen && !stunned ? armourAC() * 2 / 3 : 0 ;
+
+        return armorClass;
+
+    }
+
+    @Override
+    public boolean blocksRanged() {
+        return true;
     }
 
     @Override

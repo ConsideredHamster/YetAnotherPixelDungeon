@@ -39,6 +39,11 @@ public class Handcannon extends RangedWeaponFlintlock {
     public Class<? extends ThrowingWeaponAmmo> ammunition() {
         return Bullets.class;
     }
+
+	@Override
+	public Type weaponType() {
+		return Type.R_FLINTLOCK;
+	}
 	
 	@Override
 	public String desc() {

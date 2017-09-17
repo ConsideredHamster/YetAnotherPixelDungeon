@@ -59,8 +59,8 @@ public class GiantSpider extends MobHealthy {
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
-        if ( Random.Int( enemy.HT ) < damage ) {
+	public int attackProc( Char enemy, int damage, boolean blocked ) {
+        if ( !blocked && Random.Int( enemy.HT ) < damage ) {
 
             Poison buff = Buff.affect( enemy, Poison.class );
 

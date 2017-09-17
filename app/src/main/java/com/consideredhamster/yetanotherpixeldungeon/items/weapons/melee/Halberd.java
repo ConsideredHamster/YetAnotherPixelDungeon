@@ -32,6 +32,11 @@ public class Halberd extends MeleeWeaponLightTH {
 	public Halberd() {
 		super( 3 );
 	}
+
+	@Override
+	public Type weaponType() {
+		return Type.M_POLEARM;
+	}
 	
 	@Override
 	public String desc() {

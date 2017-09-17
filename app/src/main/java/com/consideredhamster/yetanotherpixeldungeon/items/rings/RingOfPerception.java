@@ -26,19 +26,19 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 public class RingOfPerception extends Ring {
 
 	{
-		name = "Ring of Perception";
-        shortName = "Pe";
+		name = "Ring of Awareness";
+        shortName = "Aw";
 	}
 	
-	@Override
-	public boolean doEquip( Hero hero ) {
-		if (super.doEquip( hero )) {
-			Dungeon.hero.search( false );
-			return true;
-		} else {
-			return false;
-		}
-	}
+//	@Override
+//	public boolean doEquip( Hero hero ) {
+//		if (super.doEquip( hero )) {
+//			Dungeon.hero.search( false );
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 	
 	@Override
 	protected RingBuff buff( ) {
@@ -48,10 +48,10 @@ public class RingOfPerception extends Ring {
 	@Override
 	public String desc() {
         return isTypeKnown() ?
-                ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
-                "boosts your perception when worn, improving your chances to notice hidden traps and doors and " +
-                        "decreasing the effects of dungeon's darkness on your line of sight." +
-                ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
+                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
+                "boosts your alertness when worn, improving your perception and increasing damage " +
+                "against targets exposed to counterattacks." +
+                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();
 	}
 	
@@ -59,8 +59,8 @@ public class RingOfPerception extends Ring {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "You feel that your perception is improved." :
-                    "You feel that your perception is dimmed." ;
+                    "You feel that your alertness is improved." :
+                    "You feel that your alertness is dimmed." ;
         }
 	}
 }

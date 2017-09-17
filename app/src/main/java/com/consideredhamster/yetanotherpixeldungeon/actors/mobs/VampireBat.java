@@ -63,9 +63,9 @@ public class VampireBat extends MobEvasive {
     }
 
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc( Char enemy, int damage, boolean blocked ) {
 
-        if ( isAlive() && !enemy.isMagical() ) {
+        if ( !blocked && isAlive() && !enemy.isMagical() ) {
 
             int reg = Math.min(Random.Int(damage + 1), HT - HP);
 

@@ -45,100 +45,120 @@ public class WndChangelog extends Window {
 	private static final int WIDTH_L	= 160;
 	private static final int HEIGHT_L	= 128;
 
-	private static final String TXT_TITLE	= "PLEASE READ";
+	private static final String TXT_TITLE	= "Version 0.3.0d is finally here!";
 
     private static final String TXT_DESCR =
-        "This window is supposed to tell you about the changes made to the game in the " +
-        "last updates, but due to some of the suggestions being more frequent than others, I want to " +
-        "address them once and for all here, where everyone can see them.\n" +
+        "Okay, first of all - glad to see you again! These several months were a bit rough for me, but there were so much more reasons why I've delayed this update for so long, and I have to admit that not all of them are actually reasonable. I am sorry for this awful lack of updates during this time, but I promise it'll get better from now on. This update was in the works for a very, very long time, and despite this it consists mostly of a myriad of minor tweaks and bugfixes, but soon after that the work will go according to a specific schedule. As I've said before, this mod is not even 50% complete.\n" +
         "\n" +
-        "First, I will definitely implement international localization in this mod, but not right " +
-        "now. Thing is, implementing localization would require a huge amount of effort, and I " +
-        "would rather start working on things like this AFTER I implement the things I deem to " +
-        "be more important. Which means that it will happen somewhere AFTER the 0.4.0 update.\n" +
+        "Second part is about that very schedule... I remember that I've said before about localization coming somewhere around version 0.4.0, but  since I've re-estimated all of the things I want to add, and realized that it would be much more effective to keep YAPD updates small, but frequent. Because of this, I have to take my words back and tell all of you that localization will happen only around version 0.7.0. This doesn't means that it will happen later, bcause th amount of work I want to complete before starting to work on localization is roughly the same. It just means that there will be more updates released between the current moment and that one.\n" +
         "\n" +
-        "Second, I do not plan to include multiplayer in this mod at all. That's because I don't " +
-        "see any reasonable way to make it work with the current game mechanics. I am aware that there " +
-        "may be another way to include at least some amount of interaction between players, but for now " +
-        "I am fine with the game being single player only (like most roguelikes out there).\n" +
+        "Okay, here comes a SHORT version of the change log. Because of a sheer amount of tweaks, and most of them being too small and/or too obvious to mention them, I'll skip most of them and will try to highlight the most important parts. If you really want it, you can find the full change log on the YAPD's github repository. Also, don't forget that you can always see this screen again by tapping the version number in the lower left corner of the title screen!\n" +
         "\n" +
-        "Finally, I already have my own plans about the classes I want to add in this mod, " +
-        "thank you all for your suggestions. However, all of this is irrelevant right now anyway " +
-        "because I need to bring back subclasses before it becomes a good idea to introduce " +
-        "new classes to the game. Which is planned exactly for the 0.4.0 update.\n" +
+        "CHARACTER\n" +
         "\n" +
-        "Of course, there is a long road between updates 0.3.0 and 0.4.0. There is still a lots of " +
-        "things to rework first - torches, traps, bosses, story, music... Version 0.3.1, for example, " +
-        "will be about wands, herbs and debuffs. Please, be understanding and patient. Thank you ;)\n" +
+        "- changed Wand skill attribute into Magic skill, which affects your accuracy with wands and power of some of the scrolls\n" +
         "\n" +
-        "P.S. Also, I want to bring to your attention that you can bring up this window any time by " +
-        "tapping the version number in the bottom right of the title screen. Okay, all said and " +
-        "done, here comes the actual changelog...\n" +
+        "- changed Detection attribute into Perception, which affects your chances to expose your enemy to counter attacks instead of your chances to prevent equipping a cursed item\n" +
         "\n" +
-        "CHANGES IN THE LAST UPDATES:\n" +
+        "- changed Magic power attribute into Willpower, which affects your chances to prevent equipping a cursed item instead of determining scroll's power\n" +
         "\n" +
-        "v0.3.0c\n" +
+        "- Warrior now gets increased amount of hp only on every 6th level instead of every 3rd level\n" +
         "\n" +
-        "- the \"search button\" switch in the settings now works like this:\n" +
-        "- \"default behaviour\" - tap to examine, press or tap again to search\n" +
-        "- \"reversed behaviour\" - tap to search, press to examine\n" +
+        "- Acolyte now gets decreased amount of hp only on every 6th level instead of every 3rd level\n" +
         "\n" +
-        "- removed the \"Enchanted item with +X bonus acquired\" badge\n" +
-        "- added the \"X scrolls of Upgrade used\" badge\n" +
+        "- shields now apply their armor class bonus only with 50% chance or on failed guard attempts\n" +
         "\n" +
-        "- Warrior now gets 2 bonus HP from potions of Strength\n" +
-        "- Acolyte now gets 2 bonus HP from potions of Strength\n" +
+        "- shields now degrade and proc only when applying their bonus or when guarding\n" +
         "\n" +
-        "- scrolls of Banishment now affect wands in the wand holder\n" +
-        "- potions of Blessing now affect wands in the wand holder\n" +
+        "- debuffs now affect chance to apply shield's bonus AC instead of the shield's AC\n" +
         "\n" +
-        "- decreased skeleton respawn rate in the fourth boss fight\n" +
-        "- fixed various crashes and other issues\n" +
+        "- guard effectiveness is now affected by your base strength instead of excess strength\n" +
         "\n" +
-        "v0.3.0b\n" +
+        "- hero's remains are now separated by difficulties\n" +
         "\n" +
-        "- added an option to change the \"Search\" button behaviour\n" +
-        "- some loading tips were reworded (thanks to Dustin Jacobsen)\n" +
-        "- wandmaker reward now shows proper wand names\n" +
-        "- fixed the sad ghost quest crashing the game\n" +
-        "- fixed some of the descriptions and issues\n" +
+        "MOBS & BOSSES\n" +
         "\n" +
-        "v0.3.0a\n" +
+        "- all enemies in the fifth chapter now count as magical (but not necessarily having body or mind immunity)\n" +
         "\n" +
-        "- you can hit targets out of your field of view again...\n" +
-        "- ...but you get 50% accuracy penalty in this case\n" +
-        "- rebalanced rewards of sad ghost and ambitious imp quests\n" +
-        "- rewards for the sad ghost's quest are revealed to the player now\n" +
-        "- rewards for the wandmaker's quest are revealed to the player now\n" +
-        "- player now receives 50% less damage on Easy difficulty\n" +
-        "- player now receives 50% more damage on Impossible difficulty\n" +
+        "- third boss does not counts as magical, while still having body and mind immunity\n" +
         "\n" +
-        "- all basic shops now sell arrows or quarrels\n" +
-        "- all basic shops now sell bullets or gunpowder\n" +
-        "- decreased base price of ammunitions in shops\n" +
-        "- partially identified non-cursed items now cost less\n" +
-        "- rebalanced bomb damage to be less OP against bosses\n" +
-        "- bomb sticks are less powerful than bundles now\n" +
+        "- evil eyes now drop raw meat instead of cave scorpions\n" +
         "\n" +
-        "- scrolls of Enchantment now can be used on wands and rings\n" +
-        "- scrolls of Enchantment now upgrade enchanted weapons/armors\n" +
-        "- scrolls of Enchantment now re-enchant only if item is already at +3\n" +
-        "- scrolls of Sunlight now heal more if you stay in their area of effect\n" +
-        "- effect of scrolls of Sunlight now lasts less longer\n" +
-        "- thunderstorm clouds now deal low damage to the fire elementals\n" +
+        "- fire elementals and evil eyes now only partially pierce target's armor instead of completely ignoring it\n" +
         "\n" +
-        "- mob damage is not affected by difficulty anymore\n" +
-        "- mob respawn rate is not affected by difficulty anymore\n" +
-        "- tweaked last boss battle to be a bit more difficult\n" +
-        "- buffed damage growth rate of miasma cloud\n" +
-        "- carrion swarms now drain 1% of your satiety per hit\n" +
-        "- fire elementals do not drop gunpowder anymore\n" +
-        "- golems now become less armored while burning\n" +
-        "- wraiths now deal physical damage in melee instead of body damage\n" +
-        "- wraiths still ignore target's armor\n" +
-        "- increased drop chance of raw meat from mobs\n" +
+        "- imps now deal physical damage and don't have fire resistance anymore\n" +
         "\n" +
-        "- lots of minor tweaks and bugfixes";
+        "- imps now will steal random amount of stackable items instead of the full stack\n" +
+        "\n" +
+        "ITEMS & SHOPS\n" +
+        "\n" +
+        "- ankhs now weaken curses on all of your items on activation\n" +
+        "\n" +
+        "- waterskins now can be used to wash away caustic ooze and douze burning effct on self\n" +
+        "\n" +
+        "- potions of Mending now heal 25% of health immediately\n" +
+        "\n" +
+        "- base duration of the effect of potions of Mending decreased to 15 turns instead of 20\n" +
+        "\n" +
+        "- base duration of effect of potions of Levitation increased to 20 turns (from 15 turns)\n" +
+        "\n" +
+        "- first four shops will not sell same repair tools in stock\n" +
+        "\n" +
+        "- first four shops will not have more than two of the same type of ammunition in stock\n" +
+        "\n" +
+        "RANGED WEAPONS\n" +
+        "\n" +
+        "- flintlock weapons now can be reloaded while moving\n" +
+        "\n" +
+        "- fixed issue with flintlock weapons being almost unable to deal sneak attacks\n" +
+        "\n" +
+        "- trying to shoot from a non-loaded flintlock weapon now will reload it instead of showing a warning\n" +
+        "\n" +
+        "- increased durability of ranged weapons\n" +
+        "\n" +
+        "- decreased price modifier when purchasing throwing weapons and ammunitions in shops\n" +
+        "\n" +
+        "- rebalanced amount of throwing weapons and ammunitions when generated in a wrong chapter\n" +
+        "\n" +
+        "WANDS & RINGS\n" +
+        "\n" +
+        "- wands of Disintegration/Firebolt do not completely ignore target's armor class anymore\n" +
+        "\n" +
+        "- wand of Entanglement is twice as effective now\n" +
+        "\n" +
+        "- rings of Perception were renamed into rings of Awareness and now affect bonus damage from counter attacks instead of view distance\n" +
+        "\n" +
+        "- rings of Energy were renamed into rings of Concentration and now increase mind resistance chance instead of enchantment's proc chance\n" +
+        "\n" +
+        "- rings of Sorcery now affect enchantment's proc chance instead of wand's miscast/squeeze chance\n" +
+        "\n" +
+        "- rings of Protection do not affect your mind and body resistance chance anymore\n" +
+        "\n" +
+        "SCROLLS\n" +
+        "\n" +
+        "- scrolls are now affected by your Magic skill instead of Willpower\n" +
+        "\n" +
+        "- scrolls of Challenge will not affect passive animated statues \n" +
+        "\n" +
+        "- scrolls of Enchantment now can be used to transmute fully upgraded rings/wands into another ones\n" +
+        "\n" +
+        "- scrolls of Torment are more powerful and reliable now, but their radius of effect is limited\n" +
+        "\n" +
+        "- scrolls of Transmutation can be used on ammunition and throwing weapons\n" +
+        "\n" +
+        "- scrolls of Transmutation should be way more useful now\n" +
+        "\n" +
+        "GENERAL\n" +
+        "\n" +
+        "- added confirmation window when trying to step on a revealed trap\n" +
+        "\n" +
+        "- added confirmation window when trying to equip obviously cursed item\n" +
+        "\n" +
+        "- added confirmation window when trying to drink water while your health is greater than 50%\n" +
+        "\n" +
+        "- added new lore about winners of The Impossible Contest into the game ;)\n" +
+        "\n" +
+        "- lots of tweaks, bugfixes and minor visual improvements";
 
 	private BitmapText txtTitle;
 	private ScrollPane list;

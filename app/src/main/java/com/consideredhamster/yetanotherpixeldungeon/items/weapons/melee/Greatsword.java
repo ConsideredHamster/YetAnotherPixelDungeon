@@ -32,6 +32,11 @@ public class Greatsword extends MeleeWeaponHeavyTH {
 	public Greatsword() {
 		super( 2 );
 	}
+
+	@Override
+	public Type weaponType() {
+		return Type.M_SWORD;
+	}
 	
 	@Override
 	public String desc() {

@@ -35,11 +35,11 @@ public class RingOfDurability extends Ring {
 	@Override
 	public String desc() {
         return isTypeKnown() ?
-            ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
+            ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
                 "decreases rate at which everything around it degrades with use. It will make your " +
                 "wands, weapons, shields and armour last longer, make your ammunition break less often and " +
                 "even allow you to use your repair tools more effectively." +
-                ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
+                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();
 	}
 	

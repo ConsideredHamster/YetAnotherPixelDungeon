@@ -32,40 +32,12 @@ public class RingOfFortune extends Ring {
 		return new Fortune();
 	}
 	
-//	@Override
-//	public Item random() {
-//		bonus = +1;
-//		return this;
-//	}
-	
-//	@Override
-//	public boolean doPickUp( Hero hero ) {
-//		identify();
-//		Badges.validateRingOfHaggler();
-//		Badges.validateItemLevelAcquired(this);
-//		return super.doPickUp(hero);
-//	}
-	
-//	@Override
-//	public boolean isUpgradeable() {
-//		return false;
-//	}
-	
-//	@Override
-//	public void use() {
-//		// Do nothing (it can't curse)
-//	}
-	
 	@Override
 	public String desc() {
-//			"In fact this ring doesn't provide any magic effect, but it demonstrates " +
-//			"to shopkeepers and vendors, that the owner of the ring is a member of " +
-//			"The Thieves' Guild. Usually they are glad to give a discount in exchange " +
-//			"for temporary immunity guarantee. Upgrading this ring won't give any additional " +
         return isTypeKnown() ?
-                ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
+                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
                 "blesses its wearer with greater luck, increasing amount of loot dropped from enemies when equipped." +
-                ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
+                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();
 	}
 	

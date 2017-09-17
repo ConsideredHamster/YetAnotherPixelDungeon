@@ -28,6 +28,9 @@ import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmor;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmorCloth;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmorHeavy;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmorLight;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.Shield;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
@@ -37,6 +40,10 @@ import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.MeleeWea
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.MeleeWeaponLightOH;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedWeapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeapon;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponAmmo;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponHeavy;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponLight;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponSpecial;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.HeroSprite;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.windows.WndBag;
@@ -61,20 +68,57 @@ public class ScrollOfTransmutation extends InventoryScroll {
 	@Override
 	protected void onItemSelected( Item item ) {
 
-        boolean success = true;
-
         if( item.bonus < 0  ) {
 
-            success = false;
             item.identify( CURSED_KNOWN );
             GLog.w(TXT_ITEM_RESISTS, item.name());
-            curUser.sprite.emitter().burst(ShadowParticle.CURSE, 6);
+            curUser.sprite.emitter().burst( ShadowParticle.CURSE, 6 );
 
-        } else if (item instanceof MeleeWeapon || item instanceof RangedWeapon) {
+        } else if( !transmute( item ) ) {
+
+            item.identify( CURSED_KNOWN );
+            GLog.w( TXT_ITEM_UNKNOWN, item.name() );
+            curUser.sprite.emitter().start( Speck.factory(Speck.CHANGE), 0.1f, 3 );
+
+		} else {
+
+            item.fix();
+            item.identify( CURSED_KNOWN );
+            curUser.sprite.emitter().start( Speck.factory(Speck.CHANGE), 0.1f, 5 );
+
+        }
+	}
+
+    public static boolean transmute( Item item ) {
+
+        if(item instanceof ThrowingWeapon) {
+
+            Item newItem = changeThrowing((ThrowingWeapon) item);
+
+            GLog.i(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
+
+            if( curUser.belongings.weap1 == item ) {
+
+                curUser.belongings.weap1 = (Weapon)newItem;
+
+            } else if( curUser.belongings.weap2 == item ) {
+
+                curUser.belongings.weap2 = (Weapon) newItem;
+
+            } else {
+
+                item.detach(Dungeon.hero.belongings.backpack);
+
+                if (!newItem.doPickUp(curUser)) {
+                    Dungeon.level.drop(newItem, curUser.pos).sprite.drop();
+                }
+            }
+
+        } else if(item instanceof Weapon) {
 
             Item newItem = changeWeapon((Weapon) item);
 
-            GLog.w(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
+            GLog.i(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
 
             if( curUser.belongings.weap1 == item ) {
 
@@ -107,13 +151,17 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
         } else if (item instanceof Armour) {
 
-            Item newItem = changeArmour((BodyArmor) item);
+            Item newItem = changeArmour((Armour) item);
 
-            GLog.w(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
+            GLog.i(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
 
-            if( curUser.belongings.armor == item ) {
+            if( curUser.belongings.weap2 == item ) {
 
-                curUser.belongings.armor = (BodyArmor)newItem;
+                curUser.belongings.weap2 = (Shield) newItem;
+
+            } else if( curUser.belongings.armor == item ) {
+
+                curUser.belongings.armor = (BodyArmor) newItem;
                 ((HeroSprite)curUser.sprite).updateArmor();
 
             } else {
@@ -129,15 +177,19 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
             Item newItem = changeRing((Ring) item);
 
-            GLog.w(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
-
             if( curUser.belongings.ring1 == item ) {
+
+                newItem.identify( ENCHANT_KNOWN );
+                GLog.i(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
 
                 curUser.belongings.ring1.deactivate( curUser );
                 curUser.belongings.ring1 = (Ring)newItem;
                 curUser.belongings.ring1.activate( curUser );
 
             } else if( curUser.belongings.ring2 == item ) {
+
+                newItem.identify( ENCHANT_KNOWN );
+                GLog.i(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
 
                 curUser.belongings.ring2.deactivate( curUser );
                 curUser.belongings.ring2 = (Ring)newItem;
@@ -156,14 +208,14 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
             Item newItem = changeWand((Wand) item);
 
-            GLog.w(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
+            GLog.i(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
 
-            if( curUser.belongings.weap2 == item ) {
+            if (curUser.belongings.weap2 == item) {
 
-                ((Wand)curUser.belongings.weap2).stopCharging();
+                ((Wand) curUser.belongings.weap2).stopCharging();
 
-                curUser.belongings.weap2 = (Wand)newItem;
-                curUser.belongings.weap2.activate( curUser );
+                curUser.belongings.weap2 = (Wand) newItem;
+                curUser.belongings.weap2.activate(curUser);
 
             } else {
 
@@ -173,30 +225,20 @@ public class ScrollOfTransmutation extends InventoryScroll {
                     Dungeon.level.drop(newItem, curUser.pos).sprite.drop();
                 }
             }
-
         } else {
-
-            GLog.w( TXT_ITEM_UNKNOWN, item.name() );
-
-            success = false;
-
-		}
-
-        if( success ) {
-
-            item.fix();
-
-            curUser.sprite.emitter().start(Speck.factory(Speck.CHANGE), 0.1f, 5);
-
+            return false;
         }
-	}
 
-    private Weapon changeWeapon( Weapon w ) {
+        return true;
+    }
+
+
+    private static Weapon changeWeapon( Weapon w ) {
 
         Weapon n;
         do {
-            n = (Weapon) Generator.random(Generator.Category.WEAPON);
-        } while (n == null || n.getClass() == w.getClass() || n instanceof ThrowingWeapon || n.lootChapter() != w.lootChapter() );
+            n = (Weapon) Generator.random(Generator.Category.WEAPON, false);
+        } while (n == null || n.getClass() == w.getClass() || n.weaponType() != w.weaponType() );
 
         n.known = w.known;
         n.state = w.state;
@@ -207,12 +249,72 @@ public class ScrollOfTransmutation extends InventoryScroll {
         return n;
     }
 
-    private Armour changeArmour( Armour a ) {
+    private static Weapon changeThrowing( ThrowingWeapon w ) {
 
-        Armour n;
-        do {
-            n = (Armour)Generator.random(Generator.Category.ARMOR);
-        } while (n == null || n.getClass() == a.getClass() || n instanceof Shield || n.lootChapter() != a.lootChapter() );
+        ThrowingWeapon n = (ThrowingWeapon) Generator.random(Generator.Category.THROWING);
+
+        if( w instanceof ThrowingWeaponAmmo ) {
+
+            while (n == null || n.getClass() == w.getClass() || !( n instanceof ThrowingWeaponAmmo ) ) {
+                n = (ThrowingWeapon) Generator.random(Generator.Category.THROWING, false);
+            }
+
+        } else if( w instanceof ThrowingWeaponSpecial ) {
+
+            while (n == null || n.getClass() == w.getClass() || !( n instanceof ThrowingWeaponSpecial ) ) {
+                n = (ThrowingWeapon) Generator.random(Generator.Category.THROWING, false);
+            }
+
+        } else if( w instanceof ThrowingWeaponLight ) {
+
+            while (n == null || n.getClass() == w.getClass() || !( n instanceof ThrowingWeaponLight ) ) {
+                n = (ThrowingWeapon) Generator.random(Generator.Category.THROWING, false);
+            };
+
+        } else if( w instanceof ThrowingWeaponHeavy ) {
+
+            while (n == null || n.getClass() == w.getClass() || !( n instanceof ThrowingWeaponHeavy ) ) {
+                n = (ThrowingWeapon) Generator.random(Generator.Category.THROWING, false);
+            }
+
+        }
+
+        n.known = w.known;
+        n.state = w.state;
+        n.bonus = w.bonus;
+        n.enchantment = w.enchantment;
+        n.durability = w.durability;
+
+        if( n.tier > w.tier ) {
+            n.quantity = Math.max( 1, w.quantity * n.baseAmount() / w.baseAmount() );
+        } else {
+            n.quantity = w.quantity;
+        }
+
+        return n;
+    }
+
+    private static Armour changeArmour( Armour a ) {
+
+        Armour n = (Armour) Generator.random(Generator.Category.ARMOR, false);
+
+        if (a instanceof Shield) {
+            while (n == null || n.getClass() == a.getClass() || !( n instanceof Shield ) ) {
+                n = (Armour) Generator.random(Generator.Category.ARMOR, false);
+            }
+        } else if (a instanceof BodyArmorCloth) {
+            while (n == null || n.getClass() == a.getClass() || !( n instanceof BodyArmorCloth ) ) {
+                n = (Armour) Generator.random(Generator.Category.ARMOR, false);
+            }
+        } else if (a instanceof BodyArmorLight) {
+            while (n == null || n.getClass() == a.getClass() || !( n instanceof BodyArmorLight ) ) {
+                n = (Armour) Generator.random(Generator.Category.ARMOR, false);
+            }
+        } else if (a instanceof BodyArmorHeavy) {
+            while (n == null || n.getClass() == a.getClass() || !( n instanceof BodyArmorHeavy ) ) {
+                n = (Armour) Generator.random(Generator.Category.ARMOR, false);
+            }
+        }
 
         n.known = a.known;
         n.state = a.state;
@@ -223,7 +325,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
         return n;
     }
 
-    private Ring changeRing( Ring r ) {
+    private static Ring changeRing( Ring r ) {
         Ring n;
         do {
             n = (Ring) Generator.random(Generator.Category.RING);
@@ -232,10 +334,12 @@ public class ScrollOfTransmutation extends InventoryScroll {
         n.bonus = r.bonus;
         n.known = r.known;
 
+
+
         return n;
     }
 
-    private Wand changeWand( Wand w ) {
+    private static Wand changeWand( Wand w ) {
 
         Wand n;
         do {

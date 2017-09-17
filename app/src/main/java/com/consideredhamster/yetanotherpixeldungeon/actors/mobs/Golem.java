@@ -40,16 +40,9 @@ public class Golem extends MobHealthy {
 
 	}
 
-
-
     @Override
     public int armourAC() {
         return buffs( Burning.class ) == null ? super.armourAC() : 0 ;
-    }
-
-    @Override
-    public int shieldAC() {
-        return armorClass;
     }
 	
 	@Override

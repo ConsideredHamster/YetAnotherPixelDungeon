@@ -35,14 +35,11 @@ import com.watabou.utils.Random;
 
 public class ScrollOfEnchantment extends InventoryScroll {
 
-    private static final String TXT_ITEM_CHANGED	= "your %s can't be upgraded any further, !";
-    private static final String TXT_ITEM_ENCHANT	= "your %s was enchanted.";
-    private static final String TXT_ITEM_UPGRADE	= "your %s was upgraded.";
-    private static final String TXT_ITEM_RESISTS	= "your %s is cursed, but the curse was weakened!";
-    private static final String TXT_ITEM_UNCURSE	= "your %s was cursed, but the curse was removed!";
-	private static final String TXT_ITEM_UNKNOWN	= "%s cannot be enchanted!";
-
-
+    private static final String TXT_ITEM_ENCHANT	= "the scroll turned your %s into %s!";
+    private static final String TXT_ITEM_UPGRADE	= "the scroll upgraded your %s because it is already enchanted!";
+    private static final String TXT_ITEM_RESISTS	= "the scroll weakened the curse on your %s!";
+    private static final String TXT_ITEM_UNCURSE	= "the scroll removed the curse from your %s!";
+	private static final String TXT_ITEM_UNKNOWN	= "the scroll is useless for the %s!";
 
 	{
 		name = "Scroll of Enchantment";
@@ -58,10 +55,6 @@ public class ScrollOfEnchantment extends InventoryScroll {
 	@Override
 	protected void onItemSelected( Item item ) {
 
-//		ScrollOfBanishment.uncurse(Dungeon.hero, item);
-//        if( item.bonus < 0)
-//            item.bonus = bonus * (-1);
-
         if (item instanceof Weapon) {
 
             Weapon weapon = (Weapon)item;
@@ -73,17 +66,16 @@ public class ScrollOfEnchantment extends InventoryScroll {
                 if (weapon.isEnchanted() && weapon.bonus < 3 ) {
 
                     weapon.upgrade();
-                    GLog.w(TXT_ITEM_UPGRADE, weapon.name());
+                    GLog.p(TXT_ITEM_UPGRADE, weapon.name());
 
                 } else {
 
                     weapon.enchant();
-                    GLog.w(TXT_ITEM_ENCHANT, weapon.name());
+                    GLog.i( TXT_ITEM_ENCHANT, weapon.simpleName(), weapon.name() );
 
                 }
 
                 curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
-//                Badges.validateItemLevelAcquired(item);
 
             } else {
 
@@ -93,12 +85,12 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
                 if( item.bonus < 0 ) {
 
-                    GLog.w( TXT_ITEM_RESISTS, item.name() );
+                    GLog.n( TXT_ITEM_RESISTS, item.name() );
                     curUser.sprite.emitter().burst(ShadowParticle.CURSE, 4);
 
                 } else {
 
-                    GLog.p( TXT_ITEM_UNCURSE, item.name() );
+                    GLog.w( TXT_ITEM_UNCURSE, item.name() );
                     curUser.sprite.emitter().burst(ShadowParticle.CURSE, 6);
 
                 }
@@ -115,18 +107,16 @@ public class ScrollOfEnchantment extends InventoryScroll {
                 if (armour.isInscribed() && armour.bonus < 3 ) {
 
                     armour.upgrade();
-                    GLog.w(TXT_ITEM_UPGRADE, armour.name());
+                    GLog.p(TXT_ITEM_UPGRADE, armour.name());
 
                 } else {
 
                     armour.inscribe();
-                    GLog.w(TXT_ITEM_ENCHANT, armour.name());
+                    GLog.i( TXT_ITEM_ENCHANT, armour.simpleName(), armour.name() );
 
                 }
 
                 curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
-
-//                Badges.validateItemLevelAcquired(item);
 
             } else {
 
@@ -136,12 +126,12 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
                 if( item.bonus < 0 ) {
 
-                    GLog.w( TXT_ITEM_RESISTS, item.name() );
+                    GLog.n( TXT_ITEM_RESISTS, item.name() );
                     curUser.sprite.emitter().burst(ShadowParticle.CURSE, 4);
 
                 } else {
 
-                    GLog.p( TXT_ITEM_UNCURSE, item.name() );
+                    GLog.w( TXT_ITEM_UNCURSE, item.name() );
                     curUser.sprite.emitter().burst(ShadowParticle.CURSE, 6);
 
                 }
@@ -154,13 +144,19 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
             if( item.bonus >= 0 ) {
 
-                item.upgrade();
+                if (item.bonus < 3 ) {
 
-                GLog.w(TXT_ITEM_UPGRADE, item.name());
+                    item.upgrade();
+
+                    GLog.p(TXT_ITEM_UPGRADE, item.name());
+
+                } else {
+
+                    ScrollOfTransmutation.transmute( item );
+
+                }
 
                 curUser.sprite.centerEmitter().burst(EnergyParticle.FACTORY, 10);
-
-//                Badges.validateItemLevelAcquired(item);
 
             } else {
 
@@ -169,12 +165,12 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
                 if( item.bonus < 0 ) {
 
-                    GLog.w( TXT_ITEM_RESISTS, item.name() );
+                    GLog.n( TXT_ITEM_RESISTS, item.name() );
                     curUser.sprite.emitter().burst(ShadowParticle.CURSE, 4);
 
                 } else {
 
-                    GLog.p( TXT_ITEM_UNCURSE, item.name() );
+                    GLog.w( TXT_ITEM_UNCURSE, item.name() );
                     curUser.sprite.emitter().burst(ShadowParticle.CURSE, 6);
 
                 }
@@ -193,10 +189,9 @@ public class ScrollOfEnchantment extends InventoryScroll {
 			"This scroll is able to imbue unenchanted weapon or armor with random enchantment, or " +
             "even upgrade already enchanted item. Wands and rings count as enchanted items by default. " +
             "If used on a cursed item, it will try to dispel the curse and will even turn its " +
-            "enchantment into benevolent one in case of success.";
+            "enchantment into benevolent one in case of success. Using it on something which can't " +
+            "be improved any further may have... unpredictable results.";
 	}
-
-
 
     @Override
     public int price() {

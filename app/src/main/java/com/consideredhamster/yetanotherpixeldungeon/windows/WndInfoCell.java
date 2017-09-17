@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.windows;
 
+import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.watabou.noosa.BitmapTextMultiline;
 import com.watabou.noosa.Image;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
@@ -33,14 +34,17 @@ import com.consideredhamster.yetanotherpixeldungeon.ui.Window;
 public class WndInfoCell extends Window {
 	
 	private static final float GAP	= 2;
-	
-	private static final int WIDTH = 120;
-	
+
+    private static final int WIDTH_P = 120;
+    private static final int WIDTH_L = 240;
+
 	private static final String TXT_NOTHING	= "There is nothing here.";
 	
 	public WndInfoCell( int cell ) {
 		
 		super();
+
+        int width = YetAnotherPixelDungeon.landscape() ? WIDTH_L : WIDTH_P ;
 		
 		int tile = Dungeon.level.map[cell];
 		if (Level.water[cell]) {
@@ -58,7 +62,7 @@ public class WndInfoCell extends Window {
 			titlebar.icon( DungeonTilemap.tile( tile ) );
 		}
 		titlebar.label( Dungeon.level.tileName( tile ) );
-		titlebar.setRect( 0, 0, WIDTH, 0 );
+		titlebar.setRect( 0, 0, width, 0 );
 		add( titlebar );
 		
 		BitmapTextMultiline info = PixelScene.createMultiline( 6 );
@@ -78,11 +82,11 @@ public class WndInfoCell extends Window {
 		}
 		
 		info.text( desc.length() > 0 ? desc.toString() : TXT_NOTHING );
-		info.maxWidth = WIDTH;
+		info.maxWidth = width;
 		info.measure();
 		info.x = titlebar.left();
 		info.y = titlebar.bottom() + GAP;
 		
-		resize( WIDTH, (int)(info.y + info.height()) );
+		resize( width, (int)(info.y + info.height()) );
 	}
 }

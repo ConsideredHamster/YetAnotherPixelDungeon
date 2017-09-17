@@ -182,7 +182,7 @@ public abstract class RegularLevel extends Level {
 
 				if (specials.size() > 0 &&
 					r.width() > 3 && r.height() > 3
-                    && ( Random.Int( 6 - chapter ) == 0 ||
+                  && ( Random.Int( 6 - chapter ) == 0 ||
                     Dungeon.depth % 6 == 2 && specials.contains( Type.LABORATORY ) ||
                     Dungeon.depth % 6 == 4 && specials.contains( Type.MAGIC_WELL ) )
                 ) {

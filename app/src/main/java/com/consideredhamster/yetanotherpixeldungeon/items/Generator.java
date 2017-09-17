@@ -37,7 +37,6 @@ import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.KiteSh
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.RoundShield;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.TowerShield;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.Food;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.OverpricedRation;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.DreamweedHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.WhirlvineHerb;
@@ -85,8 +84,8 @@ public class Generator {
 
         GOLD	( 0,	Gold.class ),
         HERB    ( 0,	Herb.class ),
-        FOOD	( 0,	Food.class ),
         AMMO    ( 0,	Item.class ),
+        KITS	( 0,	Item.class ),
 
         ;
 
@@ -185,10 +184,10 @@ public class Generator {
                 RingOfShadows.class,
                 RingOfAccuracy.class,
                 RingOfEvasion.class,
-                RingOfPerception.class,
+                RingOfAwareness.class,
                 RingOfVitality.class,
                 RingOfSatiety.class,
-                RingOfEnergy.class,
+                RingOfConcentration.class,
                 RingOfProtection.class,
                 RingOfFortune.class,
                 RingOfKnowledge.class,
@@ -259,50 +258,54 @@ public class Generator {
 
         Category.MISC.probs = new float[]{ 5, 4, 4, 4, 4, 3, 3, 3, 3, 2 };
         Category.MISC.classes = new Class<?>[]{
-	            Gold.class,
+            Gold.class,
 
-                Explosives.Gunpowder.class,
-                Explosives.BombStick.class,
+            Explosives.Gunpowder.class,
+            Explosives.BombStick.class,
 
-                OverpricedRation.class,
-                Torch.class,
+            OverpricedRation.class,
+            Torch.class,
 
-                Whetstone.class,
-                ArmorerKit.class,
+            Whetstone.class,
+            ArmorerKit.class,
+            CraftingKit.class,
+            Battery.class,
 
-                CraftingKit.class,
-                Battery.class,
-
-                Ankh.class,
+            Ankh.class,
         };
 
         Category.HERB.probs = null;
         Category.HERB.classes = new Class<?>[]{
-                FirebloomHerb.class,
-                IcecapHerb.class,
-                SorrowmossHerb.class,
-                DreamweedHerb.class,
-                SungrassHerb.class,
-                WhirlvineHerb.class
+            FirebloomHerb.class,
+            IcecapHerb.class,
+            SorrowmossHerb.class,
+            DreamweedHerb.class,
+            SungrassHerb.class,
+            WhirlvineHerb.class
         };
 
         Category.AMMO.probs = null;
         Category.AMMO.classes = new Class<?>[]{
-                Bullets.class,
-                Arrows.class,
-                Quarrels.class,
-                Explosives.Gunpowder.class,
-                Explosives.BombStick.class,
-                Explosives.BombBundle.class,
+            Bullets.class,
+            Arrows.class,
+            Quarrels.class,
+            Explosives.Gunpowder.class,
+            Explosives.BombStick.class,
+            Explosives.BombBundle.class,
         };
 
         Category.GOLD.probs = null;
         Category.GOLD.classes = new Class<?>[]{
-                Gold.class };
+            Gold.class
+        };
 
-        Category.FOOD.probs = null;
-        Category.FOOD.classes = new Class<?>[]{
-                Food.class };
+        Category.KITS.probs = null;
+        Category.KITS.classes = new Class<?>[]{
+            Whetstone.class,
+            ArmorerKit.class,
+            CraftingKit.class,
+            Battery.class,
+        };
 	}
 	
 	public static void reset() {
@@ -333,33 +336,36 @@ public class Generator {
     public static Item randomComestible() {
         return random( Random.chances( comestibleProbs ) );
     }
-	
-	public static Item random( Category cat ) {
-		try {
-			
-//			categoryProbs.put( cat, categoryProbs.get( cat ) / 2 );
-			
-			switch (cat) {
-                case ARMOR:
-                    return randomArmor();
-                case WEAPON:
-                    return randomWeapon();
-                case THROWING:
-                    return randomThrowing();
-                default:
-                    return ( cat.probs != null ?
-                        ((Item) cat.classes[Random.chances(cat.probs)].newInstance()).random()
-                    :
-                        ((Item) Random.element( cat.classes ).newInstance()).random()
-                    );
-            }
-			
-		} catch (Exception e) {
 
-			return null;
-			
-		}
-	}
+    public static Item random( Category cat ) {
+            return random( cat, true );
+    }
+
+    public static Item random( Category cat, Boolean weighted ) {
+        try {
+
+            if (weighted) {
+                switch (cat) {
+                    case ARMOR:
+                        return randomArmor();
+                    case WEAPON:
+                        return randomWeapon();
+                    case THROWING:
+                        return randomThrowing();
+                    default:
+
+                }
+            }
+
+            return ( cat.probs != null ? ((Item) cat.classes[Random.chances(cat.probs)].newInstance()).random()
+                    : ((Item) Random.element( cat.classes ).newInstance()).random() );
+
+        } catch (Exception e) {
+
+            return null;
+
+        }
+    }
 	
 	public static Item random( Class<? extends Item> cl ) {
 		try {

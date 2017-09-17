@@ -67,16 +67,18 @@ public class Explosion {
             dmg /= ( radius + 2 );
 
             if (dmg > 0) {
-                ch.damage(Char.absorb(dmg, ch.armorClass()/2), source, null);
+                ch.damage(Char.absorb(dmg, ch.armorClass() / 2 ), source, null);
                 if (ch.isAlive()) {
                     Buff.prolong(ch, Stun.class, radius - r + 2);
                 }
             }
         }
 
-        Heap heap = Dungeon.level.heaps.get(c);
-        if (heap != null) {
-            heap.blast("Explosion");
+        if( Dungeon.hero.isAlive() ) {
+            Heap heap = Dungeon.level.heaps.get(c);
+            if (heap != null) {
+                heap.blast("Explosion");
+            }
         }
 
         Dungeon.level.press(c, null);

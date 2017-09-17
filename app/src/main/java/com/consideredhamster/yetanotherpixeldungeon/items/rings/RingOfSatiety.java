@@ -35,10 +35,10 @@ public class RingOfSatiety extends Ring {
 	@Override
 	public String desc() {
         return isTypeKnown() ?
-                ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
+                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
                 "optimizes digestive mechanisms of your body, making it possible to go without food longer and " +
                 "increasing nutriety of consumed food." +
-                ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
+                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();
 	}
 	

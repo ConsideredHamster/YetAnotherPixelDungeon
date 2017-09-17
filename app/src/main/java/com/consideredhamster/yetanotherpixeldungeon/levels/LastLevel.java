@@ -30,7 +30,7 @@ import com.watabou.utils.Random;
 
 public class LastLevel extends Level {
 
-	private static final int SIZE = 7;
+	private static final int SIZE = 9;
 	
 	{
 //        viewDistance = 8;
@@ -56,18 +56,40 @@ public class LastLevel extends Level {
 		Arrays.fill( map, Terrain.WALL );
 		Painter.fill( this, 1, 1, SIZE, SIZE, Terrain.WATER );
 		Painter.fill( this, 2, 2, SIZE-2, SIZE-2, Terrain.EMPTY );
-		Painter.fill( this, SIZE/2, SIZE/2, 3, 3, Terrain.EMPTY_SP );
+//		Painter.fill( this, SIZE / 2, SIZE/2, 3, 3, Terrain.EMPTY_SP );
 		
 		entrance = SIZE * WIDTH + SIZE / 2 + 1;
 		map[entrance] = Terrain.ENTRANCE;
-		
-		exit = entrance - WIDTH * SIZE;
-		map[exit] = Terrain.LOCKED_EXIT;
-		
-		pedestal = (SIZE / 2 + 1) * (WIDTH + 1);
-		map[pedestal] = Terrain.PEDESTAL;
-		map[pedestal-1] = map[pedestal+1] = Terrain.STATUE_SP;
-		
+
+        int deco = entrance - WIDTH * SIZE;
+
+        for( int i = deco - 4 ; i <= deco + 4 ; i += 2 ) {
+            map[i] = Terrain.WALL_DECO;
+        }
+
+//		exit = entrance - WIDTH * SIZE;
+//		map[exit] = Terrain.LOCKED_EXIT;
+
+
+
+        Painter.fill( this, SIZE / 2 - 1, SIZE / 2 + 1, 5, 1, Terrain.EMPTY_SP );
+        Painter.fill( this, SIZE / 2 + 1, SIZE / 2 - 1, 1, 5, Terrain.EMPTY_SP );
+
+        Painter.fill( this, SIZE / 2 - 1, SIZE / 2, 1, 3, Terrain.EMPTY_SP );
+        Painter.fill( this, SIZE / 2 + 3, SIZE / 2, 1, 3, Terrain.EMPTY_SP );
+
+        Painter.fill( this, SIZE / 2, SIZE / 2 - 1, 3, 1, Terrain.EMPTY_SP );
+        Painter.fill( this, SIZE / 2, SIZE / 2 + 3, 3, 1, Terrain.EMPTY_SP );
+
+        pedestal = (SIZE / 2 + 1) * (WIDTH + 1);
+        map[pedestal] = Terrain.PEDESTAL;
+        map[pedestal+WIDTH+1] = map[pedestal+WIDTH-1] = map[pedestal-WIDTH+1] = map[pedestal-WIDTH-1] = Terrain.STATUE;
+
+        map[ pedestal + WIDTH * 3 + 3] =
+        map[ pedestal + WIDTH * 3 - 3] =
+        map[ pedestal - WIDTH * 3 + 3] =
+        map[ pedestal - WIDTH * 3 - 3] = Terrain.WATER;
+
 		feeling = Feeling.NONE;
 		
 		return true;

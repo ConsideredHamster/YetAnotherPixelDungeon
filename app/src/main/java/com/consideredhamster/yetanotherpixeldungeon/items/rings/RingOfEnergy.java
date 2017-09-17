@@ -20,12 +20,21 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
+import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+
+import java.util.HashSet;
+
 public class RingOfEnergy extends Ring {
 	
 	{
-		name = "Ring of Energy";
-        shortName = "En";
+		name = "Ring of Concentration";
+        shortName = "Co";
 	}
+
+    public static final HashSet<Class<? extends DamageType>> RESISTS = new HashSet<>();
+    static {
+        RESISTS.add(DamageType.Mind.class);
+    }
 	
 	@Override
 	protected RingBuff buff( ) {
@@ -35,11 +44,11 @@ public class RingOfEnergy extends Ring {
 	@Override
 	public String desc() {
         return isTypeKnown() ?
-                ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
-                "would be valued greatly by spellcasters of any kind, as all of your carried wands will recharge " +
-                "faster in the energy field that radiates from this ring when it is equipped. Besides, this " +
-                "effect also increases reliability of weapon and armor enchantments." +
-                ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
+                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
+                "was enchanted to improve mental fortitude of it's wearer. Rings of this kind are often used by " +
+                "spellcasters of all kind, since greater willpower helps recharge magical wands much more efficiently. " +
+                "It also offers a minor benefit of making it easier to shrug off all kinds of mind-affecting effects." +
+                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();
 	}
 	
@@ -47,8 +56,8 @@ public class RingOfEnergy extends Ring {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "Suddenly, an aura of vibrant energy surrounds you." :
-                    "Suddenly, some sort of dampening aura surrounds you." ;
+                "Suddenly, you are filled with determination." :
+                "Suddenly, you find it harder to concentrate." ;
         }
 	}
 }

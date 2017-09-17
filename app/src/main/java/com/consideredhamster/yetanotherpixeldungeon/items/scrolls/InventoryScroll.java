@@ -31,7 +31,7 @@ public abstract class InventoryScroll extends Scroll {
 	protected WndBag.Mode mode = WndBag.Mode.ALL;
 	
 	private static final String TXT_WARNING	= "Do you really want to cancel this scroll usage? It will be consumed anyway.";
-	private static final String TXT_YES		= "Yes, I'm positive";
+	private static final String TXT_YES		= "Yes, I know what I'm doing";
 	private static final String TXT_NO		= "No, I changed my mind";
 	
 	@Override

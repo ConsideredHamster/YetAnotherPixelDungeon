@@ -150,9 +150,7 @@ public abstract class MeleeWeaponLightOH extends MeleeWeapon {
                 hero.belongings.weap2 = this;
                 activate(hero);
 
-                GLog.i(TXT_EQUIP, name());
-
-                identify( CURSED_KNOWN );
+                onEquip( hero );
 
                 QuickSlot.refresh();
 

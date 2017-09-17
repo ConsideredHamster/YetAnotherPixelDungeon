@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.HeroSprite;
 import com.consideredhamster.yetanotherpixeldungeon.ui.AttackIndicator;
 import com.watabou.noosa.Camera;
@@ -63,11 +64,12 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
 	}
 
-    protected static final String AC_RELOAD = "RELOAD";
+    public static final String AC_RELOAD = "RELOAD";
 
     protected static final String TXT_POWDER_NEEDED = "You don't have enough gunpowder to reload this gun.";
     protected static final String TXT_NOT_LOADED = "This gun is not loaded.";
     protected static final String TXT_ALREADY_LOADED = "This gun is already loaded.";
+    protected static final String TXT_RELOADING = "reloading...";
 
     @Override
     public int maxDurability() {
@@ -139,9 +141,11 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
         } else if ( !loaded ) {
 
-            if( showMessage ) {
-                GLog.n(TXT_NOT_LOADED);
-            }
+//            if( showMessage ) {
+//                GLog.n(TXT_NOT_LOADED);
+//            }
+
+            execute( hero, AC_RELOAD );
 
         } else  if (ammunition() == null || !ammunition().isInstance( hero.belongings.weap2 )) {
 
@@ -165,7 +169,11 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
             curUser = hero;
             curItem = this;
 
-            if ( checkAmmo( hero, true ) ){
+            if( !loaded ){
+
+                execute( hero, AC_RELOAD );
+
+            } else if ( checkAmmo( hero, true ) ){
 
                 GameScene.selectCell(shooter);
 
@@ -174,11 +182,16 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
         } else if (action == AC_RELOAD) {
 
             curUser = hero;
-            curItem = this;
 
-            Item powder = Dungeon.hero.belongings.getItem( Explosives.Gunpowder.class );
+            if( reload(hero ) ) {
 
-            if (!isEquipped(hero)) {
+                curUser.sprite.operate( curUser.pos );
+
+                curUser.spend( curUser.attackDelay() * 0.5f );
+
+                hero.busy();
+
+            } else if (!isEquipped(hero)) {
 
                 GLog.n( TXT_NOTEQUIPPED );
 
@@ -186,37 +199,48 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
                 GLog.n( TXT_ALREADY_LOADED );
 
-            } else if ( powder == null || powder.quantity < tier ) {
-
-                GLog.n( TXT_POWDER_NEEDED );
-
             } else {
 
-                loaded = true;
-
-                if( powder.quantity <= tier ) {
-
-                    powder.detachAll(Dungeon.hero.belongings.backpack);
-
-                } else {
-                    powder.quantity -= tier;
-                }
-
-                curItem.updateQuickslot();
-
-                curUser.sprite.operate( curUser.pos );
-
-                Sample.INSTANCE.play(Assets.SND_TRAP, 0.6f, 0.6f, 0.5f);
-
-                curUser.spend( curUser.attackDelay() * 0.5f );
-
-                hero.busy();
+                GLog.n( TXT_POWDER_NEEDED );
 
             }
 
         } else {
 
             super.execute( hero, action );
+
+        }
+    }
+
+    public boolean reload( Hero hero){
+
+        curItem = this;
+
+        Item powder = Dungeon.hero.belongings.getItem( Explosives.Gunpowder.class );
+
+        if ( isEquipped(hero) && !loaded && powder != null && tier <= powder.quantity ) {
+
+            loaded = true;
+
+            if( powder.quantity <= tier ){
+
+                powder.detachAll( Dungeon.hero.belongings.backpack );
+
+            } else {
+                powder.quantity -= tier;
+            }
+
+            curItem.updateQuickslot();
+
+            Sample.INSTANCE.play( Assets.SND_TRAP, 0.6f, 0.6f, 0.5f );
+
+            hero.sprite.showStatus( CharSprite.DEFAULT, TXT_RELOADING );
+
+            return true;
+
+        } else {
+
+            return false;
 
         }
     }
@@ -264,6 +288,7 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
                             });
 
                     curWeap.loaded = false;
+                    curWeap.use( 2 );
 
                     Sample.INSTANCE.play(Assets.SND_BLAST, 0.4f + curWeap.tier * 0.2f, 0.4f + curWeap.tier * 0.2f, 1.55f - curWeap.tier * 0.15f);
                     Camera.main.shake(curWeap.tier, 0.1f);
@@ -278,8 +303,8 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
                 });
 
                 for (Mob mob : Dungeon.level.mobs) {
-                    if (Level.distance( cell, mob.pos ) <= 3 + curWeap.tier ) {
-                        mob.beckon( cell );
+                    if ( Level.distance( curUser.pos, mob.pos ) <= 3 + curWeap.tier && mob.pos != cell ) {
+                        mob.beckon( curUser.pos );
                     }
                 }
 

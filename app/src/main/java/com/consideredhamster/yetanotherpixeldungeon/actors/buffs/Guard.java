@@ -20,8 +20,44 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
-public class Guard extends PassiveBuff {
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedWeaponFlintlock;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.watabou.noosa.Camera;
+import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.Bundle;
 
-    public static final float DURATION = 1f;
-	
+public class Guard extends Buff {
+
+    private static String TXT_PARRIED = "parried";
+    private static String TXT_BLOCKED = "blocked";
+
+    private static String TXT_PARRY_BROKEN = "parry failed!";
+    private static String TXT_BLOCK_BROKEN = "block failed!";
+
+    @Override
+    public String toString() {
+        return "Guard";
+    }
+
+    public void reset( boolean withShield ) {
+
+        target.sprite.showStatus(CharSprite.DEFAULT, withShield ? TXT_BLOCK_BROKEN : TXT_PARRY_BROKEN);
+
+    }
+
+    public void proc( boolean withShield ) {
+
+        if( target.sprite.visible ) {
+            Sample.INSTANCE.play( Assets.SND_HIT, 1, 1, 0.5f );
+            target.sprite.showStatus(CharSprite.DEFAULT, withShield ? TXT_BLOCKED : TXT_PARRIED);
+
+            if (target == Dungeon.hero) {
+                Camera.main.shake(2, 0.1f);
+            }
+        }
+    }
+
 }

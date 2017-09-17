@@ -42,6 +42,11 @@ public class Warhammer extends MeleeWeaponHeavyTH {
     public int lootChapter() {
         return super.lootChapter() - 1;
     }
+
+	@Override
+	public Type weaponType() {
+		return Type.M_BLUNT;
+	}
 	
 	@Override
 	public String desc() {

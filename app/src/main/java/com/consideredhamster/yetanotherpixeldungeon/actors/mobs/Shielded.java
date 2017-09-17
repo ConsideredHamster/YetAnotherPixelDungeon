@@ -36,7 +36,7 @@ public class Shielded extends GnollBrute {
     }
 	
 	@Override
-	public int armorClass() {
+	public int armourAC() {
 		return 10;
 	}
 	

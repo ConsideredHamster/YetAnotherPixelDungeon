@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.armours;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfSorcery;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -40,7 +41,6 @@ import com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs.Retribu
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs.Revival;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs.StormWard;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs.Tenacity;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEnergy;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfKnowledge;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
@@ -167,7 +167,6 @@ public abstract class Armour extends EquipableItem {
 			if (hitsToKnow <= 0) {
 				identify();
 				GLog.w( TXT_IDENTIFY, name(), toString() );
-//				Badges.validateItemLevelAcquired(this);
 			}
 		}
 
@@ -178,6 +177,10 @@ public abstract class Armour extends EquipableItem {
 	public String name() {
 		return ( glyph != null && isEnchantKnown() ? glyph.name( this ) : super.name() );
 	}
+
+    public String simpleName() {
+        return name;
+    }
 
     @Override
     public Item uncurse() {
@@ -263,7 +266,8 @@ public abstract class Armour extends EquipableItem {
         public static boolean procced( int bonus ) {
 
             return Random.Float() < 0.125f * ( 1 + Math.abs( bonus ) )
-                    * ( bonus >= 0 ? Dungeon.hero.ringBuffs( RingOfEnergy.Energy.class ) : 1.0f );
+                    * ( bonus >= 0 ? Dungeon.hero.ringBuffs( RingOfSorcery.Sorcery.class ) : 1.0f )
+                    ;
 
         }
 
@@ -277,6 +281,7 @@ public abstract class Armour extends EquipableItem {
 
             return result;
         }
+
         public String name( Armour armor ) {
             return String.format( armor.bonus >= 0 ? name_p() : name_n(), armor.name );
         }

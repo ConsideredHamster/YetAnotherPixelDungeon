@@ -132,20 +132,20 @@ public abstract class Potion extends Item {
 			
 			if (isTypeKnown() && harmful) {
 				
-					GameScene.show( 
-						new WndOptions( TXT_HARMFUL, TXT_R_U_SURE_DRINK, TXT_YES, TXT_NO ) {
-							@Override
-							protected void onSelect(int index) {
-								if (index == 0) {
-									drink( hero );
-								}
-							};
-						}
-					);
-					
-				} else {
-					drink( hero );
-				}
+                GameScene.show(
+                    new WndOptions( TXT_HARMFUL, TXT_R_U_SURE_DRINK, TXT_YES, TXT_NO ) {
+                        @Override
+                        protected void onSelect(int index) {
+                            if (index == 0) {
+                                drink( hero );
+                            }
+                        };
+                    }
+                );
+
+            } else {
+                drink( hero );
+            }
 			
 		} else {
 			

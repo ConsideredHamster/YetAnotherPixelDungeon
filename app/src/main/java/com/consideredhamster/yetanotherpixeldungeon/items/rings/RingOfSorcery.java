@@ -31,51 +31,14 @@ public class RingOfSorcery extends Ring {
 	protected RingBuff buff( ) {
 		return new Sorcery();
 	}
-	
-//	@Override
-//	public Item random() {
-//		bonus = +1;
-//		return this;
-//	}
-//
-//	@Override
-//	public boolean doPickUp( Hero hero ) {
-//		identify();
-//		Badges.validateRingOfThorns();
-//		Badges.validateItemLevelAcquired(this);
-//		return super.doPickUp(hero);
-//	}
-	
-//	@Override
-//	public boolean isUpgradeable() {
-//		return false;
-//	}
-	
-//	@Override
-//	public void use() {
-//		// Do nothing (it can't curse)
-//	}
-	
-//	@Override
-//	public String desc() {
-//		return isTypeKnown() ?
-//			"Though this ring doesn't provide real thorns, an enemy that attacks you " +
-//			"will itself be wounded by a fraction of the damage that it inflicts. " +
-//			"If cursed, it would heal an enemy instead of damaging it." :
-//			super.desc();
-//	}
-//
-//	public class Sorcery extends RingBuff {
-//	}
-
 
     @Override
     public String desc() {
         return isTypeKnown() ?
-               ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
-               "improves your magic skills, increasing your accuracy with your offensive wands. Besides, this ring " +
-               "also improves reliability of your wands, decreasing chance to miscast and increasing chance to squeeze additional charges." +
-               ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
+               ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
+               "improves your magic skills, increasing your accuracy with your combat wands. Besides, this ring " +
+               "also improves reliability of your enchanted equipment, increasing their chances to be activated." +
+               ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();
     }
 
@@ -83,8 +46,8 @@ public class RingOfSorcery extends Ring {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "Your arcane knowledge is improved." :
-                    "Your arcane knowledge is decreased." ;
+                    "Your arcane proficiency is improved." :
+                    "Your arcane proficiency is decreased." ;
         }
     }
 }

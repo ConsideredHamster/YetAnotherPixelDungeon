@@ -24,6 +24,16 @@ import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.DiscArmor;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.MailArmor;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.PlateArmor;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.ScaleArmor;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.SplintArmor;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.KiteShield;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.TowerShield;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.FirebloomHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.IcecapHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.SorrowmossHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.ArmorerKit;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Battery;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.CraftingKit;
@@ -47,14 +57,19 @@ import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMindVi
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfOvergrowth;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfThunderstorm;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfProtection;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfBanishment;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfChallenge;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfClairvoyance;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfDarkness;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfEnchantment;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfPhaseWarp;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfRaiseDead;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfSunlight;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfTorment;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfTransmutation;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfDisintegration;
@@ -99,8 +114,8 @@ public enum HeroClass {
 //            "Argh, to hell with that! You have always been a gambler. Nobody would say that you have let the Reaper claim you the easy way. And, who knows... After all of this is done, maybe you'll keep this trinket for yourself?",
 
             "Nobody can compete with Brigand in dexterity and overall sneakiness, even if he has to limit himself to light armor if he wants to utilize these talents to their fullest.",
-            "Strong, accurate and agile, he would've been the strongest character if not for his disdain of everything magical, especially wands.",
-            "Knowledge of the game mechanics is required to play this class properly, so it can be considered a class for advanced players.",
+            "And he is not lacking in physical fitness or weapon skills either. He would've been the strongest character if not for his disdain of everything magical, especially wands.",
+            "Some knowledge of the game mechanics is required to play this class properly, so it can be considered a class for advanced players.",
     };
 
     public static final String[] MAG_ABOUT = {
@@ -108,8 +123,8 @@ public enum HeroClass {
 //            "All threads lead here. All these years you've spent on seeking the Amulet weren't in vain. The key to all power imaginable, to all knowledge obtainable is hidden in this darkness.",
 //            "You only need to brace yourself and make your first step. Your search has ended here. And here, it has only began.",
 
-            "Scholar is the expert wand user. Wands are both more accurate and recharge much faster than usual in his hands.",
-            "However, decades of study have dulled his senses, decreasing his combat skills and ability to detect traps, forcing him to rely on wands to progress.",
+            "Scholar is the expert wand user. His greater willpower allows him to recharge wands much faster, and he is the most skilled in the arcane arts than other character classes.",
+            "However, decades of study have dulled his senses, decreasing his accuracy and perception, forcing him to rely on wands to progress. He is still somewhat strong and agile, though.",
             "Inability to properly use weapons and reliance on wands make him a bit tricky to play as, and therefore this class is only recommended for veteran players.",
     };
 
@@ -118,8 +133,8 @@ public enum HeroClass {
 //            "Beautiful Artemis, proud Athena and wise Gaia - they have always guided you, sending you insights and prophetic dreams. But, as time went, predictions started to became dark and foreboding.",
 //            "They are crystal-clear now - something grows down there, under this City. Something wicked. And it must be nipped in the bud as soon as possible, or else... No gods would save us.",
 
-            "The Acolyte is blessed with extremely sensitive intuition. Her awareness of surroundings and precision of her strikes are unparalleled, allowing for more reliable usage of ranged weapons.",
-            "Alas, the elven heritage made her body frail and sickly. Her starting strength is lower and her vitality grows much slower with levels when compared with others.",
+            "The Acolyte is blessed with extremely sensitive intuition. Her awareness of surroundings and precision of her strikes are unparalleled, allowing for more reliable counterattacks and ranged attacks.",
+            "Alas, the elven heritage made her body frail and sickly. Her starting strength is lower and her vitality grows slightly slower with levels when compared with others.",
             "This vulnerability makes Acolyte a fairly challenging class, better fit for an expert player rather than someone who still learns how to play.",
     };
 
@@ -129,8 +144,8 @@ public enum HeroClass {
             "\u007F studded armor",
             "\u007F armorer's kit",
             "",
-            "+ strength",
             "+ health",
+            "+ strength",
             "",
             "- dexterity",
             "- stealth",
@@ -146,8 +161,8 @@ public enum HeroClass {
             "+ dexterity",
             "+ stealth",
             "",
-            "- wand skill",
-            "- magic power",
+            "- magic skill",
+            "- willpower",
     };
 
     public static final String[] MAG_DETAILS = {
@@ -157,11 +172,11 @@ public enum HeroClass {
             "\u007F arcane battery",
             "\u007F scroll of Raise Dead",
             "",
-            "+ wand skill",
-            "+ magic power",
+            "+ magic skill",
+            "+ willpower",
             "",
             "- accuracy",
-            "- detection",
+            "- perception",
     };
 
     public static final String[] HUN_DETAILS = {
@@ -171,11 +186,11 @@ public enum HeroClass {
             "\u007F crafting kit",
             "\u007F potion of Overgrowth",
             "",
-            "+ detection",
             "+ accuracy",
+            "+ perception",
             "",
-            "- strength",
             "- health",
+            "- strength",
     };
 	
 	public void initHero( Hero hero ) {

@@ -62,7 +62,7 @@ public class ScrollOfPhaseWarp extends Scroll {
 
         } else {
 
-//            float chance = 0.5f / curUser.magicPower();
+//            float chance = 0.5f / curUser.willpower();
 //
 //            if( chance > Random.Float() ) {
 //

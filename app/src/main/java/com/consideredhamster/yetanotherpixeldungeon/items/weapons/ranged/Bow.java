@@ -41,6 +41,11 @@ public class Bow extends RangedWeaponMissile {
     }
 
 	@Override
+	public Type weaponType() {
+		return Type.R_MISSILE;
+	}
+
+	@Override
 	public String desc() {
 		return "In the hands of a skilled archer, this weapon can be extremely effective.";
 	}

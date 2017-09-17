@@ -83,7 +83,7 @@ public class ScrollOfBanishment extends Scroll {
                         int dmg = (int) (
                                 ( !Bestiary.isBoss(mob) ? mob.HT : mob.HT / 4 )
                                 / Math.sqrt(Level.distance(curUser.pos, mob.pos) )
-                                * curUser.magicPower()
+                                * ( 110 + curUser.magicSkill() ) / 100
                         );
 
                         mob.damage( dmg, curUser, DamageType.DISPEL );
@@ -110,7 +110,8 @@ public class ScrollOfBanishment extends Scroll {
 		return
 			"The incantation on this scroll will attempt to banish any evil magics that might " +
             "happen to exist near the reader, weakening curses on carried items, harming " +
-            "nearby creatures of magical origin and even dispelling some malicious effects.";
+            "nearby creatures of magical origin and even dispelling some malicious effects." +
+            "\n\nDamage inflicted by this scroll depends on magic skill of the reader.";
 	}
 	
 	public static boolean uncurse( Hero hero, Item... items ) {

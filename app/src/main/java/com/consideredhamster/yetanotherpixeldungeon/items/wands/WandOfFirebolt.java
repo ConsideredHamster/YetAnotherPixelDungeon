@@ -67,7 +67,7 @@ public class WandOfFirebolt extends Wand {
 			}
 		}
 
-        if (!Level.water[cell]) {
+        if ( Level.flammable[ cell ] ) {
            GameScene.add(Blob.seed(cell, 2, Fire.class));
         }
 					
@@ -76,7 +76,7 @@ public class WandOfFirebolt extends Wand {
 
             if( Char.hit( curUser, ch, true, true ) ) {
 
-                ch.damage( damageRoll(), curUser, DamageType.FLAME);
+                ch.damage( Char.absorb(damageRoll(), ch.armorClass(), true), curUser, DamageType.FLAME );
 
 //                Burning buff = Buff.affect( ch, Burning.class );
 //
@@ -91,8 +91,8 @@ public class WandOfFirebolt extends Wand {
 
             } else {
 
-                ch.sprite.showStatus(CharSprite.NEUTRAL, ch.defenseVerb());
                 Sample.INSTANCE.play(Assets.SND_MISS);
+                ch.missed();
 
             }
 		}

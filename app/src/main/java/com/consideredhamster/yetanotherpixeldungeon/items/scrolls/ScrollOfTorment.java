@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
+import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
@@ -50,45 +51,51 @@ public class ScrollOfTorment extends Scroll {
 	protected void doRead() {
 
 		int count = 0;
+
 		Mob affected = null;
+
+        int distance = 2 + curUser.magicSkill() / 5;
+
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (Level.fieldOfView[mob.pos] && !mob.isMagical()) {
+
+			if (Level.fieldOfView[mob.pos] && Level.distance( curUser.pos, mob.pos ) <= distance ) {
 
                 new Flare( 6, 32 ).color( SpellSprite.COLOUR_DARK, true ).show(mob.sprite, 2f);
 
-                int damage = (int) (
-                        Random.IntRange( mob.HP / 2, mob.HP )
-                        / Math.sqrt( Level.distance(curUser.pos, mob.pos) + 1 )
-                        * curUser.magicPower()
-                );
+                int baseHP = Math.max( 0, ( !Bestiary.isBoss(mob) ? mob.HP : mob.HP / 4 ) - 1 );
 
-                mob.damage(damage, curUser, DamageType.MIND);
+                int damage = Math.min( baseHP, Random.IntRange( baseHP * 4 / 5, baseHP ) );
 
-                if (!Bestiary.isBoss(mob) && Random.Int( mob.HP ) < damage ) {
-                    Terror buff = Buff.affect(mob, Terror.class, Terror.DURATION);
+                mob.damage( damage, curUser, DamageType.MIND );
 
-                    if (buff != null) buff.object = curUser.id();
-                }
+//                if (!Bestiary.isBoss(mob) && Random.Int( mob.HP ) < damage ) {
+//                    Terror buff = Buff.affect(mob, Terror.class, Terror.DURATION);
+//
+//                    if (buff != null) buff.object = curUser.id();
+//                }
 
 				affected = mob;
                 count++;
             }
 		}
 
-        curUser.damage( (int) ( Random.IntRange( curUser.HP / 3, curUser.HP * 2 / 3 ) / Math.sqrt(count + 1) ), curUser, DamageType.MIND);
+        int baseHP = Math.max( 0, curUser.HP - ( Dungeon.difficulty == Difficulties.IMPOSSIBLE ? 2 : 1 ) );
+
+        curUser.damage( ( Random.IntRange( baseHP * 2 / 5, baseHP / 2 ) ), curUser, DamageType.MIND);
+
         GameScene.flash(SpellSprite.COLOUR_DARK - 0x660000);
         Sample.INSTANCE.play(Assets.SND_FALLING);
         Camera.main.shake(4, 0.3f);
 
 		switch (count) {
-		case 0:
-			GLog.i( "Suddenly your whole mind is engulfed in pure agony!" );
-			break;
-		case 1:
-			GLog.i( "Suddenly your whole mind and the " + affected.name + " start writhing in agony!" );
-			break;
-		default:
-			GLog.i( "Suddenly your whole mind and the creatures around you start writhing in agony!" );
+            case 0:
+                GLog.i( "Suddenly your whole mind is engulfed in pure agony!" );
+                break;
+            case 1:
+                GLog.i( "Suddenly your whole mind and the " + affected.name + " start writhing in agony!" );
+                break;
+            default:
+                GLog.i( "Suddenly your whole mind and the creatures all around you start writhing in agony!" );
 		}
 
 
@@ -100,9 +107,9 @@ public class ScrollOfTorment extends Scroll {
 	public String desc() {
 		return
 			"Upon reading this parchment, a flash of mind-tearing agony will overwhelm both its reader " +
-            "and all living creatures in reader's field of view, even forcing weaker of them to turn " +
-            "and flee. The more targets will be affected by this spell, the less harmful effects of this " +
-            "scroll will be for the reader.";
+            "and all the present creatures in the radius of the effect, bringing most of them to a brink " +
+            "of death - but not any further. The user of this scroll is partially protected from its effect. " +
+            "\n\nRadius of effect of this scroll depends on magic skill of the reader.";
 	}
 	
 	@Override

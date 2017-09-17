@@ -229,7 +229,7 @@ public class Toolbar extends Component {
 		}	
 		@Override
 		public String prompt() {
-			return "Select a cell to examine";
+			return "Select a cell or tap again";
 		}
 	};
 

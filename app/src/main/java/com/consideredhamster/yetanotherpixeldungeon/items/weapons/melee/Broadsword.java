@@ -37,4 +37,9 @@ public class Broadsword extends MeleeWeaponHeavyOH {
 	public String desc() {
 		return "The razor-sharp length of steel blade shines reassuringly.";
 	}
+
+	@Override
+	public Type weaponType() {
+		return Type.M_SWORD;
+	}
 }

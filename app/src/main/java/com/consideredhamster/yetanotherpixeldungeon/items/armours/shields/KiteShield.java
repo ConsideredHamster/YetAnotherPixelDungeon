@@ -34,6 +34,6 @@ public class KiteShield extends Shield {
 	
 	@Override
 	public String desc() {
-		return "This shield gives you a moderateamount of protection in exchange for occupied hand.";
+		return "This shield gives you a moderate amount of protection in exchange for occupied hand.";
 	}
 }

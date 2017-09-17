@@ -38,6 +38,7 @@ import com.consideredhamster.yetanotherpixeldungeon.sprites.ImpSprite;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.MissileSprite;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
+import com.watabou.utils.Random;
 
 import java.util.HashSet;
 
@@ -60,6 +61,7 @@ public class Imp extends MobRanged {
         flying = true;
 
         item = null;
+
     }
 
     @Override
@@ -77,7 +79,7 @@ public class Imp extends MobRanged {
 
     @Override
     public void restoreFromBundle( Bundle bundle ) {
-        super.restoreFromBundle(bundle);
+        super.restoreFromBundle( bundle );
         item = (Item)bundle.get( ITEM );
     }
 
@@ -182,18 +184,22 @@ public class Imp extends MobRanged {
 
                 Item item = hero.belongings.randomVisibleUnequipped();
 
-                if (item != null) {
+                if (item != null ) {
 
-                    Sample.INSTANCE.play( Assets.SND_MIMIC, 1, 1, 1.5f  );
+                    Sample.INSTANCE.play(Assets.SND_MIMIC, 1, 1, 1.5f);
                     GLog.w(TXT_STOLE, this.name, item.name());
 
                     state = FLEEING;
 
-                    item.detachAll(hero.belongings.backpack);
-                    this.item = item;
+                    int amount = Random.IntRange( 1, item.quantity() );
+                    this.item = item.detach( hero.belongings.backpack, amount );
+
+                    if( this.item != null ) {
+                        this.item.quantity(amount);
+                    }
 
                     ((MissileSprite) sprite.parent.recycle(MissileSprite.class)).
-                            reset(enemy.pos, pos, item, null);
+                    reset(enemy.pos, pos, item, null);
 
 //                    spend( attackDelay() * (-1) );
 
@@ -204,17 +210,22 @@ public class Imp extends MobRanged {
 
         } else {
 
-            enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
+            enemy.missed();
 
             return false;
         }
+    }
+
+    @Override
+    public boolean isMagical() {
+        return true;
     }
 
 	@Override
     public String description() {
         return
             "Imps are lesser demons. They are notable neither for their strength nor their magic talent, but for their cruelty " +
-            "and greed. However, some of them are actually quite smart and sociable. Certainly not this one, though... " +
+            "and greed. However, some of them are actually quite nice and sociable. Certainly not this one, though... " +
             ( item != null ? Utils.format( TXT_CARRY, item.name() ) : "" );
     }
 
@@ -222,7 +233,6 @@ public class Imp extends MobRanged {
     public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
 
     static {
-        RESISTANCES.add(DamageType.Flame.class);
         RESISTANCES.add(DamageType.Unholy.class);
     }
 

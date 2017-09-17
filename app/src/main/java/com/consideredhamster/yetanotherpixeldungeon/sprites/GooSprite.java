@@ -45,13 +45,13 @@ public class GooSprite extends MobSprite {
 		
 		texture( Assets.GOO );
 		
-		TextureFilm frames = new TextureFilm( texture, 20, 14 );
+		TextureFilm frames = new TextureFilm( texture, 20, 16 );
 		
 		idle = new Animation( NORMAL_FRAMERATE, true );
-		idle.frames( frames, 0, 1 );
+		idle.frames( frames, 10, 11, 11, 12, 11, 11 );
 		
 		run = new Animation( NORMAL_FRAMERATE, true );
-		run.frames( frames, 0, 1 );
+		run.frames( frames, 10, 11, 12, 11 );
 		
 //		pump = new Animation( NORMAL_FRAMERATE, true );
 //		pump.frames( frames, 0, 1 );
@@ -60,10 +60,10 @@ public class GooSprite extends MobSprite {
 //		jump.frames( frames, 6 );
 		
 		attack = new Animation( NORMAL_FRAMERATE, false );
-		attack.frames( frames, 5, 0, 6 );
+		attack.frames( frames, 13, 14, 15 );
 		
 		die = new Animation( NORMAL_FRAMERATE, false );
-		die.frames( frames, 2, 3, 4 );
+		die.frames( frames, 16, 17, 18, 19 );
 
 		play( idle );
 	}
@@ -111,11 +111,29 @@ public class GooSprite extends MobSprite {
 
         public SpawnSprite() {
             super();
+            texture( Assets.GOO );
 
-            scale.x = 0.8f;
-            scale.y = 0.8f;
+            TextureFilm frames = new TextureFilm( texture, 20, 16 );
 
-            origin.set( width / 2, height / 2 );
+            idle = new Animation( NORMAL_FRAMERATE, true );
+            idle.frames( frames, 0, 1, 1, 2, 1, 1 );
+
+            run = new Animation( NORMAL_FRAMERATE, true );
+            run.frames( frames, 0, 1, 2, 1 );
+
+//		pump = new Animation( NORMAL_FRAMERATE, true );
+//		pump.frames( frames, 0, 1 );
+
+//		jump = new Animation( 1, true );
+//		jump.frames( frames, 6 );
+
+            attack = new Animation( NORMAL_FRAMERATE, false );
+            attack.frames( frames, 3, 4, 5 );
+
+            die = new Animation( NORMAL_FRAMERATE, false );
+            die.frames( frames, 6, 7, 8, 9 );
+
+            play( idle );
         }
     }
 

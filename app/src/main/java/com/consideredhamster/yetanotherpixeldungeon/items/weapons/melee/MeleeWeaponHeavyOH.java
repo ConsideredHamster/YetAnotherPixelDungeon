@@ -22,6 +22,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments.Tempered;
 
 public abstract class MeleeWeaponHeavyOH extends MeleeWeapon {
 
@@ -40,12 +41,12 @@ public abstract class MeleeWeaponHeavyOH extends MeleeWeapon {
 
     @Override
     public int min( int bonus ) {
-        return super.min(bonus) + 1;
+        return super.min(bonus) + ( enchantment instanceof Tempered ? 1 : 0 ) + 1;
     }
 
     @Override
     public int max( int bonus ) {
-        return super.max(bonus) + 4;
+        return super.max(bonus) + ( enchantment instanceof Tempered ? 1 : 0 ) + 4;
     }
 
     @Override

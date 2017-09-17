@@ -22,7 +22,11 @@ package com.consideredhamster.yetanotherpixeldungeon.items.misc;
 
 import java.util.ArrayList;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
@@ -38,18 +42,34 @@ import com.watabou.utils.Bundle;
 public class Waterskin extends Item {
 
 	private static final String AC_DRINK	= "DRINK";
+	private static final String AC_WASH 	= "WASH";
 
 	private static final float TIME_TO_DRINK = 1f;
 
 	private static final String TXT_VALUE	= "%+dHP";
 	private static final String TXT_STATUS	= "%d/%d";
 
-	private static final String TXT_FULL		= "Your waterskin is full!";
-	private static final String TXT_EMPTY		= "Your waterskin is empty!";
-//	private static final String TXT_NEW_SKIN    = "You've found an additional waterskin!";
+	private static final String TXT_FULL		= "Your waterskins are full!";
+	private static final String TXT_EMPTY		= "Your waterskins are empty!";
+
+	private static final String TXT_SPLASH_NOTHING	= "You splash water on yourself. Nothing happens.";
+	private static final String TXT_SPLASH_BURNING	= "You splash water on yourself and burning is extinguished.";
+	private static final String TXT_SPLASH_CAUSTIC	= "You splash water on yourself and ooze is washed away.";
+	private static final String TXT_SPLASH_SPECIAL	= "You splash water on yourself, just in time to save yourself.";
+
+    private static final String TXT_HEALTH_FULL = "Your health is already full.";
+
+    private static final String TXT_HEALTH_HALF = "Your health is not that low yet!";
+
+    private static final String TXT_R_U_SURE =
+            "Drinking from a waterskin only restores part of your missing health, so it is recommended " +
+            "to use it only when you are significantly injured. Are you sure you want to drink it now?";
+
+    private static final String TXT_YES			= "Yes, I know what I'm doing";
+    private static final String TXT_NO			= "No, I changed my mind";
 
 	{
-		name = "waterskin";
+		name = "waterskins";
 		image = ItemSpriteSheet.WATERSKIN;
 		
 		visible = false;
@@ -76,7 +96,7 @@ public class Waterskin extends Item {
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle(bundle);
+		super.restoreFromBundle( bundle );
 		value = bundle.getInt(VALUE);
         limit = bundle.getInt(LIMIT);
 	}
@@ -85,10 +105,11 @@ public class Waterskin extends Item {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 
-        actions.add(AC_DRINK);
+        actions.add( AC_DRINK );
+        actions.add( AC_WASH );
 
         actions.remove( AC_THROW );
-        actions.remove(AC_DROP);
+        actions.remove( AC_DROP );
 
 		return actions;
 	}
@@ -97,38 +118,61 @@ public class Waterskin extends Item {
 	public void execute( final Hero hero, String action ) {
         if (action.equals( AC_DRINK )) {
 
-            if (value > 0) {
+            if( value > 0 ){
 
-                int healthLost = hero.HT - hero.HP;
+                if( hero.HT > hero.HP ){
 
-//                int required = 1;
-//                int required = (int)( healthLost / hero.ringBuffsHalved( RingOfSatiety.Satiety.class ) );
+                    if ( hero.HT < hero.HP * 2 ) {
 
-//                required = Math.max( 1, required / 25 + ( required % 25 < Random.Int( 25 ) ? 1 : 0 ) );
+                        GameScene.show(
+                            new WndOptions( TXT_HEALTH_HALF, TXT_R_U_SURE, TXT_YES, TXT_NO ) {
+                                @Override
+                                protected void onSelect(int index) {
+                                    if (index == 0) {
+                                        drink( hero );
+                                    }
+                                };
+                            }
+                        );
 
-//                int consumed = Math.min( required, value );
+                    } else {
+                        drink( hero );
+                    }
 
-                int value = healthLost * 2 / 3 ;
-//                int value = Random.IntRange( healthLost / 3, healthLost * 2 / 3 )  ;
+                } else {
+                    GLog.w( TXT_HEALTH_FULL);
+                }
+            } else {
+                GLog.w( TXT_EMPTY );
+            }
 
-                value = (int) ( value * hero.ringBuffsHalved( RingOfVitality.Vitality.class ) );
+        } else if( action.equals( AC_WASH ) ){
 
-                int effect = Math.min( healthLost, value );
+            if( value > 0 ){
 
-                if (effect > 0) {
-                    hero.HP += effect;
-                    hero.sprite.showStatus(CharSprite.POSITIVE, TXT_VALUE, effect);
-                    hero.sprite.emitter().burst(Speck.factory(Speck.HEALING), Math.max( 1, (int)Math.sqrt( value ) ) );
+                boolean burning = hero.buffs( Burning.class ) != null;
+                boolean caustic = hero.buffs( Ooze.class ) != null;
+
+                if( burning && caustic ) {
+                    GLog.p( TXT_SPLASH_SPECIAL );
+                } else if( burning ) {
+                    GLog.p( TXT_SPLASH_BURNING );
+                } else if ( caustic ) {
+                    GLog.p( TXT_SPLASH_CAUSTIC );
+                } else {
+                    GLog.p( TXT_SPLASH_NOTHING );
                 }
 
-                this.value --;
-//                this.value -= consumed;
+                Buff.detach( hero, Burning.class );
+                Buff.detach( hero, Ooze.class );
 
-                hero.spend(TIME_TO_DRINK);
+                this.value--;
+
+                hero.spend( TIME_TO_DRINK );
                 hero.busy();
 
-                Sample.INSTANCE.play(Assets.SND_DRINK);
-                hero.sprite.operate(hero.pos);
+                Sample.INSTANCE.play( Assets.SND_DRINK );
+                hero.sprite.operate( hero.pos );
 
                 updateQuickslot();
 
@@ -137,11 +181,39 @@ public class Waterskin extends Item {
             }
 
         } else {
-			
+
 			super.execute(hero, action);
 			
 		}
 	}
+
+    private void drink( Hero hero ) {
+
+        int healthLost = hero.HT - hero.HP;
+
+        int value = healthLost * 2 / 3;
+
+        value = (int) ( value * hero.ringBuffsHalved( RingOfVitality.Vitality.class ) );
+
+        int effect = Math.min( healthLost, value );
+
+        if( effect > 0 ){
+            hero.HP += effect;
+            hero.sprite.showStatus( CharSprite.POSITIVE, TXT_VALUE, effect );
+            hero.sprite.emitter().burst( Speck.factory( Speck.HEALING ), Math.max( 1, (int) Math.sqrt( value ) ) );
+        }
+
+        this.value--;
+
+        hero.spend( TIME_TO_DRINK );
+        hero.busy();
+
+        Sample.INSTANCE.play( Assets.SND_DRINK );
+        hero.sprite.operate( hero.pos );
+
+        updateQuickslot();
+
+    }
 	
 	public boolean isFull() {
 		return value >= limit;
@@ -228,9 +300,9 @@ public class Waterskin extends Item {
 	@Override
 	public String info() {
 		return 
-			"This is a receptacle made for storing water. Quaffing from it recovers " +
-            "part of the lost health. It can be refilled in wells. Any additional " +
-            "waterskins found will increase the amount of water you can carry with you.";
+			"These are a receptacles made for storing water. Quaffing from one recovers " +
+            "part of the lost health. They can be refilled in wells. Any additional " +
+            "waterskins obtained will increase the amount of water you can carry with you.";
 	}
 	
 	@Override

@@ -79,7 +79,7 @@ public class Bee extends NPC {
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc( Char enemy, int damage, boolean blocked ) {
 		if (enemy instanceof Mob) {
 			((Mob)enemy).aggro( this );
 		}

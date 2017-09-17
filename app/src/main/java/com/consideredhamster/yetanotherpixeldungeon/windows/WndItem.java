@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.windows;
 
+import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.watabou.noosa.BitmapTextMultiline;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
@@ -37,7 +38,8 @@ public class WndItem extends Window {
 	
 	private static final float GAP	= 2;
 	
-	private static final int WIDTH = 120;
+	private static final int WIDTH_P = 120;
+    private static final int WIDTH_L = 240;
 
     private BitmapTextMultiline normal;
     private BitmapTextMultiline highlighted;
@@ -45,7 +47,9 @@ public class WndItem extends Window {
 	public WndItem( final WndBag owner, final Item item ) {	
 		
 		super();
-		
+
+        int width = YetAnotherPixelDungeon.landscape() ? WIDTH_L : WIDTH_P ;
+
 		IconTitle titlebar = new IconTitle();
 		titlebar.icon( new ItemSprite( item.image(), item.glowing() ) );
 		titlebar.label( Utils.capitalize( item.toString() ) );
@@ -54,7 +58,7 @@ public class WndItem extends Window {
 
 			titlebar.health( (float)item.durability() / item.maxDurability() );
 		}
-		titlebar.setRect( 0, 0, WIDTH, 0 );
+		titlebar.setRect( 0, 0, width, 0 );
 		add( titlebar );
 		
 		if (item.isIdentified() && item.bonus > 0) {
@@ -73,7 +77,7 @@ public class WndItem extends Window {
         Highlighter hl = new Highlighter( item.info() );
 
         normal = PixelScene.createMultiline( hl.text, 6 );
-        normal.maxWidth = WIDTH;
+        normal.maxWidth = width;
         normal.measure();
         normal.x = titlebar.left();
         normal.y = titlebar.bottom() + GAP;
@@ -109,7 +113,7 @@ public class WndItem extends Window {
 					};
 				};
 				btn.setSize( Math.max( BUTTON_WIDTH, btn.reqWidth() ), BUTTON_HEIGHT );
-				if (x + btn.width() > WIDTH) {
+				if (x + btn.width() > width) {
 					x = 0;
 					y += BUTTON_HEIGHT + GAP;
 				}
@@ -124,6 +128,6 @@ public class WndItem extends Window {
 			}
 		}
 		
-		resize( WIDTH, (int)(y + (x > 0 ? BUTTON_HEIGHT : 0)) );
+		resize( width, (int)(y + (x > 0 ? BUTTON_HEIGHT : 0)) );
 	}
 }

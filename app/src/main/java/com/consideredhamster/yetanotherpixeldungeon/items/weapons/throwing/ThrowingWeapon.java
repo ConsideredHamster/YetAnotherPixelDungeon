@@ -104,14 +104,18 @@ public abstract class ThrowingWeapon extends Weapon {
     }
 
     @Override
+    public int priceModifier() { return 2; }
+
+    @Override
     public Item random() {
-        quantity = Random.Int( baseAmount(), baseAmount() * 2);
 
-        int delta = lootChapter() - Dungeon.chapter();
+        quantity = baseAmount();
 
-        if( delta > 0 ) {
-            quantity = Math.max( 1, quantity / ( delta + 1 ) );
-        }
+        quantity += Random.Int( quantity + 1 );
+
+        quantity = quantity * ( 4 + Dungeon.chapter() - lootChapter() ) / 4;
+
+        quantity = Math.max( 1, quantity );
 
         return this;
     }

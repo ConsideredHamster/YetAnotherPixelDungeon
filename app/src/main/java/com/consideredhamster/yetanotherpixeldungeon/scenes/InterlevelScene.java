@@ -84,28 +84,26 @@ public class InterlevelScene extends PixelScene {
             "Trapped and flooded vaults are less likely to have cursed item in them",
             "Special rooms with tombs or animated statues will never have their prize cursed",
 
-            "Detection determines the time it takes to search for traps and secret doors",
-            "Detection affects your chances to notice a trap or a secret door by walking near it",
-            "Detection affects your chances to hear nearby enemies through walls and doors",
-            "Your chance to wake up when there is a someone nearby depends on your Detection",
-            "Your chance to detect cursed item when equipping it depends on your Detection",
+            "Perception determines the time it takes to search for traps and secret doors",
+            "Perception affects your chances to notice a trap or a secret door by walking near it",
+            "Perception affects your chances to hear nearby enemies while exploring or sleeping",
+            "Your chance to expose your attacker depends on your Perception attribute",
 
             "Stealth determines your chances of being noticed by enemies",
             "Stealth affects your chances to ambush an enemy to deal a sneak attack",
 
-            "Magic power affects recharge rate of all of your wands",
-            "Magic power affects effectiveness of some of the scrolls",
+            "Willpower significantly affects recharge rate of all of your wands",
+            "Your chance to prevent equipping a cursed item depends on your Willpower",
+            "Willpower influences your chances to miscast with a wand or squeeze additional charge",
 
-            "Your wand skill affects your accuracy with combat wands",
-            "Your wand skill improves damage of your wand of Magic Missile",
-
-            "Your chance to parry an attack instead of blocking it depends on your Accuracy",
-            "Parries leave your enemies open to counter attacks which deal 50% bonus damage",
+            "Magic skill affects effectiveness of some of the scrolls",
+            "Your magic skill affects your accuracy with combat wands",
+            "Your magic skill improves damage of your wand of Magic Missile",
 
             "High Strength increases your chances to break free when ensnared",
             "Your health regeneration rate grows with levels and potions of Strength used",
 
-            "Your health regeneration is tripled while you are sleeping on land",
+            "Your health regeneration is tripled while you are sleeping on dry land",
             "You do not regenerate any health while you are starving, burning or poisoned",
 
             "Amount of loot and special rooms increases as you descend deeper into the dungeon",
@@ -126,7 +124,7 @@ public class InterlevelScene extends PixelScene {
             "Stronger shields and body armors usually decrease your dexterity and stealth",
 
             "Your chance to block an attack depends on armor class of your shield and damage of your weapon",
-            "A successful block can become a parry, depending on your chance to hit the target",
+            "A successful block can expose your attacker, leaving it open to a counterattack",
 
             "Excess strength decreases penalties from heavy equipment",
             "Stronger flintlock weapons require more gunpowder to reload",
@@ -145,8 +143,8 @@ public class InterlevelScene extends PixelScene {
 
             // WANDS & RINGS
 
-            "Combat wands always have a chance to miscast, which depends on their quality level",
-            "Combat wands have a chance to squeeze additional charge, which depends on their quality level",
+            "Combat wands always have a chance to miscast, which mostly depends on their quality level",
+            "Combat wands have a chance to squeeze additional charge, which mostly depends on their quality level",
 
             "Recharge rate of utility wands depends on their quality and upgrade levels",
             "Utility wands always spend all of their charges on use",
@@ -165,7 +163,7 @@ public class InterlevelScene extends PixelScene {
             "There are only 2 potions of Strength per chapter but there is a low chance to find more",
             "Potion of Strength can be used to dispel weakness",
 
-            "Potions of Mending also can dispel the Withered status effect",
+            "There is always at least one potion of Mending in every shop",
             "Potions of Mending also cure most physical debuffs such as poison or bleeding",
 
             "Potions of Mind Vision allow you to ignore most of disadvantages of being blind",
@@ -184,7 +182,7 @@ public class InterlevelScene extends PixelScene {
             "Potions of Liquid Flame always affect nearby flammable tiles",
 
             "You can quickly put out fire in a room with a help of a potion of Frigid Vapours",
-            "Potion of Frigid Vapours can be used to escape or to land a killing blow",
+            "Potion of Frigid Vapours are more useful against targets standing in the water",
 
             "Some gases are highly flammable - be careful when using potions of Corrosive Gas",
             "Potions of Corrosive Gas are very effective against crowds of enemies",
@@ -250,7 +248,7 @@ public class InterlevelScene extends PixelScene {
             // BOSSES
 
             "Most bosses can become enraged, but only three times per fight",
-            "Bosses are less vulnerable to damage which is based on target's maximum health",
+            "Bosses are quite vulnerable to explosives, potions and scrolls.",
 
             "Mind that miasma released by Goo is highly flammable",
             "Dwarven King's ritual can be disrupted by a certain spell...",

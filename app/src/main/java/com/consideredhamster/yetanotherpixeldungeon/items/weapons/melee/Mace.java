@@ -32,6 +32,11 @@ public class Mace extends MeleeWeaponHeavyOH {
 	public Mace() {
 		super( 2 );
 	}
+
+	@Override
+	public Type weaponType() {
+		return Type.M_BLUNT;
+	}
 	
 	@Override
 	public String desc() {

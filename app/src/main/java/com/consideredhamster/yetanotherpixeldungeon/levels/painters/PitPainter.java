@@ -84,7 +84,6 @@ public class PitPainter extends Painter {
 		return Generator.random( Random.oneOf( 
 			Generator.Category.POTION, 
 			Generator.Category.SCROLL,
-			Generator.Category.FOOD, 
 			Generator.Category.GOLD
 		) );
 	}

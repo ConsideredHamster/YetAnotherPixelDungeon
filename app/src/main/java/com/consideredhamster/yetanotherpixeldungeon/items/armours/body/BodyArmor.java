@@ -20,7 +20,10 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.body;
 
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.ui.QuickSlot;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.GameMath;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
@@ -46,16 +49,15 @@ public abstract class BodyArmor extends Armour {
 		
 		if ( ( hero.belongings.armor == null || hero.belongings.armor.doUnequip( hero, true, false ) ) &&
                 ( bonus >= 0 || isCursedKnown() || !detectCursed( this, hero ) ) ) {
-			
+
 			hero.belongings.armor = this;
 
-            GLog.i(TXT_EQUIP, name());
+            ((HeroSprite)hero.sprite).updateArmor();
 
-            identify( CURSED_KNOWN );
-			
-			((HeroSprite)hero.sprite).updateArmor();
-			
+            onEquip( hero );
+
 			hero.spendAndNext(time2equip(hero));
+
 			return true;
 			
 		} else {
@@ -106,7 +108,7 @@ public abstract class BodyArmor extends Armour {
     public int dr( int bonus ) {
         return tier * ( 4 + state )
                 + ( glyph instanceof Durability || bonus >= 0 ? tier * bonus : 0 )
-                + ( glyph instanceof Durability && bonus >= 0 ? tier + bonus - 1 : 0 ) ;
+                + ( glyph instanceof Durability && bonus >= 0 ? 2 + bonus : 0 ) ;
     }
 
     @Override

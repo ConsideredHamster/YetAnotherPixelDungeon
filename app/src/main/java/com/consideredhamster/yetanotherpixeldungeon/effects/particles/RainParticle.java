@@ -55,6 +55,7 @@ public class RainParticle extends PixelParticle {
 		
 		offs = -Random.Float( lifespan );
 		left = lifespan - offs;
+        angle = 15;
 	}
 	
 	@Override

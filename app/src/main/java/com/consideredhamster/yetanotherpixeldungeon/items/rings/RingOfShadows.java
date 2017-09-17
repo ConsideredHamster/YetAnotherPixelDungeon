@@ -35,9 +35,9 @@ public class RingOfShadows extends Ring {
 	@Override
 	public String desc() {
         return isTypeKnown() ?
-               ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
+               ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
                "makes it harder for enemies to notice you when you are wearing it and increases damage dealt to unaware opponents." +
-               ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
+               ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();
 	}
 	public class Shadows extends RingBuff {

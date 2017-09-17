@@ -38,9 +38,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.Shield;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAccuracy;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEnergy;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfConcentration;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEvasion;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfPerception;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAwareness;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfSorcery;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
@@ -58,12 +58,12 @@ public class WndHero extends WndTabbed {
 	private static final String TXT_STR		= "Strength";
 	private static final String TXT_HEALTH	= "Health";
 	private static final String TXT_SATIETY	= "Satiety";
-	private static final String TXT_AWARNSS	= "Detection";
-	private static final String TXT_STEALTH	= "Stealth";
-	private static final String TXT_WILLPWR = "Magic power";
-	private static final String TXT_OFFENSE = "Accuracy";
+    private static final String TXT_STEALTH	= "Stealth";
+    private static final String TXT_WILLPWR = "Willpower";
+    private static final String TXT_AWARNSS	= "Perception";
+    private static final String TXT_OFFENSE = "Accuracy";
 	private static final String TXT_DEFENSE	= "Dexterity";
-	private static final String TXT_MAGIC	= "Wand skill";
+	private static final String TXT_WNDSKLL = "Magic skill";
 	private static final String TXT_GOLD	= "Gold Collected";
 	private static final String TXT_DEPTH	= "Maximum Depth";
 	
@@ -166,7 +166,8 @@ public class WndHero extends WndTabbed {
                 statSlot( TXT_OFFENSE, (
                         hero.belongings.ring1 instanceof RingOfAccuracy && !hero.belongings.ring1.isIdentified() ||
                         hero.belongings.ring2 instanceof RingOfAccuracy && !hero.belongings.ring2.isIdentified() ||
-                        !hero.belongings.weap1.isIdentified() || !hero.belongings.weap2.isIdentified() ?
+                        hero.belongings.weap1 != null && !hero.belongings.weap1.isIdentified() ||
+                        hero.belongings.weap2 != null && !hero.belongings.weap2.isIdentified() ?
                     "??" : ( ( hero.baseAcc( hero.belongings.weap1, false ) + hero.baseAcc( (Weapon)hero.belongings.weap2, false ) ) / 2 ) ) + " (" + hero.attackSkill + ")" );
 
             } else if ( hero.belongings.weap1 != null ) {
@@ -204,7 +205,7 @@ public class WndHero extends WndTabbed {
                         hero.belongings.weap2.incompatibleWith( hero.belongings.weap1 ) && !hero.belongings.weap1.isIdentified() )
                     ? "??" : hero.baseDex(false) ) + " (" + hero.defenseSkill + ")");
 
-			statSlot( TXT_MAGIC, (
+			statSlot(TXT_WNDSKLL, (
                         hero.belongings.ring1 instanceof RingOfSorcery && !hero.belongings.ring1.isIdentified() ||
                         hero.belongings.ring2 instanceof RingOfSorcery && !hero.belongings.ring2.isIdentified() ?
                     "??" : hero.magicSkill() ) + " (" + hero.magicSkill + ")" );
@@ -216,14 +217,14 @@ public class WndHero extends WndTabbed {
 
             statSlot(TXT_WILLPWR, (
                     hero.belongings.armor instanceof MageArmor && !hero.belongings.armor.isIdentified() ||
-                            hero.belongings.ring1 instanceof RingOfEnergy && !hero.belongings.ring1.isIdentified() ||
-                            hero.belongings.ring2 instanceof RingOfEnergy && !hero.belongings.ring2.isIdentified() ?
-                            "??" : (int)( hero.magicPower() * 100 ) ) + "%" );
+                            hero.belongings.ring1 instanceof RingOfConcentration && !hero.belongings.ring1.isIdentified() ||
+                            hero.belongings.ring2 instanceof RingOfConcentration && !hero.belongings.ring2.isIdentified() ?
+                            "??" : (int)( hero.willpower() * 100 ) ) + "%" );
 
             statSlot( TXT_AWARNSS, (
                         hero.belongings.armor instanceof HuntressArmor && !hero.belongings.armor.isIdentified() ||
-                        hero.belongings.ring1 instanceof RingOfPerception && !hero.belongings.ring1.isIdentified() ||
-                        hero.belongings.ring2 instanceof RingOfPerception && !hero.belongings.ring2.isIdentified() ?
+                        hero.belongings.ring1 instanceof RingOfAwareness && !hero.belongings.ring1.isIdentified() ||
+                        hero.belongings.ring2 instanceof RingOfAwareness && !hero.belongings.ring2.isIdentified() ?
                     "??" : (int)( hero.awareness() * 100 ) ) + "%" );
 
             statSlot( TXT_STEALTH, (

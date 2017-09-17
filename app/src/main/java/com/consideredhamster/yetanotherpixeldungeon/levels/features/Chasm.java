@@ -168,12 +168,12 @@ public class Chasm {
                 dmg = hero.HT * 5 / hero.STR();
             }
 
-            hero.damage(Char.absorb(dmg, hero.armorClass()), CHASM, DamageType.FALLING);
+            if ( hero.isAlive()) {
+                hero.damage(Char.absorb(dmg, hero.armorClass()), CHASM, DamageType.FALLING);
+            } else {
+                hero.die(CHASM, DamageType.FALLING);
+            }
 
-//        if ( !hero.isAlive()) {
-//            Dungeon.fail( Utils.format( ResultDescriptions.FALL, Dungeon.depth ) );
-//            GLog.n( "You fell to death..." );
-//        }
         }
 	}
 

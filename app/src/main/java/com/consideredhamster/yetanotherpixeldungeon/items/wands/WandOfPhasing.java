@@ -51,7 +51,7 @@ public class WandOfPhasing extends WandUtility {
 //			ScrollOfPhasing.teleportHero(curUser);
 //
 //		} else
-        if (ch != null ) {
+        if ( ch != null && !ch.immovable() ) {
 
 //            if (Char.hit(curUser, ch, true, true)) {
 

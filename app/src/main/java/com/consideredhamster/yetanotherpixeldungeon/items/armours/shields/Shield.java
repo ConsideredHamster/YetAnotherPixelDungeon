@@ -20,6 +20,9 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.shields;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Guard;
 import com.watabou.utils.GameMath;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
@@ -73,11 +76,10 @@ public abstract class Shield extends Armour {
 
             }  else {
 
-//                Buff.affect(hero, Guard.class, Guard.DURATION);
-                hero.guarded = true;
+                Buff.affect(hero, Guard.class );
 
                 hero.sprite.showStatus(CharSprite.DEFAULT, TXT_GUARD);
-                hero.spendAndNext( 1.0f );
+                hero.spendAndNext( Actor.TICK );
 
             }
 
@@ -107,9 +109,7 @@ public abstract class Shield extends Armour {
 
 			hero.belongings.weap2 = this;
 
-            GLog.i(TXT_EQUIP, name());
-
-            identify( CURSED_KNOWN );
+            onEquip( hero );
 
             QuickSlot.refresh();
 			
@@ -160,7 +160,7 @@ public abstract class Shield extends Armour {
     public int dr( int bonus ) {
         return 5 - tier + tier * state
                 + ( glyph instanceof Durability || bonus >= 0 ? tier * bonus : 0 )
-                + ( glyph instanceof Durability && bonus >= 0 ? tier + bonus - 1 : 0 ) ;
+                + ( glyph instanceof Durability && bonus >= 0 ? 2 + bonus : 0 ) ;
     }
 
     @Override
@@ -211,7 +211,7 @@ public abstract class Shield extends Armour {
         if (isIdentified()) {
             info.append( "This _tier-" + tier + " shield_ requires _" + itemStr + " points of strength_ to use effectively and" +
                     ( isRepairable() ? ", given its _" + stateToString( state ) + " condition_, " : " " ) +
-                    "will increase your _armor class by " + armor + " points_.");
+                    "will occasionally increase your _armor class by " + armor + " points_.");
 
             info.append( p );
 
@@ -232,7 +232,7 @@ public abstract class Shield extends Armour {
         } else {
             info.append(  "Usually _tier-" + tier + " shields_ require _" + itemStr + " points of strength_ to be used effectively and" +
                     ( isRepairable() ? ", when in _" + stateToString( state ) + " condition_, " : " " ) +
-                    "will increase your _armor class by " + armor + " points_." );
+                    "will occasionally increase your _armor class by " + armor + " points_." );
 
             info.append( p );
 
@@ -249,7 +249,7 @@ public abstract class Shield extends Armour {
                 info.append(
                         "While you are using this shield, your stealth and dexterity probably will " +
                                 ( penalty > 0 ? "be _decreased by " + penalty + "%_" : "_not be decreased_" ) +
-                                ", unless your strength will be different from this armor's actual strength requirement." );
+                                ", unless your strength will be different from this shield's actual strength requirement." );
             }
         }
 

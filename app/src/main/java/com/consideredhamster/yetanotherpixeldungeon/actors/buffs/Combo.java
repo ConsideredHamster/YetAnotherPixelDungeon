@@ -31,11 +31,6 @@ public class Combo extends Buff {
 	private static String TXT_COMBO = "combo %dx!";
 	
 	public int count = 0;
-	
-//	@Override
-//	public int icon() {
-//		return BuffIndicator.COMBO;
-//	}
 
     private static final String COUNT	= "count";
 
@@ -60,26 +55,26 @@ public class Combo extends Buff {
 
 		count++;
 
-        if (count >= 3) {
+        if (target.sprite.visible && count >= 3) {
             target.sprite.showStatus(CharSprite.DEFAULT, TXT_COMBO, count);
         }
 
         if( target instanceof Hero && ((Hero) target).rangedWeapon instanceof RangedWeaponFlintlock ) {
 
-            postpone( target.attackDelay() * 3 / 2 + Float.MIN_VALUE );
+            postpone( target.attackDelay() * 3 / 2 * 1.1f );
 
         } else {
 
-            postpone( target.attackDelay() + Float.MIN_VALUE );
+            postpone( target.attackDelay() * 1.1f );
 
         }
 	}
 
     public float modifier() {
 
-        if (count >= 2) {
+        if ( count > 2 ) {
 
-            return (count - 1) * 0.125f;
+            return ( count - 2 ) * 0.125f;
 
         } else {
 
@@ -93,5 +88,4 @@ public class Combo extends Buff {
 		detach();
 		return true;
 	}
-	
 }

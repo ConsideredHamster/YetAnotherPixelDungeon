@@ -105,7 +105,7 @@ public class WandOfAvalanche extends Wand {
 
                         } else {
 
-                            ch.sprite.showStatus(CharSprite.NEUTRAL, ch.defenseVerb());
+                            ch.missed();
 
                         }
                     }

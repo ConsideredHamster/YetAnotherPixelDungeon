@@ -119,7 +119,7 @@ public class GnollShaman extends MobRanged {
 
         } else {
 
-            enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
+            enemy.missed();
 
         }
 

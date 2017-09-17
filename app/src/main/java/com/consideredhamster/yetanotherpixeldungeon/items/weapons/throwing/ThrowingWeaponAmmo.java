@@ -73,9 +73,6 @@ public abstract class ThrowingWeaponAmmo extends ThrowingWeapon {
     }
 
     @Override
-    public int priceModifier() { return 2; }
-
-    @Override
     public String info() {
 
         final String p = "\n\n";

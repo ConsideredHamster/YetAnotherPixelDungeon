@@ -23,8 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.watabou.noosa.Camera;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAwareness;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Challenges;
@@ -41,7 +40,6 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Enraged;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Sleep;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Summoned;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Terror;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
@@ -56,7 +54,6 @@ import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 //import com.consideredhamster.yetanotherpixeldungeon.items.weap1.melee.Dagger;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfFortune;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfKnowledge;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponAmmo;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
@@ -65,7 +62,6 @@ import com.consideredhamster.yetanotherpixeldungeon.ui.HealthIndicator;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 
 public abstract class Mob extends Char {
@@ -104,6 +100,8 @@ public abstract class Mob extends Char {
 	protected boolean enemySeen;
 	protected boolean alerted = false;
 	protected static final float TIME_TO_WAKE_UP = 1f;
+	protected static final float CHANCE_TO_BLOCK = 0.5f;
+	protected static final float CHANCE_TO_PARRY = 0.25f;
 
 //	protected float chanceToWakeUp      = 0.05f;
 //	protected float chanceToFallAsleep  = 0.25f;
@@ -148,7 +146,7 @@ public abstract class Mob extends Char {
 
     @Override
     public int dexterity() {
-        return enemySeen && !stunned && !counter ? dexterity : 0;
+        return enemySeen && !stunned ? dexterity : 0;
     }
 
     @Override
@@ -159,12 +157,12 @@ public abstract class Mob extends Char {
     @Override
     public int armourAC() {
 
-        int ac = armorClass;
+        return armorClass;
 
-//        if( buff( Withered.class ) != null )
-//            ac = (int)( ac * buff( Withered.class ).modifier() );
+    }
 
-        return ac;
+    public float guardChance() {
+        return enemySeen && !stunned? super.guardChance() : 0.0f;
     }
 
     @Override
@@ -563,40 +561,40 @@ public abstract class Mob extends Char {
         return attack(enemy);
     }
 
-
-	
 	@Override
 	public int defenseProc( Char enemy, int damage, boolean blocked ) {
-		if ( dexterity() == 0 && enemy instanceof Hero ) {
 
-            Hero hero = (Hero)enemy;
+        if (dexterity() == 0 && enemy instanceof Hero) {
+
+            Hero hero = (Hero) enemy;
 
             Weapon weapon = hero.rangedWeapon != null ? hero.rangedWeapon : hero.currentWeapon;
 
-            if( !counter ) {
-
-                if (weapon != null && weapon.canBackstab()) {
-                    damage += hero.damageRoll();
-                    Wound.hit(this);
-                }
-
-                damage = (int) (damage * hero.ringBuffs(RingOfShadows.Shadows.class));
-
-                if( sprite != null ) {
-                    sprite.showStatus(CharSprite.DEFAULT, TXT_AMBUSH);
-                }
-
-            } else {
-
-                damage += hero.damageRoll() / 2;
-                sprite.emitter().burst(Speck.factory(Speck.MASTERY), 6);
-
-                if( sprite != null ) {
-                    sprite.showStatus(CharSprite.DEFAULT, TXT_COUNTER);
-                }
-
+            if (weapon != null && weapon.canBackstab()) {
+                damage += hero.damageRoll();
+                Wound.hit(this);
             }
+
+            damage = (int) (damage);
+
+            if (sprite != null) {
+                sprite.showStatus(CharSprite.DEFAULT, TXT_AMBUSH);
+            }
+
         }
+
+        if( isOpenedTo( enemy ) ) {
+
+            damage += enemy.damageRoll() * enemy.ringBuffs( RingOfAwareness.Awareness.class ) * 0.5f;
+
+            sprite.emitter().burst(Speck.factory(Speck.MASTERY), 6);
+
+            if( sprite != null ) {
+                sprite.showStatus(CharSprite.DEFAULT, TXT_COUNTER);
+            }
+
+        }
+
 		return damage;
 	}
 	
@@ -665,8 +663,15 @@ public abstract class Mob extends Char {
 	
 	@Override
 	public void die( Object cause, DamageType dmg ) {
-		
+
+
 		super.die(cause, dmg);
+
+        if (Dungeon.visible[pos]) {
+
+            GLog.i(TXT_DEFEAT, name);
+
+        }
 
 //		if (Dungeon.hero.lvl <= maxLvl + 2) {
 			dropLoot();

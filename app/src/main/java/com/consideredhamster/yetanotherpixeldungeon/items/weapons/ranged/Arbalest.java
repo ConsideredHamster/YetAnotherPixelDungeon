@@ -39,6 +39,11 @@ public class Arbalest extends RangedWeaponMissile {
     public Class<? extends ThrowingWeaponAmmo> ammunition() {
         return Quarrels.class;
     }
+
+	@Override
+	public Type weaponType() {
+		return Type.R_MISSILE;
+	}
 	
 	@Override
 	public String desc() {

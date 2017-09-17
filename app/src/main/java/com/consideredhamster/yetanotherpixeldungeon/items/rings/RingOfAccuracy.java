@@ -35,10 +35,10 @@ public class RingOfAccuracy extends Ring {
 	@Override
 	public String desc() {
 		return isTypeKnown() ?
-                ( bonus < 0 ? "Normally, this ring " : "This ring " ) +
+                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
                 "improves your combat skills when worn, increasing your chance to hit the enemy with melee or ranged weapons and " +
                 "increasing bonus damage from series of combo attacks." +
-                ( bonus < 0 ? " However, because this ring is cursed, its effects are reversed." : "" ) :
+                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
 			super.desc();
 	}
 	

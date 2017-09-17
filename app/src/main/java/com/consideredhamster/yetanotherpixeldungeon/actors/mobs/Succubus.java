@@ -41,7 +41,7 @@ import com.consideredhamster.yetanotherpixeldungeon.sprites.SuccubusSprite;
 
 public class Succubus extends MobPrecise {
 	
-	private static final int BLINK_DELAY	= 5;
+	private static final int BLINK_DELAY = 6;
 	
 	private int delay = 0;
 
@@ -58,8 +58,9 @@ public class Succubus extends MobPrecise {
 
     @Override
     protected boolean canAttack( Char enemy ) {
-        return super.canAttack( enemy ) || Level.distance( pos, enemy.pos ) <= 2
-                && Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos && !enemy.isCharmedBy( this ) && !isCharmedBy( enemy );
+        return ( super.canAttack( enemy ) ||
+            Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos
+            && !enemy.isCharmedBy( this ) ) && !isCharmedBy( enemy );
     }
 
     @Override
@@ -94,7 +95,7 @@ public class Succubus extends MobPrecise {
 
         } else {
 
-            enemy.sprite.showStatus(CharSprite.NEUTRAL, enemy.defenseVerb());
+            enemy.missed();
 
         }
 
@@ -102,9 +103,9 @@ public class Succubus extends MobPrecise {
     }
 
     @Override
-    public int attackProc( Char enemy, int damage ) {
+    public int attackProc( Char enemy, int damage, boolean blocked ) {
 
-        if ( isAlive() && !enemy.isMagical() ) {
+        if ( !blocked && isAlive() && !enemy.isMagical() ) {
 
             int reg = Math.min(Random.Int(damage + 1), HT - HP);
 
@@ -118,7 +119,7 @@ public class Succubus extends MobPrecise {
             }
         }
 
-        return super.attackProc( enemy, damage );
+        return damage;
     }
 
 //    public void onZapComplete() {
@@ -156,6 +157,11 @@ public class Succubus extends MobPrecise {
 		
 		delay = BLINK_DELAY;
 	}
+
+    @Override
+    public boolean isMagical() {
+        return true;
+    }
 	
 	@Override
 	public String description() {

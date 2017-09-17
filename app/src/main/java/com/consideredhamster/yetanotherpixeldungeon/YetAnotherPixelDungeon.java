@@ -45,6 +45,14 @@ public class YetAnotherPixelDungeon extends Game {
                 com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability.class,
                 "com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfHaste" );
 
+        com.watabou.utils.Bundle.addAlias(
+                com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfConcentration.class,
+                "com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEnergy" );
+
+        com.watabou.utils.Bundle.addAlias(
+                com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAwareness.class,
+                "com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfPerception" );
+
 	}
 	
 	@Override
@@ -60,6 +68,8 @@ public class YetAnotherPixelDungeon extends Game {
 		if (Preferences.INSTANCE.getBoolean( Preferences.KEY_LANDSCAPE, false ) != landscape) {
 			landscape( !landscape );
 		}
+
+        Badges.loadGlobal();
 		
 		Music.INSTANCE.enable( music() );
 		Sample.INSTANCE.enable( soundFx() );

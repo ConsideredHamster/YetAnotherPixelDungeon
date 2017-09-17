@@ -30,6 +30,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.DwarfMonk;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.DwarvenKing;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.GnollBrute;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Golem;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mimic;
@@ -50,7 +51,8 @@ public abstract class ResultDescriptions {
 
     public static String generateResult( Object killedBy, DamageType killedWith ) {
 
-        return Utils.capitalize( killedBy == Dungeon.hero ? killedWith( killedBy, killedWith ) + ( Dungeon.hero.heroClass == HeroClass.ACOLYTE ? " herself" : " himself" ):
+        return Utils.capitalize( killedBy == Dungeon.hero ? killedWith( killedBy, killedWith ) +
+                ( Dungeon.hero.heroClass == HeroClass.ACOLYTE ? " herself" : " himself" ) :
                 killedWith( killedBy, killedWith ) + " by " + killedBy( killedBy ) );
     }
 
@@ -70,33 +72,41 @@ public abstract class ResultDescriptions {
 
                 Mob mob = (Mob)killedBy;
 
-                if( Bestiary.isBoss( mob ) || mob instanceof Rat) {
+                if( Bestiary.isBoss( mob ) || mob instanceof Rat ) {
 
                     result = "defeated";
 
-                } else if ( mob instanceof GnollBrute) {
+                } else if ( mob instanceof GnollBrute ) {
 
                     result = "murderized";
 
-                } else if ( mob instanceof DwarfMonk) {
+                } else if ( mob instanceof DwarfMonk ) {
 
                     result = "facefisted";
 
-                } else if ( mob instanceof Golem) {
+                } else if ( mob instanceof Golem ) {
 
                     result = "squashed flat";
 
-                } else if ( mob instanceof Piranha) {
+                } else if ( mob instanceof Piranha ) {
 
                     result = "eaten";
 
-                } else if ( mob instanceof Mimic) {
+                } else if ( mob instanceof Mimic ) {
 
                     result = "ambushed";
 
                 }
 
-            } else if( killedBy instanceof BoulderTrap) {
+            } else if( killedBy instanceof DwarvenKing.BoneExplosion ) {
+
+                result = "boned";
+
+            } if( killedBy instanceof DwarvenKing.KnockBack ) {
+
+                result = "crushed";
+
+            } if( killedBy instanceof BoulderTrap ) {
 
                 result = "crushed";
 
@@ -130,32 +140,36 @@ public abstract class ResultDescriptions {
 
         if( killedBy instanceof Mob ) {
             Mob mob = ((Mob)killedBy);
-            result = ( !Bestiary.isBoss( mob ) ? "a " : "" ) + mob.name;
-        } else if( killedBy instanceof Blob) {
+            result = ( !Bestiary.isBoss( mob ) ? Utils.indefinite( mob.name ) : mob.name );
+        } else if( killedBy instanceof Blob ) {
             Blob blob = ((Blob)killedBy);
-            result = "a " + blob.name;
-        } else if( killedBy instanceof Weapon.Enchantment) {
+            result = Utils.indefinite( blob.name );
+        } else if( killedBy instanceof Weapon.Enchantment ) {
             result = "cursed weapon";
-        } else if( killedBy instanceof Armour.Glyph) {
+        } else if( killedBy instanceof Armour.Glyph ) {
             result = "cursed armor";
-        } else if( killedBy instanceof Buff) {
+        } else if( killedBy instanceof Buff ) {
             if( killedBy instanceof Bleeding) {
                 result = "excessive bleeding";
-            } else if( killedBy instanceof Poison) {
+            } else if( killedBy instanceof Poison ) {
                 result = "poison";
-            } else if( killedBy instanceof Hunger) {
+            } else if( killedBy instanceof Hunger ) {
                 result = "starvation";
-            } else if( killedBy instanceof Burning) {
+            } else if( killedBy instanceof Burning ) {
                 result = "being burned alive";
-            } else if( killedBy instanceof Ooze) {
+            } else if( killedBy instanceof Ooze ) {
                 result = "caustic ooze";
             }
-        } else if( killedBy instanceof Trap) {
+        } else if( killedBy instanceof Trap ) {
             result = "a trap";
-        } else if( killedBy instanceof Chasm) {
+        } else if( killedBy instanceof Chasm ) {
             result = "gravity";
-
+        } else if( killedBy instanceof DwarvenKing.BoneExplosion ) {
+            result = "an explosion";
+        } else if( killedBy instanceof DwarvenKing.KnockBack ) {
+            result = "knockback";
         }
+
         return result;
     }
 

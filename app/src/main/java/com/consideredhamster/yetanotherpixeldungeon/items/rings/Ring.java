@@ -57,9 +57,9 @@ public abstract class Ring extends EquipableItem {
 	
 	private static final Class<?>[] rings = { 
 		RingOfVitality.class,
-		RingOfPerception.class,
+		RingOfAwareness.class,
 		RingOfShadows.class,
-		RingOfEnergy.class,
+		RingOfConcentration.class,
 		RingOfKnowledge.class,
 		RingOfAccuracy.class,
 		RingOfEvasion.class,
@@ -194,9 +194,7 @@ public abstract class Ring extends EquipableItem {
 
                 detach(hero.belongings.backpack);
 
-                identify( CURSED_KNOWN );
-
-                GLog.i(TXT_EQUIP, name());
+                onEquip( hero );
 
                 activate(hero);
 

@@ -34,11 +34,16 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.effects.Flare;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
+import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
 import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
@@ -88,9 +93,60 @@ public class Ankh extends Item {
         Buff.detach(hero, Ensnared.class);
         Buff.detach(hero, Confusion.class);
 
+        boolean procced = uncurse( curUser, curUser.belongings.backpack.items.toArray( new Item[0] ) );
+
+        procced = procced | uncurse( curUser,
+                curUser.belongings.weap1,
+                curUser.belongings.weap2,
+                curUser.belongings.armor,
+                curUser.belongings.ring1,
+                curUser.belongings.ring2 );
+
         hero.sprite.showStatus(CharSprite.POSITIVE, "resurrected!");
         GLog.w(TXT_RESURRECT);
 	}
+
+    public static boolean uncurse( Hero hero, Item... items ) {
+
+        boolean procced = false;
+
+        for(Item item : items) {
+
+            if (item != null) {
+
+                if( item instanceof Bag ) {
+
+                    uncurse( hero, ((Bag)item).items.toArray( new Item[0] ) );
+
+                } else {
+
+                    item.identify(CURSED_KNOWN);
+
+                    if (item.bonus < 0) {
+
+                        item.bonus = Random.IntRange(item.bonus + 1, 0);
+
+                        if (item.bonus == 0) {
+                            if (item instanceof Weapon && ((Weapon) item).enchantment != null) {
+                                ((Weapon) item).enchant(null);
+                            } else if (item instanceof Armour && ((Armour) item).glyph != null) {
+                                ((Armour) item).inscribe(null);
+                            }
+                        }
+
+                        procced = true;
+
+                    }
+                }
+            }
+        }
+
+        if (procced) {
+            hero.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
+        }
+
+        return procced;
+    }
 
 	@Override
     public String status() {

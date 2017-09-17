@@ -76,7 +76,7 @@ public class WandOfEntanglement extends WandUtility {
 
 //            if (Char.hit(curUser, ch, true, true)) {
 
-                Buff.affect(ch, Ensnared.class, curCharges + 1 );
+                Buff.affect(ch, Ensnared.class, curCharges * 2 + 2 );
 
                 GameScene.add( Blob.seed( cell, curCharges + 1, Web.class ) );
 

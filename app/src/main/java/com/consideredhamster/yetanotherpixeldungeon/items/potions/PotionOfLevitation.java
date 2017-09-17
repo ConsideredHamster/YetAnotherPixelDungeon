@@ -28,7 +28,7 @@ import com.watabou.utils.Random;
 
 public class PotionOfLevitation extends Potion {
 
-    public static final float DURATION	= 15f;
+    public static final float DURATION	= 20f;
     public static final float MODIFIER	= 1.0f;
 
 	{

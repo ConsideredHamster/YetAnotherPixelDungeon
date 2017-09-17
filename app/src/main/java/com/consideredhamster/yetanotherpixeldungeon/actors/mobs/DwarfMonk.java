@@ -67,7 +67,7 @@ public class DwarfMonk extends MobEvasive {
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc( Char enemy, int damage, boolean blocked ) {
 
         Buff.affect(this, Combo.class).hit();
 		

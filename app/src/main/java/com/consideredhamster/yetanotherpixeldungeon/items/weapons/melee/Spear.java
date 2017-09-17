@@ -32,6 +32,11 @@ public class Spear extends MeleeWeaponLightTH {
 	public Spear() {
 		super( 1 );
 	}
+
+	@Override
+	public Type weaponType() {
+		return Type.M_POLEARM;
+	}
 	
 	@Override
 	public String desc() {

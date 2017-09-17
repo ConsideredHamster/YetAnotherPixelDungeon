@@ -96,10 +96,10 @@ public class WndBag extends WndTabbed {
         KEYS
 	}
 
-	protected static final int COLS_P	= 5;
-	protected static final int COLS_L	= 7;
-
+    protected static final int COLS_P	= 5;
     protected static final int ROWS_P	= 6;
+
+	protected static final int COLS_L	= 7;
     protected static final int ROWS_L	= 4;
 
 	protected static final int SLOT_SIZE	= 24;
@@ -504,6 +504,7 @@ public class WndBag extends WndTabbed {
 						mode == Mode.OFFHAND && (item instanceof MeleeWeaponLightOH || item instanceof ThrowingWeapon || item instanceof Shield || item instanceof Wand) ||
 						mode == Mode.FOR_SALE && (item.visible && item.price() > 0) && (!item.isEquipped( Dungeon.hero ) || item.bonus >= 0) ||
 						mode == Mode.UPGRADEABLE && ( item.isUpgradeable() && ( !item.isIdentified() || item.bonus < 3 ) || item.isRepairable() && item.state < 3 ) ||
+						mode == Mode.ENCHANTABLE && item instanceof EquipableItem ||
 						mode == Mode.REPAIRABLE && item.isRepairable() && item.state < 3 ||
 						mode == Mode.UNIDENTIFED && !item.isIdentified() ||
 						mode == Mode.WEAPON && item instanceof Weapon && item.isRepairable() && item.state < 3 ||
@@ -511,9 +512,7 @@ public class WndBag extends WndTabbed {
 						mode == Mode.CRAFTING_KIT && ((item instanceof RangedWeapon || item instanceof BodyArmorCloth)&& item.state < 3) ||
 						mode == Mode.ARMORERS_KIT && (item instanceof Armour && !(item instanceof BodyArmorCloth) && item.state < 3) ||
 						mode == Mode.ARCANE_BATTERY && (item instanceof Wand && item.state < 3) ||
-						mode == Mode.ENCHANTABLE && (item instanceof MeleeWeapon || item instanceof RangedWeapon || item instanceof Armour || item instanceof Wand || item instanceof Ring) ||
-						mode == Mode.TRANSMUTABLE && ( item.bonus >= 0 || !item.isCursedKnown() ) && (item instanceof MeleeWeapon ||
-                            item instanceof RangedWeapon || item instanceof BodyArmor || item instanceof Wand || item instanceof Ring) ||
+						mode == Mode.TRANSMUTABLE && item instanceof EquipableItem ||
 						mode == Mode.WAND && (item instanceof Wand) ||
 						mode == Mode.HERB && (item instanceof Herb) ||
 						mode == Mode.ALL

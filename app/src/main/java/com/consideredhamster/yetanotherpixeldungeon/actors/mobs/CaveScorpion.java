@@ -45,8 +45,8 @@ public class CaveScorpion extends MobHealthy {
 //		loot = new PotionOfHealing();
 //		lootChance = 0.125f;
 
-        loot = new MysteryMeat();
-        lootChance = 0.35f;
+//        loot = new MysteryMeat();
+//        lootChance = 0.35f;
 	}
 	
 //	@Override
@@ -56,7 +56,7 @@ public class CaveScorpion extends MobHealthy {
 //	}
 
     @Override
-    public int attackProc( Char enemy, int damage ) {
+    public int attackProc( Char enemy, int damage, boolean blocked ) {
 
         if ( damage < enemy.HP && damage > 0 ) {
             Buff.affect(enemy, Ooze.class);

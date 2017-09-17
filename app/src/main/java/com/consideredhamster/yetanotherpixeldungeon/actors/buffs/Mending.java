@@ -53,9 +53,6 @@ public class Mending extends Buff {
     @Override
     public boolean attachTo( Char target ) {
         if (super.attachTo( target )) {
-
-            duration = 20;
-
             return true;
         } else {
             return false;
@@ -93,9 +90,9 @@ public class Mending extends Buff {
 
             int healthRestored = Math.min(
 
-                    ( effect / 10 + ( effect % 10 > Random.Int(10) ? 1 : 0 ) ),
+                ( effect / 10 + ( effect % 10 > Random.Int(10) ? 1 : 0 ) ),
 
-                    target.HT - target.HP
+                target.HT - target.HP
 
             ) ;
 

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.levels.painters.ShopPainter;
 import com.watabou.noosa.Game;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -116,7 +117,7 @@ public class Dungeon {
 		
 		Actor.clear();
 		
-		PathFinder.setMapSize(Level.WIDTH, Level.HEIGHT);
+		PathFinder.setMapSize( Level.WIDTH, Level.HEIGHT );
 		
 		Scroll.initLabels();
 		Potion.initColors();
@@ -152,6 +153,8 @@ public class Dungeon {
 		AmbitiousImp.Quest.reset();
 		
 		Room.shuffleTypes();
+
+        ShopPainter.initAssortment();
 
 		QuickSlot.quickslotValue_1 = null;
 		QuickSlot.quickslotValue_2 = null;
@@ -508,6 +511,8 @@ public class Dungeon {
 			bundle.put( QUESTS, quests );
 			
 			Room.storeRoomsInBundle( bundle );
+
+            ShopPainter.saveAssortment( bundle );
 			
 			Statistics.storeInBundle( bundle );
 			Journal.storeInBundle( bundle );
@@ -626,6 +631,8 @@ public class Dungeon {
 			}
 			
 			Room.restoreRoomsFromBundle( bundle );
+
+            ShopPainter.loadAssortment( bundle );
 		}
 		
 		Bundle badges = bundle.getBundle( BADGES );

@@ -134,10 +134,9 @@ public final class ShadowCaster {
 		}
 		
 		public void add( float o1, float o2 ) {
-			
-			if (length > limit && o1 <= a2[length-1]) {
+
+            if (length > limit && o1 <= a2[length-1]) {
 				
-				// Merging several guardEffectiveness cells
 				a2[length-1] = o2;
 				
 			} else {

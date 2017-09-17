@@ -99,21 +99,11 @@ public class Wandmaker extends NPC {
 		throwItem();
 		return super.act();
 	}
-	
-//	@Override
-//	public int dexterity( Char enemy ) {
-//		return 1000;
-//	}
 
     @Override
     public boolean immovable() {
         return true;
     }
-	
-	@Override
-	public String defenseVerb() {
-		return "absorbed";
-	}
 	
 	@Override
     public void damage( int dmg, Object src, DamageType type ) {

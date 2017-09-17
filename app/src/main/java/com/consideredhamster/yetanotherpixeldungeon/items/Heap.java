@@ -472,19 +472,6 @@ public class Heap implements Bundlable {
 			CellEmitter.get( pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 			Sample.INSTANCE.play( Assets.SND_PUFF );
 
-//			if (Random.Int( count ) == 0) {
-//
-//				CellEmitter.center( pos ).burst( Speck.factory( Speck.EVOKE ), 3 );
-//
-//				destroy();
-//
-//				Statistics.potionsCooked++;
-//				Badges.validatePotionsCooked();
-//
-//				return Generator.random( Generator.Category.POTION );
-//
-//			} else {
-
 			Herb proto = (Herb)items.get( Random.chances( chances ) );
 			Class<? extends Potion> itemClass = proto.alchemyClass;
 
@@ -510,7 +497,6 @@ public class Heap implements Bundlable {
 					return null;
 				}
 			}
-//			}
 
 		} else {
 			return null;
@@ -557,7 +543,7 @@ public class Heap implements Bundlable {
                 break;
 
             case 4:
-                type = Dungeon.depth > 1 && Dungeon.chapter() > Random.Int( 5 ) ? Type.BONES_CURSED : Type.BONES;
+                type = Dungeon.depth > 1 && Dungeon.chapter() > Random.Int( 10 ) ? Type.BONES_CURSED : Type.BONES;
                 break;
 
             case 5:
@@ -568,7 +554,7 @@ public class Heap implements Bundlable {
                 break;
 
             case 9:
-                type = Dungeon.depth > 1 && Dungeon.chapter() > Random.Int( 5 ) ? Type.CHEST_MIMIC : Type.CHEST;
+                type = Dungeon.depth > 1 && Dungeon.chapter() > Random.Int( 10 ) ? Type.CHEST_MIMIC : Type.CHEST;
                 break;
 
             default:

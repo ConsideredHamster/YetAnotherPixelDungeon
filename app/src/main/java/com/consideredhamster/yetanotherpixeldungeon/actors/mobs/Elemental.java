@@ -112,12 +112,11 @@ public class Elemental extends MobPrecise {
 
         if (hit( this, enemy, true, true )) {
 
-            enemy.damage( damageRoll(), this, DamageType.FLAME );
+            enemy.damage( absorb(damageRoll(), enemy.armorClass(), true), this, DamageType.FLAME );
 
         } else {
 
-            enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
-
+            enemy.missed();
         }
 
         return true;

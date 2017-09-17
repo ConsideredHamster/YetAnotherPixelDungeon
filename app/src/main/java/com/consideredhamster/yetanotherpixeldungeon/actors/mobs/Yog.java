@@ -210,7 +210,7 @@ public class Yog extends Mob {
         }
 
 		@Override
-		public int attackProc( Char enemy, int damage ) {
+		public int attackProc( Char enemy, int damage, boolean blocked ) {
 
             Buff.affect( enemy, Ooze.class );
 
@@ -344,7 +344,7 @@ public class Yog extends Mob {
 
             } else {
 
-                enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
+                enemy.missed();
 
             }
 

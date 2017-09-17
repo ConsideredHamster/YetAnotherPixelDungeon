@@ -56,38 +56,39 @@ public class StoragePainter extends Painter {
             fill( level, room.left + 1, room.top + 2, room.width() - 1, 1 , Terrain.SHELF_EMPTY );
         }
 		
-		int n = 1 + Random.Int( (Dungeon.chapter() + 1) / 2 );
+		int n = 1 + Random.Int( ( Dungeon.chapter() + 1 ) / 2 );
 		for (int i=0; i < n; i++) {
 			int pos;
 			do {
 				pos = room.random();
 			} while (level.map[pos] != Terrain.EMPTY);
-			level.drop( prize( level ), pos, true ).type = Heap.Type.BONES;
+			level.drop( prizeBonus(), pos, true ).type = Heap.Type.BONES;
 		}
 
         int pos;
         do {
             pos = room.random();
         } while (level.map[pos] != floor);
-        level.drop( prize( level ), pos, true ).type = Heap.Type.CHEST;
+
+        level.drop( prizeMain(level), pos, true ).type = Heap.Type.CHEST;
 
 		room.entrance().set( Room.Door.Type.REGULAR );
 		level.addItemToSpawn( new PotionOfLiquidFlame() );
 	}
-	
-	private static Item prize( Level level ) {
 
-		Item prize = level.itemToSpawnAsPrize( Food.class );
+    private static Item prizeMain( Level level ) {
+
+        Item prize = level.itemToSpawnAsPrize( Food.class );
 
         if (prize != null) {
             return prize;
         }
+
+        return prizeBonus();
+    }
+	
+	private static Item prizeBonus() {
 		
-		return Generator.random( Random.oneOf(
-			Generator.Category.POTION,
-			Generator.Category.SCROLL,
-			Generator.Category.GOLD,
-			Generator.Category.MISC
-		) );
+		return Generator.random( Generator.Category.MISC );
 	}
 }

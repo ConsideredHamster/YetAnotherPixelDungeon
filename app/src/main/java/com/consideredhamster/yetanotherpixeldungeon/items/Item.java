@@ -247,7 +247,7 @@ public class Item implements Bundlable {
 		}
 	}
 
-	public final Item detach( Bag container ) {
+    public final Item detach( Bag container, int amount ) {
 
         if (quantity <= 0) {
 
@@ -257,9 +257,9 @@ public class Item implements Bundlable {
 
             try {
 
-                if( quantity > 1 ) {
+                if( quantity > amount ) {
 
-                    quantity--;
+                    quantity -= amount;
                     onDetach();
 
                 } else {
@@ -280,6 +280,12 @@ public class Item implements Bundlable {
             return detachAll( container );
 
         }
+    }
+
+	public final Item detach( Bag container ) {
+
+        return detach(container, 1 );
+
 	}
 
 	public final Item detachAll( Bag container ) {
@@ -533,6 +539,8 @@ public class Item implements Bundlable {
         if( forced || known < value ) {
             known = value;
         }
+
+		QuickSlot.refresh();
 
         return this;
     }

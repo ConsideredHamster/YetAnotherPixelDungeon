@@ -47,7 +47,7 @@ public class ScrollOfDarkness extends Scroll {
         curUser.sprite.centerEmitter().start( Speck.factory( Speck.DARKNESS ), 0.3f, 5 );
         Sample.INSTANCE.play( Assets.SND_GHOST );
 
-        GameScene.add( Blob.seed( curUser.pos, 1000 + (int)( 1000 * curUser.magicPower() ), Darkness.class ) );
+        GameScene.add( Blob.seed( curUser.pos, 1000 * ( 110 + curUser.magicSkill() ) / 100, Darkness.class ) );
 
         GLog.i( TXT_MESSAGE );
 
@@ -59,7 +59,8 @@ public class ScrollOfDarkness extends Scroll {
 		return
 			"Unnatural darkness from the deepest abysses is summoned by the call of this otherwise " +
             "unremarkable sheet of paper. This darkness is so thick that it nothing can see through it " +
-            "without magical means.";
+            "without magical means." +
+            "\n\nDuration of this effect depends on magic skill of the reader.";
 	}
 
     @Override

@@ -32,6 +32,11 @@ public class Quarterstaff extends MeleeWeaponHeavyOH {
 	public Quarterstaff() {
 		super( 1 );
 	}
+
+	@Override
+	public Type weaponType() {
+		return Type.M_POLEARM;
+	}
 	
 	@Override
 	public String desc() {
