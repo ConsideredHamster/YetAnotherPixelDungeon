@@ -21,18 +21,18 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Challenge;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mimic;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
-import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public class ScrollOfChallenge extends Scroll {
 

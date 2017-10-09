@@ -21,12 +21,12 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Freezing;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.utils.BArray;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.BArray;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 

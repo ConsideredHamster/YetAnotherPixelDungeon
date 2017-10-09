@@ -24,16 +24,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.effects.CellEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.effects.Lightning;
-import com.consideredhamster.yetanotherpixeldungeon.effects.particles.SparkParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Lightning;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SparkParticle;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 

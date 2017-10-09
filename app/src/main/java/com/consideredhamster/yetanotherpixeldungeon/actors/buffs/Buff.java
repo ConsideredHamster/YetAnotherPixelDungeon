@@ -24,8 +24,8 @@ import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 
 public class Buff extends Actor {
 

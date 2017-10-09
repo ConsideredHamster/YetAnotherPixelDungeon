@@ -20,9 +20,6 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.scenes;
 
-import android.content.Intent;
-import android.net.Uri;
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +33,7 @@ import com.watabou.noosa.TouchArea;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
@@ -44,8 +41,8 @@ import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndError;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndStory;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndError;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndStory;
 
 public class InterlevelScene extends PixelScene {
 

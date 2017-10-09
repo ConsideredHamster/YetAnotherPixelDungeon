@@ -22,7 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.HashSet;
 
-import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.NPC;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAwareness;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
@@ -44,9 +45,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Terror;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-//import com.consideredhamster.yetanotherpixeldungeon.effects.EmoIcon;
-import com.consideredhamster.yetanotherpixeldungeon.effects.Flare;
-import com.consideredhamster.yetanotherpixeldungeon.effects.Wound;
+//import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.EmoIcon;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Wound;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Explosives;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
@@ -57,10 +58,10 @@ import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfKnowledge;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponAmmo;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.ui.HealthIndicator;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
-import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.HealthIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -667,7 +668,7 @@ public abstract class Mob extends Char {
 
 		super.die(cause, dmg);
 
-        if (Dungeon.visible[pos]) {
+        if (Dungeon.visible[pos] && !(this instanceof NPC)) {
 
             GLog.i(TXT_DEFEAT, name);
 

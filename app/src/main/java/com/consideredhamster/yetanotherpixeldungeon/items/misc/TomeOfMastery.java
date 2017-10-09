@@ -24,18 +24,18 @@ import java.util.ArrayList;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroSubClass;
-import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
-import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndChooseWay;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndChooseWay;
 
 public class TomeOfMastery extends Item {
 

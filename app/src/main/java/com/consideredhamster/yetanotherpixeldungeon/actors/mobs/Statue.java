@@ -26,8 +26,8 @@ import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.StatueSprite;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.StatueSprite;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public class Statue extends MobPrecise {
 

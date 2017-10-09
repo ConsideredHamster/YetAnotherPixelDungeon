@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 
 public class MindVision extends PassiveBuff {
 

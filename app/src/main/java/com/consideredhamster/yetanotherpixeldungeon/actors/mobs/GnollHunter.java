@@ -30,10 +30,10 @@ import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Arrow
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Bullets;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Javelins;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Quarrels;
-import com.consideredhamster.yetanotherpixeldungeon.mechanics.Ballistica;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.GnollSprite;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.MissileSprite;
+import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.GnollSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MissileSprite;
 
 public class GnollHunter extends MobRanged {
 

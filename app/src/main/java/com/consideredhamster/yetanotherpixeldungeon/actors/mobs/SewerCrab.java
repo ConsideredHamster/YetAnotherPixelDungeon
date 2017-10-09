@@ -25,7 +25,7 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CrabSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CrabSprite;
 
 public class SewerCrab extends MobHealthy {
 

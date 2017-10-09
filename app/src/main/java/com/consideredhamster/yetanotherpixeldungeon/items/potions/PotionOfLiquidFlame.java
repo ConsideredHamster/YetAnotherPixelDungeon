@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;

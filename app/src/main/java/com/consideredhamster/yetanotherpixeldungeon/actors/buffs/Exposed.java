@@ -20,9 +20,6 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedWeaponFlintlock;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
 import com.watabou.utils.Bundle;
 
 public class Exposed extends PassiveBuff {

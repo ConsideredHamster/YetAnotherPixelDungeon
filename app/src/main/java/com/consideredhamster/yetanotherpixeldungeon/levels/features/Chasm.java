@@ -24,7 +24,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -40,9 +40,9 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.RegularLevel;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.InterlevelScene;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.MobSprite;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndOptions;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MobSprite;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 import com.watabou.utils.Random;
 
 public class Chasm {

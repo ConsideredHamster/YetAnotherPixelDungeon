@@ -20,34 +20,29 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
-import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
-import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.Challenges;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Journal;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.effects.CellEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmorCloth;
-import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.ClothArmor;
 import com.consideredhamster.yetanotherpixeldungeon.items.quest.DriedRose;
 import com.consideredhamster.yetanotherpixeldungeon.items.quest.RatSkull;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.SewerLevel;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.GhostSprite;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndQuest;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndSadGhost;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.GhostSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndQuest;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndSadGhost;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 

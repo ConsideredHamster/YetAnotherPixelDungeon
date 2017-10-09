@@ -22,10 +22,9 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
 import java.util.Collection;
 
-import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.Badges;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Journal;
@@ -35,14 +34,13 @@ import com.consideredhamster.yetanotherpixeldungeon.items.EquipableItem;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.quest.DarkGold;
 import com.consideredhamster.yetanotherpixeldungeon.items.quest.Pickaxe;
-import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room.Type;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.BlacksmithSprite;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndBlacksmith;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndQuest;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.BlacksmithSprite;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndBlacksmith;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndQuest;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 

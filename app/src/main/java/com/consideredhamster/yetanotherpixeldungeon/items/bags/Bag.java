@@ -28,8 +28,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.ui.Icons;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndBag;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Icons;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndBag;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 

@@ -21,11 +21,11 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.effects.CellEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public class ScrollOfClairvoyance extends Scroll {
 

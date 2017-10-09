@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.BlackguardSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.BlackguardSprite;
 
 import java.util.HashSet;
 

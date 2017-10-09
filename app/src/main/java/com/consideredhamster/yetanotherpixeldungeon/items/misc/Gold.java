@@ -24,16 +24,16 @@ import java.util.ArrayList;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfFortune;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
-import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
