@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SwarmSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.SwarmSprite;
 
 import java.util.HashSet;
 

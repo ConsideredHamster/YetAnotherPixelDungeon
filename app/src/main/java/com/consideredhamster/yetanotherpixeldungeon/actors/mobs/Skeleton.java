@@ -23,14 +23,14 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import java.util.HashSet;
 
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SkeletonSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.SkeletonSprite;
 import com.watabou.utils.Random;
 
 public class Skeleton extends MobPrecise {

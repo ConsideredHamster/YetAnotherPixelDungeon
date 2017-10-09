@@ -20,13 +20,17 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.body;
 
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.QuickSlot;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.ui.QuickSlot;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.GameMath;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs.*;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.HeroSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.HeroSprite;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 
 public abstract class BodyArmor extends Armour {
 

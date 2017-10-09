@@ -23,10 +23,10 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.BatSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.BatSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
 
 public class VampireBat extends MobEvasive {
 

@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.levels.features;
 
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfClairvoyance;

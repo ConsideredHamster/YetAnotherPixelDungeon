@@ -28,7 +28,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Combo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.AmbitiousImp;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.OverpricedRation;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MonkSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.MonkSprite;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 
 public class DwarfMonk extends MobEvasive {
 

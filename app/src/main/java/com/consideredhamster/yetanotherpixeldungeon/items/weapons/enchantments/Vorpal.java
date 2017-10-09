@@ -20,12 +20,14 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 
+import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite.Glowing;
 import com.watabou.utils.Random;
 
 public class Vorpal extends Weapon.Enchantment {

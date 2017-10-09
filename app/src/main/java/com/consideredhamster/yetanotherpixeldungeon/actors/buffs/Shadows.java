@@ -21,10 +21,10 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
 import com.watabou.utils.Bundle;
 
 public class Shadows extends Invisibility {

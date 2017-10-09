@@ -27,16 +27,16 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.UnholyArmor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Flare;
+import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Random;
 
 public class ScrollOfBanishment extends Scroll {

@@ -22,16 +22,19 @@ package com.consideredhamster.yetanotherpixeldungeon.scenes;
 
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
+import com.watabou.noosa.Game;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.audio.Music;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Chrome;
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Archs;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BadgesList;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.ExitButton;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.ScrollPane;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Window;
+import com.consideredhamster.yetanotherpixeldungeon.ui.Archs;
+import com.consideredhamster.yetanotherpixeldungeon.ui.BadgesList;
+import com.consideredhamster.yetanotherpixeldungeon.ui.ExitButton;
+import com.consideredhamster.yetanotherpixeldungeon.ui.ScrollPane;
+import com.consideredhamster.yetanotherpixeldungeon.ui.Window;
+import com.watabou.utils.Callback;
 
 public class BadgesScene extends PixelScene {
 	
@@ -87,24 +90,24 @@ public class BadgesScene extends PixelScene {
 		
 		fadeIn();
 		
-//		Badges.loadingListener = new Callback() {
-//			@Override
-//			public void call() {
-//				if (Game.scene() == BadgesScene.this) {
-//					YetAnotherPixelDungeon.switchNoFade(BadgesScene.class);
-//				}
-//			}
-//		};
+		Badges.loadingListener = new Callback() {
+			@Override
+			public void call() {
+				if (Game.scene() == BadgesScene.this) {
+					YetAnotherPixelDungeon.switchNoFade(BadgesScene.class);
+				}
+			}
+		};
 	}
 	
-//	@Override
-//	public void destroy() {
-//
-//		Badges.saveGlobal();
-//		Badges.loadingListener = null;
-//
-//		super.destroy();
-//	}
+	@Override
+	public void destroy() {
+		
+		Badges.saveGlobal();
+		Badges.loadingListener = null;
+		
+		super.destroy();
+	}
 	
 	@Override
 	protected void onBackPressed() {

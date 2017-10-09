@@ -23,7 +23,8 @@ package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Levitation;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.watabou.utils.Random;
 
 public class PotionOfLevitation extends Potion {
 

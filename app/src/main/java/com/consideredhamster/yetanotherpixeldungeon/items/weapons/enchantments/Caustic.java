@@ -26,7 +26,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfAvalanche;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite.Glowing;
 
 public class Caustic extends Weapon.Enchantment {
 

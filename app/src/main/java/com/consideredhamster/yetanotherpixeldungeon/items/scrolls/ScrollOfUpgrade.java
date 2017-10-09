@@ -22,13 +22,15 @@ package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.QuickSlot;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndBag;
+import com.consideredhamster.yetanotherpixeldungeon.ui.QuickSlot;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndBag;
+import com.watabou.utils.Random;
 
 public class ScrollOfUpgrade extends InventoryScroll {
 

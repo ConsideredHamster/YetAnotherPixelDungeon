@@ -22,7 +22,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
 import com.watabou.utils.Bundle;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
 
 public class UnholyArmor extends PassiveBuff {
 

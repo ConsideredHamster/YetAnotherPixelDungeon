@@ -42,7 +42,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Chasm;
 import com.consideredhamster.yetanotherpixeldungeon.levels.traps.BoulderTrap;
 import com.consideredhamster.yetanotherpixeldungeon.levels.traps.Trap;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
 
 public abstract class ResultDescriptions {
 

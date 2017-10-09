@@ -28,6 +28,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Guard;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Belongings;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Knuckles;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Bullets;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeapon;
@@ -37,7 +38,7 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.GameMath;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Bones;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
@@ -70,8 +71,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Statue;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.NPC;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CheckedCell;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.effects.CheckedCell;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Amulet;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Ankh;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Waterskin;
@@ -114,14 +115,14 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.features.Sign;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.InterlevelScene;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.SurfaceScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.AttackIndicator;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.QuickSlot;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndMessage;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndTradeItem;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.ui.AttackIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.ui.QuickSlot;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndMessage;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndTradeItem;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -1304,7 +1305,6 @@ public class Hero extends Char {
 
                     Chasm.heroJump( this );
                     interrupt();
-                    return false;
 
                 }
 
@@ -1528,7 +1528,7 @@ public class Hero extends Char {
             if( defBonus > 0 )
                 bonusList.add( Utils.format( "+%d dex", defBonus ) );
             if( magBonus > 0 )
-                bonusList.add( Utils.format( "+%d mag", magBonus ) );
+                bonusList.add( Utils.format( "+%d wnd", magBonus ) );
 
             if( strBonus > 0 )
                 bonusList.add( Utils.format( "+%d strength", strBonus ) );

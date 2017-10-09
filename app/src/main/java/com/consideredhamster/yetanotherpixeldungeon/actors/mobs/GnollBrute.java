@@ -28,9 +28,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Tomahawks;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.BruteSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MissileSprite;
+import com.consideredhamster.yetanotherpixeldungeon.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.BruteSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.MissileSprite;
 
 public class GnollBrute extends MobPrecise {
 

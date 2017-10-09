@@ -34,12 +34,12 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Stun;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Flare;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite.Glowing;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 
 public class Revival extends Armour.Glyph {
 

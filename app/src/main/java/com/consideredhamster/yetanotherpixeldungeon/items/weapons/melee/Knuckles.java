@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
 
 public class Knuckles extends MeleeWeaponLightOH {
 

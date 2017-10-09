@@ -24,9 +24,11 @@ import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
+import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfBlink;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+
+import java.util.Arrays;
 
 public class ScrollOfPhaseWarp extends Scroll {
 

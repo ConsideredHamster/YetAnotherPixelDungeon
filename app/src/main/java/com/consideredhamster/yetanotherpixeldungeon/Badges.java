@@ -32,6 +32,7 @@ import java.util.List;
 import com.watabou.noosa.Game;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.ScrollHolder;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.HerbPouch;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.WandHolster;
@@ -39,8 +40,9 @@ import com.consideredhamster.yetanotherpixeldungeon.items.potions.Potion;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.Scroll;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.PixelScene;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 
@@ -143,7 +145,7 @@ public class Badges {
 //		GAMES_PLAYED_4( "2000 games played", 63, true ),
 		HAPPY_END( "Happy end", 38 ),
 		CHAMPION( "Won on Impossible difficulty", 39, true ),
-		SUPPORTER( "Helped the hungry mimic", 31, true );
+		SUPPORTER( "Thanks for your support!", 31, true );
 		
 		public boolean meta;
 		
@@ -967,7 +969,7 @@ public class Badges {
 		global.add( Badge.SUPPORTER );
 		saveNeeded = true;
 		
-//		PixelScene.showBadge( Badge.SUPPORTER );
+		PixelScene.showBadge( Badge.SUPPORTER );
 	}
 	
 //	public static void validateGamesPlayed() {

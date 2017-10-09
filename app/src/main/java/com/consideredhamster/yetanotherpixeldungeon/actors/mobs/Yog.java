@@ -28,7 +28,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
@@ -39,20 +39,20 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.PassiveBuff;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
+import com.consideredhamster.yetanotherpixeldungeon.effects.MagicMissile;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.FlameParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.keys.SkeletonKey;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.BurningFistSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.RottingFistSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.YogSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.BurningFistSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.RottingFistSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.YogSprite;
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 
 public class Yog extends Mob {
 	

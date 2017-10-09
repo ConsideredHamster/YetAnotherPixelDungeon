@@ -21,11 +21,11 @@
 package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Wound;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Wound;
 import com.watabou.utils.Random;
 
 public class BladeTrap extends Trap {

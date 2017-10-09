@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndOptions;
 
 public abstract class Trap {
 

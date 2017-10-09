@@ -28,9 +28,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Mending;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
 import com.watabou.utils.Random;
 
 public class PotionOfMending extends Potion {
@@ -52,9 +51,7 @@ public class PotionOfMending extends Potion {
 	
 	public static void heal( Hero hero ) {
 
-        int totalHP = (int)( hero.HT * hero.ringBuffs(RingOfVitality.Vitality.class ) );
-
-        int restore = Math.min( hero.HT - hero.HP, totalHP / 4 + ( totalHP % 4 > Random.Int(4) ? 1 : 0 ) ) ;
+        int restore = Math.min( hero.HT - hero.HP, hero.HT / 4 + ( hero.HT % 4 > Random.Int(4) ? 1 : 0 ) ) ;
 
         if( restore > 0 ) {
             hero.HP += restore;

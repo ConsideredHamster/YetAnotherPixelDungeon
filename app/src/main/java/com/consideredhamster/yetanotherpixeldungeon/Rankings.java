@@ -27,9 +27,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
 import com.watabou.noosa.Game;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.SystemTime;

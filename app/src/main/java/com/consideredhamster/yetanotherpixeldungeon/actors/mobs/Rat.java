@@ -24,7 +24,7 @@ import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.RatSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.RatSprite;
 
 public class Rat extends MobEvasive {
 

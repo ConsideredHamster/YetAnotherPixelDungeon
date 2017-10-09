@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfLevitation;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
 
 public class WhirlvineHerb extends Herb {
     {

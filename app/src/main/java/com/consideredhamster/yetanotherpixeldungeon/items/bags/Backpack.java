@@ -21,8 +21,8 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.bags;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Icons;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.ui.Icons;
 
 public class Backpack extends Bag {
 	{

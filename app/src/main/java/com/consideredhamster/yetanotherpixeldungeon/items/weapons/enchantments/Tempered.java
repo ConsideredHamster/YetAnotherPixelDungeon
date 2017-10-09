@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite.Glowing;
 
 public class Tempered extends Weapon.Enchantment {
 

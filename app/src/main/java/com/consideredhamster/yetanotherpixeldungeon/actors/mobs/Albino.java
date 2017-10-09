@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.AlbinoSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.AlbinoSprite;
 
 public class Albino extends Rat {
 

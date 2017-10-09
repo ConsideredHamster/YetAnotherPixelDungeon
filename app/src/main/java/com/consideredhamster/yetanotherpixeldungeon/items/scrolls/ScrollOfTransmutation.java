@@ -21,9 +21,9 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
@@ -36,15 +36,17 @@ import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandUtility;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.MeleeWeapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.MeleeWeaponLightOH;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedWeapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponAmmo;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponHeavy;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponLight;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponSpecial;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.HeroSprite;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndBag;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.HeroSprite;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndBag;
 
 public class ScrollOfTransmutation extends InventoryScroll {
 

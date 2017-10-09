@@ -28,7 +28,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Terror;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SpinnerSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.SpinnerSprite;
 import com.watabou.utils.Random;
 
 public class GiantSpider extends MobHealthy {

@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
 
 public class Enraged extends PassiveBuff {
 

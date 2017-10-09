@@ -35,8 +35,8 @@ import com.consideredhamster.yetanotherpixeldungeon.items.herbs.Herb;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.Scroll;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 

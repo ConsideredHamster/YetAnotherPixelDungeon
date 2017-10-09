@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee;
 
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
 
 public class Dagger extends MeleeWeaponLightOH {
 	
@@ -46,6 +46,7 @@ public class Dagger extends MeleeWeaponLightOH {
 	@Override
 	public String desc() {
 		return "A simple iron dagger with a well worn wooden handle. It is ideal for backstabbing, "+
-				"dealing doubled damage to unsuspecting or ambushed targets.";
+				"dealing doubled damage to unsuspecting or ambushed targets. It is not really that " +
+				"good att parrying, however.";
 	}
 }

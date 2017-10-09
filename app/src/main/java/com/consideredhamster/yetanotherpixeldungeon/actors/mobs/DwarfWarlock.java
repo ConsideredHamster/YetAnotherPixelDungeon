@@ -27,12 +27,13 @@ import com.watabou.utils.Bundle;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Lightning;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.EnergyParticle;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Lightning;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.EnergyParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.WarlockSprite;
+import com.consideredhamster.yetanotherpixeldungeon.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.WarlockSprite;
 
 public class DwarfWarlock extends MobRanged {
 

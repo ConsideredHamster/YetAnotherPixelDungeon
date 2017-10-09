@@ -26,13 +26,13 @@ import java.util.HashSet;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Lightning;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Lightning;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfLightning;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite;
 
 public class Shocking extends Weapon.Enchantment {
 

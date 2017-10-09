@@ -21,16 +21,17 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
 import com.watabou.utils.Random;
+import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Suffocation;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.effects.BlobEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.GooSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.GooSprite;
 
 public class Miasma extends Blob {
 

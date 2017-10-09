@@ -24,9 +24,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Wraith;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
+import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
 
 import java.util.ArrayList;
 

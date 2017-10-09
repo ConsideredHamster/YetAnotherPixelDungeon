@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.levels;
 
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.tweeners.AlphaTweener;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Bones;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
@@ -40,7 +40,7 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.traps.AlarmTrap;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 
 import java.util.ArrayList;
 

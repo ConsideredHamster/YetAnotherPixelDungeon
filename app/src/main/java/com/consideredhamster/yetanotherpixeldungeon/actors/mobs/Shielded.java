@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ShieldedSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ShieldedSprite;
 
 public class Shielded extends GnollBrute {
 

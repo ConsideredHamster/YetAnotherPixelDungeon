@@ -21,14 +21,14 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Web;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ensnared;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
+import com.consideredhamster.yetanotherpixeldungeon.effects.MagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Callback;
 

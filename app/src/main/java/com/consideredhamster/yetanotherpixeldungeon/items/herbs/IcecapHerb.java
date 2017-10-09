@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfFrigidVapours;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
 
 public class IcecapHerb extends Herb {
     {

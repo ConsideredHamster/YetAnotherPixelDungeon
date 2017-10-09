@@ -25,16 +25,16 @@ import java.util.ArrayList;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Bee;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Pushing;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Splash;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Pushing;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Splash;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
 public class Honeypot extends Item {

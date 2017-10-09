@@ -21,8 +21,8 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Splash;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Splash;
+import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;

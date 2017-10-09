@@ -21,12 +21,12 @@
 package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.effects.CellEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 
 public class AlarmTrap extends Trap {
 

@@ -28,8 +28,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MirrorSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.MirrorSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 

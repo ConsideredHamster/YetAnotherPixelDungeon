@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.levels;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.AmbitiousImp;

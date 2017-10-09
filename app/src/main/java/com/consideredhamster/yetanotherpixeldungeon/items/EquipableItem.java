@@ -25,17 +25,17 @@ import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmor
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.GameMath;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments.Ethereal;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public abstract class EquipableItem extends Item {
     protected static final String TXT_ISEQUIPPED	= "%s is already equipped";
 
 	private static final String TXT_UNEQUIP_CURSED = "your %s is cursed, and you cannot remove it.";
-	private static final String TXT_DETECT_CURSED = "this %s was cursed, but you managed to unequip it before it was too late.";
+	private static final String TXT_DETECT_CURSED = "this %s was cursed, but your managed to unequip it before it was too late.";
 
     protected static final String TXT_EQUIP_CURSED_HAND = "your grip involuntarily tightens around your %s";
     protected static final String TXT_EQUIP_CURSED_BODY = "your %s constricts around you painfully";

@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.armours.body;
 import java.util.ArrayList;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 
 abstract public class ClassArmor extends BodyArmor {

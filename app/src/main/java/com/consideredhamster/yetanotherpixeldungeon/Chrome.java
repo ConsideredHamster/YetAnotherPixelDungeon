@@ -20,7 +20,6 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon;
 
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.watabou.noosa.NinePatch;
 
 public class Chrome {

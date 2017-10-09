@@ -26,9 +26,9 @@ import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.effects.BlobEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.BArray;
+import com.consideredhamster.yetanotherpixeldungeon.utils.BArray;
 import com.watabou.utils.Bundle;
 
 public class Blob extends Actor {

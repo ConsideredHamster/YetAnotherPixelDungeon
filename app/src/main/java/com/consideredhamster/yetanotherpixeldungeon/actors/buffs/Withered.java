@@ -24,10 +24,10 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.QuickSlot;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.ui.QuickSlot;
+import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
 
 public class Withered extends PassiveBuff {
 

@@ -24,8 +24,8 @@ import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfSatiety;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 
 public class Hunger extends Buff {
@@ -52,7 +52,7 @@ public class Hunger extends Buff {
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle( bundle );
+		super.restoreFromBundle(bundle);
 		level = bundle.getFloat( LEVEL );
 	}
 	
@@ -184,10 +184,6 @@ public class Hunger extends Buff {
 
     public float value() {
         return ( STARVING - level ) / STARVING;
-    }
-
-    public float level() {
-        return level;
     }
 
 //	@Override

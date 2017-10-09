@@ -22,30 +22,29 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.AttackIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.ui.AttackIndicator;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Chains;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Chains;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.CellSelector;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MissileSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.QuickSlot;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.MissileSprite;
+import com.consideredhamster.yetanotherpixeldungeon.ui.QuickSlot;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 
 public abstract class ThrowingWeapon extends Weapon {
 
@@ -426,8 +425,6 @@ public abstract class ThrowingWeapon extends Weapon {
             }
 
         } else {
-
-            enemy.sprite.showStatus( CharSprite.DEFAULT, "ammo lost" );
 
             if (quantity == 1) {
 

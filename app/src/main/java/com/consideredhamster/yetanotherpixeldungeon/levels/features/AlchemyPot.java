@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.levels.features;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndBag;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndBag;
 
 public class AlchemyPot {
 

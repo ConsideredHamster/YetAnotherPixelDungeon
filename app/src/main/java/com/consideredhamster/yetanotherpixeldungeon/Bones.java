@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
 import com.watabou.noosa.Game;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;

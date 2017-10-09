@@ -22,8 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Journal;
 import com.consideredhamster.yetanotherpixeldungeon.Journal.Feature;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.effects.BlobEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator.Category;

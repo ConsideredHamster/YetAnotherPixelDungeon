@@ -21,7 +21,9 @@
 package com.consideredhamster.yetanotherpixeldungeon.scenes;
 
 import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.ui.RedButton;
+import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.BitmapTextMultiline;
 import com.watabou.noosa.Camera;
@@ -29,18 +31,18 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.ui.Button;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Rankings;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Archs;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.ExitButton;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Icons;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Window;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndError;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndRanking;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Flare;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.ui.Archs;
+import com.consideredhamster.yetanotherpixeldungeon.ui.ExitButton;
+import com.consideredhamster.yetanotherpixeldungeon.ui.Icons;
+import com.consideredhamster.yetanotherpixeldungeon.ui.Window;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndError;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndRanking;
 
 public class RankingsScene extends PixelScene {
 	

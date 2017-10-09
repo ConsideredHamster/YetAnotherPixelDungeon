@@ -22,19 +22,21 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Rejuvenation;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShaftParticle;
+import com.consideredhamster.yetanotherpixeldungeon.effects.BlobEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShaftParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
 
 public class Sunlight extends Blob {
 	

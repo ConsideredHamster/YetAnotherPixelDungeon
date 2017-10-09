@@ -26,7 +26,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite.Glowing;
 
 public class FrostWard extends Armour.Glyph {
 

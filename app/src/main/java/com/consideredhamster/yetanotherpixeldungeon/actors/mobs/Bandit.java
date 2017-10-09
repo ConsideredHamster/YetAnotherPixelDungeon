@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.BanditSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.BanditSprite;
 
 public class Bandit extends Thief {
 	

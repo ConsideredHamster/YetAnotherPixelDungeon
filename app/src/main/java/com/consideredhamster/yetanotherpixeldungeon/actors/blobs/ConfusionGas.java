@@ -24,8 +24,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.effects.BlobEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 
 public class ConfusionGas extends Blob {
 	

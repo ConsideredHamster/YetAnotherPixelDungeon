@@ -22,8 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.items.keys;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
 
 public class IronKey extends Key {
 

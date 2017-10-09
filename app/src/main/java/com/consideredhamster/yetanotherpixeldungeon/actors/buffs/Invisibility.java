@@ -22,8 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 
 public class Invisibility extends PassiveBuff {
 

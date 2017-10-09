@@ -23,10 +23,10 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Pushing;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
 
 public class Harpoons extends ThrowingWeaponHeavy {
 

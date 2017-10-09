@@ -22,10 +22,15 @@ package com.consideredhamster.yetanotherpixeldungeon.scenes;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.opengl.GLES20;
 
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.DonateButton;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndChangelog;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Flare;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.ui.DonateButton;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndChangelog;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndSettings;
 import com.watabou.input.Touchscreen;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
@@ -36,13 +41,13 @@ import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.ui.Button;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BannerSprites;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Fireball;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Archs;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.ExitButton;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.PrefsButton;
+import com.consideredhamster.yetanotherpixeldungeon.effects.BannerSprites;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Fireball;
+import com.consideredhamster.yetanotherpixeldungeon.ui.Archs;
+import com.consideredhamster.yetanotherpixeldungeon.ui.ExitButton;
+import com.consideredhamster.yetanotherpixeldungeon.ui.PrefsButton;
 
 public class TitleScene extends PixelScene {
 
@@ -198,9 +203,9 @@ public class TitleScene extends PixelScene {
 
 
 
-        DonateButton btnDonate = new DonateButton();
-        btnDonate.setPos(0, h - btnDonate.height());
-        add(btnDonate);
+//        DonateButton btnDonate = new DonateButton();
+//        btnDonate.setPos(0, h - btnDonate.height());
+//        add(btnDonate);
 
         PrefsButton btnPrefs = new PrefsButton();
 		btnPrefs.setPos( 0, 0 );

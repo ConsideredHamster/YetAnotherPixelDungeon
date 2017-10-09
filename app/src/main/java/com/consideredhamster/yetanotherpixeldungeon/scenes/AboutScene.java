@@ -30,11 +30,11 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TouchArea;
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Archs;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.ExitButton;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Icons;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Window;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Flare;
+import com.consideredhamster.yetanotherpixeldungeon.ui.Archs;
+import com.consideredhamster.yetanotherpixeldungeon.ui.ExitButton;
+import com.consideredhamster.yetanotherpixeldungeon.ui.Icons;
+import com.consideredhamster.yetanotherpixeldungeon.ui.Window;
 
 public class AboutScene extends PixelScene {
 

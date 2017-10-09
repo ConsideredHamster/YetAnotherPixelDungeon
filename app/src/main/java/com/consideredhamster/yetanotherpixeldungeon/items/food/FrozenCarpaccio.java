@@ -22,9 +22,9 @@ package com.consideredhamster.yetanotherpixeldungeon.items.food;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 
 public class FrozenCarpaccio extends Food {
 

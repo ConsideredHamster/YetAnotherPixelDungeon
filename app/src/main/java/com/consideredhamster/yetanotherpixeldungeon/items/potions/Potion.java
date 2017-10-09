@@ -24,19 +24,20 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Splash;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Splash;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.ItemStatusHandler;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.windows.WndOptions;
 import com.watabou.utils.Bundle;
 
 public abstract class Potion extends Item {

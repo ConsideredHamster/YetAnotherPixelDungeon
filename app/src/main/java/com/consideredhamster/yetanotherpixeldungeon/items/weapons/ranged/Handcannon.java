@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Bullets;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponAmmo;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
 
 public class Handcannon extends RangedWeaponFlintlock {
 

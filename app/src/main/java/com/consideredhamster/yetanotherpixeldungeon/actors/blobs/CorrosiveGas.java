@@ -29,8 +29,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Elemental;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.effects.BlobEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 

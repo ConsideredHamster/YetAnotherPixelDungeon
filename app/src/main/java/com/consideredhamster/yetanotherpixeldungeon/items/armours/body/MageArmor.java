@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.body;
 
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
 
 public class MageArmor extends BodyArmorCloth {
 	

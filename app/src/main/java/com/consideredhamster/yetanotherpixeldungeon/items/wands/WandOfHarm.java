@@ -22,14 +22,15 @@ package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Splash;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.effects.MagicMissile;
+import com.consideredhamster.yetanotherpixeldungeon.effects.Splash;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.ShadowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Callback;
 
 public class WandOfHarm extends Wand {

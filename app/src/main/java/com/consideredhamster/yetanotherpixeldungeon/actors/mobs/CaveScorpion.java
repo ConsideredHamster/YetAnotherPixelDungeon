@@ -28,8 +28,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ScorpionSprite;
+import com.consideredhamster.yetanotherpixeldungeon.sprites.ScorpionSprite;
 
 public class CaveScorpion extends MobHealthy {
 

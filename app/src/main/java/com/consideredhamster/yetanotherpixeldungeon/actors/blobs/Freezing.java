@@ -25,8 +25,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SnowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.effects.CellEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.effects.particles.SnowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 
