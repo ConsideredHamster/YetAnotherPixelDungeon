@@ -22,9 +22,9 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.LarvaSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.LarvaSprite;
 
 public class Larva extends MobEvasive {
 

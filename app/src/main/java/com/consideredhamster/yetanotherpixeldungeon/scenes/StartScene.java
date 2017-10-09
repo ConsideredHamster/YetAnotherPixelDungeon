@@ -25,30 +25,27 @@ import java.util.HashMap;
 
 import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
 import com.watabou.noosa.BitmapText;
-import com.watabou.noosa.BitmapTextMultiline;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.ui.Button;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.GamesInProgress;
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
-import com.consideredhamster.yetanotherpixeldungeon.effects.BannerSprites;
-import com.consideredhamster.yetanotherpixeldungeon.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.effects.BannerSprites.Type;
-import com.consideredhamster.yetanotherpixeldungeon.ui.Archs;
-import com.consideredhamster.yetanotherpixeldungeon.ui.ExitButton;
-import com.consideredhamster.yetanotherpixeldungeon.ui.RedButton;
-import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndClass;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndOptions;
-import com.watabou.utils.Callback;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BannerSprites;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BannerSprites.Type;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Archs;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.ExitButton;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.RedButton;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndClass;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 
 public class StartScene extends PixelScene {
 
@@ -291,24 +288,24 @@ public class StartScene extends PixelScene {
 		
 		fadeIn();
 		
-		Badges.loadingListener = new Callback() {
-			@Override
-			public void call() {
-				if (Game.scene() == StartScene.this) {
-					YetAnotherPixelDungeon.switchNoFade(StartScene.class);
-				}
-			}
-		};
+//		Badges.loadingListener = new Callback() {
+//			@Override
+//			public void call() {
+//				if (Game.scene() == StartScene.this) {
+//					YetAnotherPixelDungeon.switchNoFade(StartScene.class);
+//				}
+//			}
+//		};
 	}
 	
-	@Override
-	public void destroy() {
-		
-		Badges.saveGlobal();
-		Badges.loadingListener = null;
-		
-		super.destroy();
-	}
+//	@Override
+//	public void destroy() {
+//
+//		Badges.saveGlobal();
+//		Badges.loadingListener = null;
+//
+//		super.destroy();
+//	}
 	
 	private void updateClass( HeroClass cl ) {
 		

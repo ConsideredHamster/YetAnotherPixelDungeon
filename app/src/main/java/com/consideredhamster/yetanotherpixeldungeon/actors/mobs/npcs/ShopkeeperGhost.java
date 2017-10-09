@@ -20,8 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ShopkeeperGhostSprite;
-import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ShopkeeperGhostSprite;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
 
 public class ShopkeeperGhost extends Shopkeeper {
 

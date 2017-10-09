@@ -31,14 +31,14 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.effects.CellEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.effects.particles.FlameParticle;
-import com.consideredhamster.yetanotherpixeldungeon.effects.particles.SnowParticle;
-import com.consideredhamster.yetanotherpixeldungeon.effects.particles.SparkParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SnowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SparkParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.EquipableItem;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public abstract class DamageType {
 

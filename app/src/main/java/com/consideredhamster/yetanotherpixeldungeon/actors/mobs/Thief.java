@@ -29,9 +29,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Knives;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.mechanics.Ballistica;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.MissileSprite;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ThiefSprite;
+import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MissileSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ThiefSprite;
 
 public class Thief extends MobPrecise {
 

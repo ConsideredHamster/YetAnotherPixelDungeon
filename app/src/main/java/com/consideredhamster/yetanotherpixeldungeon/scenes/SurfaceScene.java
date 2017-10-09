@@ -38,12 +38,12 @@ import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.TouchArea;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Music;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
-import com.consideredhamster.yetanotherpixeldungeon.ui.Archs;
-import com.consideredhamster.yetanotherpixeldungeon.ui.RedButton;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Archs;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.RedButton;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 

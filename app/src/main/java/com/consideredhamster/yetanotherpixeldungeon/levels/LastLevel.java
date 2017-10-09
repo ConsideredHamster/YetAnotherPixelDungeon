@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.levels;
 import java.util.Arrays;
 
 import com.watabou.noosa.Scene;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Amulet;
 import com.consideredhamster.yetanotherpixeldungeon.levels.painters.Painter;
 import com.watabou.utils.Random;

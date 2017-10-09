@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.scenes;
 
 import com.watabou.noosa.Game;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndStory;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndStory;
 
 public class IntroScene extends PixelScene {
 

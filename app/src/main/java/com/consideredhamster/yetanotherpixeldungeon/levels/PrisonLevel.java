@@ -22,12 +22,12 @@ package com.consideredhamster.yetanotherpixeldungeon.levels;
 
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.particles.Emitter;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Wandmaker;
-import com.consideredhamster.yetanotherpixeldungeon.effects.Halo;
-import com.consideredhamster.yetanotherpixeldungeon.effects.particles.FlameParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Halo;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room.Type;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;

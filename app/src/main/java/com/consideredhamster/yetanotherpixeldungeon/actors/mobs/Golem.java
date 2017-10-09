@@ -25,7 +25,7 @@ import java.util.HashSet;
 import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.AmbitiousImp;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.GolemSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.GolemSprite;
 
 public class Golem extends MobHealthy {
 

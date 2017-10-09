@@ -25,7 +25,7 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 
-import com.consideredhamster.yetanotherpixeldungeon.sprites.RatKingSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.RatKingSprite;
 
 public class RatKing extends NPC {
 
