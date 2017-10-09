@@ -20,11 +20,10 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedWeaponFlintlock;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 
 public class Combo extends Buff {
 	

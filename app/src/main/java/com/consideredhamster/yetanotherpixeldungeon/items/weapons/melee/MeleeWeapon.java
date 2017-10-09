@@ -29,8 +29,8 @@ import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.Shield
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments.Ethereal;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments.Tempered;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public abstract class MeleeWeapon extends Weapon {
 

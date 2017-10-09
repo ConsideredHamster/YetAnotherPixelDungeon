@@ -1,25 +1,19 @@
 apply plugin: 'com.android.application'
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.consideredhamster.yetanotherpixeldungeon"
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 304
-        versionName '0.3.0d'
+        versionCode 310
+        versionName '0.3.0f'
         archivesBaseName = "yapd-$versionName"
     }
 
     buildTypes {
         release {
-            shrinkResources true
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-
-        debug {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

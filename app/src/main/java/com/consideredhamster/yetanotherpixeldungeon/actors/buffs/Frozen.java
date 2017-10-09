@@ -28,7 +28,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.FrozenCarpaccio;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
-import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 
 public class Frozen extends PassiveBuff {
 

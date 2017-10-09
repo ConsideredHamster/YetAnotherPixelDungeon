@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Stun;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.SeniorSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SeniorSprite;
 import com.watabou.utils.Random;
 
 public class Senior extends DwarfMonk {

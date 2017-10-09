@@ -23,13 +23,12 @@ package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 import java.util.ArrayList;
 
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.effects.Splash;
-import com.consideredhamster.yetanotherpixeldungeon.effects.particles.SparkParticle;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Splash;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SparkParticle;
 import com.watabou.utils.Random;
 
 public class WandOfMagicMissile extends Wand {

@@ -22,14 +22,14 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.effects.particles.EnergyParticle;
-import com.consideredhamster.yetanotherpixeldungeon.effects.particles.SparkParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.EnergyParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SparkParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfDisintegration;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandUtility;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite.Glowing;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
 import com.watabou.utils.Random;
 
 public class Arcane extends Weapon.Enchantment {

@@ -42,8 +42,8 @@ import com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs.Revival
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs.StormWard;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs.Tenacity;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfKnowledge;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public abstract class Armour extends EquipableItem {
 

@@ -25,17 +25,17 @@ import java.util.ArrayList;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfBlink;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.InterlevelScene;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite.Glowing;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
-import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
 import com.watabou.utils.Bundle;
 
 public class LloydsBeacon extends Item {

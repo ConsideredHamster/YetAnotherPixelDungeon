@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.quest;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
 public class RatSkull extends Item {
 	

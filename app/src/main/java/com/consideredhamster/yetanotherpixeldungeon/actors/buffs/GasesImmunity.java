@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas;
-import com.consideredhamster.yetanotherpixeldungeon.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 
 public class GasesImmunity extends PassiveBuff {
 	

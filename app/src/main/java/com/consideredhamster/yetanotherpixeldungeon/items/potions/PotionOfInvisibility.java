@@ -22,13 +22,12 @@ package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
-import com.watabou.utils.Random;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public class PotionOfInvisibility extends Potion {
 

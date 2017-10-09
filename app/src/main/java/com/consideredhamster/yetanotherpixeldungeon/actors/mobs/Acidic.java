@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.AcidicSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.AcidicSprite;
 import com.watabou.utils.Random;
 
 public class Acidic extends CaveScorpion {

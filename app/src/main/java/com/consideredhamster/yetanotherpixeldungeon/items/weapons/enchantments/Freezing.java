@@ -26,7 +26,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfAvalanche;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite.Glowing;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
 import com.watabou.utils.Random;
 
 public class Freezing extends Weapon.Enchantment {

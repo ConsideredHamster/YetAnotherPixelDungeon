@@ -21,7 +21,7 @@
 
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.body;
 
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
 public class DiscArmor extends BodyArmorHeavy {
     {

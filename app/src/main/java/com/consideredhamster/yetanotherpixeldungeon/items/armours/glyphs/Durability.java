@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSprite.Glowing;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
 
 public class Durability extends Armour.Glyph {
 

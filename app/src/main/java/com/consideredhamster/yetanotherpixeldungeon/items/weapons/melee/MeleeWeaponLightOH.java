@@ -25,10 +25,10 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.EquipableItem;
-import com.consideredhamster.yetanotherpixeldungeon.ui.QuickSlot;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
-import com.consideredhamster.yetanotherpixeldungeon.utils.Utils;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndOptions;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.QuickSlot;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 
 public abstract class MeleeWeaponLightOH extends MeleeWeapon {
 

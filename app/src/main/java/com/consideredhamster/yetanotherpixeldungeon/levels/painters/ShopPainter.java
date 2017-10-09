@@ -95,7 +95,6 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.PrisonLevel;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
 import com.consideredhamster.yetanotherpixeldungeon.levels.SewerLevel;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Point;

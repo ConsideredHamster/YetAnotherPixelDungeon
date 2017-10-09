@@ -22,8 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
-import com.consideredhamster.yetanotherpixeldungeon.effects.CellEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.effects.particles.FlameParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 
 public class FireTrap extends Trap {

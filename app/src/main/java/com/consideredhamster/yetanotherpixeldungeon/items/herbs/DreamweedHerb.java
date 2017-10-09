@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMindVision;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
 public class DreamweedHerb extends Herb {
 

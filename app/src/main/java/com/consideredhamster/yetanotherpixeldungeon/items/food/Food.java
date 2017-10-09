@@ -22,8 +22,10 @@ package com.consideredhamster.yetanotherpixeldungeon.items.food;
 
 import java.util.ArrayList;
 
+import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
@@ -31,15 +33,24 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.CarrionSwarm;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
-import com.consideredhamster.yetanotherpixeldungeon.effects.SpellSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.sprites.ItemSpriteSheet;
-import com.consideredhamster.yetanotherpixeldungeon.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public class Food extends Item {
 
 	private static final float TIME_TO_EAT	= 3f;
     private static final String TXT_STUFFED		= "You are overfed... Can't eat anymore.";
+
+    private static final String TXT_NOT_THAT_HUNGRY = "Don't waste your food!";
+
+    private static final String TXT_R_U_SURE =
+        "Your satiety cannot be greater than 100% anyway, so probably it would be a better idea to " +
+        "spend some more time before eating this kind of food. Are you sure you want to eat it now?";
+
+    private static final String TXT_YES			= "Yes, I know what I'm doing";
+    private static final String TXT_NO			= "No, I changed my mind";
 	
 	public static final String AC_EAT	= "EAT";
 
@@ -65,33 +76,29 @@ public class Food extends Item {
 	}
 	
 	@Override
-	public void execute( Hero hero, String action ) {
+	public void execute( final Hero hero, String action ) {
 		if ( action.equals( AC_EAT ) && hero != null ) {
 
-            Hunger hunger = hero.buff(Hunger.class);
+            final Hunger hunger = hero.buff(Hunger.class);
 
             if( hunger != null && !hunger.isOverfed() ) {
 
-                hunger.satisfy(energy);
-                detach(hero.belongings.backpack);
-                onConsume( hero );
+                if( hunger.level() < energy ){
 
-                hero.sprite.operate( hero.pos );
-                hero.busy();
-                SpellSprite.show( hero, SpellSprite.FOOD );
-                Sample.INSTANCE.play( Assets.SND_EAT );
+                    GameScene.show(
+                            new WndOptions( TXT_NOT_THAT_HUNGRY, TXT_R_U_SURE, TXT_YES, TXT_NO ) {
+                                @Override
+                                protected void onSelect( int index ){
+                                    if( index == 0 ){
+                                        consume( hunger, hero );
+                                    }
+                                }
+                            }
+                    );
 
-                hero.spend(TIME_TO_EAT);
-
-                for (Mob mob : Dungeon.level.mobs) {
-                    if ( mob instanceof CarrionSwarm ) {
-                        mob.beckon( hero.pos );
-                    }
+                } else {
+                    consume( hunger, hero );
                 }
-
-                Statistics.foodEaten++;
-                Badges.validateFoodEaten();
-                updateQuickslot();
 
             } else {
 
@@ -105,6 +112,30 @@ public class Food extends Item {
 			
 		}
 	}
+
+    private void consume( Hunger hunger, Hero hero ) {
+
+        hunger.satisfy(energy);
+        detach(hero.belongings.backpack);
+        onConsume( hero );
+
+        hero.sprite.operate( hero.pos );
+        hero.busy();
+        SpellSprite.show( hero, SpellSprite.FOOD );
+        Sample.INSTANCE.play( Assets.SND_EAT );
+
+        hero.spend(TIME_TO_EAT);
+
+        for (Mob mob : Dungeon.level.mobs) {
+            if ( mob instanceof CarrionSwarm ) {
+                mob.beckon( hero.pos );
+            }
+        }
+
+        Statistics.foodEaten++;
+        Badges.validateFoodEaten();
+        updateQuickslot();
+    }
 	
 	@Override
 	public String info() {

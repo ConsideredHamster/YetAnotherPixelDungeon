@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.levels;
 import java.util.List;
 
 import com.watabou.noosa.Scene;
-import com.consideredhamster.yetanotherpixeldungeon.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Bones;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;

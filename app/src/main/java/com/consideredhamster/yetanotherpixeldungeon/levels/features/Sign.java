@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.levels.features;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.DeadEndLevel;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.windows.WndMessage;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndMessage;
 
 public class Sign {
 
