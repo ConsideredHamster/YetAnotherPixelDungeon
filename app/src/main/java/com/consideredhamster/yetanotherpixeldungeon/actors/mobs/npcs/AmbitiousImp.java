@@ -59,7 +59,6 @@ public class AmbitiousImp extends NPC {
 	{
 		name = "ambitious imp";
 		spriteClass = AmbitiousImpSprite.class;
-        sprite.alpha( 0.25f );
 	}
 	
 	private static final String TXT_GOLEMS1	=
