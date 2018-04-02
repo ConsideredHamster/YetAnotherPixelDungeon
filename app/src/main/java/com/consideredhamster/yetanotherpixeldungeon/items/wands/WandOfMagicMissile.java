@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
 import java.util.ArrayList;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;

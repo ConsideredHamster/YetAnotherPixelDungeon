@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
 import java.util.HashSet;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
@@ -142,16 +142,4 @@ public class MirrorImage extends NPC {
 		Dungeon.hero.spend( 1 / Dungeon.hero.moveSpeed() );
 		Dungeon.hero.busy();
 	}
-
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-        IMMUNITIES.add(DamageType.Mind.class);
-        IMMUNITIES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
-    }
 }

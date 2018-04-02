@@ -20,12 +20,21 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
+
+import java.util.HashSet;
+
 public class RingOfVitality extends Ring {
 	
 	{
 		name = "Ring of Vitality";
         shortName = "Vi";
 	}
+
+    public static final HashSet<Class<? extends Element>> RESISTS = new HashSet<>();
+    static {
+        RESISTS.add(Element.Body.class);
+    }
 	
 	@Override
 	protected RingBuff buff( ) {
@@ -36,8 +45,8 @@ public class RingOfVitality extends Ring {
 	public String desc() {
         return isTypeKnown() ?
                 ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-                "increases the body's regenerative properties, augmenting effects of both natural " +
-                "and unnatural sources of healing." +
+                "increases the body's regenerative properties, augmenting effects of all sources " +
+                "of healing, and increasing your resistance to negative effects affecting your body." +
                 ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
             super.desc();
 	}

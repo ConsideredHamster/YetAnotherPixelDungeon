@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.hazards;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Freezing;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.FrigidVapours;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfFrigidVapours;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
@@ -45,13 +45,13 @@ public class Icecap extends Plant {
 		
 		PathFinder.buildDistanceMap( pos, BArray.not( Level.losBlockHigh, null ), 1 );
 		
-		Fire fire = (Fire)Dungeon.level.blobs.get( Fire.class );
-		
-		for (int i=0; i < Level.LENGTH; i++) {
-			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				Freezing.affect( i, 1, fire );
-			}
-		}
+//		Fire fire = (Fire)Dungeon.energy.blobs.get( Fire.class );
+//
+//		for (int i=0; i < Level.LENGTH; i++) {
+//			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
+////				FrigidVapours.affect( i, 1, fire );
+//			}
+//		}
 	}
 	
 	@Override

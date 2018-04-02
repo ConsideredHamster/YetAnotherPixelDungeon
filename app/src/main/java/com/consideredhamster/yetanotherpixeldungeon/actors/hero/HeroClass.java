@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.hero;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.ArmorerKit;
@@ -35,7 +37,6 @@ import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.RoundS
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.Keyring;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.Food;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfOvergrowth;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfRaiseDead;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfMagicMissile;
@@ -45,7 +46,6 @@ import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Dagger;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Quarterstaff;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Shortsword;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Knives;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.QuickSlot;
 import com.watabou.utils.Bundle;
 
 public enum HeroClass {
@@ -183,8 +183,10 @@ public enum HeroClass {
 		new Keyring().collect();
         new Food().collect();
 
-        ((Waterskin)(QuickSlot.quickslotValue_3 = new Waterskin())).setLimit( 5 ).fill().collect();
-	}
+        new Waterskin().setLimit( 5 ).fill().collect();
+        new OilLantern().collect();
+
+    }
 	
 	public Badges.Badge masteryBadge() {
 		switch (this) {

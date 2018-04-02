@@ -20,14 +20,14 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
@@ -47,17 +47,20 @@ public class WandOfCharm extends WandUtility {
 
 //            if( Char.hit( curUser, ch, true, true ) ) {
 
-                if (ch == Dungeon.hero) {
-                    Buff.affect(ch, Confusion.class, curCharges );
-                    ch.sprite.centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 5);
-                } else {
-                    Charm buff = Buff.affect(ch, Charm.class, curCharges );
+//                if (ch == Dungeon.hero) {
+//
+//                    BuffActive.add(ch, Vertigo.class, (float)curCharges );
+//                    ch.sprite.centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 5);
+//
+//                } else {
+
+                    Charmed buff = BuffActive.add(ch, Charmed.class, (float)curCharges );
 
                     if( buff != null ) {
                         buff.object = curUser.id();
                         ch.sprite.centerEmitter().start( Speck.factory(Speck.HEART), 0.2f, 5 );
                     }
-                }
+//                }
 
 //            } else {
 //                ch.sprite.showStatus( CharSprite.NEUTRAL, ch.defenseVerb() );

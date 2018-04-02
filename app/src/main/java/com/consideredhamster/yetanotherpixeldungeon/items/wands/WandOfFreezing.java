@@ -20,12 +20,17 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Freezing;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.FrigidVapours;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Splash;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
@@ -55,19 +60,26 @@ public class WandOfFreezing extends WandUtility {
 
         Splash.at( cell, 0xFFFFFF, 10 );
 
-        Fire fire = (Fire) Dungeon.level.blobs.get( Fire.class );
-
-        for (int i=1; i < Ballistica.distance ; i++) {
-
-            Freezing.affect(Ballistica.trace[i], curCharges, fire);
-
+        Char ch = Actor.findChar( cell );
+        if (ch != null) {
+            BuffActive.add( ch, Frozen.class, curCharges );
         }
 
-        for (int i : Level.NEIGHBOURS8) {
-            if( !Level.solid[cell + i] ) {
-                Freezing.affect( cell + i, curCharges, fire );
-            }
-        }
+        GameScene.add( Blob.seed( cell, 60 + curCharges * 10, FrigidVapours.class ) );
+
+//        Fire fire = (Fire) Dungeon.energy.blobs.get( Fire.class );
+//
+//        for (int i=1; i < Ballistica.distance ; i++) {
+//
+//            FrigidVapours.affect(Ballistica.trace[i], curCharges, fire);
+//
+//        }
+//
+//        for (int i : Level.NEIGHBOURS8) {
+//            if( !Level.solid[cell + i] ) {
+//                FrigidVapours.affect( cell + i, curCharges, fire );
+//            }
+//        }
 
 
 //		Char ch = Actor.findChar( cell );

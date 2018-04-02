@@ -82,7 +82,9 @@ public class Bookshelf {
 
 			"old notes about B'gnu-Thun, a hunter and a craftsman. Beautiful belts, mighty shields and lot of other wondrous things were created thanks to his talent.", 
 
-			"a story about R'byj, a cunning troll warlord who, with his knowledge of tactics and strategies, made a huge impact on the current state of this world.", 
+			"a story about R'byj, a cunning troll warlord who, with his knowledge of tactics and strategies, made a huge impact on the current state of this world.",
+
+			"music sheets written by Jivvy, a talented bard from eastern lands whose songs deserved much greater praise and popularity.",
 
 			"a tome which was written by Evan the Shattered, a great sage who worked tirelessly to improve his world. His deeds inspired many, and were adored by even more.",
 

@@ -20,46 +20,39 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Exposed;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Guard;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Banished;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Blinded;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Controlled;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Disrupted;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Ensnared;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Exposed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Focused;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Guard;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Light;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Amok;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Challenge;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.ForceField;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Bleeding;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Crippled;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Enraged;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Cripple;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Light;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ensnared;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Sleep;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Speed;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Levitation;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.MindVision;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Stun;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Slow;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Terror;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.UnholyArmor;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Levitation;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.PoisonParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs.Deflection;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
@@ -108,8 +101,6 @@ public abstract class Char extends Actor {
 	public boolean flying		= false;
     public boolean moving		= false;
 
-
-
 	public int invisible		= 0;
 
 	private HashSet<Buff> buffs = new HashSet<Buff>();
@@ -120,17 +111,12 @@ public abstract class Char extends Actor {
 
         moving = false;
 
-        Guard guard = buff( Guard.class );
-
-        if( guard != null ) {
-            Buff.detach( guard );
-        }
-
 		return false;
 	}
 
-
-
+    public int viewDistance() {
+        return buff( Blinded.class ) == null ? VIEW_DISTANCE : 1 ;
+    };
 
     private static final String POS			= "pos";
 	private static final String TAG_HP		= "HP";
@@ -159,15 +145,10 @@ public abstract class Char extends Actor {
 
 		for (Bundlable b : bundle.getCollection( BUFFS )) {
 			if (b != null) {
-				((Buff)b).attachTo( this );
+				((Buff)b).attachOnLoad( this );
 			}
 		}
 	}
-
-    public int viewDistance() {
-//        return 6;
-        return buff( Blindness.class ) == null ? VIEW_DISTANCE : 1 ;
-    };
 	
 	public boolean attack( Char enemy ){
 
@@ -209,7 +190,7 @@ public abstract class Char extends Actor {
 
                 int dr = enemy.armorClass( blocked );
 
-                damageRoll = absorb( damageRoll, dr, damageType() != null );
+                damageRoll = absorb( damageRoll, dr, !( damageType() instanceof Element.Physical ) );
 
             }
 
@@ -218,6 +199,16 @@ public abstract class Char extends Actor {
             enemy.damage( damageRoll, this, damageType());
 
             if( guarded != null ) guarded.reset( enemy.blocksRanged() );
+
+//            Shocked buff1 = buff( Shocked.class );
+//
+//            if( buff1 != null )
+//                buff1.discharge();
+//
+//            Shocked buff2 = enemy.buff( Shocked.class );
+//
+//            if( buff2 != null )
+//                buff2.discharge();
 
             if (enemy == Dungeon.hero) {
 
@@ -254,27 +245,31 @@ public abstract class Char extends Actor {
         if( defender.buff( Guard.class ) != null )
             return true;
 
-        if( defender.isOpenedTo(attacker) )
+        if( defender.isExposedTo(attacker) )
             return true;
 
         if( defender.isCharmedBy(attacker) )
             return true;
 
-        int attRoll = ( magic ? attacker.magicSkill() : attacker.accuracy() );
+        int attValue = ( magic ? attacker.magicSkill() : attacker.accuracy() );
 
         if( Level.fieldOfView[ defender.pos ] )
-            attRoll *= 2;
+            attValue *= 2;
+
+        if( attacker.buff( Focused.class ) != null ){
+            attValue *= 2;
+        }
 
         if( ranged ) {
 
             int distance = Math.min( 9, Level.distance(attacker.pos, defender.pos) );
 
             if( distance > 1 ) {
-                attRoll = attRoll * (9 - distance);
+                attValue = attValue * (9 - distance);
             }
         }
 
-        int defRoll = defender.dexterity();
+        int defValue = defender.dexterity();
         int impassable = 16;
 
         for (int n : Level.NEIGHBOURS8) {
@@ -283,9 +278,19 @@ public abstract class Char extends Actor {
             }
         }
 
-        defRoll = defRoll * impassable / 16;
+        defValue = defValue * impassable / 16;
 
-		return attRoll > Random.Int( attRoll + defRoll );
+        int roll = Random.Int( attValue + defValue );
+
+//        float buff = attacker.ringBuffsBaseZero( RingOfFortune.Fortune.class ) - defender.ringBuffsBaseZero( RingOfFortune.Fortune.class );
+//
+//        if( buff > 0.0f && Random.Float() < buff ) {
+//            roll = Math.min( roll, Random.Int( attValue + defValue ) );
+//        } else if( buff < 0.0f && Random.Float() < -buff ) {
+//            roll = Math.max( roll, Random.Int( attValue + defValue ) );
+//        }
+
+		return attValue > roll;
 	}
 
     public static int absorb( int damage, int armorClass ) {
@@ -317,11 +322,23 @@ public abstract class Char extends Actor {
             Dungeon.hero.interrupt();
         }
     }
-	
+
+    protected float healthValueModifier() {
+        return 1.0f;
+    }
+
+    final public int currentHealthValue() {
+        return (int)( HP * healthValueModifier() );
+    }
+
+    final public int totalHealthValue() {
+        return (int)( HT * healthValueModifier() );
+    }
+
 	public int accuracy() {
         return 0;
     }
-	
+
 	public int dexterity() {
 		return 0;
 	}
@@ -334,8 +351,10 @@ public abstract class Char extends Actor {
         return TICK / attackSpeed();
     }
 
-    public float attackSpeed() {
-        return 1.0f;
+    public float attackSpeed(){
+
+        return ( buff( Enraged.class ) == null ? ( buff( Poisoned.class ) == null ? TICK : TICK * 0.5f ) : TICK );
+
     }
 
 
@@ -363,17 +382,13 @@ public abstract class Char extends Actor {
 
 	public int armorClass( boolean withShield ) {
 
-        if (buff( Frozen.class ) != null) {
-            return 0;
-        }
-
         float armourMod = 1.0f;
 
         if ( buff(Withered.class) != null ) {
-            armourMod *= buff( Withered.class ).modifier();
+            armourMod *= 0.5f;
         }
 
-        if ( buff(Ooze.class) != null ) {
+        if ( buff(Corrosion.class) != null ) {
             armourMod *= 0.5f;
         }
 
@@ -383,16 +398,21 @@ public abstract class Char extends Actor {
 
     public float guardChance() {
 
-        if ( buff( Frozen.class ) != null || buff( Stun.class ) != null )
-            return 0.0f;
-
         float guardChance = 1.0f;
 
-        if ( buff( Confusion.class ) != null ) {
+        if ( buff( Poisoned.class ) != null ) {
             guardChance *= 0.5f;
         }
 
-        if ( buff( Blindness.class ) != null ) {
+        if ( buff( Vertigo.class ) != null ) {
+            guardChance *= 0.5f;
+        }
+
+        if ( buff( Blinded.class ) != null ) {
+            guardChance *= 0.5f;
+        }
+
+        if ( buff( Disrupted.class ) != null ) {
             guardChance *= 0.5f;
         }
 
@@ -415,8 +435,8 @@ public abstract class Char extends Actor {
         return 0;
     }
 
-	public DamageType damageType() {
-		return null;
+	public Element damageType() {
+		return Element.PHYSICAL;
 	}
 
     public boolean ignoresAC() { return false; }
@@ -430,15 +450,15 @@ public abstract class Char extends Actor {
     }
 
 	public float moveSpeed() {
-		return ( buff( Levitation.class ) == null ? ( buff( Cripple.class ) == null ? baseSpeed : baseSpeed * 0.5f ) : baseSpeed * 1.5f );
+		return ( buff( Levitation.class ) == null ? ( buff( Crippled.class ) == null ? baseSpeed : baseSpeed * 0.5f ) : baseSpeed * 1.5f );
 	}
 
     public float awareness() {
-        return buff( Confusion.class ) == null && buff( Blindness.class ) == null ? 1.0f : 0.0f ;
+        return buff( Vertigo.class ) == null && buff( Blinded.class ) == null ? 1.0f : 0.5f ;
     }
 
     public float stealth() {
-        return buff( Burning.class ) == null && buff( Light.class ) == null ? 1.0f : 0.0f ;
+        return buff( Burning.class ) == null && buff( Ensnared.class ) == null ? 1.0f : 0.5f ;
     }
 
     public boolean isRanged() {
@@ -450,15 +470,35 @@ public abstract class Char extends Actor {
     }
 
     public boolean isMagical() {
-        return immunities().contains( DamageType.Body.class );
+        return false;
     }
 
     public boolean isHeavy() {
         return STR() > Dungeon.hero.STR();
     }
 
-	public void damage( int dmg, Object src, DamageType type ) {
-		
+	public void heal( int value ) {
+
+        if (HP <= 0 || value <= 0) {
+            return;
+        }
+
+        if( buff( Withered.class ) != null ) {
+            value = ( value / 2 + ( Random.Int( 2 ) < value % 2 ? 1 : 0 ) );
+        }
+
+        if( buff( RingOfVitality.Vitality.class ) != null ){
+            value *= ringBuffsHalved( RingOfVitality.Vitality.class );
+        }
+
+        HP = Math.min( HP + value, HT );
+
+        sprite.showStatus( CharSprite.POSITIVE, Integer.toString( value ) );
+
+    }
+
+	public void damage( int dmg, Object src, Element type ) {
+
 		if (HP <= 0) {
 			return;
 		}
@@ -473,24 +513,38 @@ public abstract class Char extends Actor {
             Dungeon.hero.interrupt( "You were awoken by an attack!" );
         }
 
+        boolean amplified = false;
         int textColor = CharSprite.NEGATIVE;
 
         if( type != null ) {
 
-            Class<? extends DamageType> typeClass = type.getClass();
+            float resist = Element.Resist.getResistance( this, type );
 
-            if (immunities().contains(typeClass)) {
-                dmg = 0;
-                textColor = CharSprite.NEUTRAL;
-            } else if (resistances().contains(typeClass)) {
-                dmg = dmg / 2 + Random.Int(dmg % 2 + 1);
-                textColor = CharSprite.WARNING;
+            if( !Element.Resist.checkIfDefault( resist ) ) {
+
+                if ( Element.Resist.checkIfNegated( resist ) ) {
+
+                    dmg = 0;
+                    textColor = CharSprite.NEUTRAL;
+
+                } else if ( Element.Resist.checkIfPartial( resist ) ) {
+
+                    dmg = dmg / 2 + Random.Int(dmg % 2 + 1);
+                    textColor = CharSprite.WARNING;
+
+                } else if ( Element.Resist.checkIfAmplified( resist ) ) {
+
+                    dmg += Random.IntRange( 1, dmg );
+                    amplified = true;
+
+                }
+
             }
 
             dmg = type.proc( this, dmg );
         }
 
-        if( type != null && src instanceof Char ) {
+        if( type != null && !( type instanceof Element.Physical ) && src instanceof Char ) {
             if (src instanceof Hero) {
 
                 Hero hero = (Hero) src;
@@ -512,18 +566,15 @@ public abstract class Char extends Actor {
             }
         }
 
-		sprite.showStatus( textColor, Integer.toString( dmg ) );
+		sprite.showStatus( textColor, Integer.toString( dmg ) + ( amplified ? "!" : "" ) );
 
         sprite.flash();
 
         HP -= dmg;
 
-        if( src instanceof Char && !( type instanceof DamageType.Frost)  ) {
-            Buff.detach(this, Frozen.class);
-        }
-
         if( src instanceof Char && isCharmedBy( (Char)src ) ) {
-            Buff.detach(this, Charm.class);
+            Buff.detach(this, Controlled.class);
+            Buff.detach(this, Charmed.class);
         }
 
 		if ( !isAlive() ) {
@@ -535,9 +586,10 @@ public abstract class Char extends Actor {
 	
 	public void destroy() {
 		HP = 0;
+
 		Actor.remove(this);
-		Actor.freeCell(pos);
-	}
+        Actor.freeCell(pos);
+    }
 
     public void die( Object src) {
 
@@ -545,7 +597,7 @@ public abstract class Char extends Actor {
 
     }
 
-	public void die( Object src, DamageType dmg ) {
+	public void die( Object src, Element dmg ) {
 		destroy();
 
 		sprite.die();
@@ -553,23 +605,7 @@ public abstract class Char extends Actor {
 
     public boolean detected( Char ch ) {
 
-//        float rnd1 = Random.Float();
-//
-//        float ste = ch.stealth();
-
-//        float geo =  ( !ch.flying ? Dungeon.level.stealthModifier( ch.pos ) : 1.5f );
-//
-//        float awr = awareness();
-//
-//        int dist = distance(ch);
-//        int rnd2 = Random.IntRange(1, dist + 1);
-//
-//        float ch1 = rnd1 * ste * geo;
-//        float ch2 = awr / rnd2;
-//
-//        return ch1 < ch2;
-
-        return Random.Float( ch.stealth() ) * ( !ch.flying ? Dungeon.level.stealthModifier( ch.pos ) : 1.5f )
+        return ch.buff( Light.class) != null || Random.Float( ch.stealth() ) * ( !ch.flying ? Dungeon.level.stealthModifier( ch.pos ) : 1.5f )
                 < Random.Float( awareness() * 2.0f ) / Math.sqrt( distance(ch) + 1 );
 
     }
@@ -581,9 +617,9 @@ public abstract class Char extends Actor {
     public boolean isDamagedOverTime() {
         for (Buff b : buffs) {
             if (b instanceof Burning
-                || b instanceof Poison
-                || b instanceof Ooze
-                || b instanceof Bleeding
+                || b instanceof Poisoned
+                || b instanceof Corrosion
+                || b instanceof Crippled
             ) {
                 return true;
             }
@@ -593,15 +629,17 @@ public abstract class Char extends Actor {
 
 	@Override
 	public void spend( float time ) {
-		
+
 		float timeScale = 1f;
-		if (buff( Slow.class ) != null) {
-			timeScale *= 0.5f;
+
+		if (buff( Frozen.class ) != null) {
+			timeScale *= 0.667f;
 		}
-		if (buff( Speed.class ) != null) {
-			timeScale *= 1.5f;
-		}
-		
+
+//		if (buff( Speed.class ) != null) {
+//			timeScale *= 1.5f;
+//		}
+
 		super.spend( time / timeScale );
 	}
 	
@@ -678,7 +716,7 @@ public abstract class Char extends Actor {
         return false;
     }
 
-    public boolean isOpenedTo( Char ch ) {
+    public boolean isExposedTo( Char ch ) {
         int chID = ch.id();
         for (Buff b : buffs) {
             if (b instanceof Exposed && ((Exposed)b).object == chID) {
@@ -687,115 +725,37 @@ public abstract class Char extends Actor {
         }
         return false;
     }
-	
-	public boolean isCharmedBy( Char ch ) {
-		int chID = ch.id();
-		for (Buff b : buffs) {
-			if (b instanceof Charm && ((Charm)b).object == chID) {
-				return true;
-			}
-		}
-		return false;
-	}
 
-    public boolean isCharmedBy( int chID ) {
+    public boolean isCharmedBy( Char ch ) {
 
-        for (Buff b : buffs) {
-            if (b instanceof Charm && ((Charm)b).object == chID) {
-                return true;
+        int chID = ch.id();
+
+        return isCharmed() == chID;
+    }
+
+    public int isCharmed() {
+
+        for (Buff b : buffs){
+            if( b instanceof Charmed ){
+                return ( (Charmed) b ).object;
+            } else if( b instanceof Controlled ){
+                return ( (Controlled) b ).object;
             }
         }
-        return false;
+
+        return 0;
+    }
+
+    public boolean isScared() {
+
+        return buff( Tormented.class ) != null || buff( Banished.class ) != null;
+
     }
 	
 	public boolean add( Buff buff ) {
-		
+
 		buffs.add(buff);
 		Actor.add(buff);
-		
-		if (sprite != null) {
-			if (buff instanceof Poison) {
-				
-				CellEmitter.center( pos ).burst( PoisonParticle.SPLASH, 5 );
-				sprite.showStatus( CharSprite.NEGATIVE, "poisoned" );
-				
-			} else if (buff instanceof Amok) {
-				
-				sprite.showStatus( CharSprite.NEGATIVE, "amok" );
-
-			} else if (buff instanceof Slow) {
-
-				sprite.showStatus( CharSprite.NEGATIVE, "slowed" );
-				
-			} else if (buff instanceof MindVision) {
-				
-				sprite.showStatus( CharSprite.POSITIVE, "mind" );
-				sprite.showStatus( CharSprite.POSITIVE, "vision" );
-				
-			} else if (buff instanceof Stun) {
-
-				sprite.add( CharSprite.State.PARALYSED );
-				sprite.showStatus( CharSprite.NEGATIVE, "stunned" );
-				
-			} else if (buff instanceof Terror) {
-				
-				sprite.showStatus( CharSprite.NEGATIVE, "frightened" );
-				
-			} else if (buff instanceof Ensnared) {
-				
-				sprite.showStatus( CharSprite.NEGATIVE, "ensnared" );
-				
-			} else if (buff instanceof Cripple) {
-
-				sprite.showStatus( CharSprite.NEGATIVE, "crippled" );
-				
-			} else if (buff instanceof Bleeding) {
-
-				sprite.showStatus( CharSprite.NEGATIVE, "bleeding" );
-				
-			} else if (buff instanceof Confusion) {
-
-                sprite.showStatus( CharSprite.NEGATIVE, "dizzy" );
-
-//            } else if (buff instanceof Withered) {
-//
-//                sprite.showStatus(CharSprite.NEGATIVE, "weakened");
-
-            } else if (buff instanceof Sleep) {
-				sprite.idle();
-			}  else if (buff instanceof Burning) {
-                sprite.add( CharSprite.State.BURNING );
-            } else if (buff instanceof Withered) {
-                sprite.add( CharSprite.State.WITHERED );
-            } else if (buff instanceof Levitation) {
-                sprite.showStatus( CharSprite.POSITIVE, "levitating" );
-                sprite.add( CharSprite.State.LEVITATING );
-            } else if (buff instanceof Frozen) {
-                sprite.showStatus(CharSprite.NEGATIVE, "frozen");
-                sprite.add(CharSprite.State.FROZEN);
-			} else if (buff instanceof Invisibility) {
-                sprite.showStatus( CharSprite.POSITIVE, "invisible" );
-				sprite.add( CharSprite.State.INVISIBLE );
-			} else if (buff instanceof Enraged) {
-//                sprite.showStatus(CharSprite.POSITIVE, "enraged");
-                sprite.add(CharSprite.State.ENRAGED);
-            } else if (buff instanceof Charm) {
-                sprite.showStatus(CharSprite.POSITIVE, "charmed");
-                sprite.add( CharSprite.State.CHARMED );
-            } else if (buff instanceof ForceField) {
-                sprite.showStatus(CharSprite.POSITIVE, "shield");
-                sprite.add(CharSprite.State.PROTECTION);
-            } else if (buff instanceof UnholyArmor) {
-                sprite.showStatus(CharSprite.POSITIVE, "unholy armor");
-                sprite.add(CharSprite.State.UNHOLYARMOR);
-            } else if (buff instanceof Exposed) {
-                sprite.showStatus( CharSprite.NEUTRAL, TXT_EXPOSED );
-            }
-		}
-
-//        if( Dungeon.hero == this ) {
-//            BuffIndicator.refreshHero();
-//        }
 
         return true;
 	}
@@ -805,31 +765,6 @@ public abstract class Char extends Actor {
 		buffs.remove(buff);
 		Actor.remove(buff);
 
-        if (buff instanceof Burning) {
-            sprite.remove( CharSprite.State.BURNING );
-        } else if (buff instanceof Charm) {
-            sprite.remove( CharSprite.State.CHARMED );
-        } else if (buff instanceof Withered) {
-            sprite.remove( CharSprite.State.WITHERED );
-        } else if (buff instanceof Levitation) {
-			sprite.remove( CharSprite.State.LEVITATING );
-		} else if (buff instanceof Invisibility && invisible <= 0) {
-			sprite.remove( CharSprite.State.INVISIBLE );
-		} else if (buff instanceof Stun) {
-			sprite.remove( CharSprite.State.PARALYSED );
-		} else if (buff instanceof Frozen) {
-            sprite.remove( CharSprite.State.FROZEN );
-        } else if (buff instanceof Enraged) {
-            sprite.remove( CharSprite.State.ENRAGED );
-        } else if (buff instanceof Challenge) {
-            sprite.remove( CharSprite.State.CHALLENGE );
-        } else if (buff instanceof Light) {
-            sprite.remove( CharSprite.State.ILLUMINATED );
-        } else if (buff instanceof ForceField) {
-            sprite.remove( CharSprite.State.PROTECTION );
-        } else if (buff instanceof UnholyArmor) {
-            sprite.remove( CharSprite.State.UNHOLYARMOR);
-        }
     }
 	
 	public void remove( Class<? extends Buff> buffClass ) {
@@ -844,41 +779,18 @@ public abstract class Char extends Actor {
 			buff.detach();
 		}
 	}
-	
+
 	public void updateSpriteState() {
 		for (Buff buff:buffs) {
-            if (buff instanceof Burning) {
-                sprite.add(CharSprite.State.BURNING);
-            } else if (buff instanceof Charm) {
-                sprite.add(CharSprite.State.CHARMED);
-            } else if (buff instanceof Withered) {
-                sprite.add(CharSprite.State.WITHERED);
-            } else if (buff instanceof Levitation) {
-				sprite.add(CharSprite.State.LEVITATING);
-			} else if (buff instanceof Invisibility) {
-				sprite.add( CharSprite.State.INVISIBLE );
-			} else if (buff instanceof Stun) {
-				sprite.add( CharSprite.State.PARALYSED );
-			} else if (buff instanceof Frozen) {
-				sprite.add( CharSprite.State.FROZEN );
-			} else if (buff instanceof Light) {
-                sprite.add( CharSprite.State.ILLUMINATED );
-            } else if (buff instanceof Enraged) {
-                sprite.add( CharSprite.State.ENRAGED );
-            } else if (buff instanceof Challenge) {
-                sprite.add( CharSprite.State.CHALLENGE );
-            } else if (buff instanceof ForceField) {
-                sprite.add( CharSprite.State.PROTECTION );
-            } else if (buff instanceof UnholyArmor) {
-                sprite.add( CharSprite.State.UNHOLYARMOR);
-            }
+
+            buff.applyVisual();
+
 		}
 	}
 
 	public void move( int step ) {
 		
-		if (Level.adjacent( step, pos ) && Random.Int( 2 ) == 0 && ( ( buff( Confusion.class ) != null
-            || this instanceof Mob && buff( Blindness.class ) != null ) ) ) {
+		if (Level.adjacent( step, pos ) && Random.Int( 2 ) == 0 && ( ( buff( Vertigo.class ) != null ) ) ) {
 
 			step = pos + Level.NEIGHBOURS8[Random.Int( 8 )];
 
@@ -926,7 +838,6 @@ public abstract class Char extends Actor {
         next();
     }
 
-
     public void onComplete() {
         next();
     }
@@ -934,12 +845,11 @@ public abstract class Char extends Actor {
 	public void onOperateComplete() {
 		next();
 	}
-	
-	public HashSet<Class<? extends DamageType>> resistances() {
-		return new HashSet<>();
+
+	public HashMap<Class<? extends Element>, Float> resistances() {
+		return new HashMap<>();
 	}
-	
-	public HashSet<Class<? extends DamageType>> immunities() {
-		return new HashSet<>();
-	}
+
+
+
 }

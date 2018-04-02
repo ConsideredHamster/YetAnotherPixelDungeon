@@ -25,7 +25,7 @@ import java.util.HashSet;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
@@ -41,8 +41,6 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.EyeSprite;
 import com.watabou.utils.Random;
 
 public class EvilEye extends MobRanged {
-	
-	private static final String TXT_DEATHGAZE_KILLED = "%s's deathgaze killed you...";
 
     public EvilEye() {
 
@@ -52,32 +50,12 @@ public class EvilEye extends MobRanged {
 		spriteClass = EyeSprite.class;
 		
 		flying = true;
-		
-//		loot = new Dewdrop();
-//		lootChance = 0.5f;
-
         loot = new MysteryMeat();
         lootChance = 0.35f;
 
+        resistances.put(Element.Energy.class, Element.Resist.PARTIAL);
+
 	}
-	
-//	private int hitCell;
-	
-//	@Override
-//	protected boolean canAttack( Char enemy ) {
-//
-//        if( isCharmedBy( enemy ) )
-//            return false;
-//
-//		hitCell = Ballistica.cast( pos, enemy.pos, true, false );
-//
-//		for (int i=1; i < Ballistica.distance; i++) {
-//			if (Ballistica.trace[i] == enemy.pos) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
 
     @Override
 	protected boolean getCloser( int target ) {
@@ -143,7 +121,7 @@ public class EvilEye extends MobRanged {
 
                 if (hit(this, ch, false, true)) {
 
-                    ch.damage( absorb( damageRoll(), enemy.armorClass(), true ), this, DamageType.ENERGY );
+                    ch.damage( absorb( damageRoll(), enemy.armorClass(), true ), this, Element.ENERGY );
 
                     if (Dungeon.visible[pos]) {
                         ch.sprite.flash();
@@ -268,15 +246,4 @@ public class EvilEye extends MobRanged {
 			"One of this creature's other names is \"orb of hatred\", because when it sees an enemy, " +
 			"it uses its deathgaze recklessly, often ignoring its allies and wounding them.";
 	}
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Energy.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
 }

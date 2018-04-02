@@ -25,15 +25,15 @@ import java.util.HashSet;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ensnared;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Ensnared;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
@@ -59,28 +59,28 @@ public class Elemental extends MobPrecise {
         flying = true;
         armorClass = 0;
 
-//		loot = Explosives.Gunpowder.class;
-//		lootChance = 0.25f;
+        resistances.put( Element.Shock.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Acid.class, Element.Resist.PARTIAL );
+
+        resistances.put( Element.Body.class, Element.Resist.IMMUNE );
+
+        resistances.put( Element.Frost.class, Element.Resist.VULNERABLE );
+
+    }
+
+    public boolean isMagical() {
+        return true;
     }
 
     @Override
-    public DamageType damageType() {
-        return DamageType.FLAME;
+    public Element damageType() {
+        return Element.FLAME;
     }
 
     @Override
     public int damageRoll() {
         return super.damageRoll() / 2 ;
     }
-
-//	@Override
-//	public int attackProc( Char enemy, int damage ) {
-//		if (Random.Int( 2 ) == 0) {
-//			Buff.affect( enemy, Burning.class ).reignite( enemy );
-//		}
-//
-//		return damage;
-//	}
 
     @Override
     protected boolean canAttack( Char enemy ) {
@@ -111,7 +111,7 @@ public class Elemental extends MobPrecise {
 
         if (hit( this, enemy, true, true )) {
 
-            enemy.damage( absorb(damageRoll(), enemy.armorClass(), true), this, DamageType.FLAME );
+            enemy.damage( absorb(damageRoll(), enemy.armorClass(), true), this, Element.FLAME );
 
         } else {
 
@@ -122,9 +122,9 @@ public class Elemental extends MobPrecise {
     }
 
     @Override
-    public void damage( int dmg, Object src, DamageType type ) {
+    public void damage( int dmg, Object src, Element type ) {
 
-        if ( type == DamageType.FLAME ) {
+        if ( type == Element.FLAME ) {
 
             if (HP < HT) {
                 int reg = Math.min( dmg / 2, HT - HP );
@@ -185,57 +185,8 @@ public class Elemental extends MobPrecise {
         }
 	}
 
-//    protected boolean doAttack( Char enemy ) {
-//
-//        if (Level.adjacent( pos, enemy.pos )) {
-//
-//            return super.doAttack( enemy );
-//
-//        } else {
-//
-//            boolean visible = Level.fieldOfView[pos] || Level.fieldOfView[enemy.pos];
-//            if (visible) {
-//                sprite.cast(enemy.pos);
-//            } else {
-//                zap();
-//            }
-//
-//            return !visible;
-//        }
-//    }
-//
-//    private void zap() {
-//
-//        spend( attackDelay() );
-//
-////        for (int i=1; i < Ballistica.distance - 1; i++) {
-////            int c = Ballistica.trace[i];
-////            if (Level.flammable[c]) {
-////                GameScene.add( Blob.seed( c, 1, Fire.class ) );
-////            }
-////        }
-////
-////        if (!Level.water[enemy.pos]) {
-////            GameScene.add(Blob.seed(enemy.pos, 1, Fire.class));
-////        }
-//
-//        if (hit( this, enemy, true, true )) {
-//
-//            int dmg = damageRoll() / 2;
-//            enemy.damage( dmg, this, DamageType.FLAME );
-//
-//        } else {
-//            enemy.sprite.showStatus(CharSprite.NEUTRAL, enemy.defenseVerb());
-//        }
-//    }
-
-//    public void onZapComplete() {
-//        zap();
-//        next();
-//    }
-
     @Override
-    public void die( Object cause, DamageType dmg ) {
+    public void die( Object cause, Element dmg ) {
 
         if (Level.flammable[pos]) {
             GameScene.add(Blob.seed(pos, 1, Fire.class));
@@ -250,40 +201,5 @@ public class Elemental extends MobPrecise {
 			"Wandering fire elementals are a byproduct of summoning greater entities. " +
 			"They are too chaotic in their nature to be controlled by even the most powerful demonologist.";
 	}
-	
-//	private static final HashSet<Class<?>> IMMUNITIES = new HashSet<Class<?>>();
-//
-//	static {
-//        IMMUNITIES.add( Fire.class );
-//        IMMUNITIES.add( Leech.class );
-//        IMMUNITIES.add( Poison.class );
-//        IMMUNITIES.add( Burning.class );
-//        IMMUNITIES.add( WandOfFirebolt.class );
-//        IMMUNITIES.add( ScrollOfPsionicBlast.class );
-//	}
-//
-//	@Override
-//	public HashSet<Class<?>> immunities() {
-//		return IMMUNITIES;
-//	}
-public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
 
-    static {
-//        RESISTANCES.add(DamageType.Energy.class);
-
-//        IMMUNITIES.add(DamageType.Flame.class);
-        IMMUNITIES.add(DamageType.Acid.class);
-        IMMUNITIES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
-    }
 }

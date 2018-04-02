@@ -27,7 +27,7 @@ import java.util.List;
 
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -63,8 +63,10 @@ public class Mimic extends MobHealthy {
 
         HP = HT += Random.IntRange( 5, 10 );
 
-//        EXP = 0;
         baseSpeed = 0.75f;
+
+        resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Body.class, Element.Resist.PARTIAL);
     }
 	
 	public ArrayList<Item> items;
@@ -194,7 +196,7 @@ public class Mimic extends MobHealthy {
     }
 	
 	@Override
-	public void die( Object cause, DamageType dmg ) {
+	public void die( Object cause, Element dmg ) {
 
 		super.die( cause, dmg );
 		
@@ -271,16 +273,4 @@ public class Mimic extends MobHealthy {
 		
 		return m;
 	}
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Mind.class);
-        RESISTANCES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
 }

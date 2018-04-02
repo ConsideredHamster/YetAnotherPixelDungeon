@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.food;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
 public class OverpricedRation extends Food {
@@ -28,12 +28,12 @@ public class OverpricedRation extends Food {
 	{
 		name = "small ration";
 		image = ItemSpriteSheet.OVERPRICED;
-		energy = Hunger.STARVING / 2;
-		message = "That food tasted ok.";
+		energy = Satiety.MAXIMUM * 0.5f;
+		message = "That food tasted good!";
 	}
 	
 	@Override
-	public String info() {
+	public String desc() {
 		return "It looks exactly like a standard ration of food but smaller.";
 	}
 	

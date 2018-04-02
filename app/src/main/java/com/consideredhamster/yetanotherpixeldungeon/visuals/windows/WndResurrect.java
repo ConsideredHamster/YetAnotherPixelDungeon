@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.windows;
 
 import com.watabou.noosa.BitmapTextMultiline;
 import com.watabou.noosa.Game;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Rankings;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
@@ -46,9 +46,9 @@ public class WndResurrect extends Window {
 	
 	public static WndResurrect instance;
 	public static Object killedBy;
-	public static DamageType killedWith;
+	public static Element killedWith;
 
-	public WndResurrect( final Ankh ankh, Object killedBy, DamageType killedWith ) {
+	public WndResurrect( final Ankh ankh, Object killedBy, Element killedWith ) {
 		
 		super();
 		

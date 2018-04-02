@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfAvalanche;
@@ -63,7 +63,7 @@ public class Caustic extends Weapon.Enchantment {
     @Override
     protected boolean proc_p( Char attacker, Char defender, int damage ) {
 
-        defender.damage(Random.IntRange(damage / 3, damage / 2), this, DamageType.ACID);
+        defender.damage(Random.IntRange(damage / 3, damage / 2), this, Element.ACID);
         return true;
 
     }
@@ -71,7 +71,7 @@ public class Caustic extends Weapon.Enchantment {
     @Override
     protected boolean proc_n( Char attacker, Char defender, int damage ) {
 
-        attacker.damage( Random.IntRange(damage / 3, damage / 2), this, DamageType.ACID );
+        attacker.damage( Random.IntRange(damage / 3, damage / 2), this, Element.ACID );
         return true;
 
     }

@@ -62,19 +62,19 @@ public class YetAnotherPixelDungeon extends Game {
 		updateImmersiveMode();
 		
 		DisplayMetrics metrics = new DisplayMetrics();
-		instance.getWindowManager().getDefaultDisplay().getMetrics( metrics );
-		boolean landscape = metrics.widthPixels > metrics.heightPixels;
-		
-		if (Preferences.INSTANCE.getBoolean( Preferences.KEY_LANDSCAPE, false ) != landscape) {
-			landscape( !landscape );
-		}
+        instance.getWindowManager().getDefaultDisplay().getMetrics( metrics );
+        boolean landscape = metrics.widthPixels > metrics.heightPixels;
+
+        if( Preferences.INSTANCE.getBoolean( Preferences.KEY_LANDSCAPE, false ) != landscape ){
+            landscape( !landscape );
+        }
 
         Badges.loadGlobal();
-		
-		Music.INSTANCE.enable( music() );
-		Sample.INSTANCE.enable( soundFx() );
-		
-		Sample.INSTANCE.load(
+
+        Music.INSTANCE.enable( music() );
+        Sample.INSTANCE.enable( soundFx() );
+
+        Sample.INSTANCE.load(
                 Assets.SND_CLICK,
                 Assets.SND_BADGE,
                 Assets.SND_GOLD,
@@ -140,7 +140,7 @@ public class YetAnotherPixelDungeon extends Game {
 	}
 	
 	/*
-	 * ---> Prefernces
+	 * ---> Preferences
 	 */
 	
 	public static void landscape( boolean value ) {
@@ -271,6 +271,15 @@ public class YetAnotherPixelDungeon extends Game {
 
     public static void searchButton( boolean value ) {
         Preferences.INSTANCE.put( Preferences.KEY_SEARCH_BTN, value );
+    }
+
+    public static void buttons( boolean value ) {
+        Preferences.INSTANCE.put( Preferences.KEY_BUTTONS, value );
+    }
+
+    public static boolean buttons() {
+        return true;
+//        return Preferences.INSTANCE.getBoolean(Preferences.KEY_BUTTONS, true);
     }
 
     public static int loadingTips() {

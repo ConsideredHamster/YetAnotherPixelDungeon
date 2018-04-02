@@ -76,13 +76,13 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
             item.identify( CURSED_KNOWN );
             GLog.w( TXT_ITEM_UNKNOWN, item.name() );
-            curUser.sprite.emitter().start( Speck.factory(Speck.CHANGE), 0.1f, 3 );
+//            curUser.sprite.emitter().start( Speck.factory(Speck.CHANGE), 0.1f, 3 );
 
 		} else {
 
             item.fix();
             item.identify( CURSED_KNOWN );
-            curUser.sprite.emitter().start( Speck.factory(Speck.CHANGE), 0.1f, 5 );
+//            curUser.sprite.emitter().start( Speck.factory(Speck.CHANGE), 0.1f, 5 );
 
         }
 	}

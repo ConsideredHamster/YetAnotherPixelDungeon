@@ -20,15 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
-import java.util.HashSet;
-
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SkeletonSprite;
 import com.watabou.utils.Random;
@@ -46,18 +44,24 @@ public class Skeleton extends MobPrecise {
 
         loot = Gold.class;
         lootChance = 0.25f;
+
+        resistances.put( Element.Frost.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
+
+        resistances.put( Element.Body.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
+
 	}
+
+    public boolean isMagical() {
+        return true;
+    }
 
     @Override
     public int attackProc( Char enemy, int damage, boolean blocked ) {
-        if ( Random.Int(enemy.HT) < damage * 2 ) {
 
-            Withered buff = Buff.affect(enemy, Withered.class);
-
-            if( buff != null ) {
-                buff.prolong();
-                enemy.sprite.burst( 0x000000, 5 );
-            }
+        if( !blocked && Random.Int( 10 ) < tier ) {
+            BuffActive.addFromDamage( enemy, Withered.class, damage );
         }
 
         return damage;
@@ -85,56 +89,14 @@ public class Skeleton extends MobPrecise {
                 "its ability to sapping the lifeforce of the unlucky victim.";
     }
 
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Frost.class);
-        RESISTANCES.add(DamageType.Unholy.class);
-
-        IMMUNITIES.add(DamageType.Mind.class);
-        IMMUNITIES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
-    }
-	
 	@Override
 	public void die( Object cause ) {
 
 		super.die( cause );
-//
-//		boolean heroKilled = false;
-//		for (int i=0; i < Level.NEIGHBOURS8.length; i++) {
-//			Char ch = findChar( pos + Level.NEIGHBOURS8[i] );
-//			if (ch != null && ch.isAlive()) {
-//				int damage = Math.max( 0,  damageRoll() - Random.IntRange( 0, ch.armorClass() / 2 ) );
-//				ch.damage( damage, this );
-//				if (ch == Dungeon.hero && !ch.isAlive()) {
-//					heroKilled = true;
-//				}
-//			}
-//		}
-//
+
 		if (Dungeon.visible[pos]) {
 			Sample.INSTANCE.play( Assets.SND_BONES );
 		}
-//
-//		if (heroKilled) {
-//			Dungeon.fail( Utils.format( ResultDescriptions.MOB, Utils.indefinite( name ), Dungeon.depth ) );
-//			GLog.n( TXT_HERO_KILLED );
-//		}
 	}
-	
-//	@Override
-//	public String defenseVerb() {
-//		return "blocked";
-//	}
+
 }

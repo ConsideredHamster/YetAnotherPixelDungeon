@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
 import java.util.ArrayList;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
@@ -122,7 +122,7 @@ public class WandOfDisintegration extends Wand {
 
 		for (Char ch : chars) {
 
-            ch.damage( Char.absorb( damageRoll(), ch.armorClass(), true ), curUser, DamageType.ENERGY );
+            ch.damage( Char.absorb( damageRoll(), ch.armorClass(), true ), curUser, Element.ENERGY );
 
         }
 	}

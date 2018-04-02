@@ -20,20 +20,24 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
-import java.util.HashSet;
-
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ElmoParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.keys.SkeletonKey;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
-import com.consideredhamster.yetanotherpixeldungeon.levels.traps.BoulderTrap;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.DM300Sprite;
@@ -60,6 +64,19 @@ public class DM300 extends MobHealthy {
 
         loot = Gold.class;
         lootChance = 4f;
+
+        resistances.put(Element.Flame.class, Element.Resist.PARTIAL );
+        resistances.put(Element.Frost.class, Element.Resist.PARTIAL );
+        resistances.put(Element.Unholy.class, Element.Resist.PARTIAL );
+
+        resistances.put(Element.Mind.class, Element.Resist.IMMUNE );
+        resistances.put(Element.Body.class, Element.Resist.IMMUNE );
+        resistances.put(Element.Dispel.class, Element.Resist.IMMUNE );
+    }
+
+    @Override
+    public boolean isMagical() {
+        return true;
     }
 
     @Override
@@ -71,6 +88,11 @@ public class DM300 extends MobHealthy {
     public float moveSpeed() {
         return buff( Enraged.class ) != null ? 1.0f : 0.75f;
     }
+
+    @Override
+    protected float healthValueModifier() {
+        return 0.25f;
+    }
 	
 	@Override
 	public void move( int step ) {
@@ -78,9 +100,9 @@ public class DM300 extends MobHealthy {
 
         if( buff( Enraged.class ) != null ) {
 
-            BoulderTrap.boulders( step + Level.NEIGHBOURS8[ Random.Int( Level.NEIGHBOURS8.length ) ], damageRoll() / 2 );
+            dropBoulders( step + Level.NEIGHBOURS8[ Random.Int( Level.NEIGHBOURS8.length ) ], damageRoll() / 2 );
 
-            BoulderTrap.boulders( step + Level.NEIGHBOURS12[ Random.Int( Level.NEIGHBOURS12.length ) ], damageRoll() / 3 );
+            dropBoulders( step + Level.NEIGHBOURS12[ Random.Int( Level.NEIGHBOURS12.length ) ], damageRoll() / 3 );
 
             Camera.main.shake( 2, 0.1f );
 
@@ -116,7 +138,7 @@ public class DM300 extends MobHealthy {
 
             breaks++;
 
-            Buff.affect(this, Enraged.class, breaks * Random.Float(8.0f, 12.0f));
+            BuffActive.add(this, Enraged.class, breaks * Random.Float(8.0f, 12.0f));
 
             if (Dungeon.visible[pos]) {
                 sprite.showStatus( CharSprite.NEGATIVE, "enraged!" );
@@ -134,7 +156,7 @@ public class DM300 extends MobHealthy {
     }
 	
 	@Override
-	public void die( Object cause, DamageType dmg ) {
+	public void die( Object cause, Element dmg ) {
 		
 		super.die( cause, dmg );
 		
@@ -162,32 +184,37 @@ public class DM300 extends MobHealthy {
 			"machines were typically used for construction and mining, and in some cases, for city defense.";
 	}
 
-    @Override
-    public boolean isMagical() {
-        return false;
-    }
+    public void dropBoulders( int pos, int power ) {
 
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
+        if( pos < 0 || pos >= 1024 )
+            return;
 
-    static {
-        RESISTANCES.add(DamageType.Flame.class);
-        RESISTANCES.add(DamageType.Frost.class);
-        RESISTANCES.add(DamageType.Unholy.class);
+        if( Level.solid[pos] )
+            return;
 
-        IMMUNITIES.add(DamageType.Mind.class);
-        IMMUNITIES.add(DamageType.Body.class);
-        IMMUNITIES.add(DamageType.Dispel.class);
-    }
+        Char ch = Actor.findChar(pos);
+        if (ch != null) {
 
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
+            int dmg = Char.absorb( Random.IntRange( power / 2 , power ), ch.armorClass() );
+//                    int dmg = Math.max(0, Random.IntRange(Dungeon.depth, Dungeon.depth + 10) - Random.NormalIntRange(0, ch.armorClass()));
 
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
+            ch.damage(dmg, this, Element.PHYSICAL);
+
+            if (ch.isAlive() ) {
+                BuffActive.addFromDamage(ch, Vertigo.class, dmg);
+            }
+        }
+
+        Heap heap = Dungeon.level.heaps.get(pos);
+        if (heap != null) {
+            heap.shatter( "Boulders" );
+        }
+
+        if (Dungeon.visible[pos]) {
+
+            CellEmitter.get(pos).start( Speck.factory(Speck.ROCK), 0.1f, 4 );
+
+        }
     }
 
     private static final String BREAKS	= "breaks";

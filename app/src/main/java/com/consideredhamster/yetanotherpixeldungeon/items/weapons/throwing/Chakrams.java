@@ -27,7 +27,7 @@ public class Chakrams extends ThrowingWeaponLight {
 
     {
         name = "chakrams";
-        image = ItemSpriteSheet.CHAKRAM;
+        image = ItemSpriteSheet.THROWING_ANUS;
     }
 
     public Chakrams() {

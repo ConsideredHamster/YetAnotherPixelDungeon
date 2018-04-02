@@ -118,7 +118,7 @@ public class Earthroot extends Plant {
 		
 		@Override
 		public int icon() {
-			return BuffIndicator.ARMOR;
+			return BuffIndicator.BLESSED;
 		}
 		
 		@Override

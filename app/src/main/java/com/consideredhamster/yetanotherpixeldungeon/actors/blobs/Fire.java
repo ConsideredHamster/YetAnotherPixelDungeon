@@ -20,12 +20,12 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
@@ -129,10 +129,10 @@ public class Fire extends Blob {
 	private void burn( int pos ) {
 		Char ch = Actor.findChar(pos);
 		if (ch != null) {
-            Burning buff = Buff.affect( ch, Burning.class );
-
-            if( buff != null ) {
-                buff.reignite(ch);
+            if( ch.buff( Burning.class ) == null ){
+                BuffActive.add( ch, Burning.class, TICK * 3 );
+            } else {
+                BuffActive.add( ch, Burning.class, TICK );
             }
 		}
 		

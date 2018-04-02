@@ -585,7 +585,7 @@ public abstract class RegularLevel extends Level {
 //                ((Mimic)mob).items.add(new Gold().random());
 //                ((Mimic)mob).items.add(new Gold().random());
 //                mob.state = mob.WANDERING;
-            } else if( feeling == Feeling.HAUNT && Random.Int( 5 ) == 0 ) {
+            } else if( feeling == Feeling.HAUNT && Random.Int( 10 ) == 0 ) {
 
                 mob = new Wraith();
                 mob.state = mob.HUNTING;

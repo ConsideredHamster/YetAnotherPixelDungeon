@@ -20,33 +20,36 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Banished;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Controlled;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Crippled;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Disrupted;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Ensnared;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.NPC;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAwareness;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Challenges;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Amok;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Challenge;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Enraged;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Sleep;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Terror;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 //import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.EmoIcon;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Wound;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Explosives;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
@@ -97,22 +100,17 @@ public abstract class Mob extends Char {
     protected int dexterity = 0;
     protected int armorClass = 0;
 
-	protected Char enemy;
-	protected boolean enemySeen;
-	protected boolean alerted = false;
-	protected static final float TIME_TO_WAKE_UP = 1f;
-	protected static final float CHANCE_TO_BLOCK = 0.5f;
-	protected static final float CHANCE_TO_PARRY = 0.25f;
+    protected HashMap<Class<? extends Element>, Float> resistances = new HashMap<>();
 
-//	protected float chanceToWakeUp      = 0.05f;
-//	protected float chanceToFallAsleep  = 0.25f;
-//    protected float chanceToCalmDown    = 0.50f;
+    protected Char enemy;
+    protected boolean enemySeen;
+    protected boolean alerted = false;
+    protected static final float TIME_TO_WAKE_UP = 1f;
 
-    protected boolean swarmer = false;
-
-	public boolean hostile = true;
-	public boolean special = false;
+    public boolean hostile = true;
+    public boolean special = false;
     public boolean noticed = false;
+
     private boolean recentlyNoticed = false;
 
 	private static final String STATE	= "state";
@@ -128,31 +126,61 @@ public abstract class Mob extends Char {
     @Override
     public int accuracy() {
 
-        int acc = accuracy;
+        float modifier = 1.0f;
 
-        if( ( buff(Enraged.class) != null ) )
-            acc *= 2;
+        if( buff(Enraged.class) != null )
+            modifier *= 2.0f;
 
-        if( ( buff(Challenge.class) != null ) )
-            acc *= 2;
+        if( buff( Tormented.class ) != null )
+            modifier *= 0.5f;
 
-        if( ( buff(Confusion.class) != null ) )
-            acc /= 2;
+        if( buff( Charmed.class ) != null )
+            modifier *= 0.5f;
 
-        if( ( buff(Blindness.class) != null ) )
-            acc /= 2;
+        if( buff( Banished.class ) != null )
+            modifier *= 0.5f;
 
-        return acc;
+        if( buff( Controlled.class ) != null )
+            modifier *= 0.5f;
+
+        if( buff( Frozen.class ) != null )
+            modifier *= 0.5f;
+
+        return (int)( accuracy * modifier );
     }
 
     @Override
     public int dexterity() {
-        return enemySeen && !stunned ? dexterity : 0;
+
+        if( !enemySeen || stunned ){
+            return 0;
+        }
+
+        float modifier = 1.0f;
+
+        if( buff( Crippled.class ) != null && !flying )
+            modifier *= 0.5f;
+
+        if( buff( Vertigo.class ) != null )
+            modifier *= 0.5f;
+
+        if( buff( Disrupted.class ) != null )
+            modifier *= 0.5f;
+
+        if( buff( Frozen.class ) != null )
+            modifier *= 0.5f;
+
+        if( buff( Ensnared.class ) != null )
+            modifier *= 0.5f;
+
+        return (int)(dexterity * modifier);
     }
 
     @Override
     public int magicSkill() {
+
         return accuracy() * 2;
+
     }
 
     @Override
@@ -174,11 +202,17 @@ public abstract class Mob extends Char {
         if( buff( Enraged.class ) != null )
             damage += Random.NormalIntRange( minDamage, maxDamage );
 
-        if( buff( Challenge.class ) != null )
-            damage += damage / 2;
+        if( buff( Poisoned.class ) != null )
+            damage /= 2;
 
         if( buff( Withered.class ) != null )
-            damage = (int)( damage * buff( Withered.class ).modifier() );
+            damage /= 2;
+
+        if( buff( Charmed.class ) != null )
+            damage /= 2;
+
+        if( buff( Controlled.class ) != null )
+            damage /= 2;
 
         return damage;
     }
@@ -194,11 +228,6 @@ public abstract class Mob extends Char {
     }
 
     @Override
-    public float attackDelay() {
-        return 1f;
-    }
-
-    @Override
     public float moveSpeed() {
         return state != WANDERING ? super.moveSpeed() : super.moveSpeed() * 0.75f;
     }
@@ -206,6 +235,10 @@ public abstract class Mob extends Char {
     public int viewDistance() {
         return ( state != SLEEPING ? super.viewDistance() : super.viewDistance() / 2 ) ;
     };
+
+    public HashMap<Class<? extends Element>, Float> resistances() {
+        return resistances;
+    }
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -312,30 +345,21 @@ public abstract class Mob extends Char {
 	
 	protected Char chooseEnemy() {
 
-        Charm charm = buff( Charm.class );
-
-		if ( charm != null) {
+        if( isCharmed() > 0 && !Bestiary.isBoss( this ) ) {
 
 			if (enemy == Dungeon.hero || enemy == null) {
 				
 				HashSet<Mob> enemies = new HashSet<Mob>();
 				for (Mob mob:Dungeon.level.mobs) {
-					if (mob != this && Level.fieldOfView[mob.pos] && mob.hostile && !(mob.isCharmedBy( charm.object ) ) ) {
+					if (mob != this && Level.fieldOfView[mob.pos] && mob.hostile && mob.isCharmed() == 0 ) {
 						enemies.add( mob );
 					}
 				}
+
 				if (enemies.size() > 0) {
 					return Random.element( enemies );
 				}
 				
-			}
-		}
-		
-		Terror terror = (Terror)buff( Terror.class );
-		if (terror != null) {
-			Char source = (Char)Actor.findById( terror.object );
-			if (source != null) {
-				return source;
 			}
 		}
 
@@ -364,19 +388,8 @@ public abstract class Mob extends Char {
         enemySeen = true;
         alerted = true;
 
-        if (buff instanceof Amok) {
-            if (sprite != null) {
-                sprite.showStatus(CharSprite.NEGATIVE, TXT_RAGE);
-            }
-            state = HUNTING;
-        } else if (buff instanceof Terror) {
+        if ( buff instanceof Tormented || buff instanceof Banished ) {
             state = FLEEING;
-        } else if (buff instanceof Sleep) {
-            if (sprite != null) {
-                new Flare(4, 32).color(0x44ffff, true).show(sprite, 2f);
-            }
-            state = SLEEPING;
-            postpone(Random.Float(Sleep.SWS, Sleep.SWS * 2));
         }
 
         return super.add(buff);
@@ -385,14 +398,14 @@ public abstract class Mob extends Char {
 	@Override
 	public void remove( Buff buff ) {
 		super.remove(buff);
-		if (buff instanceof Terror) {
+		if (buff instanceof Tormented ) {
 			sprite.showStatus( CharSprite.NEGATIVE, TXT_RAGE );
 			state = HUNTING;
 		}
 	}
 	
 	protected boolean canAttack( Char enemy ) {
-		return Level.adjacent( pos, enemy.pos ) && !isCharmedBy( enemy );
+		return Level.adjacent( pos, enemy.pos ) && ( !isCharmedBy( enemy ) || Bestiary.isBoss( this ) );
 	}
 
     protected int nextStepTo( Char enemy ) {
@@ -584,7 +597,7 @@ public abstract class Mob extends Char {
 
         }
 
-        if( isOpenedTo( enemy ) ) {
+        if( isExposedTo( enemy ) ) {
 
             damage += enemy.damageRoll() * enemy.ringBuffs( RingOfAwareness.Awareness.class ) * 0.5f;
 
@@ -604,27 +617,23 @@ public abstract class Mob extends Char {
 	}
 
     @Override
-    public void damage( int dmg, Object src, DamageType type ) {
+    public void damage( int dmg, Object src, Element type ) {
 
         HealthIndicator.instance.target( this );
 
-		Buff.detach( this, Sleep.class );
-
-        Terror terror = buff( Terror.class );
-
-        if (terror == null) {
+        if ( !isScared() ) {
             if (src != null && state == FLEEING || state == WANDERING || state == SLEEPING) {
                 notice();
                 state = HUNTING;
             }
         }
 
-        enemySeen = true;
-        alerted = true;
-
         if( src instanceof Char ) {
             enemy = (Char)src;
         }
+
+        enemySeen = true;
+        alerted = true;
 		
 		super.damage( dmg, src, type );
 	}
@@ -647,8 +656,8 @@ public abstract class Mob extends Char {
 
                 int exp = EXP;
 
-                if( buff(Challenge.class) != null )
-                    exp *= 2;
+//                if( buff(Challenge.class) != null )
+//                    exp *= 2;
 
                 float bonus = Dungeon.hero.ringBuffs(RingOfKnowledge.Knowledge.class) * exp - exp;
 
@@ -663,32 +672,30 @@ public abstract class Mob extends Char {
 	}
 	
 	@Override
-	public void die( Object cause, DamageType dmg ) {
-
+	public void die( Object cause, Element dmg ) {
 
 		super.die(cause, dmg);
 
-        if (Dungeon.visible[pos] && !(this instanceof NPC)) {
+        if( this != cause ){
 
-            GLog.i(TXT_DEFEAT, name);
+            if( Dungeon.visible[ pos ] && cause == Dungeon.hero ){
+
+                Enraged buff = Dungeon.hero.buff( Enraged.class );
+
+                if( buff != null ){
+                    buff.reset( Enraged.DURATION );
+                }
+            }
+
+            if( Dungeon.visible[ pos ] && !( this instanceof NPC ) ){
+
+                GLog.i( TXT_DEFEAT, name );
+
+            }
 
         }
 
-//		if (Dungeon.hero.lvl <= maxLvl + 2) {
-			dropLoot();
-//		}
-
-//		if (Dungeon.hero.isAlive() && !Dungeon.visible[pos]) {
-//			GLog.i( TXT_DIED );
-//		}
-
-//        if( buff( Enraged.class ) != null ) {
-//            for (Mob mob : Dungeon.level.mobs) {
-//                mob.beckon(mob.pos);
-//
-//                Buff.affect(mob, Enraged.class, Random.Float( 10f ) );
-//            }
-//        }
+        dropLoot();
 	}
 	
 	protected Object loot = null;
@@ -732,8 +739,8 @@ public abstract class Mob extends Char {
 	public boolean reset() {
 		return false;
 	}
-	
-	public void beckon( int cell ) {
+
+    public void beckon( int cell ) {
 
         enemySeen = true;
         target = cell;
@@ -744,7 +751,7 @@ public abstract class Mob extends Char {
             state = HUNTING;
 
         }
-	}
+    }
 
     public void inspect( int cell ) {
 
@@ -791,7 +798,9 @@ public abstract class Mob extends Char {
 
             enemySeen = enemyInFOV && detected( enemy );
 
-			if ( enemySeen && buff( Sleep.class ) == null ) {
+			if ( enemySeen
+//                    && buff( Sleep.class ) == null
+                ) {
 
                 notice();
 				state = HUNTING;
@@ -996,7 +1005,7 @@ public abstract class Mob extends Char {
 		}
 		
 		protected void nowhereToRun() {
-            if (buff( Terror.class ) == null) {
+            if (buff( Tormented.class ) == null) {
 				state = HUNTING;
 			}
 		}

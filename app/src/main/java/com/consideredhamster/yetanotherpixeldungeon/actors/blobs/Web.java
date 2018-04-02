@@ -22,10 +22,11 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ensnared;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Ensnared;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.watabou.utils.Random;
 
 public class Web extends Blob {
 	
@@ -44,7 +45,11 @@ public class Web extends Blob {
 				Char ch = Actor.findChar( i );
 
 				if ( ch != null ) {
-					Buff.affect( ch, Ensnared.class, TICK );
+                    if( ch.buff( Ensnared.class ) != null ){
+                        BuffActive.add( ch, Ensnared.class, TICK * 2 );
+                    } else {
+                        BuffActive.add( ch, Ensnared.class, TICK );
+                    }
 				}
 			}
 		}

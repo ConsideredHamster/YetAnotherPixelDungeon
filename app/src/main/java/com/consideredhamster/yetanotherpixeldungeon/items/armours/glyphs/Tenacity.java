@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
@@ -33,8 +33,8 @@ public class Tenacity extends Armour.Glyph {
 	}
 
     @Override
-    public Class<? extends DamageType> resistance() {
-        return DamageType.Mind.class;
+    public Class<? extends Element> resistance() {
+        return Element.Mind.class;
     }
 
     @Override

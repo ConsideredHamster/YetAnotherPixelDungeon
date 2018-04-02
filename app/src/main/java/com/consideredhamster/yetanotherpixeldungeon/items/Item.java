@@ -30,8 +30,8 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
@@ -719,21 +719,21 @@ public class Item implements Bundlable {
         curItem = this;
 
 
-        if( curUser.buff( Confusion.class ) != null ) {
+        if( curUser.buff( Vertigo.class ) != null ) {
             dst += Level.NEIGHBOURS8[Random.Int( 8 )];
         }
 
         final int cell = Ballistica.cast( user.pos, dst, false, true );
 
-        Char ch = Actor.findChar( cell );
-
-        if( ch != null ) {
-
-            if ( curUser.isCharmedBy( ch ) ) {
-                GLog.i(TXT_TARGET_CHARMED);
-                return;
-            }
-        }
+//        Char ch = Actor.findChar( cell );
+//
+//        if( ch != null ) {
+//
+//            if ( curUser.isCharmedBy( ch ) ) {
+//                GLog.i(TXT_TARGET_CHARMED);
+//                return;
+//            }
+//        }
 
 
 //            final int cell = dst;

@@ -33,21 +33,29 @@ public class Tag extends Button {
 	protected NinePatch bg;
 	
 	protected float lightness = 0;
-	
-	public Tag( int color ) {
-		super();
-		
-		this.r = (color >> 16) / 255f;
-		this.g = ((color >> 8) & 0xFF) / 255f;
-		this.b = (color & 0xFF) / 255f;
-	}
+
+    public Tag( int color ) {
+
+        super();
+
+        this.r = (color >> 16) / 255f;
+        this.g = ((color >> 8) & 0xFF) / 255f;
+        this.b = (color & 0xFF) / 255f;
+
+
+
+        bg.ra = bg.ga = bg.ba = 0;
+        bg.rm = this.r;
+        bg.gm = this.g;
+        bg.bm = this.b;
+    }
 	
 	@Override
 	protected void createChildren() {
 		
 		super.createChildren();
 		
-		bg = Chrome.get( Chrome.Type.TAG );
+		bg = Chrome.get( Chrome.Type.TAG_RIGHT );
 		add( bg );
 	}
 	

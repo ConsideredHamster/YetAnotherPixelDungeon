@@ -59,17 +59,26 @@ public class Emitter extends Group {
 	}
 	
 	public void pos( float x, float y, float width, float height ) {
+
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
+
+        this.width = width;
+        this.height = height;
 		
 		target = null;
 	}
 	
 	public void pos( Visual target ) {
-		this.target = target; 
-	}
+
+        this.x = 0;
+        this.y = 0;
+
+        this.width = 0;
+        this.height = 0;
+
+        this.target = target;
+    }
 	
 	public void burst( Factory factory, int quantity ) {
 		start( factory, 0, quantity );
@@ -126,8 +135,8 @@ public class Emitter extends Group {
 			factory.emit( 
 				this,
 				index,
-				target.x + Random.Float( target.width ),
-				target.y + Random.Float( target.height ) );
+				target.x + x + Random.Float( target.width + width ),
+				target.y + y + Random.Float( target.height + height ) );
 		}
 	}
 	

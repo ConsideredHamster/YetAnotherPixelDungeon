@@ -36,125 +36,110 @@ public class WndChangelog extends Window {
 	private static final int WIDTH_L	= 160;
 	private static final int HEIGHT_L	= 128;
 
-	private static final String TXT_TITLE	= "The long-awaited update!";
+	private static final String TXT_TITLE	= "Update 0.3.1e!";
 
     private static final String TXT_DESCR =
 
-        "Glad to see you again! These several months were a bit rough for me, but there were many other reasons why I've delayed this update for so long, and I have to admit that not all of them are actually reasonable. I am sorry for this awful lack of updates during this time, but I promise it'll get better from now on. This update was in the works for a very, very long time, and despite this it consists mostly of a myriad of minor tweaks and bugfixes, but soon after that the work will go according to a specific schedule. As I've said before, this mod is not even 50% complete.\n" +
+        "Finally, I can say that version 0.3.1 has been completed! Thank you for waiting!\n" +
         "\n" +
-        "_IMPORTANT:_ if your supporter's badge was not saved properly in the version 0.3.0e, then you can contact me via my e-mail, consideredhamster@gmail.com. I can't restore the badge, but I can give you a refund. Sorry about that... I messed up. Mea culpa. But it works properly now!\n" +
+        "Well, I had to rework a huge chunk of the game code for all these changes, so you better like " +
+        "them. Reworking debuffs was necessary for the next update (in which I plan to finally " +
+        "rework the wands and enchantments as well as add new potions and scrolls), which will " +
+        "serve as the basis for the return of the subclasses.\n" +
         "\n" +
-        "Okay, here comes a SHORT version of the change log. Because of a sheer amount of tweaks, and most of them being too small and/or too obvious to mention them, I'll skip most of them and will try to highlight the most important parts. If you really want it, you can find the full change log on the YAPD's github repository. Also, don't forget that you can always see this screen again by tapping the version number in the lower right corner of the title screen!\n" +
+        "WARNING! This update will make your older save games unplayable. Sorry about that, but given " +
+        "the scope of work done, it would've been unnecessarily difficult to make this update " +
+        "backwards compatible. I try to avoid issues like these where it is possible, but now it wasn't.\n" +
         "\n" +
-        "_CHARACTER_\n" +
-        "\n" +
-        "- changed Wand skill attribute into Magic skill, which determines your accuracy with wands as before, but also affects power of some of the scrolls\n" +
-        "\n" +
-        "- changed Detection attribute into Perception, which affects your chances to expose your enemy to counter attacks instead of your chances to prevent equipping a cursed item\n" +
-        "\n" +
-        "- changed Magic power attribute into Willpower, which affects your chances to prevent equipping a cursed item instead of determining scroll's power\n" +
-        "\n" +
-        "- Warrior now gets slightly less hp with levels\n" +
-        "\n" +
-        "- Acolyte now gets slightly more hp with levels\n" +
-        "\n" +
-        "- shields now apply their armor class bonus only with 50% chance or on failed guard attempts\n" +
-        "\n" +
-        "- shields now degrade and proc only when applying their bonus or when guarding\n" +
-        "\n" +
-        "- debuffs now affect chance to apply shield's bonus AC instead of the shield's AC\n" +
-        "\n" +
-        "- guard effectiveness is now affected by your base strength instead of excess strength\n" +
-        "\n" +
-        "- hero's remains are now separated by difficulties\n" +
-        "\n" +
-        "_MOBS & BOSSES_\n" +
-        "\n" +
-        "- all enemies in the fifth chapter now count as magical (but not necessarily having body or mind immunity)\n" +
-        "\n" +
-        "- third boss does not counts as magical, while still having body and mind immunity\n" +
-        "\n" +
-        "- evil eyes now drop raw meat instead of cave scorpions\n" +
-        "\n" +
-        "- fire elementals and evil eyes now only partially pierce target's armor instead of completely ignoring it\n" +
-        "\n" +
-        "- imps now deal physical damage and don't have fire resistance anymore\n" +
-        "\n" +
-        "- imps now will steal random amount of stackable items instead of the full stack\n" +
-        "\n" +
-        "_ITEMS & SHOPS_\n" +
-        "\n" +
-        "- ankhs now weaken curses on all of your items on activation\n" +
-        "\n" +
-        "- waterskins now can be used to wash away caustic ooze and douze burning effct on self\n" +
-        "\n" +
-        "- potions of Mending now heal 25% of health immediately\n" +
-        "\n" +
-        "- base duration of the effect of potions of Mending decreased to 15 turns instead of 20\n" +
-        "\n" +
-        "- base duration of effect of potions of Levitation increased to 20 turns (from 15 turns)\n" +
-        "\n" +
-        "- first four shops will not sell same repair tools in stock\n" +
-        "\n" +
-        "- first four shops will not have more than two of the same type of ammunition in stock\n" +
-        "\n" +
-        "_RANGED WEAPONS_\n" +
-        "\n" +
-        "- flintlock weapons now can be reloaded while moving\n" +
-        "\n" +
-        "- fixed issue with flintlock weapons being almost unable to deal sneak attacks\n" +
-        "\n" +
-        "- trying to shoot from a non-loaded flintlock weapon now will reload it instead of showing a warning\n" +
-        "\n" +
-        "- increased durability of missile and firearm weapons\n" +
-        "\n" +
-        "- decreased price modifier when purchasing throwing weapons and ammunitions in shops\n" +
-        "\n" +
-        "- rebalanced amount of throwing weapons and ammunitions when generated in a wrong chapter\n" +
-        "\n" +
-        "_WANDS & RINGS_\n" +
-        "\n" +
-        "- wands of Disintegration/Firebolt do not completely ignore target's armor class anymore\n" +
-        "\n" +
-        "- wand of Entanglement is twice as effective now\n" +
-        "\n" +
-        "- rings of Perception were renamed into rings of Awareness and now affect bonus damage from counter attacks instead of view distance\n" +
-        "\n" +
-        "- rings of Energy were renamed into rings of Concentration and now increase mind resistance chance instead of enchantment's proc chance\n" +
-        "\n" +
-        "- rings of Sorcery now affect enchantment's proc chance instead of wand's miscast/squeeze chance\n" +
-        "\n" +
-        "- rings of Protection do not affect your mind and body resistance chance anymore\n" +
-        "\n" +
-        "_SCROLLS_\n" +
-        "\n" +
-        "- scrolls are now affected by your Magic skill instead of Willpower\n" +
-        "\n" +
-        "- scrolls of Challenge will not affect passive animated statues \n" +
-        "\n" +
-        "- scrolls of Enchantment now can be used to transmute fully upgraded rings/wands into another ones\n" +
-        "\n" +
-        "- scrolls of Torment are more powerful and reliable now, but their radius of effect is limited\n" +
-        "\n" +
-        "- scrolls of Transmutation can be used on ammunition and throwing weapons\n" +
-        "\n" +
-        "- scrolls of Transmutation should be way more useful now\n" +
+        "Here you'll find main features that were introduced in this version:\n" +
         "\n" +
         "_GENERAL_\n" +
         "\n" +
-        "- added confirmation window when trying to step on a revealed trap\n" +
+        "- new soundtracks, kudos to _Jivvy_! (music in the first chapter remained the same)\n" +
         "\n" +
-        "- added confirmation window when trying to equip an obviously cursed item\n" +
+        "- when you skip a turn, the character gains a significant bonus to the chance to hit\n" +
         "\n" +
-        "- added confirmation window when trying to drink water while not being injured enough\n" +
+        "- waterskins now occupy a separate button on the left of the game screen\n" +
         "\n" +
-        "- added confirmation window when trying to eat food while your satiety is too high\n" +
+        "- added a digital indicator of the character's health\n" +
         "\n" +
-        "- added donation feature on the title screen (may be somewhat unstable, but works fine)\n" +
+        "- added the indicator of current difficulty in the upper right corner\n" +
         "\n" +
-        "- added new lore about winners of The Impossible Contest into the game ;)\n" +
+        "_BUFFS & DEBUFFS_\n" +
         "\n" +
-        "- lots of tweaks, bugfixes and minor visual improvements";
+        "- all status effects were standardized, many were partially or completely reworked\n" +
+        "\n" +
+        "- some overly powerful or redundant debuffs were removed from the game (stun, for example)\n" +
+        "\n" +
+        "- some debuffs were brought back to the game or implemented from scratch\n" +
+        "\n" +
+        "- duration of debuffs from attacks now scales from damage received vs target's total health\n" +
+        "\n" +
+        "- duration of most debuffs from blobs now depends on amount of time target spent in the blob\n" +
+        "\n" +
+        "- added descriptions of effects in the \"Buffs\" window\n" +
+        "\n" +
+        "- added effect duration indicator at the top of the game screen\n" +
+        "\n" +
+        "- many debuffs got new shiny visual effects\n" +
+        "\n" +
+        "_ILLUMINATION & SECRETS_\n" +
+        "\n" +
+        "- torches have been removed from the game\n" +
+        "\n" +
+        "- characters start with an oil lantern that can be turned on and off at any time instead\n" +
+        "\n" +
+        "- lantern increases view distance and makes it guaranteed to find traps/secret doors, but makes it guaranteed to be noticed in return\n" +
+        "\n" +
+        "- lantern needs oil flasks, there are two of them per chapter (one among random drops and one in a shop)\n" +
+        "\n" +
+        "- player character's view distance is now limited to 4 cells regardless of the chapter\n" +
+        "\n" +
+        "- rebalanced chance to detect traps (mostly decreased it)\n" +
+        "\n" +
+        "_FOOD & SATIETY_\n" +
+        "\n" +
+        "- satiety drain rate now depends on strength requirement of your current equipment vs your current strength\n" +
+        "\n" +
+        "- starving now gives you some time before it starts to inflict damage (and it also deals decreased damage at first)\n" +
+        "\n" +
+        "- in general, starvation now inflicts less damage than before (4% HP per turn at max instead of 6.67% HP per turn)\n" +
+        "\n" +
+        "- herbs can now be eaten to slightly satisfy hunger and/or to remove certain debuffs\n" +
+        "\n" +
+        "- some herbs, on the contrary, inflict short-term debuffs (but satisfy hunger anyway)\n" +
+        "\n" +
+        "- it's better to eat harmful food when you are not that hungry\n" +
+        "\n" +
+        "_BOSSES & MOBS_\n" +
+        "\n" +
+        "- the fifth boss now has immunity to fire/acid, as long as the corresponding fist is alive\n" +
+        "\n" +
+        "- on knockback into something, the fourth boss now inflicts Vertigo instead of dealing additional damage\n" +
+        "\n" +
+        "- wraiths are now resistant to physical damage\n" +
+        "\n" +
+        "- reduced the frequency of wraith spawn on the haunted floors\n" +
+        "\n" +
+        "- some mobs have been slightly tweaked\n" +
+        "\n" +
+        "_EQUIPMENT & CONSUMABLES_\n" +
+        "\n" +
+        "- resists from buffs, rings and enchantments now stack and can be brought to 100% immunity\n" +
+        "\n" +
+        "- bonuses from rings and the chance of triggering enchantments have become slightly higher at the lower upgrade levels\n" +
+        "\n" +
+        "- scrolls of Torment now inflict a \"Torment\" debuff, frightening off mobs in addition to inflicting damage\n" +
+        "\n" +
+        "- scroll of Challenge now enrages your character instead of mobs on the current floor\n" +
+        "\n" +
+        "- scrolls of Banishment now banish magical mobs in addition to inflicting damage, forcing them to flee\n" +
+        "\n" +
+        "- scrolls of Sunlight now disrupt (confuse) magic mobs instead of ignoring them\n" +
+        "\n" +
+        "-----\n" +
+        "\n" +
+        "Thank you for waiting for this update, and good hunting!";
 
 	private BitmapText txtTitle;
 	private ScrollPane list;

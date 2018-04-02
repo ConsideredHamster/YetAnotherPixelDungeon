@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
@@ -43,17 +44,17 @@ public class BladeTrap extends Trap {
             int power = 10 + Dungeon.chapter() * 5;
 
 			int damage = Char.absorb( Random.IntRange( power / 2 , power ), ch.armorClass() );
-//			int damage = Math.max( 0,  (Dungeon.depth + 3) - Random.NormalIntRange( 0, c.armorClass() ) );
-//			Buff.affect( c, Bleeding.class ).set( damage );
-//			Buff.prolong(c, Cripple.class, Cripple.DURATION);
 
-            ch.damage( damage, TRAP, null );
+            ch.damage( damage, TRAP, Element.PHYSICAL );
 
             Sample.INSTANCE.play(Assets.SND_HIT);
 
 			Wound.hit( ch );
+
 		} else {
+
 			Wound.hit( pos );
+
 		}
 	}
 

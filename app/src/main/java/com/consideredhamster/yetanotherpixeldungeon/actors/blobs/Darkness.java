@@ -23,8 +23,10 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Blinded;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 
@@ -53,7 +55,7 @@ public class Darkness extends Blob {
 		for (int i=0; i < LENGTH; i++) {
             if (cur[i] > 0 && (ch = Actor.findChar(i)) != null) {
                 if (cur[i] > 0) {
-                    Buff.prolong( ch, Blindness.class, TICK );
+                    BuffActive.add( ch, Blinded.class, TICK );
                 }
             }
         }

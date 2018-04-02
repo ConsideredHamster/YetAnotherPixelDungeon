@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
 import com.watabou.noosa.Scene;
+import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Bones;
@@ -242,6 +243,8 @@ public class SewerBossLevel extends Level {
                 seal();
 
                 Dungeon.observe();
+
+                Music.INSTANCE.play( currentTrack(), true );
             }
         }
     }
@@ -254,6 +257,8 @@ public class SewerBossLevel extends Level {
         if (bossAppeared && !bossDefeated && item instanceof Gold) {
 
             bossDefeated = true;
+
+            Music.INSTANCE.play( currentTrack(), true );
 
             unseal();
 
@@ -335,4 +340,8 @@ public class SewerBossLevel extends Level {
     public int nMobs() {
         return 0;
     }
+
+    public String currentTrack() {
+        return bossAppeared && !bossDefeated ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
+    };
 }

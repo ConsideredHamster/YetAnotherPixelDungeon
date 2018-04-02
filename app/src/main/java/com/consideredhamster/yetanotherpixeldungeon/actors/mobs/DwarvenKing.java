@@ -21,32 +21,26 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Bleeding;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ensnared;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Enraged;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.UnholyArmor;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.UnholyArmor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.LifeDrain;
@@ -157,6 +151,11 @@ public class DwarvenKing extends MobPrecise {
 
         loot = Gold.class;
         lootChance = 4f;
+
+        resistances.put(Element.Body.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
+
+        resistances.put(Element.Mind.class, Element.Resist.IMMUNE);
     }
 
     public int breaks = 0;
@@ -177,6 +176,11 @@ public class DwarvenKing extends MobPrecise {
         super.restoreFromBundle(bundle);
         phase = bundle.getBoolean( PHASE );
         breaks = bundle.getInt( BREAKS );
+    }
+
+    @Override
+    protected float healthValueModifier() {
+        return 0.25f;
     }
 
     @Override
@@ -231,7 +235,7 @@ public class DwarvenKing extends MobPrecise {
                     yell( LINE_MOVEASIDE );
                     GLog.w( TXT_ENRAGED );
 
-                    Buff.affect( this, Enraged.class, TICK );
+                    BuffActive.add( this, Enraged.class, TICK );
                     enemy = findChar(throne);
 
 //                    return super.act();
@@ -252,15 +256,7 @@ public class DwarvenKing extends MobPrecise {
                         yell( LINE_CHANNELING );
                         GLog.w( TXT_CHANNEL );
 
-                        Buff.detach(this, Withered.class);
-                        Buff.detach(this, Burning.class);
-                        Buff.detach(this, Ooze.class);
-                        Buff.detach(this, Poison.class);
-                        Buff.detach(this, Bleeding.class);
-                        Buff.detach(this, Blindness.class);
-                        Buff.detach(this, Charm.class);
-                        Buff.detach(this, Ensnared.class);
-                        Buff.detach(this, Confusion.class);
+                        Debuff.removeAll( this );
 
                     } else {
 
@@ -314,7 +310,7 @@ public class DwarvenKing extends MobPrecise {
         for (Mob mob : Dungeon.level.mobs) {
             if (mob instanceof Undead) {
                 mob.target = pos;
-                Buff.affect( mob, Enraged.class, TICK );
+                BuffActive.add( mob, Enraged.class, TICK );
             }
         }
 
@@ -322,7 +318,7 @@ public class DwarvenKing extends MobPrecise {
     }
 
     @Override
-    public void damage( int dmg, Object src, DamageType type ) {
+    public void damage( int dmg, Object src, Element type ) {
 
         UnholyArmor buff = buff(UnholyArmor.class);
 
@@ -332,7 +328,7 @@ public class DwarvenKing extends MobPrecise {
                 Char ch = Dungeon.hero;
 
                 ch.sprite.showStatus(CharSprite.NEGATIVE, "reflected");
-                ch.damage( dmg, null, DamageType.MIND );
+                ch.damage( dmg, null, Element.MIND );
 
 //                if( Level.adjacent( pos, ch.pos) ) {
 //                    knockBack(ch, dmg);
@@ -372,7 +368,7 @@ public class DwarvenKing extends MobPrecise {
             int duration = ((UnholyArmor) buff).consumed();
 
             if( duration > 0 ) {
-                Buff.affect( this, Enraged.class, BASE_ENRAGE + TICK * duration );
+                BuffActive.add( this, Enraged.class, BASE_ENRAGE + TICK * duration );
                 yell( LINE_EMPOWERED );
                 GLog.w( TXT_ENRAGED );
                 spend( TICK );
@@ -390,7 +386,7 @@ public class DwarvenKing extends MobPrecise {
     }
 	
 	@Override
-	public void die( Object cause, DamageType dmg ) {
+	public void die( Object cause, Element dmg ) {
 
         yell( LINE_NEARDEATH );
         Camera.main.shake(3, 0.5f);
@@ -436,26 +432,15 @@ public class DwarvenKing extends MobPrecise {
 			"as a bonus.";
 	}
 
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Unholy.class);
-        RESISTANCES.add(DamageType.Body.class);
-
-        IMMUNITIES.add(DamageType.Mind.class);
-        IMMUNITIES.add(DamageType.Frost.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
-    }
+//    @Override
+//    public HashSet<Class<? extends EffectType>> resistances() {
+//        return RESISTANCES;
+//    }
+//
+//    @Override
+//    public HashSet<Class<? extends EffectType>> immunities() {
+//        return IMMUNITIES;
+//    }
 	
 	public static class Undead extends MobPrecise {
 
@@ -477,7 +462,18 @@ public class DwarvenKing extends MobPrecise {
 
 //            dexterity /= 2;
             armorClass /= 2;
+
+            resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
+            resistances.put(Element.Acid.class, Element.Resist.PARTIAL);
+
+            resistances.put(Element.Mind.class, Element.Resist.IMMUNE);
+            resistances.put(Element.Body.class, Element.Resist.IMMUNE);
+
 		}
+
+        public boolean isMagical() {
+            return true;
+        }
 
         private static final String WELL	= "well";
 
@@ -538,7 +534,7 @@ public class DwarvenKing extends MobPrecise {
 
                 }
 
-                die( king );
+                die( this );
 
                 return true;
             }
@@ -561,14 +557,8 @@ public class DwarvenKing extends MobPrecise {
 		@Override
 		public int attackProc( Char enemy, int damage, boolean blocked ) {
 
-            if( damage * 2 > Random.Int( enemy.HT ) ) {
-
-                Withered buff = Buff.affect(enemy, Withered.class);
-
-                if (buff != null) {
-                    buff.prolong();
-                    enemy.sprite.burst(0x000000, 5);
-                }
+            if( Random.Int( 10 ) < 5 ) {
+                BuffActive.addFromDamage( enemy, Withered.class, damage );
             }
 
 			return damage;
@@ -577,7 +567,7 @@ public class DwarvenKing extends MobPrecise {
 		
 		@Override
 		public void
-        die( Object cause, DamageType dmg ) {
+        die( Object cause, Element dmg ) {
 
             if( buff( Enraged.class ) != null && king != null && king.isAlive() && cause != king ) {
                 for (int n : Level.NEIGHBOURS8) {
@@ -587,7 +577,7 @@ public class DwarvenKing extends MobPrecise {
                     Char ch = findChar(p);
 
                     if (ch != null && ch.isAlive()) {
-                        ch.damage(Char.absorb(damageRoll(), ch.armorClass() / 2), EXPLOSION, null);
+                        ch.damage(Char.absorb(damageRoll(), ch.armorClass() / 2), EXPLOSION, Element.PHYSICAL);
                     }
                 }
 
@@ -612,28 +602,6 @@ public class DwarvenKing extends MobPrecise {
 				"These undead dwarves, risen by the will of the King of Dwarves, were members of his court. " +
 				"They appear as stocky skeletons with unusually tiny skulls.";
 		}
-
-        public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-        public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-        static {
-            RESISTANCES.add(DamageType.Unholy.class);
-            RESISTANCES.add(DamageType.Frost.class);
-            RESISTANCES.add(DamageType.Acid.class);
-
-            IMMUNITIES.add(DamageType.Mind.class);
-            IMMUNITIES.add(DamageType.Body.class);
-        }
-
-        @Override
-        public HashSet<Class<? extends DamageType>> resistances() {
-            return RESISTANCES;
-        }
-
-        @Override
-        public HashSet<Class<? extends DamageType>> immunities() {
-            return IMMUNITIES;
-        }
 	}
 
     public static class Spawner extends Blob {
@@ -750,6 +718,7 @@ public class DwarvenKing extends MobPrecise {
         if ( Level.solid[newPos] ) {
 
             damage += bonus;
+            BuffActive.add( enemy, Vertigo.class, damage );
 
         } else {
 
@@ -757,8 +726,10 @@ public class DwarvenKing extends MobPrecise {
 
             if( ch != null ) {
 
-                ch.damage( Char.absorb( bonus, ch.armorClass() ), this, null );
-                enemy.damage( Char.absorb( bonus, enemy.armorClass() ), this, null );
+                BuffActive.add( enemy, Vertigo.class, damage );
+                ch.damage( Char.absorb( bonus, ch.armorClass() ), this, Element.PHYSICAL );
+//                enemy.damage( Char.absorb( bonus, enemy.armorClass() ), this, Element.PHYSICAL );
+
 
             }
 

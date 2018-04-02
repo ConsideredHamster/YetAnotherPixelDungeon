@@ -20,19 +20,9 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Bleeding;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ensnared;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Stun;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
@@ -51,8 +41,8 @@ public class Revival extends Armour.Glyph {
 	}
 
     @Override
-    public Class<? extends DamageType> resistance() {
-        return DamageType.Unholy.class;
+    public Class<? extends Element> resistance() {
+        return Element.Unholy.class;
     }
 
     @Override
@@ -90,17 +80,8 @@ public class Revival extends Armour.Glyph {
         GameScene.flash(0xFFFFAA);
 
         hero.HP = hero.HT;
-        Withered.detach(hero, Withered.class);
-        Burning.detach(hero, Burning.class);
-        Ooze.detach(hero, Ooze.class);
-        Poison.detach(hero, Poison.class);
-        Bleeding.detach(hero, Bleeding.class);
-        Blindness.detach(hero, Blindness.class);
-        Charm.detach(hero, Charm.class);
-        Frozen.detach(hero, Frozen.class);
-        Stun.detach(hero, Stun.class);
-        Ensnared.detach(hero, Ensnared.class);
-        Confusion.detach(hero, Confusion.class);
+
+        Debuff.removeAll( hero );
 
         hero.sprite.showStatus(CharSprite.POSITIVE, "resurrected!");
         GLog.w(TXT_RESURRECT);

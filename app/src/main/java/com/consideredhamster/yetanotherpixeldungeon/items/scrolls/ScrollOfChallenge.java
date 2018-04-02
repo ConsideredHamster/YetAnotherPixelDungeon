@@ -20,11 +20,12 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Challenge;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mimic;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
@@ -76,15 +77,13 @@ public class ScrollOfChallenge extends Scroll {
 
         for (Mob mob : Dungeon.level.mobs) {
             if( mob.hostile && mob.state != mob.PASSIVE ) {
-                mob.HP = mob.HT;
-
                 mob.beckon(curUser.pos);
-
-                Buff.affect( mob, Challenge.class );
             }
         }
 		
 		GLog.w(TXT_MESSAGE);
+
+        BuffActive.add( curUser, Enraged.class, 10.0f * ( 110 + curUser.magicSkill() ) / 100 );
 
 		curUser.sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.3f, 3);
 		Sample.INSTANCE.play(Assets.SND_CHALLENGE);

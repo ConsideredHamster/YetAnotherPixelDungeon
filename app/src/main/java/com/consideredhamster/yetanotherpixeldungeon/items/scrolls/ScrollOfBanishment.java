@@ -20,10 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.UnholyArmor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Banished;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.UnholyArmor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
@@ -80,13 +83,8 @@ public class ScrollOfBanishment extends Scroll {
 
                     if( mob.isMagical() ) {
 
-                        int dmg = (int) (
-                                ( !Bestiary.isBoss(mob) ? mob.HT : mob.HT / 4 )
-                                / Math.sqrt(Level.distance(curUser.pos, mob.pos) )
-                                * ( 110 + curUser.magicSkill() ) / 100
-                        );
+                        BuffActive.add( mob, Banished.class, (float)(10 + curUser.magicSkill()) );
 
-                        mob.damage( dmg, curUser, DamageType.DISPEL );
                     }
 
                     affected = true;
@@ -95,7 +93,7 @@ public class ScrollOfBanishment extends Scroll {
         }
 		
 		if (procced || affected) {
-			GLog.p( TXT_PROCCED );			
+			GLog.p( TXT_PROCCED );
 		} else {		
 			GLog.i( TXT_NOT_PROCCED );		
 		}
@@ -109,9 +107,9 @@ public class ScrollOfBanishment extends Scroll {
 	public String desc() {
 		return
 			"The incantation on this scroll will attempt to banish any evil magics that might " +
-            "happen to exist near the reader, weakening curses on carried items, harming " +
+            "happen to exist near the reader, weakening curses on carried items, banishing " +
             "nearby creatures of magical origin and even dispelling some malicious effects." +
-            "\n\nDamage inflicted by this scroll depends on magic skill of the reader.";
+            "\n\nDuration of effect inflicted by this scroll depends on magic skill of the reader.";
 	}
 	
 	public static boolean uncurse( Hero hero, Item... items ) {
@@ -124,9 +122,9 @@ public class ScrollOfBanishment extends Scroll {
 
                 if( item instanceof Bag ) {
 
-                    uncurse( hero, ((Bag)item).items.toArray( new Item[0] )  );
+                    uncurse( hero, ((Bag)item).items.toArray( new Item[0] ) );
 
-                } else {
+                } else if( item.isUpgradeable() ) {
 
                     item.identify(CURSED_KNOWN);
 

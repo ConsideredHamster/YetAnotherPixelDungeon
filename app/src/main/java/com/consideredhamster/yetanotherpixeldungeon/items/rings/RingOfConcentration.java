@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 
 import java.util.HashSet;
 
@@ -31,9 +31,9 @@ public class RingOfConcentration extends Ring {
         shortName = "Co";
 	}
 
-    public static final HashSet<Class<? extends DamageType>> RESISTS = new HashSet<>();
+    public static final HashSet<Class<? extends Element>> RESISTS = new HashSet<>();
     static {
-        RESISTS.add(DamageType.Mind.class);
+        RESISTS.add(Element.Mind.class);
     }
 	
 	@Override

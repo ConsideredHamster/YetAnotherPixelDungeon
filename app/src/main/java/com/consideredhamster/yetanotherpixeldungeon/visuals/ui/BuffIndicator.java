@@ -20,8 +20,11 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.ui;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.scenes.PixelScene;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
+import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.tweeners.AlphaTweener;
@@ -35,39 +38,47 @@ import com.watabou.utils.SparseArray;
 public class BuffIndicator extends Component {
 
 	public static final int NONE	= -1;
-	
-	public static final int MIND_VISION	= 0;
-	public static final int LEVITATION	= 1;
-	public static final int FIRE		= 2;
-	public static final int POISON		= 3;
-	public static final int STUN        = 4;
-	public static final int HUNGER		= 5;
-	public static final int STARVATION	= 6;
-	public static final int SLOW		= 7;
-	public static final int OOZE		= 8;
-	public static final int AMOK		= 9;
-	public static final int TERROR		= 10;
-	public static final int ROOTS		= 11;
-	public static final int INVISIBLE	= 12;
-	public static final int SHADOWS		= 13;
-	public static final int WITHERED    = 14;
-	public static final int FROST		= 15;
-	public static final int BLINDNESS	= 16;
-	public static final int COMBO		= 17;
-	public static final int FURY		= 18;
-	public static final int HEALING		= 19;
-	public static final int ARMOR		= 20;
-	public static final int HEART		= 21;
-	public static final int LIGHT		= 22;
-	public static final int CRIPPLE		= 23;
-	public static final int BARKSKIN	= 24;
-	public static final int IMMUNITY	= 25;
-	public static final int BLEEDING	= 26;
-	public static final int MARK		= 27;
-	public static final int DEFERRED	= 28;
-	public static final int VERTIGO		= 29;
-	public static final int MENDING		= 30;
-	public static final int OVERFED     = 31;
+
+    public static final int COMBO		= 0;
+    public static final int GUARD		= 1;
+    public static final int FOCUSED = 2;
+    public static final int EVADE		= 3;
+
+    public static final int STARVATION	= 4;
+    public static final int HUNGER		= 5;
+    public static final int OVERFED     = 6;
+    public static final int LIGHT		= 7;
+
+    public static final int MENDING		= 8;
+    public static final int MIND_VISION	= 9;
+    public static final int LEVITATION	= 10;
+    public static final int INVISIBLE	= 11;
+
+    public static final int BLESSED     = 12;
+    public static final int SUNLIGHT    = 13;
+    public static final int ENRAGED     = 14;
+    public static final int IMMUNITY	= 15;
+
+    public static final int SHOCKED     = 16;
+    public static final int BURNING     = 17;
+    public static final int CAUSTIC     = 18;
+
+    public static final int WITHER      = 19;
+    public static final int CRIPPLED    = 20;
+    public static final int POISONED    = 21;
+
+    public static final int VERTIGO     = 22;
+    public static final int TERROR		= 23;
+    public static final int CHARMED     = 24;
+
+    public static final int DISRUPT		= 25;
+    public static final int BANISH		= 26;
+    public static final int CONTROL     = 27;
+
+    public static final int BLINDED 	= 28;
+    public static final int ENSNARED	= 29;
+    public static final int FROZEN		= 30;
+    public static final int POLYMORPH	= 31;
 
 	public static final int SIZE	= 8;
 	
@@ -106,18 +117,38 @@ public class BuffIndicator extends Component {
 	
 	@Override
 	protected void layout() {
+
 		clear();
 		
 		SparseArray<Image> newIcons = new SparseArray<Image>();
 		
 		for (Buff buff : ch.buffs()) {
+
 			int icon = buff.icon();
+
 			if (icon != NONE) {
-				Image img = new Image( texture );
-				img.frame( film.get( icon ) );
-				img.x = x + members.size() * (SIZE + 2);
-				img.y = y;
-				add( img );
+
+                Image img = new Image( texture );
+                img.frame( film.get( icon ) );
+                img.x = x + newIcons.size() * (SIZE + 2);
+                img.y = y;
+                add( img );
+
+                String status = buff.status();
+
+                if( ch == Dungeon.hero && status != null ){
+
+                    BitmapText text = new BitmapText( PixelScene.font1x );
+                    text.hardlight( 0xCACFC2 );
+
+                    text.text( status );
+                    text.measure();
+
+                    text.x = img.x + SIZE / 2 - text.width() / 2;
+                    text.y = img.y + SIZE + 2;
+                    add( text );
+
+                }
 				
 				newIcons.put( icon, img );
 			}

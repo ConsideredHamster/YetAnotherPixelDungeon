@@ -145,19 +145,19 @@ public class Belongings implements Iterable<Item> {
 		}
 	}
 	
-	public void observe() {
-		if (weap1 != null) {
+	public void observe(){
+        if( weap1 != null ){
             weap1.identify();
 //            Badges.validateItemLevelAcquired(weap1);
         }
-        if (weap2 != null) {
+        if( weap2 != null ){
             weap2.identify();
 //            Badges.validateItemLevelAcquired(weap2);
         }
-		if (armor != null) {
-			armor.identify();
+        if( armor != null ){
+            armor.identify();
 //			Badges.validateItemLevelAcquired(armor);
-		}
+        }
 //		if (ring1 != null) {
 //			ring1.identify();
 //			Badges.validateItemLevelAcquired(ring1);
@@ -166,18 +166,14 @@ public class Belongings implements Iterable<Item> {
 //			ring2.identify();
 //			Badges.validateItemLevelAcquired(ring2);
 //		}
-		for (Item item : backpack) {
-			item.identify();
-		}
-	}
-	
-//	public void uncurseEquipped() {
-//		ScrollOfExorcism.uncurse(owner, armor, weapon, ring1, ring2);
-//	}
-	
-	public Item randomUnequipped() {
-		return Random.element( backpack.items );
-	}
+        for( Item item : backpack ){
+            item.identify();
+        }
+    }
+
+    public Item randomUnequipped() {
+        return Random.element( backpack.items );
+    }
 
     public Item randomVisibleUnequipped() {
 

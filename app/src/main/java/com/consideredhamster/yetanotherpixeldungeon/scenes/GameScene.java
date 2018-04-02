@@ -23,6 +23,8 @@ package com.consideredhamster.yetanotherpixeldungeon.scenes;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.consideredhamster.yetanotherpixeldungeon.levels.SewerBossLevel;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -121,8 +123,8 @@ public class GameScene extends PixelScene {
 	
 	@Override
 	public void create() {
-		
-		Music.INSTANCE.play( Assets.TUNE, true );
+
+        Music.INSTANCE.play( Dungeon.level.currentTrack(), true );
 		Music.INSTANCE.volume( 1f );
 		
 		YetAnotherPixelDungeon.lastClass(Dungeon.hero.heroClass.ordinal());
@@ -208,8 +210,9 @@ public class GameScene extends PixelScene {
 		hero = new HeroSprite();
 		hero.place(Dungeon.hero.pos);
 		hero.updateArmor();
-		mobs.add(hero);
-		
+        Dungeon.hero.updateSpriteState();
+        mobs.add(hero);
+
 		add(new HealthIndicator());
 		
 		add(cellSelector = new CellSelector(tiles));
@@ -359,6 +362,7 @@ public class GameScene extends PixelScene {
 		
 		if (Dungeon.hero.ready && !Dungeon.hero.stunned) {
 			log.newLine();
+            BuffIndicator.refreshHero();
 		}
 
         if( cellSelector != null ) {
@@ -422,6 +426,7 @@ public class GameScene extends PixelScene {
 		sprite.visible = Dungeon.visible[mob.pos];
 		mobs.add( sprite );
 		sprite.link( mob );
+        mob.updateSpriteState();
 	}
 	
 	private void prompt( String text ) {
@@ -654,10 +659,11 @@ public class GameScene extends PixelScene {
 	}
 
 	static boolean cancel() {
+
 		if (Dungeon.hero.curAction != null || Dungeon.hero.restoreHealth) {
 			
 			Dungeon.hero.curAction = null;
-			Dungeon.hero.restoreHealth = false;
+			Dungeon.hero.interrupt();
 			return true;
 			
 		} else {

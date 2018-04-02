@@ -22,7 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.MindVision;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.MindVision;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
@@ -38,13 +39,8 @@ public class PotionOfMindVision extends Potion {
 	
 	@Override
 	protected void apply( Hero hero ) {
-		Buff.affect(hero, MindVision.class, DURATION + alchemySkill() * MODIFIER );
+        BuffActive.add(hero, MindVision.class, DURATION + alchemySkill() * MODIFIER );
         Dungeon.observe();
-
-        GLog.i( Dungeon.level.mobs.size() > 0 ?
-            "You can somehow feel the presence of other creatures' minds!" :
-            "You can somehow tell that you are alone on this level at the moment."
-        );
 
         setKnown();
     }

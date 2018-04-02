@@ -74,7 +74,7 @@ public class RankingsScene extends PixelScene {
 
         difficulty = YetAnotherPixelDungeon.lastDifficulty();
 		
-		Music.INSTANCE.play( Assets.THEME, true );
+		Music.INSTANCE.play( Assets.TRACK_MAIN_THEME, true );
 		Music.INSTANCE.volume( 1f );
 		
 		uiCamera.visible = false;

@@ -23,7 +23,8 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.watabou.noosa.audio.Sample;
@@ -31,12 +32,11 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
@@ -67,12 +67,18 @@ public class Tengu extends MobRanged {
 
         loot = Gold.class;
         lootChance = 4f;
+
+        resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Body.class, Element.Resist.PARTIAL);
     }
 
     @Override
     public float attackDelay() {
         return buff( Enraged.class ) == null ? 1.0f : 0.5f ;
     }
+
+    @Override
+    protected float healthValueModifier() { return 0.25f; }
 
     @Override
     public int damageRoll() {
@@ -119,7 +125,7 @@ public class Tengu extends MobRanged {
 	}
 
     @Override
-    public void damage( int dmg, Object src, DamageType type ) {
+    public void damage( int dmg, Object src, Element type ) {
 
         if (HP <= 0) {
             return;
@@ -148,7 +154,7 @@ public class Tengu extends MobRanged {
 
             breaks++;
 
-            Buff.affect(this, Enraged.class, breaks * Random.Float(2.5f, 5.0f));
+            BuffActive.add(this, Enraged.class, breaks * Random.Float(2.5f, 5.0f));
 
             if (Dungeon.visible[pos]) {
                 sprite.showStatus( CharSprite.NEGATIVE, "enraged!" );
@@ -170,29 +176,33 @@ public class Tengu extends MobRanged {
     }
 	
 	private void jump() {
-		timeToJump = 0;
 
-        if( buff(Blindness.class) == null ) {
-            for (int i = 0; i < 4; i++) {
+            timeToJump = 0;
+
+            for( int i = 0 ; i < 4 ; i++ ){
                 int trapPos;
-                do {
-                    trapPos = Random.Int(Level.LENGTH);
-                } while (!Level.fieldOfView[trapPos] || !Level.passable[trapPos] || Actor.findChar( trapPos ) != null);
+                do{
+                    trapPos = Random.Int( Level.LENGTH );
+                }
+                while( !Level.fieldOfView[ trapPos ] || !Level.passable[ trapPos ] || Actor.findChar( trapPos ) != null );
 
-                if (Dungeon.level.map[trapPos] == Terrain.INACTIVE_TRAP) {
-                    Level.set(trapPos, Terrain.BLADE_TRAP);
-                    GameScene.updateMap(trapPos);
-                    ScrollOfClairvoyance.discover(trapPos);
+                if( Dungeon.level.map[ trapPos ] == Terrain.INACTIVE_TRAP ){
+                    Level.set( trapPos, Terrain.BLADE_TRAP );
+                    GameScene.updateMap( trapPos );
+                    ScrollOfClairvoyance.discover( trapPos );
                 }
             }
-        }
-		
-		int newPos;
 
-		do {
-			newPos = Dungeon.level.randomRespawnCell( false, true );
-		} while (Level.adjacent( pos, newPos ) ||
-			(enemy != null && Level.adjacent( newPos, enemy.pos )));
+
+            int newPos;
+
+
+            do{
+                newPos = Dungeon.level.randomRespawnCell( false, true );
+            } while( Level.adjacent( pos, newPos ) ||
+                    ( enemy != null && Level.adjacent( newPos, enemy.pos ) ) );
+
+
 		
 		sprite.move( pos, newPos );
 		move( newPos );
@@ -221,7 +231,7 @@ public class Tengu extends MobRanged {
     }
 
     @Override
-    public void die( Object cause, DamageType dmg ) {
+    public void die( Object cause, Element dmg ) {
 
 //		Badges.Badge badgeToCheck = null;
 //		switch (Dungeon.hero.heroClass) {
@@ -257,26 +267,6 @@ public class Tengu extends MobRanged {
 			"Tengu are members of the ancient assassins clan, which is also called Tengu. " +
 			"These assassins are noted for extensive use of shurikens and traps.";
 	}
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-//        RESISTANCES.add(DamageType.Unholy.class);
-        RESISTANCES.add(DamageType.Body.class);
-
-        IMMUNITIES.add(DamageType.Mind.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
-    }
 
     private static final String TIME_TO_JUMP	= "timeToJump";
     private static final String BREAKS	= "breaks";

@@ -22,19 +22,22 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.windows;
 
 import java.util.Locale;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.HuntressArmor;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.MageArmor;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.RogueArmor;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.ScrollPane;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.BitmapText;
+import com.watabou.noosa.BitmapTextMultiline;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.Shield;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAccuracy;
@@ -48,6 +51,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.PixelScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.watabou.noosa.ui.Component;
 
 public class WndHero extends WndTabbed {
 	
@@ -68,13 +72,14 @@ public class WndHero extends WndTabbed {
 	private static final String TXT_DEPTH	= "Maximum Depth";
 	
 	private static final int WIDTH		= 100;
+    private static final int HEIGHT	    = 100;
 	private static final int TAB_WIDTH	= 40;
 	
 	private StatsTab stats;
 	private BuffsTab buffs;
 	
-	private SmartTexture icons;
-	private TextureFilm film;
+	private static SmartTexture icons;
+	private static TextureFilm film;
 	
 	public WndHero() {
 		
@@ -82,30 +87,35 @@ public class WndHero extends WndTabbed {
 		
 		icons = TextureCache.get( Assets.BUFFS_LARGE );
 		film = new TextureFilm( icons, 16, 16 );
+
+        resize( WIDTH, HEIGHT );
 		
 		stats = new StatsTab();
 		add( stats );
 		
-		buffs = new BuffsTab();
-		add( buffs );
-		
+		buffs = new BuffsTab( new Component() );
+        add( buffs );
+        buffs.setRect( 0, 0, WIDTH, stats.height() );
+
 		add( new LabeledTab( TXT_STATS ) {
 			protected void select( boolean value ) {
 				super.select( value );
 				stats.visible = stats.active = selected;
 			};
 		} );
+
 		add( new LabeledTab( TXT_BUFFS ) {
 			protected void select( boolean value ) {
 				super.select( value );
 				buffs.visible = buffs.active = selected;
 			};
 		} );
+
 		for (Tab tab : tabs) {
 			tab.setSize( TAB_WIDTH, tabHeight() );
 		}
 		
-		resize( WIDTH, (int)Math.max( stats.height(), buffs.height() ) );
+		resize( WIDTH, (int)stats.height() );
 		
 		select( 0 );
 	}
@@ -216,10 +226,10 @@ public class WndHero extends WndTabbed {
 			pos += GAP;
 
             statSlot(TXT_WILLPWR, (
-                    hero.belongings.armor instanceof MageArmor && !hero.belongings.armor.isIdentified() ||
-                            hero.belongings.ring1 instanceof RingOfConcentration && !hero.belongings.ring1.isIdentified() ||
-                            hero.belongings.ring2 instanceof RingOfConcentration && !hero.belongings.ring2.isIdentified() ?
-                            "??" : (int)( hero.willpower() * 100 ) ) + "%" );
+                        hero.belongings.armor instanceof MageArmor && !hero.belongings.armor.isIdentified() ||
+                        hero.belongings.ring1 instanceof RingOfConcentration && !hero.belongings.ring1.isIdentified() ||
+                        hero.belongings.ring2 instanceof RingOfConcentration && !hero.belongings.ring2.isIdentified() ?
+                    "??" : (int)( hero.willpower() * 100 ) ) + "%" );
 
             statSlot( TXT_AWARNSS, (
                         hero.belongings.armor instanceof HuntressArmor && !hero.belongings.armor.isIdentified() ||
@@ -237,7 +247,7 @@ public class WndHero extends WndTabbed {
                     "??" : (int)( hero.baseStealth(false) * 100 ) ) + "%" );
 
             statSlot( TXT_SATIETY, ( hero.isAlive() ?
-                (int)Math.ceil( hero.buff( Hunger.class ).value() * 100 ) : 0 ) + "%" );
+                    (int)Math.ceil( hero.buff( Satiety.class ).energy() / Satiety.MAXIMUM * 100.0f ) : 0 ) + "%" );
 
             pos += GAP;
 		}
@@ -266,40 +276,86 @@ public class WndHero extends WndTabbed {
 		}
 	}
 	
-	private class BuffsTab extends Group {
+	private class BuffsTab extends ScrollPane {
 		
-		private static final int GAP = 2;
+		private static final int GAP_X = 2;
+		private static final int GAP_Y = 4;
+
+		private float pos = 0;
 		
-		private float pos;
-		
-		public BuffsTab() {
-			for (Buff buff : Dungeon.hero.buffs()) {
-				buffSlot( buff );
-			}
-		}
+		public BuffsTab( Component content ) {
+
+            super( content );
+
+            pos = GAP_Y;
+
+            for (Buff buff : Dungeon.hero.buffs()) {
+                buffSlot( buff );
+            }
+
+            content.setSize( WIDTH, pos );
+            content.setPos( 0, 0 );
+
+        }
 		
 		private void buffSlot( Buff buff ) {
-			
+
 			int index = buff.icon();
-			
+
 			if (index != BuffIndicator.NONE) {
-				
-				Image icon = new Image( icons );
-				icon.frame( film.get( index ) );
-				icon.y = pos;
-				add( icon );
-				
-				BitmapText txt = PixelScene.createText( buff.toString(), 8 );
-				txt.x = icon.width + GAP;
-				txt.y = pos + (int)(icon.height - txt.baseLine()) / 2;
-				add( txt );
-				
-				pos += GAP + icon.height;
+
+                Image icon = new Image( icons );
+                icon.frame( film.get( index ) );
+                icon.y = pos;
+                content.add( icon );
+
+                String title = buff instanceof BuffActive ? String.format( "%s (%s)", buff.toString(), buff.status() ) : buff.toString();
+
+                BitmapText label = PixelScene.createText( title, 8 );
+                label.x = icon.width + GAP_X;
+                label.y = pos + (int)(icon.height - label.baseLine()) / 2;
+                content.add( label );
+
+                Highlighter hl = new Highlighter( buff.description() );
+
+                BitmapTextMultiline basicDesc = PixelScene.createMultiline( hl.text, 6 );
+
+                basicDesc.x = GAP_X;
+                basicDesc.y = pos + icon.height + GAP_X;
+
+                basicDesc.maxWidth = WIDTH - GAP_Y;
+                basicDesc.measure();
+
+                content.add( basicDesc );
+
+                if (hl.isHighlighted()) {
+
+                    basicDesc.mask = hl.inverted();
+
+                    BitmapTextMultiline colorDesc = PixelScene.createMultiline( hl.text, 6 );
+
+                    colorDesc.x = basicDesc.x;
+                    colorDesc.y = basicDesc.y;
+
+                    colorDesc.maxWidth = basicDesc.maxWidth;
+                    colorDesc.measure();
+
+                    colorDesc.mask = hl.mask;
+                    colorDesc.hardlight( TITLE_COLOR );
+
+                    content.add( colorDesc );
+
+                }
+
+				pos += GAP_Y + icon.height + basicDesc.height();
+
 			}
 		}
 		
 		public float height() {
 			return pos;
 		}
+
+
 	}
 }

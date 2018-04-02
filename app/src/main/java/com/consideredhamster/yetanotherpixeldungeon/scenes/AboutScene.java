@@ -55,13 +55,13 @@ public class AboutScene extends PixelScene {
 
     private static final String TXT_YAPD =
             "Author: ConsideredHamster\n" +
-            "Artist: PavelProvotorov\n" +
             "Editor: Inevielle\n" +
-            "Thanks for support: rbyj93\n\n" +
+            "Artist: PavelProvotorov\n" +
+            "Music: Jivvy\n\n" +
             "Special thanks to: Evan (ShPD)";
 
     private static final String LNK_YAPD =
-            "reddit.com/user/ConsideredHamster";
+            "consideredhamster@gmail.com";
 
 
 	
@@ -147,8 +147,12 @@ public class AboutScene extends PixelScene {
         TouchArea hotArea2 = new TouchArea( link2 ) {
             @Override
             protected void onClick( Touch touch ) {
-                Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( "http://" + LNK_YAPD ) );
-                Game.instance.startActivity( intent );
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:"
+                    + LNK_YAPD + "?subject=" + "YetAnotherPD" + "&body=" + "" )
+                );
+
+                Game.instance.startActivity(intent);
             }
         };
         add( hotArea2 );

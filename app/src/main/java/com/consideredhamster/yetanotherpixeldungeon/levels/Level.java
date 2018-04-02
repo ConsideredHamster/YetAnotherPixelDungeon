@@ -26,7 +26,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.Plant;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.audio.Sample;
@@ -39,9 +41,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Alchemy;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.WaterOfHealth;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.WellWater;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.MindVision;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.MindVision;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Statue;
@@ -51,7 +52,6 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.Fl
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.LeafParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.WindParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Ankh;
-import com.consideredhamster.yetanotherpixeldungeon.items.misc.Torch;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
@@ -249,7 +249,7 @@ public abstract class Level implements Bundlable {
             }
 
             if (Dungeon.torchesNeeded()) {
-                addItemToSpawn( new Torch() );
+                addItemToSpawn( new OilLantern.OilFlask() );
                 Dungeon.torches++;
             }
 
@@ -322,7 +322,7 @@ public abstract class Level implements Bundlable {
 		}
 
         for (Class<? extends Blob> blob : blobs.keySet()) {
-            if ( !( blob == WaterOfHealth.class || blob == Alchemy.class ) ) {
+            if ( !( blob == WellWater.class || blob == Alchemy.class ) ) {
                 blobs.remove( blob );
             }
         }
@@ -461,6 +461,26 @@ public abstract class Level implements Bundlable {
 	abstract protected void createMobs();
 
 	abstract protected void createItems();
+
+
+    public String currentTrack() {
+
+        switch( Dungeon.chapter() ){
+            case 1:
+                return Assets.TRACK_CHAPTER_1;
+            case 2:
+                return Assets.TRACK_CHAPTER_2;
+            case 3:
+                return Assets.TRACK_CHAPTER_3;
+            case 4:
+                return Assets.TRACK_CHAPTER_4;
+            case 5:
+                return Dungeon.depth > 25 ? Assets.TRACK_CHAPTER_5 : Assets.TRACK_CHAPTER_4;
+            default:
+                return Assets.TRACK_CHAPTER_1;
+        }
+
+    };
 
 	public void addVisuals( Scene scene ) {
 		for (int i=0; i < LENGTH; i++) {
@@ -919,6 +939,7 @@ public abstract class Level implements Bundlable {
                     break;
 
                 case Terrain.WELL:
+
                     WellWater.affectCell(cell);
                     break;
 

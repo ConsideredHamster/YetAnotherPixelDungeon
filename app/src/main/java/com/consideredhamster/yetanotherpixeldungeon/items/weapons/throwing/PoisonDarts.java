@@ -20,10 +20,9 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 
-import com.watabou.utils.Random;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
 public class PoisonDarts extends ThrowingWeaponSpecial {
@@ -44,13 +43,11 @@ public class PoisonDarts extends ThrowingWeaponSpecial {
 
     @Override
     public void proc( Char attacker, Char defender, int damage ) {
+
         super.proc(attacker, defender, damage);
 
-        Poison buff = Buff.affect( defender, Poison.class );
+        BuffActive.addFromDamage(defender, Poisoned.class, defender.totalHealthValue() + damage);
 
-        if( buff != null ) {
-            buff.addDuration(Random.IntRange( damage, damage * 2 ));
-        }
     }
 	
 	@Override

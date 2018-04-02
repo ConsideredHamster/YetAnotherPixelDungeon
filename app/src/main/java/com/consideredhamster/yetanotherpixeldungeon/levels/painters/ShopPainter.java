@@ -37,7 +37,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.misc.CraftingKit;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.items.misc.Torch;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Waterskin;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Whetstone;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
@@ -250,7 +250,7 @@ public class ShopPainter extends Painter {
             items.add(new Pasty());
 
             items.add(new Waterskin());
-            items.add(new Torch());
+            items.add(new OilLantern.OilFlask());
 
         } else {
 
@@ -351,7 +351,7 @@ public class ShopPainter extends Painter {
 
             items.add(new Pasty());
             items.add(new Waterskin());
-            items.add(new Torch());
+            items.add(new OilLantern.OilFlask());
         }
 		
 		Item[] range = items.toArray( new Item[0] );

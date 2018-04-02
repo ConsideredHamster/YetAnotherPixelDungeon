@@ -24,7 +24,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -61,14 +61,19 @@ public class Imp extends MobRanged {
 
         item = null;
 
+        resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
+
     }
 
     @Override
-    public DamageType damageType() {
-        return DamageType.ENERGY;
+    public boolean isMagical() {
+        return true;
     }
 
-
+    @Override
+    public Element damageType() {
+        return Element.ENERGY;
+    }
 
     @Override
     public void storeInBundle( Bundle bundle ) {
@@ -121,7 +126,7 @@ public class Imp extends MobRanged {
     }
 
     @Override
-    public void die( Object cause, DamageType dmg ) {
+    public void die( Object cause, Element dmg ) {
 
         super.die(cause, dmg);
 
@@ -215,11 +220,6 @@ public class Imp extends MobRanged {
         }
     }
 
-    @Override
-    public boolean isMagical() {
-        return true;
-    }
-
 	@Override
     public String description() {
         return
@@ -228,20 +228,4 @@ public class Imp extends MobRanged {
             ( item != null ? Utils.format( TXT_CARRY, item.name() ) : "" );
     }
 
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Unholy.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
-    }
 }

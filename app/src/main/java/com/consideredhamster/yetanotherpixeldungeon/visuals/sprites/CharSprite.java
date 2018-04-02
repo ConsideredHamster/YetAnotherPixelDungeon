@@ -20,12 +20,18 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.sprites;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.AcidParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.BloodParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SnowParticle;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
+import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.tweeners.PosTweener;
 import com.watabou.noosa.tweeners.Tweener;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
@@ -61,8 +67,31 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	private static final float FLASH_INTERVAL	= 0.05f;	
 	
 	public enum State {
-		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, ENRAGED, CHALLENGE, PROTECTION, UNHOLYARMOR, WITHERED, CHARMED
-	}
+
+        // special effects
+        ILLUMINATED,UNHOLYARMOR,
+
+        // buffs
+		LEVITATING, MENDING, INVISIBLE, ENRAGED, PROTECTION,
+
+        // elemental debuffs
+        BURNING, BLIGHTED,
+
+        // body debuffs
+        POISONED, BLEEDING, WITHERED,
+
+        // mental debuffs
+        VERTIGO, CHARMED,
+
+        // special debuffs
+        CHILLED,
+
+        // magical debuffs
+        DISRUPTED, CONTROLLED, BANISHED,
+
+        // redundant effects
+        FROZEN, PARALYSED, CHALLENGE,
+    }
 	
 	protected Animation idle;
 	protected Animation run;
@@ -76,15 +105,25 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected Callback animCallback;
 	
 	protected Tweener motion;
-	
-	protected Emitter burning;
-	protected Emitter levitation;
-	protected Emitter withered;
-	protected Emitter charmed;
 
+    protected Emitter mending;
+    protected Emitter levitation;
+
+    protected Emitter burning;
+    protected Emitter blighted;
+
+	protected Emitter poisoned;
+	protected Emitter bleeding;
+	protected Emitter withered;
+
+    protected Emitter vertigo;
+    protected Emitter charmed;
+
+    protected Emitter chilled;
+
+    protected Emitter controlled;
 
 	protected EnragedFX enraged;
-	protected EnragedFX challenge;
 
 	protected IceBlock iceBlock;
 	protected TorchHalo halo;
@@ -115,8 +154,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		
 		place( ch.pos );
 		turnTo(ch.pos, Random.Int(Level.LENGTH));
-		
-		ch.updateSpriteState();
 	}
 	
 	public PointF worldToCamera( int cell ) {
@@ -258,12 +295,22 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		emitter.pos(center());
 		return emitter;
 	}
-	
-	public Emitter bottomEmitter() {
-		Emitter emitter = GameScene.emitter();
-		emitter.pos( x, y + height, width, 0 );
-		return emitter;
-	}
+
+    public Emitter topEmitter() {
+        Emitter emitter = GameScene.emitter();
+        emitter.pos(this);
+        emitter.y = -height / 4;
+        emitter.height = -height / 2;
+        return emitter;
+    }
+
+    public Emitter bottomEmitter() {
+        Emitter emitter = GameScene.emitter();
+        emitter.pos(this);
+        emitter.y = height;
+        emitter.height = -height / 2;
+        return emitter;
+    }
 	
 	public void burst( final int color, int n ) {
 		if (visible) {
@@ -291,66 +338,160 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	
 	public void add( State state ) {
 		switch (state) {
-		case BURNING:
-			burning = emitter();
-			burning.pour( FlameParticle.FACTORY, 0.06f );
-			if (visible) {
-				Sample.INSTANCE.play( Assets.SND_BURNING );
-			}
-			break;
-		case LEVITATING:
-			levitation = emitter();
-			levitation.pour(Speck.factory(Speck.JET), 0.02f);
-			break;
-        case CHARMED:
-            charmed = emitter();
-            charmed.pour(Speck.factory(Speck.HEART), 0.25f);
-            break;
-        case WITHERED:
-            withered = emitter();
-            withered.pour(ShadowParticle.UP, 0.25f);
-            break;
-		case INVISIBLE:
-			PotionOfInvisibility.melt(ch);
-			break;
-		case PARALYSED:
-			paused = true;
-			break;
-		case FROZEN:
-			iceBlock = IceBlock.freeze( this );
-			paused = true;
-			break;
-		case ILLUMINATED:
-			GameScene.effect( halo = new TorchHalo( this ) );
-			break;
-        case ENRAGED:
-            enraged = EnragedFX.fury( this );
-            break;
-        case CHALLENGE:
-            challenge = EnragedFX.fury( this );
-            break;
-        case PROTECTION:
-            GameScene.effect( ward = new Shield( this ) );
-            break;
-        case UNHOLYARMOR:
-            GameScene.effect( unholyArmor = new UnholyArmor( this ) );
-            break;
+
+            case MENDING:
+                mending = emitter();
+                mending.pour(Speck.factory(Speck.HEALING), 0.5f);
+                break;
+
+            case LEVITATING:
+                levitation = bottomEmitter();
+                levitation.pour(Speck.factory(Speck.JET), 0.1f);
+                break;
+
+            case INVISIBLE:
+                if (ch.sprite.parent != null) {
+                    ch.sprite.parent.add( new AlphaTweener( ch.sprite, 0.4f, 0.4f ) );
+                } else {
+                    ch.sprite.alpha( 0.4f );
+                }
+                break;
+
+            case ENRAGED:
+                enraged = EnragedFX.fury( this );
+                break;
+
+            case PROTECTION:
+                GameScene.effect( ward = new Shield( this ) );
+                break;
+
+
+            case BURNING:
+                burning = emitter();
+                burning.pour( FlameParticle.FACTORY, 0.06f );
+                break;
+            case BLIGHTED:
+                blighted = emitter();
+                blighted.pour( AcidParticle.FACTORY, 0.3f );
+                break;
+
+
+            case POISONED:
+                poisoned = emitter();
+                poisoned.pour(Speck.factory( Speck.POISON ), 0.5f);
+                break;
+            case BLEEDING:
+                bleeding = emitter();
+                bleeding.pour(BloodParticle.FACTORY, 0.5f);
+                break;
+            case WITHERED:
+                withered = emitter();
+                withered.pour(ShadowParticle.UP, 0.25f);
+                break;
+
+            case VERTIGO:
+                vertigo = topEmitter();
+                vertigo.pour(Speck.factory(Speck.VERTIGO), 0.5f);
+                break;
+            case CHARMED:
+                charmed = emitter();
+                charmed.pour(Speck.factory(Speck.HEART), 0.25f);
+                break;
+
+            case CHILLED:
+                chilled = emitter();
+                chilled.pour( SnowParticle.FACTORY, 0.1f );
+                break;
+
+            case CONTROLLED:
+                controlled = emitter();
+                controlled.pour( Speck.factory(Speck.CONTROL), 0.25f );
+                break;
+
+            case ILLUMINATED:
+                GameScene.effect( halo = new TorchHalo( this ) );
+                break;
+
+            case UNHOLYARMOR:
+                GameScene.effect( unholyArmor = new UnholyArmor( this ) );
+                break;
+
+
+//            case CHALLENGE:
+//                challenge = EnragedFX.fury( this );
+//                break;
+            case PARALYSED:
+                paused = true;
+                break;
+            case FROZEN:
+                iceBlock = IceBlock.freeze( this );
+                paused = true;
+                break;
 		}
 	}
 	
 	public void remove( State state ) {
 		switch (state) {
+
+
+            case MENDING:
+                if (mending != null) {
+                    mending.on = false;
+                    mending = null;
+                }
+                break;
+
+            case LEVITATING:
+                if (levitation != null) {
+                    levitation.on = false;
+                    levitation = null;
+                }
+                break;
+
+            case ENRAGED:
+                if (enraged != null) {
+                    enraged.calm();
+                    enraged = null;
+                }
+                break;
+
+            case PROTECTION:
+                if (ward != null) {
+                    ward.putOut();
+                }
+                break;
+
+            case INVISIBLE:
+                alpha( 1f );
+                break;
+
+
             case BURNING:
                 if (burning != null) {
                     burning.on = false;
                     burning = null;
                 }
-            break;
+                break;
+            case BLIGHTED:
+                if (blighted != null) {
+                    blighted.on = false;
+                    blighted = null;
+                }
+                break;
 
-            case CHARMED:
-                if (charmed != null) {
-                    charmed.on = false;
-                    charmed = null;
+
+
+            case POISONED:
+                if (poisoned != null) {
+                    poisoned.on = false;
+                    poisoned = null;
+                }
+                break;
+
+            case BLEEDING:
+                if (bleeding != null) {
+                    bleeding.on = false;
+                    bleeding = null;
                 }
                 break;
 
@@ -361,52 +502,39 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                 }
                 break;
 
-            case LEVITATING:
-                if (levitation != null) {
-                    levitation.on = false;
-                    levitation = null;
+
+            case VERTIGO:
+                if (vertigo != null) {
+                    vertigo.on = false;
+                    vertigo = null;
                 }
-            break;
-
-            case INVISIBLE:
-                alpha( 1f );
-            break;
-
-            case PARALYSED:
-                paused = false;
-            break;
-
-            case FROZEN:
-                if (iceBlock != null) {
-                    iceBlock.melt();
-                    iceBlock = null;
+                break;
+            case CHARMED:
+                if (charmed != null) {
+                    charmed.on = false;
+                    charmed = null;
                 }
-                paused = false;
-            break;
+                break;
+
+
+            case CHILLED:
+                if (chilled != null) {
+                    chilled.on = false;
+                    chilled = null;
+                }
+                break;
+
+
+            case CONTROLLED:
+                if (controlled != null) {
+                    controlled.on = false;
+                    controlled = null;
+                }
+                break;
 
             case ILLUMINATED:
                 if (halo != null) {
                     halo.putOut();
-                }
-            break;
-
-            case ENRAGED:
-                if (enraged != null) {
-                    enraged.calm();
-                    enraged = null;
-                }
-            break;
-
-            case CHALLENGE:
-                if (challenge != null) {
-                    challenge.calm();
-                    challenge = null;
-                }
-                break;
-
-            case PROTECTION:
-                if (ward != null) {
-                    ward.putOut();
                 }
                 break;
 
@@ -415,6 +543,27 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                     unholyArmor.putOut();
                 }
                 break;
+
+
+//            case CHALLENGE:
+//                if (challenge != null) {
+//                    challenge.calm();
+//                    challenge = null;
+//                }
+//                break;
+
+            case PARALYSED:
+                paused = false;
+                break;
+
+            case FROZEN:
+                if (iceBlock != null) {
+                    iceBlock.melt();
+                    iceBlock = null;
+                }
+                paused = false;
+                break;
+
         }
 	}
 	
@@ -431,34 +580,60 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 //			resetColorAlpha();
             resetColorOnly();
 		}
-		
-		if (burning != null) {
-			burning.visible = visible;
-		}
 
+
+
+        if (mending != null) {
+            mending.visible = visible;
+        }
+
+        if (levitation != null) {
+            levitation.visible = visible;
+        }
+
+        if (burning != null) {
+            burning.visible = visible;
+        }
+
+        if (blighted != null) {
+            blighted.visible = visible;
+        }
+
+        if (poisoned != null) {
+            poisoned.visible = visible;
+        }
+        if (bleeding != null) {
+            bleeding.visible = visible;
+        }
+        if (withered != null) {
+            withered.visible = visible;
+        }
+
+        if (vertigo != null) {
+            vertigo.visible = visible;
+        }
         if (charmed != null) {
             charmed.visible = visible;
         }
 
-        if (withered != null) {
-            withered.visible = visible;
+        if (chilled != null) {
+            chilled.visible = visible;
+        }
+
+        if (controlled != null) {
+            controlled.visible = visible;
         }
 
         if (unholyArmor != null) {
             unholyArmor.visible = visible;
         }
-		if (levitation != null) {
-			levitation.visible = visible;
-		}
-        if (iceBlock != null) {
-            iceBlock.visible = visible;
-        }
+
         if (enraged != null) {
             enraged.visible = visible;
         }
-        if (challenge != null) {
-            challenge.visible = visible;
-        }
+//        if (challenge != null) {
+//            challenge.visible = visible;
+//        }
 
 		if (sleeping) {
 			showSleep();

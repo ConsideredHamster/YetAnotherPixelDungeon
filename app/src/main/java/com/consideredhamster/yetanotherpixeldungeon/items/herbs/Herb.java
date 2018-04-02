@@ -20,19 +20,21 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.Food;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.Potion;
 
-public abstract class Herb extends Item {
+public abstract class Herb extends Food {
 		
 //    public static final String AC_PLANT	= "PLANT";
 
 //    private static final String TXT_INFO = "Throw this seed to the place where you want to grow %s.\n\n%s";
 
-    private static final float TIME_TO_PLANT = 1f;
+//    private static final float TIME_TO_PLANT = 1f;
 
     {
-        stackable = true;
+        energy = Satiety.MAXIMUM * 0.05f;
 //        defaultAction = AC_THROW;
     }
 
@@ -44,7 +46,7 @@ public abstract class Herb extends Item {
 //    @Override
 //    public ArrayList<String> actions( Hero hero ) {
 //        ArrayList<String> actions = super.actions( hero );
-//        actions.add( AC_PLANT );
+//        actions.addFromDamage( AC_PLANT );
 //        return actions;
 //    }
 

@@ -25,7 +25,7 @@ import java.util.HashSet;
 
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -81,7 +81,7 @@ public class WandOfLightning extends Wand {
 
         if( Char.hit( curUser, ch, false, true ) ) {
 
-            ch.damage(power, curUser, DamageType.SHOCK);
+            ch.damage(power, curUser, Element.SHOCK);
 
             HashSet<Char> ns = new HashSet<Char>();
 

@@ -20,16 +20,17 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.features;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Levitation;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Levitation;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
@@ -136,7 +137,7 @@ public class Chasm {
 
         if( useLevitation ) {
 
-            Buff.affect( hero, Levitation.class, Math.round( Random.Float(PotionOfLevitation.DURATION / 5, PotionOfLevitation.DURATION / 4 ) ));
+            BuffActive.add( hero, Levitation.class, Math.round( Random.Float(PotionOfLevitation.DURATION / 5, PotionOfLevitation.DURATION / 4 ) ));
             GLog.i("\n" + TXT_LANDS_SAFELY );
             useLevitation = false;
 
@@ -169,9 +170,9 @@ public class Chasm {
             }
 
             if ( hero.isAlive()) {
-                hero.damage(Char.absorb(dmg, hero.armorClass()), CHASM, DamageType.FALLING);
+                hero.damage(Char.absorb(dmg, hero.armorClass()), CHASM, Element.FALLING);
             } else {
-                hero.die(CHASM, DamageType.FALLING);
+                hero.die(CHASM, Element.FALLING);
             }
 
         }

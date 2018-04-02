@@ -30,7 +30,8 @@ public class Chrome {
 		TOAST_TR,
 		WINDOW,
 		BUTTON,
-		TAG,
+        TAG_RIGHT,
+        TAG_LEFT,
 		SCROLL,
 		TAB_SET,
 		TAB_SELECTED,
@@ -47,8 +48,10 @@ public class Chrome {
 			return new NinePatch( Assets.CHROME, 40, 0, 18, 18, 5 );
 		case BUTTON:
 			return new NinePatch( Assets.CHROME, 58, 0, 4, 4, 1 );
-		case TAG:
-			return new NinePatch( Assets.CHROME, 22, 18, 16, 14, 3 );
+        case TAG_RIGHT:
+            return new NinePatch( Assets.CHROME, 22, 18, 16, 14, 3 );
+        case TAG_LEFT:
+            return new NinePatch( Assets.CHROME, 39, 18, 16, 14, 3 );
 		case SCROLL:
 			return new NinePatch( Assets.CHROME, 32, 32, 32, 32, 5, 11, 5, 11 );
 		case TAB_SET:

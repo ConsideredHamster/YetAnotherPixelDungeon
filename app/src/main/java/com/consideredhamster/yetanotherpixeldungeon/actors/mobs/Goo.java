@@ -21,22 +21,22 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Bundle;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Miasma;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Enraged;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
@@ -66,6 +66,15 @@ public abstract class Goo extends MobEvasive {
 
         armorClass = 0;
 
+        resistances.put(Element.Acid.class, Element.Resist.PARTIAL);
+
+        resistances.put(Element.Mind.class, Element.Resist.IMMUNE);
+        resistances.put(Element.Body.class, Element.Resist.IMMUNE);
+
+    }
+
+    public boolean isMagical() {
+        return true;
     }
 
     private static Goo mother() {
@@ -98,14 +107,14 @@ public abstract class Goo extends MobEvasive {
 //    }
 
 	@Override
-	public void damage( int dmg, Object src, DamageType type ) {
+	public void damage( int dmg, Object src, Element type ) {
 
         if (HP <= 0) {
             return;
         }
 
         if (
-                type == DamageType.ENERGY || type == DamageType.SHOCK
+                type == Element.ENERGY || type == Element.SHOCK
                 || type == null && buff( Frozen.class ) != null
         ) {
 
@@ -132,12 +141,10 @@ public abstract class Goo extends MobEvasive {
 
                 Spawn clone = new Spawn();
 
-                if (buff( Burning.class ) != null) {
-                    Burning buff = Buff.affect( clone, Burning.class );
+                Burning buff1 = buff( Burning.class );
 
-                    if( buff != null ) {
-                        buff.reignite(clone);
-                    }
+                if ( buff1 != null) {
+                    BuffActive.addFromDamage( clone, Burning.class, buff1.getDuration() );
                 }
 
                 clone.pos = Random.element( candidates );
@@ -176,27 +183,6 @@ public abstract class Goo extends MobEvasive {
             "sentience.";
 	}
 
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-//        RESISTANCES.add(DamageType.Unholy.class);
-        RESISTANCES.add(DamageType.Acid.class);
-
-        IMMUNITIES.add(DamageType.Mind.class);
-        IMMUNITIES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
-    }
-
     public static class Mother extends Goo {
 
         public Mother() {
@@ -233,6 +219,9 @@ public abstract class Goo extends MobEvasive {
         public float awareness(){
             return state != SLEEPING ? super.awareness() : 0.0f ;
         }
+
+        @Override
+        protected float healthValueModifier() { return 0.25f; }
 
         @Override
         public boolean act() {
@@ -323,7 +312,7 @@ public abstract class Goo extends MobEvasive {
 
                 GameScene.add(Blob.seed(pos, 100, Miasma.class));
 
-                Buff.affect(this, Enraged.class, breaks * Random.Float( 5.0f, 10.0f ) );
+                BuffActive.add(this, Enraged.class, breaks * Random.Float( 5.0f, 10.0f ) );
 
                 for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
                     if (mob instanceof Spawn) {
@@ -349,7 +338,7 @@ public abstract class Goo extends MobEvasive {
         }
 
         @Override
-        public void die( Object cause, DamageType dmg ) {
+        public void die( Object cause, Element dmg ) {
 
             super.die(cause, dmg);
 
@@ -416,12 +405,10 @@ public abstract class Goo extends MobEvasive {
 
             if ( phase && mother != null && mother != this && Level.adjacent( pos, mother.pos ) ) {
 
-                if (buff( Burning.class ) != null) {
-                    Burning buff = Buff.affect( mother, Burning.class );
+                Burning buff1 = buff( Burning.class );
 
-                    if( buff != null ) {
-                        buff.reignite(mother);
-                    }
+                if ( buff1 != null) {
+                    BuffActive.addFromDamage( mother, Burning.class, buff1.getDuration() );
                 }
 
                 int heal = Math.min( HP, mother.HT - mother.HP );
@@ -441,7 +428,7 @@ public abstract class Goo extends MobEvasive {
 
                 GLog.n("An entranced spawn was absorbed by the Goo, restoring its health!");
 
-                die(mother);
+                die( this );
 
                 return true;
 

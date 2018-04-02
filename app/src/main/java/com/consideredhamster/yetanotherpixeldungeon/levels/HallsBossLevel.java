@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
+import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.watabou.noosa.Scene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Bones;
@@ -34,6 +35,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.keys.SkeletonKey;
 import com.consideredhamster.yetanotherpixeldungeon.levels.painters.Painter;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
+import com.watabou.noosa.audio.Music;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -211,6 +213,8 @@ public class HallsBossLevel extends Level {
 			
 			stairs = entrance;
 			entrance = -1;
+
+            Music.INSTANCE.play( currentTrack(), true );
 		}
 	}
 	
@@ -228,6 +232,8 @@ public class HallsBossLevel extends Level {
 			entrance = stairs;
 			set( entrance, Terrain.ENTRANCE );
 			GameScene.updateMap( entrance );
+
+            Music.INSTANCE.play( currentTrack(), true );
 		}
 		
 		return super.drop( item, cell );
@@ -258,4 +264,8 @@ public class HallsBossLevel extends Level {
 	public void addVisuals( Scene scene ) {
 		HallsLevel.addVisuals( this, scene );
 	}
+
+    public String currentTrack() {
+        return enteredArena && !keyDropped ? Assets.TRACK_FINAL_LOOP : super.currentTrack();
+    };
 }

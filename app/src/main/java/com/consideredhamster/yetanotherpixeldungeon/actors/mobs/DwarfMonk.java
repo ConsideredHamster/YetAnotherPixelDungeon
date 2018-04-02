@@ -22,10 +22,10 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.HashSet;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Combo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Combo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.AmbitiousImp;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.OverpricedRation;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MonkSprite;
@@ -46,23 +46,22 @@ public class DwarfMonk extends MobEvasive {
 
 		loot = new OverpricedRation();
 		lootChance = 0.1f;
+
+        resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
 	}
 
     @Override
-    public float attackDelay() {
-        return 0.5f;
+    public float attackSpeed() {
+        return super.attackSpeed() * 2.0f;
     }
-
-//	@Override
-//	public String defenseVerb() {
-//		return "parried";
-//	}
 	
 	@Override
-	public void die( Object cause, DamageType dmg ) {
+	public void die( Object cause, Element dmg ) {
+
 		AmbitiousImp.Quest.process( this );
 		
 		super.die( cause, dmg );
+
 	}
 	
 	@Override
@@ -95,16 +94,4 @@ public class DwarfMonk extends MobEvasive {
 			"These monks are fanatics, who devoted themselves to protecting their city's secrets from all intruders. " +
 			"They don't use any armor or weapons, relying solely on the art of hand-to-hand combat.";
 	}
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Body.class);
-        RESISTANCES.add(DamageType.Mind.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
 }

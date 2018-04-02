@@ -27,14 +27,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Blinded;
 import com.consideredhamster.yetanotherpixeldungeon.levels.painters.ShopPainter;
 import com.watabou.noosa.Game;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Terror;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
@@ -98,7 +99,7 @@ public class Dungeon {
 	public static Level level;
 	
 	public static int depth;
-	public static int gold;
+    public static int gold;
 	// Reason of death
 	public static String resultDescription;
 	
@@ -129,7 +130,7 @@ public class Dungeon {
 		
 		depth = 0;
 		gold = 0;
-		
+
 		droppedItems = new SparseArray<ArrayList<Item>>();
 		
 		potionOfStrength = 0;
@@ -161,8 +162,8 @@ public class Dungeon {
 		QuickSlot.quickslotValue_3 = null;
 
 		hero = new Hero();
-		hero.live();
-		hero.buff( Hunger.class ).satisfy( 0, true );
+        Buff.affect( hero, Satiety.class ).setValue( Satiety.MAXIMUM );
+
 
 		Badges.reset();
 		
@@ -389,7 +390,7 @@ public class Dungeon {
     }
 
     public static boolean torchesNeeded() {
-        int[] quota = {5, 0, 11, 1, 17, 3, 23, 6, 29, 10};
+        int[] quota = {5, 1, 11, 2, 17, 3, 23, 4, 29, 5};
 
         return chance( quota, torches );
     }
@@ -548,6 +549,7 @@ public class Dungeon {
 	}
 	
 	public static void saveAll() throws IOException {
+
 		if (hero.isAlive()) {
 			
 			Actor.fixTime();
@@ -562,6 +564,7 @@ public class Dungeon {
 			Hero.reallyDie( WndResurrect.killedBy, WndResurrect.killedWith );
 			
 		}
+
 	}
 
     public static boolean loaded() {
@@ -765,7 +768,9 @@ public class Dungeon {
 			return Actor.findChar( to ) == null && (pass[to] || Level.avoid[to] && !(ch instanceof Piranha)) ? to : -1;
 		}
 
-		if (ch.flying || ch.buff( Terror.class ) != null || ch.buff( Confusion.class ) != null || ch.buff( Blindness.class ) != null) {
+		if (ch.flying || ch.buff( Tormented.class ) != null ||
+            ch.buff( Blinded.class ) != null || ch.buff( Vertigo.class ) != null
+        ) {
 			BArray.or( pass, Level.avoid, passable );
 		} else {
 			System.arraycopy( pass, 0, passable, 0, Level.LENGTH );
@@ -790,11 +795,15 @@ public class Dungeon {
 	
 	public static int flee( Char ch, int cur, int from, boolean pass[], boolean[] visible ) {
 		
-		if (ch.flying || ch.buff( Terror.class ) != null || ch.buff( Confusion.class ) != null || ch.buff( Blindness.class ) != null) {
+		if (ch.flying || ch.buff( Tormented.class ) != null || ch.buff( Vertigo.class ) != null || ch.buff( Blinded.class ) != null) {
 			BArray.or( pass, Level.avoid, passable );
 		} else {
 			System.arraycopy( pass, 0, passable, 0, Level.LENGTH );
 		}
+
+        if (ch instanceof Mob && !(ch instanceof Piranha)) {
+            BArray.or( passable, Level.illusory, passable );
+        }
 		
 		for (Actor actor : Actor.all()) {
 			if (actor instanceof Char) {
@@ -804,6 +813,7 @@ public class Dungeon {
                 }
 			}
 		}
+
 		passable[cur] = true;
 		
 		return PathFinder.getStepBack( cur, from, passable );

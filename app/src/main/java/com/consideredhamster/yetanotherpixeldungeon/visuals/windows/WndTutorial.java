@@ -67,7 +67,7 @@ public class WndTutorial extends WndTabbed {
             "You can skip a turn by tapping this button on the bottom left of the screen. Press and hold this button to rest - this allows to skip time much faster and significantly increases your health regeneration.",
             "Depending on your settings, this button can be tapped or pressed to make your character search nearby tiles, revealing traps and secret doors. Alternatively, it allows you to examine anything you meet in the dungeon to read its description.",
             "On the bottom right of the screen you can see this button. Tap it to open your inventory (you have probably guessed it by now). Long press it to show your keys available at the moment.",
-            "To the left of the inventory button you can see three quickslots. You can use some items from there without need to open your inventory. You can set items for the quickslots by pressing and holding them.",
+            "To the left of the inventory button you can see three quickslots. You can use some items from there without need to open your inventory. You can add items for the quickslots by pressing and holding them.",
             "There is an offhand quickslot right above the inventory button. Its effect depends on the combination of weapons you have equipped at the moment. For example, it will shoot if wands or ranged weapons are equipped.",
             "Above the offhand quickslot there are several buttons which are probably hidden at the moment. These are danger indicator, attack button, pickup button and resume button. Danger indicator shows the number of currently visible enemies.",
 			"Selecting the enemy by clicking the danger indicator and tapping the attack button allows you to attack an enemy without tapping the tile. Also, pressing and holding the attack button will show target's description.",
@@ -124,9 +124,9 @@ public class WndTutorial extends WndTabbed {
 			"Some enemies possess proper ranged attacks though, and they will use them whenever possible. Even worse is that most of these enemies also deal non-physical damage which ignores your armor class. On the other hand, some of them also need to spend a turn to charge their attack before that.",
 			"There are also some mobs which are a much greater threat than others, being strong, durable, and pretty accurate as well. Their only weakness is their very low dexterity. They are also more susceptible to be ambushed and are much easier to be heard.",
 			"While in general, most enemies belong to certain chapter and will never spawn out of it, some enemies can be encountered in any part of the dungeon. They grow in strength to always represent adequate threat for the current floor. Most of them also have some kind of weakness which makes dealing with them much easier.",
-			"However, bosses take the cake for being the greatest threat in this dungeon. All of them are very powerful, durable and possess unique abilities. Worst of all, you can't evade the fight them and you have to defeat them to descend deeper into the dungeon. They require preparation and attention to be defeated, but some of them also possess certain tricks to make fight with them easier.",			
+			"However, bosses take the cake for being the greatest threat in this dungeon. All of them are very powerful, durable and possess unique abilities. Worst of all, you can't evade the fight with them and you have to defeat them to descend deeper into the dungeon. They require preparation and attention to be defeated, but some of them also possess certain tricks to make fight with them easier.",
 			"But keep in mind that not everything in this dungeon wants you dead. Some denizens of this dungeon are quite friendly and can even give you a short quest to complete. Obviously, doing what they ask will net you a proper reward, but they can be simply ignored if you want, it will have almost no effect on your future progress.",
-			"Some of these NPCs do not want anything from you... except for your gold. There will be small shop on every fifth level where you can sell your surplus items and buy something in return. Assortment and quality of items in these shops depends on the current chapter, but some of the items are guaranteed to be sold.",
+			"Some of these NPCs do not want anything from you... except for your gold. There will be small shop on every fifth floor where you can sell your surplus items and buy something in return. Assortment and quality of items in these shops depends on the current chapter, but some of the items are guaranteed to be sold.",
 			"Finally, keep in mind that some of the enemies in this dungeon are of magical, unnatural origin, and thus can be immune to some effects which require living flesh and thinking mind to be affected. But this also makes them susceptible to some other effects which do not affect natural, living creatures.",	
 			"Well, that's it for now. If you read this tutorial from the beginning to the end, then you now know everything what you need to start playing this game. Some of details are gonna be explained in loading tips (pay attention to them) and you can learn more about inner workings of the game by reading the YAPD article on the Pixel Dungeon wikia. Good luck, and watch out for mimics!",
 		},
@@ -145,7 +145,7 @@ public class WndTutorial extends WndTabbed {
 
     };
 
-	private ArrayList<Component> items = new ArrayList<>();
+//	private ArrayList<Component> items = new ArrayList<>();
 
 	private static Tabs currentTab;
 
@@ -245,7 +245,7 @@ public class WndTutorial extends WndTabbed {
 		txtTitle.measure();
 		txtTitle.x = PixelScene.align( PixelScene.uiCamera, (width - txtTitle.width()) / 2 );
 		
-		items.clear();
+//		items.clear();
 		
 		Component content = list.content();
 		content.clear();
@@ -261,7 +261,7 @@ public class WndTutorial extends WndTabbed {
                     TutorialItem item = new TutorialItem(text, index++, width);
                     item.setRect(0, pos, width, item.height());
                     content.add(item);
-                    items.add(item);
+//                    items.add(item);
 
                     pos += item.height();
                 }
@@ -275,7 +275,7 @@ public class WndTutorial extends WndTabbed {
                     TutorialItem item = new TutorialItem(text, index++, width);
                     item.setRect(0, pos, width, item.height());
                     content.add(item);
-                    items.add(item);
+//                    items.add(item);
 
                     pos += item.height();
                 }
@@ -289,7 +289,7 @@ public class WndTutorial extends WndTabbed {
                     TutorialItem item = new TutorialItem(text, index++, width);
                     item.setRect(0, pos, width, item.height());
                     content.add(item);
-                    items.add(item);
+//                    items.add(item);
 
                     pos += item.height();
                 }
@@ -303,7 +303,7 @@ public class WndTutorial extends WndTabbed {
                     TutorialItem item = new TutorialItem(text, index++, width);
                     item.setRect(0, pos, width, item.height());
                     content.add(item);
-                    items.add(item);
+//                    items.add(item);
 
                     pos += item.height();
                 }
@@ -317,7 +317,7 @@ public class WndTutorial extends WndTabbed {
                     TutorialItem item = new TutorialItem(text, index++, width);
                     item.setRect(0, pos, width, item.height());
                     content.add(item);
-                    items.add(item);
+//                    items.add(item);
 
                     pos += item.height();
                 }

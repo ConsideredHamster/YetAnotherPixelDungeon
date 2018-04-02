@@ -342,20 +342,14 @@ public class QuickSlot extends Button implements WndBag.Listener {
 	
 	public static void target( Item item, Char target ) {
 		if (target != Dungeon.hero) {
-//			if (item == setAsQuickSlot1.lastItem) {
-//
-                quickslot0.currentTarget = target;
-                quickslot1.currentTarget = target;
-//				HealthIndicator.instance.target( target );
-//
-//			} else if (item == quickslot2.lastItem) {
 
-                quickslot2.currentTarget = target;
-                quickslot3.currentTarget = target;
-				HealthIndicator.instance.target(target);
-				
-			}
-//		}
+            quickslot0.currentTarget = target;
+            quickslot1.currentTarget = target;
+            quickslot2.currentTarget = target;
+            quickslot3.currentTarget = target;
+            HealthIndicator.instance.target(target);
+
+        }
 	}
 	
 	public static void cancel() {

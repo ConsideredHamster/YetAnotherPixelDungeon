@@ -20,17 +20,15 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
-import java.util.HashSet;
-
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfBlink;
@@ -54,7 +52,15 @@ public class Succubus extends MobPrecise {
 
         armorClass /= 3;
 
+        resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
+
 	}
+
+    @Override
+    public boolean isMagical() {
+        return true;
+    }
 
     @Override
     protected boolean canAttack( Char enemy ) {
@@ -86,7 +92,7 @@ public class Succubus extends MobPrecise {
 
         if ( hit( this, enemy, true, true ) ) {
 
-            Charm buff = Buff.affect(enemy, Charm.class, (float)Random.IntRange( 3, 6 ));
+            Charmed buff = BuffActive.add( enemy, Charmed.class, damageRoll() );
 
             if( buff != null ) {
                 buff.object = this.id();
@@ -105,16 +111,36 @@ public class Succubus extends MobPrecise {
     @Override
     public int attackProc( Char enemy, int damage, boolean blocked ) {
 
-        if ( !blocked && isAlive() && !enemy.isMagical() ) {
+        if ( !blocked && isAlive() ) {
 
-            int reg = Math.min(Random.Int(damage + 1), HT - HP);
+            int healed = damage / 2;
 
-            if (reg > 0) {
-                HP += reg;
+            float resist = Element.Resist.getResistance( enemy, Element.BODY );
+
+            if( !Element.Resist.checkIfDefault( resist ) ) {
+
+                if ( Element.Resist.checkIfNegated( resist ) ) {
+
+                    healed = 0;
+
+                } else if ( Element.Resist.checkIfPartial( resist ) ) {
+
+                    healed = healed / 2 + Random.Int( (int)healed % 2 + 1 );
+
+                } else if ( Element.Resist.checkIfAmplified( resist ) ) {
+
+                    healed *= 2;
+
+                }
+
+            }
+
+            if (healed > 0) {
+
+                heal( healed );
 
                 if( sprite.visible ) {
                     sprite.emitter().burst(Speck.factory(Speck.HEALING), 1);
-                    sprite.showStatus(CharSprite.POSITIVE, Integer.toString(reg));
                 }
             }
         }
@@ -157,11 +183,6 @@ public class Succubus extends MobPrecise {
 		
 		delay = BLINK_DELAY;
 	}
-
-    @Override
-    public boolean isMagical() {
-        return true;
-    }
 	
 	@Override
 	public String description() {
@@ -170,16 +191,4 @@ public class Succubus extends MobPrecise {
 			"them to mesmerize mortals, making them unable to inflict any direct harm against their tormentor and " +
             "leaving them vulnerable to succubus' life-draining touch.";
 	}
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Mind.class);
-        RESISTANCES.add(DamageType.Unholy.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
 }

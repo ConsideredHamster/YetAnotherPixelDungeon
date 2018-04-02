@@ -21,10 +21,10 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.EnergyParticle;
@@ -32,8 +32,6 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ShamanSprite;
 import com.watabou.utils.Callback;
-
-import java.util.HashSet;
 
 public class GnollShaman extends MobRanged {
 
@@ -47,9 +45,7 @@ public class GnollShaman extends MobRanged {
 
 		name = "gnoll shaman";
 		spriteClass = ShamanSprite.class;
-		
-//		loot = Generator.Category.HERB;
-//		lootChance = 0.25f;
+
 	}
 
     @Override
@@ -177,17 +173,6 @@ public class GnollShaman extends MobRanged {
 //	}
 
 
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    static {
-//        RESISTANCES.add(DamageType.Shock.class);
-//        RESISTANCES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
 
     @Override
     public void storeInBundle( Bundle bundle ) {

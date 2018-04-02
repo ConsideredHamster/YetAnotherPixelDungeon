@@ -385,7 +385,7 @@ public abstract class Ring extends EquipableItem {
 	}
 	
 	public static boolean allKnown() {
-		return handler.known().size() == rings.length - 2;
+		return handler.known().size() == rings.length;
 	}
 
     public static HashSet<Class<? extends Ring>> getKnown() {
@@ -434,14 +434,13 @@ public abstract class Ring extends EquipableItem {
             return "You don't feel anything special on equipping this ring.";
         }
 
-//		public int level;
+//		public int energy;
 		public int level() {
             return Ring.this.bonus < 0 ? Ring.this.bonus : Ring.this.bonus + 1 ;
         };
 
         public float effect() {
-            return level() * 0.125f;
-//            return (float)Math.sqrt( 1 + level() * 0.25f );
+            return level() >= 0 ? 0.2f + 0.1f * level() : 0.167f * level();
         }
 		
 		@Override

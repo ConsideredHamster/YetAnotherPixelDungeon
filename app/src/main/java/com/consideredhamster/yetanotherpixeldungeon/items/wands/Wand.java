@@ -22,8 +22,12 @@ package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Shocked;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.AttackIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.TagAttack;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
@@ -31,9 +35,9 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.items.EquipableItem;
@@ -303,7 +307,10 @@ public abstract class Wand extends EquipableItem {
         float dmg = Random.NormalIntRange( min(), max() ) * effectiveness();
 
         if( curUser != null && curUser.buff( Withered.class ) != null )
-            dmg = (int)( dmg * curUser.buff( Withered.class ).modifier() );
+            dmg *= 0.5f;
+
+        if( curUser != null && curUser.buff( Charmed.class ) != null )
+            dmg *= 0.5f;
 
         return (int)dmg;
     }
@@ -330,9 +337,11 @@ public abstract class Wand extends EquipableItem {
 
             chance /= hero.willpower();
 
-            if( hero.belongings.weap1 instanceof Quarterstaff ) {
-                chance /= 2.0f;
-            }
+            if( hero.buffs( Shocked.class ) != null )
+                chance *= 2.0f;
+
+            if( hero.belongings.weap1 instanceof Quarterstaff )
+                chance *= 0.5f;
         }
 
         return chance;
@@ -348,6 +357,9 @@ public abstract class Wand extends EquipableItem {
             Hero hero = (Hero) charger.target;
 
             chance *= hero.willpower();
+
+            if( hero.buffs( Shocked.class ) != null )
+                chance *= 0.5f;
 
             if( hero.belongings.weap1 instanceof Quarterstaff ) {
                 chance *= 2.0f;
@@ -636,7 +648,7 @@ public abstract class Wand extends EquipableItem {
 
                 final Wand curWand = (Wand) Wand.curItem;
 
-                if (curUser.buff(Confusion.class) != null) {
+                if (curUser.buff(Vertigo.class) != null) {
                     target += Level.NEIGHBOURS8[Random.Int(8)];
                 }
 
@@ -646,13 +658,13 @@ public abstract class Wand extends EquipableItem {
 
                 if (ch != null && curUser != ch && Dungeon.visible[cell]) {
 
-                    if (curUser.isCharmedBy(ch)) {
-                        GLog.i(TXT_TARGET_CHARMED);
-                        return;
-                    }
+//                    if (curUser.isCharmedBy(ch)) {
+//                        GLog.i(TXT_TARGET_CHARMED);
+//                        return;
+//                    }
 
                     QuickSlot.target(curItem, ch);
-                    AttackIndicator.target((Mob) ch);
+                    TagAttack.target((Mob) ch);
                 }
 
                 curUser.sprite.cast(cell);
@@ -670,6 +682,7 @@ public abstract class Wand extends EquipableItem {
                             if (curWand.curCharges == 0) {
 
                                 curWand.use(3);
+                                curUser.buff( Satiety.class ).decrease( 2.0f );
 
                                 if (curWand.isIdentified()) {
                                     GLog.w(TXT_SQUEEZE);
@@ -678,16 +691,18 @@ public abstract class Wand extends EquipableItem {
                             } else {
 
                                 curWand.use(curWand instanceof WandUtility ? curWand.curCharges : 2);
+                                curUser.buff( Satiety.class ).decrease( 1.0f );
 
                             }
 
                             curWand.fx(cell, new Callback() {
                                 @Override
                                 public void call() {
-                                    curWand.onZap(cell);
-                                    curWand.wandUsed();
+                                curWand.onZap(cell);
+                                curWand.wandUsed();
                                 }
                             });
+
 
 
                         } else {
@@ -700,6 +715,8 @@ public abstract class Wand extends EquipableItem {
                             curUser.spendAndNext(TIME_TO_ZAP);
 
                             curUser.sprite.showStatus(CharSprite.WARNING, TXT_FIZZLES);
+
+                            curUser.buff( Satiety.class ).decrease( 1.0f );
 
                             if (!(curWand instanceof WandUtility))
                                 curWand.use(1);
@@ -735,7 +752,7 @@ public abstract class Wand extends EquipableItem {
         @Override
         public boolean act() {
 
-            if (curCharges < maxCharges()) {
+            if (curCharges < maxCharges() && target.buff( Withered.class ) == null ) {
                 curCharges++;
                 updateQuickslot();
             }

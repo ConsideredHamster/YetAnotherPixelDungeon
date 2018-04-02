@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
@@ -57,7 +57,7 @@ public class WandOfHarm extends Wand {
 
             if( Char.hit( curUser, ch, true, true ) ) {
 
-                ch.damage( damageRoll(), curUser, DamageType.UNHOLY );
+                ch.damage( damageRoll(), curUser, Element.UNHOLY );
 
                 Splash.at(cell, 0x000000, 5);
 

@@ -20,7 +20,16 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMindVision;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
 public class DreamweedHerb extends Herb {
@@ -29,11 +38,23 @@ public class DreamweedHerb extends Herb {
         name = "Dreamweed herb";
         image = ItemSpriteSheet.HERB_DREAMWEED;
         alchemyClass = PotionOfMindVision.class;
+        message = "That herb tasted sweet like dreams.";
+    }
+
+    @Override
+    public void onConsume( Hero hero ) {
+
+//        GLog.i("Your mind is cleared.");
+
+        Debuff.remove( hero, Vertigo.class );
+
+        super.onConsume( hero );
     }
 
     @Override
     public String desc() {
-        return "Dreamweed herbs are used to brew potions of Mind Vision.";
+        return "Folks say that chewing Dreamweed herbs greatly helps to clear one's thinking " +
+                "capabilities. Such herbs are also used to brew potions of Mind Vision.";
     }
 }
 

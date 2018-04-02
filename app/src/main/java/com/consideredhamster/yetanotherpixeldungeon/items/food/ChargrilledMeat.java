@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.food;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
 public class ChargrilledMeat extends Food {
@@ -28,11 +28,12 @@ public class ChargrilledMeat extends Food {
 	{
 		name = "chargrilled meat";
 		image = ItemSpriteSheet.STEAK;
-		energy = Hunger.STARVING / 4;
+		energy = Satiety.MAXIMUM * 0.25f;
+        message = "That food tasted... ok.";
 	}
 	
 	@Override
-	public String info() {
+	public String desc() {
 		return "It looks like a decent steak.";
 	}
 	

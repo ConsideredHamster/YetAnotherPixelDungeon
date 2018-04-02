@@ -20,11 +20,11 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Crippled;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Enraged;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.PiranhaSprite;
@@ -40,22 +40,15 @@ public class Piranha extends MobEvasive {
 
         baseSpeed = 2f;
 
-        minDamage += tier;
-        maxDamage += tier;
+        minDamage += tier * 2;
+        maxDamage += tier * 2;
 
         HP = HT += Random.IntRange(2, 4);
-
-//        EXP = 0;
 
         loot = new MysteryMeat();
         lootChance = 0.5f;
 
 	}
-
-//    @Override
-//    public float attackDelay() {
-//        return 0.5f;
-//    }
 	
 	@Override
 	protected boolean act() {
@@ -66,35 +59,6 @@ public class Piranha extends MobEvasive {
 			return super.act();
 		}
 	}
-	
-//	@Override
-//	public int damageRoll() {
-//		return Random.NormalIntRange( Dungeon.depth, 5 + Dungeon.depth );
-//	}
-//
-//	@Override
-//	public int accuracy( Char target ) {
-//		return 10 + Dungeon.depth * 3;
-//	}
-//
-//	@Override
-//	public int armorClass() {
-//		return 0;
-//	}
-
-//    @Override
-//    public float awareness(){
-//        return 2.0f;
-//    }
-	
-//	@Override
-//	public void die( Object cause, DamageType dmg ) {
-////		Dungeon.bonus.drop( new MysteryMeat(), pos ).sprite.drop();
-//		super.die( cause, dmg );
-//
-//		Statistics.piranhasKilled++;
-//		Badges.validatePiranhasKilled();
-//	}
 	
 	@Override
 	public boolean reset() {
@@ -143,10 +107,8 @@ public class Piranha extends MobEvasive {
     @Override
     public int attackProc( Char enemy, int damage, boolean blocked ) {
 
-        if ( !blocked && Random.Int( enemy.HT ) < damage ) {
-
-            Buff.affect(this, Enraged.class, Random.IntRange(2, 3));
-
+        if( !blocked && Random.Int( 10 ) < tier ) {
+            BuffActive.addFromDamage( enemy, Crippled.class, damage * 2 );
         }
 
         return damage;
@@ -160,20 +122,4 @@ public class Piranha extends MobEvasive {
             "Regardless of origin, they all share the same ferocity and thirst for blood.";
 	}
 
-//    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-//    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-//    static {
-//        IMMUNITIES.add(DamageType.Flame.class);
-//    }
-
-//    @Override
-//    public HashSet<Class<? extends DamageType>> resistances() {
-//        return RESISTANCES;
-//    }
-//
-//    @Override
-//    public HashSet<Class<? extends DamageType>> immunities() {
-//        return IMMUNITIES;
-//    }
 }

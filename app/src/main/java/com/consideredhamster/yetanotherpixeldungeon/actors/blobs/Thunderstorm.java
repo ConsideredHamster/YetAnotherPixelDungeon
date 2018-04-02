@@ -28,12 +28,12 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
@@ -216,7 +216,7 @@ public class Thunderstorm extends Blob {
                 }
 
 
-                ch.damage(n == 0 ? power : power / 2, blob, DamageType.SHOCK);
+                ch.damage(n == 0 ? power : power / 2, blob, Element.SHOCK);
 
             }
 

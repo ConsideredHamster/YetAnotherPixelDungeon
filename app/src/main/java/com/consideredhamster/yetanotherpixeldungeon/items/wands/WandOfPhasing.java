@@ -20,13 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfPhaseWarp;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
@@ -76,7 +76,7 @@ public class WandOfPhasing extends WandUtility {
                     ch.sprite.place(ch.pos);
                     ch.sprite.visible = ch == curUser || Dungeon.visible[pos];
 
-                    Buff.affect(ch, Confusion.class, curCharges );
+                    BuffActive.add(ch, Vertigo.class, (float)curCharges );
 
                     GLog.i("%s teleported %s to somewhere", curUser.name, ch.name);
 

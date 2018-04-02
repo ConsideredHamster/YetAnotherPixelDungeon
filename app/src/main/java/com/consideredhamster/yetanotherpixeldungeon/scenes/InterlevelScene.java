@@ -184,7 +184,7 @@ public class InterlevelScene extends PixelScene {
             "Some gases are highly flammable - be careful when using potions of Corrosive Gas",
             "Potions of Corrosive Gas are very effective against crowds of enemies",
 
-            "Potions of Ovegrowth are more effective when used on an already grassy tiles",
+            "Potions of Overgrowth are more effective when used on an already grassy tiles",
             "You can farm plants for alchemy with help of potions of Overgrowth",
 
             "Using a potion of Thunderstorm can attract wandering monsters",
@@ -371,9 +371,9 @@ public class InterlevelScene extends PixelScene {
 					case CONTINUE:
 						restore();
 						break;
-					case RESURRECT:
-                        resurrect();
-                        break;
+//					case RESURRECT:
+//                        resurrect();
+//                        break;
 					case RETURN:
 						returnTo();
 						break;
@@ -495,6 +495,7 @@ public class InterlevelScene extends PixelScene {
 	private void descend() throws Exception {
 		
 		Actor.fixTime();
+
 		if (Dungeon.hero == null) {
 			Dungeon.init();
 			if (noStory) {
@@ -502,7 +503,7 @@ public class InterlevelScene extends PixelScene {
 				noStory = false;
 			}
 		} else {
-			Dungeon.saveLevel();
+			Dungeon.saveAll();
 		}
 		
 		Level level;
@@ -518,7 +519,7 @@ public class InterlevelScene extends PixelScene {
 	private void fall() throws Exception {
 		
 		Actor.fixTime();
-		Dungeon.saveLevel();
+		Dungeon.saveAll();
 		
 		Level level;
 		if (Dungeon.depth >= Statistics.deepestFloor) {
@@ -533,9 +534,10 @@ public class InterlevelScene extends PixelScene {
 	private void ascend() throws Exception {
 		Actor.fixTime();
 		
-		Dungeon.saveLevel();
+		Dungeon.saveAll();
 		Dungeon.depth--;
-		Level level = Dungeon.loadLevel( Dungeon.hero.heroClass );
+		Level level = Dungeon.
+                loadLevel( Dungeon.hero.heroClass );
 		Dungeon.switchLevel( level, level.exit );
 	}
 	
@@ -543,7 +545,7 @@ public class InterlevelScene extends PixelScene {
 		
 		Actor.fixTime();
 		
-		Dungeon.saveLevel();
+		Dungeon.saveAll();
 		Dungeon.depth = returnDepth;
 		Level level = Dungeon.loadLevel( Dungeon.hero.heroClass );
 		Dungeon.switchLevel(level, Level.resizingNeeded ? level.adjustPos(returnPos) : returnPos);
@@ -563,27 +565,27 @@ public class InterlevelScene extends PixelScene {
 		}
 	}
 
-	private void resurrect() throws Exception {
-
-        Actor.fixTime();
-
-        if (Dungeon.bossLevel()) {
-
-            Dungeon.hero.resurrect( Dungeon.depth );
-            Dungeon.depth--;
-            Level level = Dungeon.newLevel();
-            Dungeon.switchLevel( level, level.entrance );
-            
-        } else {
-
-            Dungeon.hero.resurrect(-1);
-            Actor.clear();
-            Arrays.fill(Dungeon.visible, false);
-            Dungeon.level.reset();
-            Dungeon.switchLevel(Dungeon.level, Dungeon.hero.pos);
-
-        }
-    }
+//	private void resurrect() throws Exception {
+//
+//        Actor.fixTime();
+//
+//        if (Dungeon.bossLevel()) {
+//
+//            Dungeon.hero.resurrect( Dungeon.depth );
+//            Dungeon.depth--;
+//            Level level = Dungeon.newLevel();
+//            Dungeon.switchLevel( level, level.entrance );
+//
+//        } else {
+//
+//            Dungeon.hero.resurrect(-1);
+//            Actor.clear();
+//            Arrays.fill(Dungeon.visible, false);
+//            Dungeon.level.reset();
+//            Dungeon.switchLevel(Dungeon.level, Dungeon.hero.pos);
+//
+//        }
+//    }
 
 	@Override
 	protected void onBackPressed() {

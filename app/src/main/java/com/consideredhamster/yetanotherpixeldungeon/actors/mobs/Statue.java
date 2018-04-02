@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import java.util.HashSet;
 
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.StatueSprite;
@@ -45,82 +45,23 @@ public class Statue extends MobPrecise {
 
         armorClass += tier * 2;
 
-//        EXP = 0;
         state = PASSIVE;
 
-//        do {
-//			weapon = (Weapon)Generator.random( Generator.Category.WEAPON );
-//		} while (!(weapon instanceof MeleeWeapon) || weapon.bonus < 0);
-//
-//		weapon.identify();
-//		weapon.enchant();
+        resistances.put( Element.Flame.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Acid.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Shock.class, Element.Resist.PARTIAL );
+
+        resistances.put( Element.Energy.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Frost.class, Element.Resist.PARTIAL );
+
+        resistances.put( Element.Body.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
+
     }
 	
-//	private Weapon weapon;
-//
-//	public Statue() {
-//		super();
-//
-//		do {
-//			weapon = (Weapon)Generator.random( Generator.Category.WEAPON );
-//		} while (!(weapon instanceof MeleeWeapon) || weapon.bonus < 0);
-//
-//		weapon.identify();
-//		weapon.enchant();
-//
-//		HP = HT = 15 + Dungeon.depth * 5;
-//		dexterity = 4 + Dungeon.depth;
-//	}
-	
-//	private static final String WEAPON	= "weapon";
-
-//	@Override
-//	public void storeInBundle( Bundle bundle ) {
-//		super.storeInBundle( bundle );
-//		bundle.put( WEAPON, weapon );
-//	}
-
-//	@Override
-//	public void restoreFromBundle( Bundle bundle ) {
-//		super.restoreFromBundle(bundle);
-//		weapon = (Weapon)bundle.get( WEAPON );
-//	}
-	
-//	@Override
-//	protected boolean act() {
-//		if (Dungeon.visible[pos]) {
-//			Journal.add( Journal.Feature.STATUE );
-//		}
-//		return super.act();
-//	}
-	
-//	@Override
-//	public int damageRoll() {
-//		return Random.NormalIntRange(weapon.MIN, weapon.MAX);
-//	}
-//
-//	@Override
-//	public int accuracy( Char target ) {
-//		return (int)(( super.accuracy( target ) ) * weapon.accuracyFactor( null ));
-//	}
-//
-//	@Override
-//	public float attackDelay() {
-//		return weapon.speedFactor( null );
-//	}
-//
-//	@Override
-//	public int armorClass() {
-//		return Dungeon.depth;
-//	}
-
-//    @Override
-//    public float awareness(){
-//        return 0.5f;
-//    }
-	
 	@Override
-	public void damage( int dmg, Object src, DamageType type ) {
+	public void damage( int dmg, Object src, Element type ) {
 
 		if (state == PASSIVE) {
             notice();
@@ -129,12 +70,6 @@ public class Statue extends MobPrecise {
 		
 		super.damage( dmg, src, type );
 	}
-	
-//	@Override
-//	public int attackProc( Char enemy, int damage ) {
-//		weapon.proc( this, enemy, damage );
-//		return damage;
-//	}
 	
 	@Override
 	public void beckon( int cell ) {
@@ -169,19 +104,6 @@ public class Statue extends MobPrecise {
         spend( TICK );
     }
 
-
-//	@Override
-//	public void die( Object cause ) {
-//		Dungeon.bonus.drop( weapon, pos ).sprite.drop();
-//		super.die( cause );
-//	}
-	
-//	@Override
-//	public void destroy() {
-//		Journal.remove( Journal.Feature.STATUE );
-//		super.destroy();
-//	}
-	
 	@Override
 	public boolean reset() {
 		state = PASSIVE;
@@ -195,33 +117,5 @@ public class Statue extends MobPrecise {
             "Usually passive, these stony juggernauts are almost unstoppable once provoked, being very resistant to both " +
             "physical and magical damage. Besides being extremely reliable guardians, these automatons also may serve as a " +
             "pretty cool garden decorations.";
-//			"You would think that it's just another ugly statue of this dungeon, but its red glowing eyes give itself away. " +
-//			"While the statue itself is made of stone, the _" + weapon.name() + "_, it's wielding, looks real.";
 	}
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Flame.class);
-        RESISTANCES.add(DamageType.Frost.class);
-        RESISTANCES.add(DamageType.Shock.class);
-        RESISTANCES.add(DamageType.Acid.class);
-        RESISTANCES.add(DamageType.Energy.class);
-        RESISTANCES.add(DamageType.Unholy.class);
-        RESISTANCES.add(DamageType.Dispel.class);
-
-        IMMUNITIES.add(DamageType.Mind.class);
-        IMMUNITIES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
-    }
 }

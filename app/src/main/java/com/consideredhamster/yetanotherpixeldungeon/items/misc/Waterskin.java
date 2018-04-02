@@ -23,8 +23,8 @@ package com.consideredhamster.yetanotherpixeldungeon.items.misc;
 import java.util.ArrayList;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
@@ -41,8 +41,8 @@ import com.watabou.utils.Bundle;
 
 public class Waterskin extends Item {
 
-	private static final String AC_DRINK	= "DRINK";
-	private static final String AC_WASH 	= "WASH";
+	public static final String AC_DRINK	= "DRINK";
+	public static final String AC_WASH 	= "WASH";
 
 	private static final float TIME_TO_DRINK = 1f;
 
@@ -55,7 +55,7 @@ public class Waterskin extends Item {
 	private static final String TXT_SPLASH_NOTHING	= "You splash water on yourself. Nothing happens.";
 	private static final String TXT_SPLASH_BURNING	= "You splash water on yourself and burning is extinguished.";
 	private static final String TXT_SPLASH_CAUSTIC	= "You splash water on yourself and ooze is washed away.";
-	private static final String TXT_SPLASH_SPECIAL	= "You splash water on yourself, just in time to save yourself.";
+	private static final String TXT_SPLASH_SPECIAL	= "You splash water on yourself. Just in time!";
 
     private static final String TXT_HEALTH_FULL = "Your health is already full.";
 
@@ -150,11 +150,11 @@ public class Waterskin extends Item {
 
             if( value > 0 ){
 
-                boolean burning = hero.buffs( Burning.class ) != null;
-                boolean caustic = hero.buffs( Ooze.class ) != null;
+                boolean burning = !hero.buffs( Burning.class ).isEmpty();
+                boolean caustic = !hero.buffs( Corrosion.class ).isEmpty();
 
                 if( burning && caustic ) {
-                    GLog.p( TXT_SPLASH_SPECIAL );
+                    GLog.i( TXT_SPLASH_SPECIAL );
                 } else if( burning ) {
                     GLog.p( TXT_SPLASH_BURNING );
                 } else if ( caustic ) {
@@ -164,7 +164,7 @@ public class Waterskin extends Item {
                 }
 
                 Buff.detach( hero, Burning.class );
-                Buff.detach( hero, Ooze.class );
+                Buff.detach( hero, Corrosion.class );
 
                 this.value--;
 

@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.ui;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.Waterskin;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.ui.Button;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
@@ -201,11 +203,26 @@ public class ItemSlot extends Button {
 				
 			} else if( item.shortName != null && item.isTypeKnown() ) {
 
-				topRight.text( Utils.format( "%s", item.shortName ) );
+                topRight.text( Utils.format( "%s", item.shortName ) );
                 topRight.resetColorAlpha();
                 topRight.measure();
 
-			} else {
+            } else if( item instanceof Waterskin ) {
+
+                topLeft.text( "" );
+
+                bottomLeft.text( item.status() );
+                bottomLeft.measure();
+
+            } else if( item instanceof OilLantern ) {
+
+                int flasks = ((OilLantern)item).getFlasks();
+                topLeft.text( flasks > 0 ? Utils.format( "%d", flasks ) : "" );
+
+                bottomLeft.text( item.status() );
+                bottomLeft.measure();
+
+            } else {
 
                 topRight.text( null );
 

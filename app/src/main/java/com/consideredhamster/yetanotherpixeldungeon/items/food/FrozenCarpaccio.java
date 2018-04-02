@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.food;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
@@ -31,7 +31,8 @@ public class FrozenCarpaccio extends Food {
 	{
 		name = "frozen carpaccio";
 		image = ItemSpriteSheet.CARPACCIO;
-		energy = Hunger.STARVING / 4;
+		energy = Satiety.MAXIMUM * 0.25f;
+        message = "That food tasted... kinda good.";
 	}
 	
 	@Override
@@ -39,7 +40,7 @@ public class FrozenCarpaccio extends Food {
 
         super.onConsume( hero );
 
-        GLog.i( "Refreshing!" );
+//        GLog.i( "Refreshing!" );
 
         if (hero.HP < hero.HT) {
             hero.HP = Math.min( hero.HP + hero.HT / 10, hero.HT );
@@ -48,7 +49,7 @@ public class FrozenCarpaccio extends Food {
 	}
 	
 	@Override
-	public String info() {
+	public String desc() {
 		return 
 			"It's a piece of frozen raw meat. The only way to eat it is " +
 			"by cutting thin slices of it. And this way it's suprisingly good.";

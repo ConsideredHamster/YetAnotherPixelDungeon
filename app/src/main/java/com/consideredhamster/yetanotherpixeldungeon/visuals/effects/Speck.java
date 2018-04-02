@@ -23,6 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.effects;
 import android.annotation.SuppressLint;
 import android.util.SparseArray;
 
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
@@ -50,6 +51,11 @@ public class Speck extends Image {
 	public static final int COIN		= 14;
 	public static final int COBWEB		= 15;
 
+	public static final int CONTROL		= 16;
+	public static final int TORMENT		= 17;
+	public static final int BANISH		= 18;
+	public static final int SPARKS		= 19;
+
 	public static final int DISCOVER	= 101;
 	public static final int EVOKE		= 102;
 	public static final int MASTERY		= 103;
@@ -62,8 +68,10 @@ public class Speck extends Image {
     public static final int FORGE		= 110;
     public static final int CONFUSION	= 111;
     public static final int RAISE_DEAD	= 112;
+    public static final int POISON  	= 113;
+    public static final int VERTIGO  	= 114;
 
-	private static final int SIZE = 7;
+	private static final int SIZE = 8;
 
 	private int type;
 	private float lifespan;
@@ -96,6 +104,7 @@ public class Speck extends Image {
 		case MASTERY:
 		case KIT:
 		case FORGE:
+		case VERTIGO:
 			frame( film.get( STAR ) );
 			break;
 		case RATTLE:
@@ -105,10 +114,15 @@ public class Speck extends Image {
 		case JET:
 		case TOXIC:
 		case DARKNESS:
-		case CONFUSION:
-		case DUST:
-			frame( film.get( STEAM ) );
-			break;
+        case DUST:
+            frame( film.get( STEAM ) );
+            break;
+        case POISON:
+            frame( film.get( BUBBLE ) );
+            break;
+        case CONFUSION:
+            frame( film.get( CHANGE ) );
+            break;
 		default:
 			frame( film.get( type ) );
 		}
@@ -144,6 +158,17 @@ public class Speck extends Image {
                 angle = Random.Float(360);
                 angularSpeed = Random.Float(-360, +360);
                 lifespan = 0.51f;
+                break;
+
+            case VERTIGO:
+
+//                this.y -= 8;
+
+                angularSpeed = Random.Float(+180);
+                angle = Random.Float(360);
+
+                lifespan = 1f;
+
                 break;
 
             case EVOKE:
@@ -197,7 +222,7 @@ public class Speck extends Image {
 
             case BONE:
                 lifespan = 0.2f;
-                speed.polar(Random.Float(2 * 3.1415926f), 24 / lifespan);
+
                 acc.set(0, 128);
                 angle = Random.Float(360);
                 angularSpeed = 360;
@@ -219,7 +244,6 @@ public class Speck extends Image {
                 angularSpeed = 360;
                 lifespan = 0.5f;
 
-//                speed.polar(Random.Float(2 * 3.1415926f), Random.Float(96));
                 this.x = x - speed.x * lifespan;
                 this.y = y - speed.y * lifespan;
                 scale.set( 0.7f, 0.7f );
@@ -265,6 +289,13 @@ public class Speck extends Image {
                 lifespan = Random.Float(0.8f, 1.5f);
                 break;
 
+            case POISON:
+                hardlight(0x00B300);
+                speed.set(0, -15);
+                scale.set(Random.Float(0.8f, 1));
+                lifespan = Random.Float(0.6f, 1.0f);
+                break;
+
             case STEAM:
                 speed.y = -Random.Float(20, 30);
                 angularSpeed = Random.Float(+180);
@@ -273,8 +304,8 @@ public class Speck extends Image {
                 break;
 
             case JET:
-                speed.y = +32;
-                acc.y = -64;
+//                speed.y = +32;
+//                acc.y = -64;
                 angularSpeed = Random.Float(180, 360);
                 angle = Random.Float(360);
                 lifespan = 0.5f;
@@ -282,14 +313,12 @@ public class Speck extends Image {
 
             case TOXIC:
                 hardlight(0x007044);
-//                hardlight(0x50FF60);
                 angularSpeed = 30;
                 angle = Random.Float(360);
                 lifespan = Random.Float(1f, 3f);
                 break;
 
             case DARKNESS:
-//			hardlight( 0xFFFF66 );
                 hardlight(0x22);
                 angularSpeed = -30;
                 angle = Random.Float(360);
@@ -316,6 +345,11 @@ public class Speck extends Image {
                 lifespan = -speed.y / acc.y * 2;
                 break;
 
+            case CONTROL:
+                angularSpeed = 0;
+                angle = Random.Float(360);
+                lifespan = Random.Float(1f, 3f);
+                break;
 
             case COBWEB:
                 angularSpeed = 0;
@@ -404,6 +438,11 @@ public class Speck extends Image {
 				scale.y = (1 + p) * 0.5f;
 				scale.x = scale.y * (float)Math.cos( left * 15 );
 				break;
+
+            case VERTIGO:
+                scale.set( 1 - p );
+                am = 1 - p * p;
+                break;
 				
 			case HEART:
 				scale.set( 1 - p );
@@ -422,6 +461,11 @@ public class Speck extends Image {
 				am = p < 0.5f ? p : 1 - p;
 				scale.set( 1 + p * 2 );
 				break;
+
+            case CONTROL:
+                scale.set( 1 - p );
+                am = 1 - p * p;
+                break;
 
             case COBWEB:
                 am = p < 0.5f ? p : 1 - p;

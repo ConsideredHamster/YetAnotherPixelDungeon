@@ -20,10 +20,11 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
@@ -36,8 +37,8 @@ public class FrostWard extends Armour.Glyph {
     }
 
     @Override
-    public Class<? extends DamageType> resistance() {
-        return DamageType.Frost.class;
+    public Class<? extends Element> resistance() {
+        return Element.Frost.class;
     }
 
     @Override
@@ -64,7 +65,7 @@ public class FrostWard extends Armour.Glyph {
     protected boolean proc_p( Char attacker, Char defender, int damage ) {
 
         if (Level.adjacent(attacker.pos, defender.pos)) {
-            attacker.damage(Random.IntRange(damage / 4, damage / 3), this, DamageType.FROST);
+            attacker.damage(Random.IntRange(damage / 4, damage / 3), this, Element.FROST);
             return true;
         }
 
@@ -73,13 +74,9 @@ public class FrostWard extends Armour.Glyph {
 
     @Override
     protected boolean proc_n( Char attacker, Char defender, int damage ) {
-        defender.damage(Random.IntRange(damage / 4, damage / 3), this, DamageType.FROST);
+//        defender.damage(Random.IntRange(damage / 4, damage / 3), this, EffectType.FROST);
 
-        Frozen buff = defender.buff( Frozen.class );
-
-        if( buff != null ) {
-            buff.set(2);
-        }
+        BuffActive.addFromDamage( defender, Frozen.class, damage );
 
         return true;
     }

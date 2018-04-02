@@ -22,8 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.HashSet;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.AmbitiousImp;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.GolemSprite;
 
@@ -38,7 +38,20 @@ public class Golem extends MobHealthy {
 
         dexterity /= 2;
 
+        resistances.put(Element.Flame.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Frost.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Shock.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Energy.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
+
+        resistances.put(Element.Mind.class, Element.Resist.IMMUNE);
+        resistances.put(Element.Body.class, Element.Resist.IMMUNE);
+
 	}
+
+    public boolean isMagical() {
+        return true;
+    }
 
     @Override
     public int armourAC() {
@@ -56,7 +69,7 @@ public class Golem extends MobHealthy {
     }
 	
 	@Override
-	public void die( Object cause, DamageType dmg ) {
+	public void die( Object cause, Element dmg ) {
 		AmbitiousImp.Quest.process( this );
 		
 		super.die( cause, dmg );
@@ -71,28 +84,4 @@ public class Golem extends MobHealthy {
             "metallic bodies can become less durable under high temperatures.";
 	}
 
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Flame.class);
-        RESISTANCES.add(DamageType.Frost.class);
-        RESISTANCES.add(DamageType.Shock.class);
-        RESISTANCES.add(DamageType.Acid.class);
-        RESISTANCES.add(DamageType.Energy.class);
-        RESISTANCES.add(DamageType.Unholy.class);
-
-        IMMUNITIES.add(DamageType.Mind.class);
-        IMMUNITIES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
-    }
 }
