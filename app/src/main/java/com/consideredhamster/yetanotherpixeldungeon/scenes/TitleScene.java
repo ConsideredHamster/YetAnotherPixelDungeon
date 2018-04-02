@@ -24,7 +24,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLES20;
 
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.DonateButton;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndChangelog;
 import com.watabou.input.Touchscreen;
 import com.watabou.noosa.BitmapText;
@@ -195,12 +194,6 @@ public class TitleScene extends PixelScene {
             }
         };
         add(changelog);
-
-
-
-        DonateButton btnDonate = new DonateButton();
-        btnDonate.setPos(0, h - btnDonate.height());
-        add(btnDonate);
 
         PrefsButton btnPrefs = new PrefsButton();
         btnPrefs.setPos( 0, 0 );
