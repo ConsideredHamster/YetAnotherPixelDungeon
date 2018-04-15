@@ -1116,7 +1116,7 @@ public class Hero extends Char {
 
         if( enemy.isAlive() ){
 
-            if( belongings.weap1 instanceof RangedWeaponMissile && ( (RangedWeaponMissile) belongings.weap1 ).checkAmmo( this, true ) ){
+            if( belongings.weap1 instanceof RangedWeaponMissile && ( (RangedWeaponMissile) belongings.weap1 ).checkAmmo( this, false ) ){
 
                 RangedWeaponMissile weap = (RangedWeaponMissile) belongings.weap1;
 
@@ -1140,7 +1140,7 @@ public class Hero extends Char {
 
                     weap.execute( this, RangedWeaponFlintlock.AC_RELOAD );
 
-                } else if( weap.checkAmmo( this, true ) ){
+                } else if( weap.checkAmmo( this, false ) ){
 
                     busy();
 
@@ -1258,7 +1258,7 @@ public class Hero extends Char {
             wep.proc( this, enemy, damage );
 
             if( wep instanceof MeleeWeapon ){
-                wep.use( 2 );
+                wep.use( 1 );
             }
         }
 
@@ -1273,7 +1273,7 @@ public class Hero extends Char {
                 currentArmour = (Shield) belongings.weap2;
                 currentArmour.use( 2 );
             } else {
-                currentArmour = null;
+                currentArmour = belongings.armor;
 
                 if( currentWeapon instanceof MeleeWeapon ){
                     currentWeapon.use( 2 );

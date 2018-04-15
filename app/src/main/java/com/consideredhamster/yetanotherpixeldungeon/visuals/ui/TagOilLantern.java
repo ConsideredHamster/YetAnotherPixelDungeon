@@ -52,12 +52,14 @@ public class TagOilLantern extends Tag {
                 flash();
 			};
 
-//            protected boolean onLongClick() {
-//                item.execute( Dungeon.hero, Waterskin.AC_WASH );
-//                flash();
-//                return true;
-//            };
+            protected boolean onLongClick() {
+                item.execute( Dungeon.hero, OilLantern.AC_BURN );
+                flash();
+                return true;
+            };
 		};
+
+
 
 
         slot.setScale(0.8f);

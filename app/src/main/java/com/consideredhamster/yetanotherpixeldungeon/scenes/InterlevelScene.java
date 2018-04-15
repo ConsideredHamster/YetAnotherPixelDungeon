@@ -126,7 +126,7 @@ public class InterlevelScene extends PixelScene {
             "Excess strength decreases penalties from heavy equipment",
             "Stronger flintlock weapons require more gunpowder to reload",
 
-            "Being hit by lightning can force you to drop your current weapon on the ground",
+            "Being electrified can force you to drop your current weapon on the ground",
             "You can identify weapons, armors, wands and rings by using them long enough",
 
             "Flintlock weapons ignore distance penalties and the target's armor",
@@ -202,7 +202,7 @@ public class InterlevelScene extends PixelScene {
             "There is always at least one scroll of Identify in every shop",
 
             "Scrolls of Transmutation will never change an item into the same item",
-            "Scrolls of Transmutation will always keep the rarity of the item",
+            "Scrolls of Transmutation can be used to transmute ammunition and throwing weapons",
 
             "Scrolls of Sunlight can be used to counteract effect of a potion of Thunderstorm",
             "Never forget that scroll of Sunlight can heal some of your enemies, too",
@@ -226,7 +226,7 @@ public class InterlevelScene extends PixelScene {
             "Scroll of Challenge can be used to lure mimics out of their cover",
 
             "Scroll of Torment is more harmful to you if there are no more enemies in sight",
-            "Scroll of Torment is useless against creatures which have no flesh to torture",
+            "Scroll of Torment is useless against creatures which have no mind to torture",
 
             // FOOD
 
@@ -241,6 +241,12 @@ public class InterlevelScene extends PixelScene {
 
             "Sometimes you can find additional rations, but they will be smaller",
             "You can buy pastry in shops; more often than not it is well worth its cost",
+
+            "Starvation is not immediately harmful; initially it just prevents regeneration",
+            "If you ignore starvation for too long, it will become more dangerous",
+
+            "Satiety will be drained slightly slower if you have more strength than required by your equipment",
+            "Moving, attacking, casting and blocking decrease your satiety faster than standing still",
 
             // BOSSES
 
@@ -267,6 +273,14 @@ public class InterlevelScene extends PixelScene {
             "Sleeping in the water is much less efficient than sleeping anywhere else",
             "Evasion chance is decreased for every adjacent tile which is occupied or impassable",
 
+
+            // MISC
+
+            "You can refill your waterskins in wells, but their capacity is limited",
+            "You can pour water from your waterskin to put out fires and wash away caustic ooze",
+
+            "Your lantern makes it much easier to check for traps and secret doors",
+            "Oil lantern can be used to create fires on adjacent tiles if you have spare oil flasks",
     };
 	
 	private enum Phase {

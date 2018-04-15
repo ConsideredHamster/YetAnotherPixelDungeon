@@ -304,16 +304,31 @@ public class ShopPainter extends Painter {
 
             if( weapon != null ) {
                 weapon.repair().fix().upgrade(Random.Int(Dungeon.chapter()));
+
+                if( Random.Int( 5 ) < Dungeon.chapter() ) {
+                    weapon.enchant();
+                }
+
                 items.add(weapon);
             }
 
             if( armour != null ) {
                 armour.repair().fix().upgrade( Random.Int( Dungeon.chapter() ) );
+
+                if( Random.Int( 5 ) < Dungeon.chapter() ) {
+                    armour.inscribe();
+                }
+
                 items.add(armour);
             }
 
             if( ranged instanceof RangedWeapon ) {
                 ranged.repair().fix().upgrade(Random.Int(Dungeon.chapter()));
+
+                if( Random.Int( 5 ) < Dungeon.chapter() ) {
+                    ((RangedWeapon)ranged).enchant();
+                }
+
                 items.add(ranged);
             } else if( ranged instanceof ThrowingWeapon || ranged instanceof Explosives) {
                 ranged.random();

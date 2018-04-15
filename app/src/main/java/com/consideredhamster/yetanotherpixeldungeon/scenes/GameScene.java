@@ -210,7 +210,6 @@ public class GameScene extends PixelScene {
 		hero = new HeroSprite();
 		hero.place(Dungeon.hero.pos);
 		hero.updateArmor();
-        Dungeon.hero.updateSpriteState();
         mobs.add(hero);
 
 		add(new HealthIndicator());
@@ -323,8 +322,10 @@ public class GameScene extends PixelScene {
 			}
 			Dungeon.droppedItems.remove( Dungeon.depth );
 		}
-		
-		Camera.main.target = hero;
+
+        Dungeon.hero.updateSpriteState();
+        Camera.main.target = hero;
+
 		fadeIn();
 	}
 	

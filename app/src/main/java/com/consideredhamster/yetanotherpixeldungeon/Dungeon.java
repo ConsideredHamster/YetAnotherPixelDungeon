@@ -390,7 +390,7 @@ public class Dungeon {
     }
 
     public static boolean torchesNeeded() {
-        int[] quota = {5, 1, 11, 2, 17, 3, 23, 4, 29, 5};
+        int[] quota = {5, 2, 11, 4, 17, 6, 23, 8, 29, 10};
 
         return chance( quota, torches );
     }

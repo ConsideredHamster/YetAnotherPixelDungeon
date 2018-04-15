@@ -126,7 +126,7 @@ public abstract class Goo extends MobEvasive {
 
             dmg /= 2;
 
-        } else if ( type == null && dmg > 1 && dmg < HP && dmg > Random.Int( SPAWN_HEALTH * 3 ) ) {
+        } else if ( type == Element.PHYSICAL && dmg > 1 && dmg < HP && dmg > Random.Int( SPAWN_HEALTH * 3 ) ) {
 
             ArrayList<Integer> candidates = new ArrayList<Integer>();
             boolean[] passable = Level.passable;

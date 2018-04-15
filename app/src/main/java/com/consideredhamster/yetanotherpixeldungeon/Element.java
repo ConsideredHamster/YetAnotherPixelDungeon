@@ -204,7 +204,7 @@ public abstract class Element {
         public int proc( Char target, int damage ) {
 
 //            if ( Random.Int( target.HT ) < damage * damage / 2 ) {
-                BuffActive.addFromDamage(target, Withered.class, damage);
+                BuffActive.addFromDamage(target, Withered.class, damage * 2 );
 
 //                if( damage < target.HP && buff != null ) {
 //

@@ -105,7 +105,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
             } else {
 
-                item.detach(Dungeon.hero.belongings.backpack);
+                item.detachAll(Dungeon.hero.belongings.backpack);
 
                 if (!newItem.doPickUp(curUser)) {
                     Dungeon.level.drop(newItem, curUser.pos).sprite.drop();
@@ -174,6 +174,8 @@ public class ScrollOfTransmutation extends InventoryScroll {
         } else if (item instanceof Ring) {
 
             Item newItem = changeRing((Ring) item);
+
+            GLog.i(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
 
             if( curUser.belongings.ring1 == item ) {
 

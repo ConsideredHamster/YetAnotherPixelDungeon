@@ -350,11 +350,13 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                 break;
 
             case INVISIBLE:
-                if (ch.sprite.parent != null) {
-                    ch.sprite.parent.add( new AlphaTweener( ch.sprite, 0.4f, 0.4f ) );
+
+                if (parent != null) {
+                    parent.add( new AlphaTweener( ch.sprite, 0.4f, 0.4f ) );
                 } else {
-                    ch.sprite.alpha( 0.4f );
+                    alpha( 0.4f );
                 }
+
                 break;
 
             case ENRAGED:
@@ -416,10 +418,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                 GameScene.effect( unholyArmor = new UnholyArmor( this ) );
                 break;
 
-
-//            case CHALLENGE:
-//                challenge = EnragedFX.fury( this );
-//                break;
             case PARALYSED:
                 paused = true;
                 break;
@@ -543,14 +541,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                     unholyArmor.putOut();
                 }
                 break;
-
-
-//            case CHALLENGE:
-//                if (challenge != null) {
-//                    challenge.calm();
-//                    challenge = null;
-//                }
-//                break;
 
             case PARALYSED:
                 paused = false;

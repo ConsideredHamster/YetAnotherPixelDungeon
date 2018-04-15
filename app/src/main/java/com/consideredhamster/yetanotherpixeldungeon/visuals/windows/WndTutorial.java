@@ -72,7 +72,8 @@ public class WndTutorial extends WndTabbed {
             "Above the offhand quickslot there are several buttons which are probably hidden at the moment. These are danger indicator, attack button, pickup button and resume button. Danger indicator shows the number of currently visible enemies.",
 			"Selecting the enemy by clicking the danger indicator and tapping the attack button allows you to attack an enemy without tapping the tile. Also, pressing and holding the attack button will show target's description.",
 			"Pickup button is shown only when there are items on the tile on which your character is standing right now. Tapping the pickup button allows you to pick up these items without the need to click on the character.",
-			"Resume button is only shown then your current action was interrupted by an attack or noticing an enemy. Obviously, it allows you to resume the interrupted action (such as moving somewhere) )after observing the situation, if you want to."
+            "Below your character avatar you can see a button which allows you to drink from one of your waterskins without having to open your inventory. Or you can long press this button to pour water from your waterskin instead.",
+            "Also there are another button which allows you to interact with your lantern. It is kinda smart one - tap it to light, snuff or refill your lantern. Long pressing it allows you to use your spare oil flasks to ignite nearby tiles.",
         },
 		{
 			"Most actions in the game spend one turn when performed, which means that one attack spend just as much time as one tile travelled, and that almost everyone moves with the same speed. Keep in mind that actions take their effect the moment they are performed and make the character wait after that.",
@@ -85,8 +86,8 @@ public class WndTutorial extends WndTabbed {
             "Your Perception attribute affects your chances to find a trap or a secret door by walking near it, as well as your chance to hear an enemy through the wall. Mind that secrets become more difficult to find as you descend further into the dungeon.",
 			"High grass is extremely useful for setting up ambushes, as it both blocks field of view and makes you stealthier. However, water is noisy and will decrease your stealth when you are standing in it.",
             "Sleeping is the most readily available source of recovery. While you are sleeping, your regeneration rate is tripled. However, sleeping in the water denies this advantage, but you still can do that to skip turns quickly if needed.",
-            "Your chance to notice a hidden door or trap, your chance to hear an enemy through a wall and your chance to expose your enemy to counterattack all depend on your Perception attribute.",
-            "Your Willpower very significantly affects wands recharge rate, and also determines chance to prevent equipping cursed item when it is unidentified. Wand skill determines your accuracy with combat wands and also affects effectiveness of certain offensive scrolls.",
+            "Searching or lighting your lantern guarantees that all secrets on nearby tiles (such as traps or hidden doors) will be revealed to you. Keep in mind that lit lantern also makes it guaranteed that enemies will notice you when they can, however.",
+            "Your Willpower very significantly affects wands recharge rate, and also determines chance to prevent equipping cursed item when it is unidentified. Magic skill determines your accuracy with combat wands and also affects effectiveness of certain offensive scrolls.",
         },
         {
 			"Melee weapons are separated into different categories. The most basic of them is heavy one-handed weapons which do not have any special abilities or penalties and can be used in any combination of weapons without strength penalties.",

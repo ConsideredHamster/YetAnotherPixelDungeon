@@ -94,9 +94,9 @@ public class ScrollOfChallenge extends Scroll {
 	@Override
 	public String desc() {
 		return 
-			"When read aloud, this scroll will start ritual of Challenge, aggravating all creatures " +
-            "on the level and revealing your position to them. Creatures, affected by this ritual, " +
-            "will become invigorated, but fighting them will improve your skills much better than usual.";
+			"When read aloud, this scroll will bless you with an unholy wrath, significantly " +
+            "increasing strength of your blows for a limited time. However, it will also aggravate " +
+            "all creatures on the level and reveal your position to them.";
 	}
 
     @Override

@@ -110,7 +110,7 @@ public class GnollShaman extends MobRanged {
 
         if (hit( this, enemy, true, true )) {
 
-            enemy.damage( absorb( damageRoll() + damageRoll(), enemy.armorClass() ), this, null );
+            enemy.damage( absorb( damageRoll() + damageRoll(), enemy.armorClass() ), this, Element.ENERGY );
 
         } else {
 

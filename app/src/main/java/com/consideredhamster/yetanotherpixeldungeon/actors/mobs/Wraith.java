@@ -48,8 +48,7 @@ public class Wraith extends MobRanged {
 
 	private static final float SPAWN_DELAY	= 2.0f;
 
-	private static final float BLINK_CHANCE	= 0.25f;
-	public static final float HEALTH_DRAIN	= 0.25f;
+	private static final float BLINK_CHANCE	= 0.125f;
 
     public Wraith() {
         this( Dungeon.depth );;
@@ -65,6 +64,11 @@ public class Wraith extends MobRanged {
         minDamage += tier;
         maxDamage += tier;
 
+        minDamage /= 2;
+        maxDamage /= 2;
+
+        HP = HT /= 2;
+
         flying = true;
 
         resistances.put( Element.Frost.class, Element.Resist.PARTIAL );
@@ -78,11 +82,6 @@ public class Wraith extends MobRanged {
     @Override
     public boolean isMagical() {
         return true;
-    }
-
-    @Override
-    public int damageRoll() {
-        return super.damageRoll() / 2;
     }
 
     @Override

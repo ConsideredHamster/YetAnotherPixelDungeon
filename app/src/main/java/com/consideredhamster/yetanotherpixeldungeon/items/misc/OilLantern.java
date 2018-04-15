@@ -21,15 +21,23 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.misc;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Light;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.scenes.CellSelector;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -39,15 +47,16 @@ import java.util.ArrayList;
 public class OilLantern extends Item {
 
 	public static final String AC_LIGHT	= "LIGHT";
-	private static final String AC_SNUFF    = "SNUFF";
-	private static final String AC_REFILL   = "REFILL";
-	private static final String AC_SPLASH 	= "SPLASH";
+    public static final String AC_SNUFF    = "SNUFF";
+    public static final String AC_REFILL   = "REFILL";
+    public static final String AC_BURN 	= "BURN";
 
 	private static final float TIME_TO_USE = 1f;
 	private static final int MAX_CHARGE = 100;
 
 	private static final String TXT_STATUS	= "%d%%";
 
+	private static final String TXT_CANT_BURN	= "You need a spare oil flask for this!";
 	private static final String TXT_NO_FLASKS	= "You don't have oil to refill the lamp!";
 
 	private static final String TXT_DEACTIVATE = "Your lantern flickers faintly and goes out!";
@@ -57,6 +66,9 @@ public class OilLantern extends Item {
     private static final String TXT_LIGHT = "You light the lantern.";
 
     private static final String TXT_SNUFF = "You snuff out the lantern.";
+
+    private static final String TXT_BURN_SELF = "You pour the oil from an oil flask on yourself and ignite it. Just... Why?";
+    private static final String TXT_BURN_TILE = "You pour the oil from an oil flask on a nearby tile and ignite it.";
 
 	{
 		name = "oil lantern";
@@ -130,6 +142,7 @@ public class OilLantern extends Item {
 
         actions.add( isActivated() ? AC_SNUFF : AC_LIGHT );
         actions.add( AC_REFILL );
+        actions.add( AC_BURN );
 
         actions.remove( AC_THROW );
         actions.remove( AC_DROP );
@@ -166,13 +179,26 @@ public class OilLantern extends Item {
 
         } else if (action.equals( AC_REFILL ) ) {
 
-             if ( flasks > 0 ) {
+            if ( flasks > 0 ) {
 
-                 refill( hero );
+                refill( hero );
 
             } else {
-                 GLog.w( TXT_NO_FLASKS );
-             }
+                GLog.w( TXT_NO_FLASKS );
+            }
+
+        } else if (action.equals( AC_BURN ) ) {
+
+            if ( flasks > 0 ) {
+
+                curUser = hero;
+                curItem = this;
+
+                GameScene.selectCell( burner );
+
+            } else {
+                GLog.w( TXT_CANT_BURN );
+            }
 
         } else {
 
@@ -192,7 +218,7 @@ public class OilLantern extends Item {
         Sample.INSTANCE.play( Assets.SND_DRINK, 1.0f, 1.0f, 1.2f );
         hero.sprite.operate( hero.pos );
 
-        GLog.w( TXT_REFILL );
+        GLog.i( TXT_REFILL );
         updateQuickslot();
 
     }
@@ -212,7 +238,7 @@ public class OilLantern extends Item {
             hero.spend( TIME_TO_USE );
             hero.busy();
 
-            GLog.w( TXT_LIGHT );
+            GLog.i( TXT_LIGHT );
             hero.sprite.operate( hero.pos );
 
         }
@@ -238,7 +264,7 @@ public class OilLantern extends Item {
             hero.busy();
 
             hero.sprite.operate( hero.pos );
-            GLog.w( TXT_SNUFF );
+            GLog.i( TXT_SNUFF );
 
         } else {
 
@@ -319,14 +345,55 @@ public class OilLantern extends Item {
 
         @Override
         public int price() {
-            return quantity * 20;
+            return quantity * 30;
         }
 
         @Override
         public String info() {
             return
-                "This container holds 10 oz of oil. You can buy it to " +
-                "use as a fuel for your lantern. It is fireproof, thankfully.";
+                "This container holds 10 oz of lantern oil. You can use it to " +
+                "refill your lantern or pour on something to burn it.";
         }
     }
+
+
+
+    protected static CellSelector.Listener burner = new CellSelector.Listener() {
+        @Override
+        public void onSelect( Integer target ) {
+
+            if (target != null) {
+
+                Ballistica.cast( curUser.pos, target, false, true );
+
+                int cell = Ballistica.trace[ 0 ];
+
+                if( Ballistica.distance > 1 ){
+                    cell = Ballistica.trace[ 1 ];
+                }
+
+                GameScene.add( Blob.seed( cell, 5, Fire.class ) );
+                ((OilLantern)curItem).flasks--;
+                Invisibility.dispel();
+
+                if( curUser.pos == cell ) {
+                    GLog.i( TXT_BURN_SELF );
+                } else {
+                    GLog.i( TXT_BURN_TILE );
+                }
+
+                Sample.INSTANCE.play(Assets.SND_BURNING, 0.6f, 0.6f, 1.5f);
+                CellEmitter.get( cell ).burst( FlameParticle.FACTORY, 5 );
+
+                curUser.sprite.operate(cell);
+                curUser.busy();
+                curUser.spend( Actor.TICK );
+
+            }
+        }
+        @Override
+        public String prompt() {
+            return "Select nearby tile to burn";
+        }
+    };
 }

@@ -216,6 +216,4 @@ public class ItemSpriteSheet {
     public static final int HARPOON_THROWN    	= 178;
     public static final int HARPOON_RETURN    	= 179;
 
-    public static final int ARMOR_FOOLS		    = 150;
-
 }

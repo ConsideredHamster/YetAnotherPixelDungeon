@@ -7,8 +7,8 @@ android {
         applicationId "com.consideredhamster.yetanotherpixeldungeon"
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 316
-        versionName '0.3.1f'
+        versionCode 318
+        versionName '0.3.1h'
         archivesBaseName = "yapd-$versionName"
     }
 

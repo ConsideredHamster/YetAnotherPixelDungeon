@@ -86,7 +86,7 @@ public class WandOfMagicMissile extends Wand {
                 ch.damage(
                         Char.absorb(
                                 damageRoll(), ch.armorClass()
-                        ), curUser, null
+                        ), curUser, Element.ENERGY
                 );
 
                 ch.sprite.centerEmitter().burst( SparkParticle.FACTORY, Random.IntRange( 2 + power / 10 , 4 + power / 5 ) );

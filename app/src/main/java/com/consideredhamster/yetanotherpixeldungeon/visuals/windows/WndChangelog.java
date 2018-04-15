@@ -36,110 +36,87 @@ public class WndChangelog extends Window {
 	private static final int WIDTH_L	= 160;
 	private static final int HEIGHT_L	= 128;
 
-	private static final String TXT_TITLE	= "Update 0.3.1e!";
+	private static final String TXT_TITLE	= "CHANGELOG";
 
     private static final String TXT_DESCR =
 
-        "Finally, I can say that version 0.3.1 has been completed! Thank you for waiting!\n" +
+        "Hello, fellow rat punchers! April Fools event is over, and this means that mob sprites are reverted back to normal. Also, classy suit armor was removed from the game - sorry about that. I liked it, but it had to go, as it was never intended to be in the game for real.\n" +
         "\n" +
-        "Well, I had to rework a huge chunk of the game code for all these changes, so you better like " +
-        "them. Reworking debuffs was necessary for the next update (in which I plan to finally " +
-        "rework the wands and enchantments as well as add new potions and scrolls), which will " +
-        "serve as the basis for the return of the subclasses.\n" +
+        "Apart from removing stuff from the game, I've also implemented new features for your waterskins and lantern. Now they can be used on adjacent tiles to splash them with water and set them on fire, respectively. Hope that this feature makes for a more fun runs, as it allows you to basically terraform this dungeon to suit your own needs.\n" +
         "\n" +
-        "WARNING! This update will make your older save games unplayable. Sorry about that, but given " +
-        "the scope of work done, it would've been unnecessarily difficult to make this update " +
-        "backwards compatible. I try to avoid issues like these where it is possible, but now it wasn't.\n" +
+        "Additionally, this update fixes to most of the reported issues (all of the important ones, at least) and nerfs wraiths back to be a way more manageable threat. They are still resistant to physical damage and possess all the same abilities, but they got less beefy and less annoying.\n" +
         "\n" +
-        "Here you'll find main features that were introduced in this version:\n" +
+        "Now I can start working on the next update, which will be mostly about making wands more powerful and interesting to use. It will also bring new potions and scrolls into the game, as well as change existing alchemy system and implement new ways to obtain scrolls for your character.\n" +
         "\n" +
-        "_GENERAL_\n" +
+        "_IMPORTANT:_ one thing which I want to remind to both rookie and veteran YAPD players is that this mod has its own set of articles on the PD wikia. They can be really useful for a newcomer to this mod, and I really recommend checking them out, they can be very helpful - despite the fact that they are a bit outdated by now...\n" +
         "\n" +
-        "- new soundtracks, kudos to _Jivvy_! (music in the first chapter remained the same)\n" +
+        "And that's where I need help of veteran players. I wrote all of these articles mostly by myself, and while I can update them myself as well, doing this is a very time consuming task for a single person. Wikis are supposed to be community-driven projects, so I just ask for some volunteers to spend just a little bit of their time and show some love to those articles.\n" +
         "\n" +
-        "- when you skip a turn, the character gains a significant bonus to the chance to hit\n" +
-        "\n" +
-        "- waterskins now occupy a separate button on the left of the game screen\n" +
-        "\n" +
-        "- added a digital indicator of the character's health\n" +
-        "\n" +
-        "- added the indicator of current difficulty in the upper right corner\n" +
-        "\n" +
-        "_BUFFS & DEBUFFS_\n" +
-        "\n" +
-        "- all status effects were standardized, many were partially or completely reworked\n" +
-        "\n" +
-        "- some overly powerful or redundant debuffs were removed from the game (stun, for example)\n" +
-        "\n" +
-        "- some debuffs were brought back to the game or implemented from scratch\n" +
-        "\n" +
-        "- duration of debuffs from attacks now scales from damage received vs target's total health\n" +
-        "\n" +
-        "- duration of most debuffs from blobs now depends on amount of time target spent in the blob\n" +
-        "\n" +
-        "- added descriptions of effects in the \"Buffs\" window\n" +
-        "\n" +
-        "- added effect duration indicator at the top of the game screen\n" +
-        "\n" +
-        "- many debuffs got new shiny visual effects\n" +
-        "\n" +
-        "_ILLUMINATION & SECRETS_\n" +
-        "\n" +
-        "- torches have been removed from the game\n" +
-        "\n" +
-        "- characters start with an oil lantern that can be turned on and off at any time instead\n" +
-        "\n" +
-        "- lantern increases view distance and makes it guaranteed to find traps/secret doors, but makes it guaranteed to be noticed in return\n" +
-        "\n" +
-        "- lantern needs oil flasks, there are two of them per chapter (one among random drops and one in a shop)\n" +
-        "\n" +
-        "- player character's view distance is now limited to 4 cells regardless of the chapter\n" +
-        "\n" +
-        "- rebalanced chance to detect traps (mostly decreased it)\n" +
-        "\n" +
-        "_FOOD & SATIETY_\n" +
-        "\n" +
-        "- satiety drain rate now depends on strength requirement of your current equipment vs your current strength\n" +
-        "\n" +
-        "- starving now gives you some time before it starts to inflict damage (and it also deals decreased damage at first)\n" +
-        "\n" +
-        "- in general, starvation now inflicts less damage than before (4% HP per turn at max instead of 6.67% HP per turn)\n" +
-        "\n" +
-        "- herbs can now be eaten to slightly satisfy hunger and/or to remove certain debuffs\n" +
-        "\n" +
-        "- some herbs, on the contrary, inflict short-term debuffs (but satisfy hunger anyway)\n" +
-        "\n" +
-        "- it's better to eat harmful food when you are not that hungry\n" +
-        "\n" +
-        "_BOSSES & MOBS_\n" +
-        "\n" +
-        "- the fifth boss now has immunity to fire/acid, as long as the corresponding fist is alive\n" +
-        "\n" +
-        "- on knockback into something, the fourth boss now inflicts Vertigo instead of dealing additional damage\n" +
-        "\n" +
-        "- wraiths are now resistant to physical damage\n" +
-        "\n" +
-        "- reduced the frequency of wraith spawn on the haunted floors\n" +
-        "\n" +
-        "- some mobs have been slightly tweaked\n" +
-        "\n" +
-        "_EQUIPMENT & CONSUMABLES_\n" +
-        "\n" +
-        "- resists from buffs, rings and enchantments now stack and can be brought to 100% immunity\n" +
-        "\n" +
-        "- bonuses from rings and the chance of triggering enchantments have become slightly higher at the lower upgrade levels\n" +
-        "\n" +
-        "- scrolls of Torment now inflict a \"Torment\" debuff, frightening off mobs in addition to inflicting damage\n" +
-        "\n" +
-        "- scroll of Challenge now enrages your character instead of mobs on the current floor\n" +
-        "\n" +
-        "- scrolls of Banishment now banish magical mobs in addition to inflicting damage, forcing them to flee\n" +
-        "\n" +
-        "- scrolls of Sunlight now disrupt (confuse) magic mobs instead of ignoring them\n" +
+        "Thank you in advance!\n" +
         "\n" +
         "-----\n" +
         "\n" +
-        "Thank you for waiting for this update, and good hunting!";
+        "Ok, now that's everything is said and done, here is a list of changes brought by this update:\n" +
+        "\n" +
+        "_GENERAL_\n" +
+        "\n" +
+        "- lantern can be used to spend your oil flasks to ignite nearby tiles\n" +
+        "\n" +
+        "- amount of oil flasks spawned is increased\n" +
+        "\n" +
+        "- waterskins can be used to pour water on adjacent tiles (or yourself)\n" +
+        "\n" +
+        "- pouring water now creates a patch of water on affected tile\n" +
+        "\n" +
+        "- wands of Magic Missile now inflict energy damage with their spells (instead physical)\n" +
+        "\n" +
+        "_ENEMIES_\n" +
+        "\n" +
+        "- decreased wraith HP\n" +
+        "\n" +
+        "- decreased wraith blink chance\n" +
+        "\n" +
+        "- restored wraith spawn rate on haunted floor to the previous value\n" +
+        "\n" +
+        "- gnoll shamans now inflict energy damage with their spells (instead of physical)\n" +
+        "\n" +
+        "_MISC_\n" +
+        "\n" +
+        "- weapons ands armors in shops can be enchanted now\n" +
+        "\n" +
+        "- increased duration of \"Withered\" caused by unholy damage\n" +
+        "\n" +
+        "- thunderstorm clouds now can remove Corrosion\n" +
+        "\n" +
+        "- updated loading tips\n" +
+        "\n" +
+        "- updated tutorial\n" +
+        "\n" +
+        "_BUGFIXES_\n" +
+        "\n" +
+        "- fixed first boss not spawning minions when hit\n" +
+        "\n" +
+        "- fixed issue with weapons being degraded too fast\n" +
+        "\n" +
+        "- fixed scroll of Challenge crashing the game\n" +
+        "\n" +
+        "- fixed scroll of Transmutation and throwing weapons/ammunitions issue\n" +
+        "\n" +
+        "- fixed issue when using throwing weapons with ranged weapon in your main hand\n" +
+        "\n" +
+        "- fixed issue with quickslots acting as offhand slots when item in them is equipped\n" +
+        "\n" +
+        "- fixed scroll of Transmutation not showing a message when transmuting rings\n" +
+        "\n" +
+        "- fixed some typos and grammar mistakes\n" +
+        "\n" +
+        "_UPDATE 0.3.1h_:\n" +
+        "\n" +
+        "- fixed ranged weapons working incorrectly after all of the bugfixes... *sigh*\n" +
+        "\n" +
+        "-----\n" +
+        "\n" +
+        "Well, that's all for now. Thank you for playing this mod!";
 
 	private BitmapText txtTitle;
 	private ScrollPane list;

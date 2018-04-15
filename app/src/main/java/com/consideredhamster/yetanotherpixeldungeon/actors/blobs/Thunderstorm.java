@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Elemental;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SparkParticle;
@@ -122,6 +123,7 @@ public class Thunderstorm extends Blob {
                             ch.damage( Random.IntRange( 1, (int)Math.sqrt( ch.HT / 2 + 1 ) ), this, null );
                         } else {
                             Buff.detach(ch, Burning.class);
+                            Buff.detach(ch, Corrosion.class);
                         }
                     }
 

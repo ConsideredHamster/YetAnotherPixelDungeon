@@ -126,7 +126,7 @@ public class QuickSlot extends Button implements WndBag.Listener {
 //						lastItem = item;
 //					}
                     if ( item != null ) {
-                        item.execute( Dungeon.hero, item.isEquipped( Dungeon.hero ) && item.equipAction() != null ? item.equipAction() : item.quickAction() );
+                        item.execute( Dungeon.hero, QuickSlot.this == quickslot0 && item.equipAction() != null ? item.equipAction() : item.quickAction() );
 
                         if( !GameScene.checkListener() ) {
                             useTargeting();
@@ -191,8 +191,6 @@ public class QuickSlot extends Button implements WndBag.Listener {
 	
 	@SuppressWarnings("unchecked")
 	public Item select() {
-		
-//		Object content = (this == setAsQuickSlot1 ? quickslotValue_1 : quickslotValue_2);
 
         if( this == quickslot0 ) {
 

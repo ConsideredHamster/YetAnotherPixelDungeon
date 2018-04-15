@@ -20,13 +20,9 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.ui;
 
-import com.consideredhamster.yetanotherpixeldungeon.Chrome;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
-import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
-import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Waterskin;
-import com.watabou.gltextures.TextureCache;
 
 public class TagWaterskin extends Tag {
 
@@ -54,7 +50,7 @@ public class TagWaterskin extends Tag {
 			};
 
             protected boolean onLongClick() {
-                item.execute( Dungeon.hero, Waterskin.AC_WASH );
+                item.execute( Dungeon.hero, Waterskin.AC_POUR );
                 flash();
                 return true;
             };
