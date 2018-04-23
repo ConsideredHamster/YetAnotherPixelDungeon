@@ -31,6 +31,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 
@@ -180,14 +181,28 @@ public abstract class Actor implements Bundlable {
 
 		do {
 			now = Float.MAX_VALUE;
+
 			current = null;
-			
+
+            Actor currentChar = null;
+            Actor currentBlob = null;
+            Actor currentBuff = null;
+
 			Arrays.fill( chars, null );
 			
 			for (Actor actor : all) {
 				if (actor.time < now) {
 					now = actor.time;
+
 					current = actor;
+
+                    if(actor instanceof Char) {
+                        currentChar = actor;
+                    } else if(actor instanceof Blob) {
+                        currentBlob = actor;
+                    } else if(actor instanceof Buff) {
+                        currentBuff = actor;
+                    }
 				}
 				
 				if (actor instanceof Char) {
@@ -196,7 +211,23 @@ public abstract class Actor implements Bundlable {
 				}
 			}
 
-			if (current != null) {
+//            for (Actor actor : all) {
+//
+//                if (actor instanceof Char) {
+//                    Char ch = (Char)actor;
+//                    chars[ch.pos] = ch;
+//                }
+//            }
+
+            if( currentBuff != null && currentBuff.time <= now ) {
+                current = currentBuff;
+            } else if( currentBlob != null && currentBlob.time <= now ) {
+                current = currentBlob;
+            } else if( currentChar != null && currentChar.time <= now ) {
+                current = currentChar;
+            }
+
+            if (current != null) {
 				
 				if (current instanceof Char && ((Char)current).sprite != null && ((Char)current).sprite.isMoving) {
 					// If it's character's turn to act, but its sprite 
@@ -206,10 +237,12 @@ public abstract class Actor implements Bundlable {
 				}
 				
 				doNext = current.act();
+
 				if (doNext && !Dungeon.hero.isAlive()) {
 					doNext = false;
 					current = null;
 				}
+
 			} else {
 				doNext = false;
 			}

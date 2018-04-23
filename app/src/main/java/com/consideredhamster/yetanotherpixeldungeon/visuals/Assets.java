@@ -132,10 +132,18 @@ public class Assets {
 	public static final String FONTS25X	= "font25x.png";
 	public static final String FONTS3X	= "font3x.png";
 	
-	public static final String THEME	= "theme.mp3";
-	public static final String TUNE		= "game.mp3";
-	public static final String HAPPY	= "surface.mp3";
-	
+	public static final String TRACK_MAIN_THEME	= "track_theme.ogg";
+	public static final String TRACK_CHAPTER_1	= "track_chapter_1.ogg";
+	public static final String TRACK_CHAPTER_2	= "track_chapter_2.ogg";
+	public static final String TRACK_CHAPTER_3	= "track_chapter_3.ogg";
+	public static final String TRACK_CHAPTER_4	= "track_chapter_4.ogg";
+	public static final String TRACK_CHAPTER_5	= "track_chapter_5.ogg";
+    public static final String TRACK_BOSS_INTRO = "track_boss_intro.ogg";
+    public static final String TRACK_BOSS_LOOP  = "track_boss_loop.ogg";
+    public static final String TRACK_FINAL_INTRO= "track_final_intro.ogg";
+    public static final String TRACK_FINAL_LOOP	= "track_final_loop.ogg";
+    public static final String TRACK_HAPPY_END	= "track_surface.ogg";
+
 	public static final String SND_CLICK	= "snd_click.mp3";
 	public static final String SND_BADGE	= "snd_badge.mp3";
 	public static final String SND_GOLD		= "snd_gold.mp3";

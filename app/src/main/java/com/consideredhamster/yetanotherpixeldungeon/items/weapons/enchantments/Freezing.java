@@ -20,14 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfAvalanche;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
-import com.watabou.utils.Random;
 
 public class Freezing extends Weapon.Enchantment {
 
@@ -63,23 +62,13 @@ public class Freezing extends Weapon.Enchantment {
 
     @Override
     protected boolean proc_p( Char attacker, Char defender, int damage ) {
-
-        defender.damage(Random.IntRange(damage / 3, damage / 2), this, DamageType.FROST);
-
-        Frozen buff = defender.buff( Frozen.class );
-
-        if( buff != null ) {
-            buff.set(2);
-        }
-
+        BuffActive.addFromDamage( defender, Frozen.class, damage );
         return true;
     }
 
     @Override
     protected boolean proc_n( Char attacker, Char defender, int damage ) {
-
-        attacker.damage(Random.IntRange(damage / 3, damage / 2), this, DamageType.FROST);
+        BuffActive.addFromDamage( attacker, Frozen.class, damage );
         return true;
-
     }
 }

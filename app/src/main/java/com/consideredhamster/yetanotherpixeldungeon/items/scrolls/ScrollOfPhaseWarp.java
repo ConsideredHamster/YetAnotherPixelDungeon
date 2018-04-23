@@ -20,10 +20,10 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfBlink;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
@@ -72,7 +72,7 @@ public class ScrollOfPhaseWarp extends Scroll {
             WandOfBlink.appear(curUser, pos);
             Dungeon.level.press(pos, curUser);
 
-            Buff.affect(curUser, Confusion.class, Random.Float(5f, 10f));
+            BuffActive.add(curUser, Vertigo.class, Random.Float(5f, 10f) );
             Dungeon.observe();
 
         }

@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
 import java.util.ArrayList;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
@@ -85,7 +86,7 @@ public class WandOfMagicMissile extends Wand {
                 ch.damage(
                         Char.absorb(
                                 damageRoll(), ch.armorClass()
-                        ), curUser, null
+                        ), curUser, Element.ENERGY
                 );
 
                 ch.sprite.centerEmitter().burst( SparkParticle.FACTORY, Random.IntRange( 2 + power / 10 , 4 + power / 5 ) );

@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.watabou.utils.Callback;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
@@ -97,24 +97,24 @@ public class GnollHunter extends MobRanged {
         super.onRangedAttack( cell );
     }
 
-    @Override
-    public void damage( int dmg, Object src, DamageType type ) {
-        super.damage(dmg, src, type);
-
-        if ( isAlive() && src != null && HP >= HT / 2 && HP + dmg < HT / 2 ) {
-
-            state = FLEEING;
-
-            if (Dungeon.visible[pos]) {
-                sprite.showStatus(CharSprite.NEGATIVE, "fleeing");
-//                spend( TICK );
-            }
-
-        }
-    }
+//    @Override
+//    public void damage( int dmg, Object src, Element type ) {
+//        super.damage(dmg, src, type);
+//
+//        if ( isAlive() && src != null && HP >= HT / 2 && HP + dmg < HT / 2 ) {
+//
+//            state = FLEEING;
+//
+//            if (Dungeon.visible[pos]) {
+//                sprite.showStatus(CharSprite.NEGATIVE, "fleeing");
+////                spend( TICK );
+//            }
+//
+//        }
+//    }
 	
 	@Override
-	public void die( Object cause, DamageType dmg ) {
+	public void die( Object cause, Element dmg ) {
 		Ghost.Quest.process( pos );
 		super.die( cause, dmg );
 	}
@@ -142,13 +142,4 @@ public class GnollHunter extends MobRanged {
                 ;
 	}
 
-//    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-//    static {
-//        RESISTANCES.add(DamageType.Body.class);
-//    }
-//
-//    @Override
-//    public HashSet<Class<? extends DamageType>> resistances() {
-//        return RESISTANCES;
-//    }
 }

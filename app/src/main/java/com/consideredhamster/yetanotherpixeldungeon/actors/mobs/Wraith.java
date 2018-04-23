@@ -21,25 +21,25 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.WraithSprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -48,11 +48,15 @@ public class Wraith extends MobRanged {
 
 	private static final float SPAWN_DELAY	= 2.0f;
 
-    private int timeToJump;
+	private static final float BLINK_CHANCE	= 0.125f;
 
     public Wraith() {
+        this( Dungeon.depth );;
+    }
 
-        super( Dungeon.depth + 1 );
+    public Wraith( int depth ) {
+
+        super( depth / 6 + 1, depth + 1, false );
 
         name = "wraith";
         spriteClass = WraithSprite.class;
@@ -60,17 +64,24 @@ public class Wraith extends MobRanged {
         minDamage += tier;
         maxDamage += tier;
 
-        HP = HT += Random.IntRange( 3, 6 );
+        minDamage /= 2;
+        maxDamage /= 2;
 
-//        EXP = 0;
+        HP = HT /= 2;
 
-        timeToJump = jumpDelay();
         flying = true;
+
+        resistances.put( Element.Frost.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Physical.class, Element.Resist.PARTIAL );
+
+        resistances.put( Element.Body.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
     }
 
     @Override
-    public int damageRoll() {
-        return super.damageRoll() / 2;
+    public boolean isMagical() {
+        return true;
     }
 
     @Override
@@ -83,27 +94,17 @@ public class Wraith extends MobRanged {
         return 0;
     }
 
-    private int jumpDelay() {
-
-        return viewDistance();
-
-    }
-
     private void blink() {
-
-        timeToJump = jumpDelay();
 
         int newPos = pos;
 
-        if( buff(Blindness.class) == null ) {
-            do {
+        do {
 
-                newPos = Random.Int( Level.LENGTH );
+            newPos = Random.Int( Level.LENGTH );
 
-            } while ( Level.solid[newPos] || !Level.fieldOfView[newPos] ||
-                     Actor.findChar(newPos) != null && pos != newPos ||
-                    Ballistica.cast(pos, newPos, false, false) != newPos );
-        }
+        } while ( Level.solid[newPos] || !Level.fieldOfView[newPos] ||
+                 Actor.findChar(newPos) != null && pos != newPos ||
+                Ballistica.cast(pos, newPos, false, false) != newPos );
 
         if (Dungeon.visible[pos]) {
             CellEmitter.get(pos).start( ShadowParticle.UP, 0.01f, Random.IntRange(5, 10) );
@@ -121,27 +122,26 @@ public class Wraith extends MobRanged {
 
     }
 
-	private static final String DELAY = "delay";
-
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle( bundle );
-		bundle.put(DELAY, timeToJump);
-	}
-
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle(bundle);
-        timeToJump = bundle.getInt( DELAY );
-	}
+//	private static final String DELAY = "delay";
+//
+//	@Override
+//	public void storeInBundle( Bundle bundle ) {
+//		super.storeInBundle( bundle );
+//		bundle.put(DELAY, timeToJump);
+//	}
+//
+//	@Override
+//	public void restoreFromBundle( Bundle bundle ) {
+//		super.restoreFromBundle(bundle);
+//        timeToJump = bundle.getInt( DELAY );
+//	}
 
 	@Override
 	public String description() {
 		return
-			"A wraith is a vengeful spirit of a sinner, whose grave or tomb was disturbed. " +
-			"Being an ethereal entity, it can teleport at will to shower you with a bolts " +
-            "of unholy energy. The touch of a wraith drains life from its victims, bypassing " +
-            "any armor and restoring it's own foul strength.";
+			"A wraith is a vengeful spirit of a sinner, whose grave or tomb was disturbed. Being " +
+            "an ethereal entity it bypasses any armor with its attacks while being partially " +
+            "immune to conventional weapons itself.";
 	}
 
 
@@ -172,7 +172,7 @@ public class Wraith extends MobRanged {
 
         if (hit( this, enemy, true, true )) {
 
-            enemy.damage( damageRoll(), this, DamageType.UNHOLY );
+            enemy.damage( damageRoll(), this, Element.UNHOLY );
 
         } else {
 
@@ -185,9 +185,7 @@ public class Wraith extends MobRanged {
 
     protected boolean doAttack( Char enemy ) {
 
-        timeToJump--;
-
-        if ( !rooted && timeToJump < 0 ) {
+        if ( !rooted && Random.Float() < BLINK_CHANCE ) {
 
             blink();
             return true;
@@ -217,15 +215,36 @@ public class Wraith extends MobRanged {
     @Override
     public int attackProc( Char enemy, int damage, boolean blocked ) {
 
-        if ( !blocked && distance( enemy ) <= 1 && !enemy.isMagical() && isAlive() ) {
-            int reg = Math.min( Random.Int( damage + 1 ), HT - HP );
+        if ( distance( enemy ) <= 1 && isAlive() ) {
 
-            if (reg > 0) {
-                HP += reg;
+            int healed = damage / 2;
+
+            float resist = Element.Resist.getResistance( enemy, Element.BODY );
+
+            if( !Element.Resist.checkIfDefault( resist ) ) {
+
+                if ( Element.Resist.checkIfNegated( resist ) ) {
+
+                    healed = 0;
+
+                } else if ( Element.Resist.checkIfPartial( resist ) ) {
+
+                    healed = healed / 2 + Random.Int( (int)healed % 2 + 1 );
+
+                } else if ( Element.Resist.checkIfAmplified( resist ) ) {
+
+                    healed *= 2;
+
+                }
+
+            }
+
+            if (healed > 0) {
+
+                heal( healed );
 
                 if( sprite.visible ) {
-                    sprite.emitter().burst(Speck.factory(Speck.HEALING), (int) Math.sqrt(reg));
-                    sprite.showStatus(CharSprite.POSITIVE, Integer.toString(reg));
+                    sprite.emitter().burst(Speck.factory(Speck.HEALING), 1);
                 }
             }
         }
@@ -240,40 +259,11 @@ public class Wraith extends MobRanged {
         return true;
     }
 
-//    @Override
-//    public void call() {
-//        next();
-//    }
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Frost.class);
-        RESISTANCES.add(DamageType.Unholy.class);
-
-        IMMUNITIES.add(DamageType.Mind.class);
-        IMMUNITIES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
-    }
-
     public static ArrayList<Wraith> spawnAround( int pos, int amount ) {
+        return spawnAround( Dungeon.depth, pos, amount );
+    }
 
-//		for (int n : Level.NEIGHBOURS8) {
-//			int cell = pos + n;
-//			if (Level.passable[cell] && Actor.findChar( cell ) == null) {
-//				spawnAt( cell );
-//			}
-//		}
+    public static ArrayList<Wraith> spawnAround( int depth, int pos, int amount ) {
 
         ArrayList<Wraith> wraiths = new ArrayList<>();
 
@@ -290,7 +280,7 @@ public class Wraith extends MobRanged {
             for (int i = 0; i < amount; i++) {
                 if (candidates.size() > 0) {
                     int o = Random.Int( candidates.size() );
-                    wraiths.add( spawnAt( candidates.get(o) ) );
+                    wraiths.add( spawnAt( depth, candidates.get(o) ) );
                     candidates.remove( o );
                 } else {
                     break;
@@ -302,15 +292,20 @@ public class Wraith extends MobRanged {
     }
 
     public static Wraith spawnAt( int pos ) {
+        return spawnAt( Dungeon.depth, pos );
+    }
+
+    public static Wraith spawnAt( int depth, int pos ) {
 
         if (!Level.solid[pos] && Actor.findChar( pos ) == null) {
 
-            Wraith w = new Wraith();
-//			w.adjustStats( Dungeon.depth );
+            Wraith w = new Wraith( depth );
+
             w.pos = pos;
             w.special = true;
             w.enemySeen = true;
             w.state = w.HUNTING;
+
             GameScene.add( w, SPAWN_DELAY );
 
             w.sprite.alpha( 0 );

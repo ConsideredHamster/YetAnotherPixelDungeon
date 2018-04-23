@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.food;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
 public class Pasty extends Food {
@@ -28,11 +28,12 @@ public class Pasty extends Food {
 	{
 		name = "dwarven pasty";
 		image = ItemSpriteSheet.PASTY;
-		energy = Hunger.STARVING;
+		energy = Satiety.MAXIMUM;
+        message = "That food tasted delicious!";
 	}
 	
 	@Override
-	public String info() {
+	public String desc() {
 		return "This is an authentic dwarven pasty with traditional filling of beer and sand. " +
                "Food like these can last for years without spoiling.";
 	}

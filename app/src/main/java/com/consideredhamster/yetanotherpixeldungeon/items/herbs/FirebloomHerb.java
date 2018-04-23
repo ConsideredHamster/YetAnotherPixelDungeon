@@ -20,7 +20,14 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfLiquidFlame;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
 public class FirebloomHerb extends Herb {
@@ -29,10 +36,22 @@ public class FirebloomHerb extends Herb {
         image = ItemSpriteSheet.HERB_FIREBLOOM;
 
         alchemyClass = PotionOfLiquidFlame.class;
+        message = "That herb tasted spicy, but sweet.";
+    }
+
+    @Override
+    public void onConsume( Hero hero ) {
+
+//        GLog.i("You feel warmer.");
+
+        Debuff.remove( hero, Frozen.class );
+
+        super.onConsume( hero );
     }
 
     @Override
     public String desc() {
-        return "Firebloom herbs are used to brew potions of Liquid Flame";
+        return "Northern tribes sometimes use Firebloom herbs as a food to shortly warm themselves " +
+                "in extreme situations. Such herbs are also used to brew potions of Liquid Flame. ";
     }
 }

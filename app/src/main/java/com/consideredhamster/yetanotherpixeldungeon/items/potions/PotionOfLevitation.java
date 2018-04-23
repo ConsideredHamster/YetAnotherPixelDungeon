@@ -21,7 +21,8 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Levitation;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Levitation;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
@@ -37,8 +38,7 @@ public class PotionOfLevitation extends Potion {
 	
 	@Override
 	protected void apply( Hero hero ) {
-		Buff.affect( hero, Levitation.class, DURATION + alchemySkill() * MODIFIER );
-        GLog.i( "You float into the air!" );
+        BuffActive.add( hero, Levitation.class, DURATION + alchemySkill() * MODIFIER );
         setKnown();
     }
 	

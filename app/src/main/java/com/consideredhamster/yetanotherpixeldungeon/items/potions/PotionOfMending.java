@@ -20,17 +20,11 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 
-import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Bleeding;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Cripple;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Mending;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Mending;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.watabou.utils.Random;
 
 public class PotionOfMending extends Potion {
@@ -45,38 +39,17 @@ public class PotionOfMending extends Potion {
 	
 	@Override
 	protected void apply( Hero hero ) {
-        hero.sprite.showStatus( CharSprite.POSITIVE, "mending" );;
-        heal(Dungeon.hero);
-        setKnown();
-    }
-	
-	public static void heal( Hero hero ) {
 
         int totalHP = (int)( hero.HT * hero.ringBuffs(RingOfVitality.Vitality.class ) );
 
-        int restore = Math.min( hero.HT - hero.HP, totalHP / 4 + ( totalHP % 4 > Random.Int(4) ? 1 : 0 ) ) ;
-
-        if( restore > 0 ) {
-            hero.HP += restore;
-            hero.sprite.showStatus(CharSprite.POSITIVE, "%d", restore);
-        }
+        hero.heal( totalHP / 4 + ( totalHP % 4 > Random.Int(4) ? 1 : 0 ) );
 
         hero.sprite.emitter().burst(Speck.factory(Speck.HEALING), 5);
 
-        Mending buff = Buff.affect( hero, Mending.class );
+        BuffActive.add( hero, Mending.class, DURATION + alchemySkill() * MODIFIER );
+        setKnown();
+    }
 
-        if( buff != null ) {
-            buff.setDuration( (int)( DURATION + alchemySkill() * MODIFIER ) );
-        }
-
-		Buff.detach( hero, Poison.class );
-		Buff.detach( hero, Cripple.class );
-		Buff.detach( hero, Bleeding.class );
-		Buff.detach( hero, Withered.class );
-
-		hero.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, 4 );
-	}
-	
 	@Override
 	public String desc() {
 		return

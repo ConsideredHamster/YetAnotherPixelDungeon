@@ -21,17 +21,20 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Guard;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.AttackIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.TagAttack;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments.Ethereal;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments.Tempered;
@@ -159,7 +162,7 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
 
                 final RangedWeapon curWeap = (RangedWeapon)RangedWeapon.curItem;
 
-                if( curUser.buff( Confusion.class ) != null ) {
+                if( curUser.buff( Vertigo.class ) != null ) {
                     target += Level.NEIGHBOURS8[Random.Int( 8 )];
                 }
 
@@ -169,13 +172,13 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
 
                 if( ch != null && curUser != ch && Dungeon.visible[ cell ] ) {
 
-                    if ( curUser.isCharmedBy( ch ) ) {
-                        GLog.i( TXT_TARGET_CHARMED );
-                        return;
-                    }
+//                    if ( curUser.isCharmedBy( ch ) ) {
+//                        GLog.i( TXT_TARGET_CHARMED );
+//                        return;
+//                    }
 
                     QuickSlot.target(curItem, ch);
-                    AttackIndicator.target( (Mob)ch );
+                    TagAttack.target( (Mob)ch );
                 }
 
                 curUser.sprite.cast(cell, new Callback() {
@@ -190,9 +193,11 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
                                 }
                             });
 
+                        curUser.buff( Satiety.class ).decrease( (float)curWeap.str() / curUser.STR() );
                         curWeap.use( 2 );
                     }
                 });
+
 
 
                 Sample.INSTANCE.play(Assets.SND_MISS, 0.6f, 0.6f, 1.5f);

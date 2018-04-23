@@ -20,9 +20,10 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.AttackIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.TagAttack;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -34,8 +35,8 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Spark;
@@ -188,19 +189,24 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
                 curUser.spend( curUser.attackDelay() * 0.5f );
 
+                hero.buff( Satiety.class ).decrease( (float)str() / hero.STR() * 0.5f );
+
                 hero.busy();
 
             } else if (!isEquipped(hero)) {
 
                 GLog.n( TXT_NOTEQUIPPED );
+                hero.ready();
 
             } else if ( loaded ) {
 
                 GLog.n( TXT_ALREADY_LOADED );
+                hero.ready();
 
             } else {
 
                 GLog.n( TXT_POWDER_NEEDED );
+                hero.ready();
 
             }
 
@@ -253,7 +259,7 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
                 final RangedWeaponFlintlock curWeap = (RangedWeaponFlintlock)RangedWeaponFlintlock.curItem;
 
-                if( curUser.buff( Confusion.class ) != null ) {
+                if( curUser.buff( Vertigo.class ) != null ) {
                     target += Level.NEIGHBOURS8[Random.Int( 8 )];
                 }
 
@@ -263,13 +269,13 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
                 if( ch != null && curUser != ch && Dungeon.visible[ cell ] ) {
 
-                    if ( curUser.isCharmedBy( ch ) ) {
-                        GLog.i( TXT_TARGET_CHARMED );
-                        return;
-                    }
+//                    if ( curUser.isCharmedBy( ch ) ) {
+//                        GLog.i( TXT_TARGET_CHARMED );
+//                        return;
+//                    }
 
                     QuickSlot.target(curItem, ch);
-                    AttackIndicator.target( (Mob)ch );
+                    TagAttack.target( (Mob)ch );
                 }
 
                 curUser.sprite.cast(cell, new Callback() {
@@ -286,6 +292,7 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
                                 }
                             });
 
+                    curUser.buff( Satiety.class ).decrease( (float)curWeap.str() / curUser.STR() );
                     curWeap.loaded = false;
                     curWeap.use( 2 );
 

@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.sprites;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.watabou.noosa.TextureFilm;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -49,7 +50,9 @@ public class AmbitiousImpSprite extends MobSprite {
 	public void link( Char ch ) {
 		super.link( ch );
 
-        alpha( 0.25f );
+        if( Dungeon.depth != 25 ) {
+            alpha( 0.25f );
+        }
 	}
 	
 //	@Override

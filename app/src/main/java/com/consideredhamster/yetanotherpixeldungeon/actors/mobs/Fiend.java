@@ -20,11 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Miasma;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
@@ -34,8 +36,7 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.FiendSprite;
-
-import java.util.HashSet;
+import com.watabou.utils.Random;
 
 public class Fiend extends MobRanged {
 
@@ -50,7 +51,15 @@ public class Fiend extends MobRanged {
 		name = "fiend";
 		spriteClass = FiendSprite.class;
 
+        resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Body.class, Element.Resist.PARTIAL);
+
 	}
+
+    @Override
+    public boolean isMagical() {
+        return true;
+    }
 
     @Override
     public int damageRoll() {
@@ -94,6 +103,16 @@ public class Fiend extends MobRanged {
 //    }
 
     @Override
+    public int attackProc( Char enemy, int damage, boolean blocked ) {
+
+        if( !blocked && Random.Int( 10 ) < tier ) {
+            BuffActive.addFromDamage( enemy, Tormented.class, damage );
+        }
+
+        return damage;
+    }
+
+    @Override
     protected boolean canAttack( Char enemy ) {
         return !isCharmedBy( enemy ) && ( Level.adjacent( pos, enemy.pos )
             || Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos );
@@ -120,7 +139,7 @@ public class Fiend extends MobRanged {
 
         if (hit( this, enemy, true, true )) {
 
-            enemy.damage( damageRoll(), this, DamageType.UNHOLY );
+            enemy.damage( damageRoll(), this, Element.UNHOLY );
 
         } else {
 
@@ -132,7 +151,7 @@ public class Fiend extends MobRanged {
     }
 
     @Override
-    public void die( Object cause, DamageType dmg ) {
+    public void die( Object cause, Element dmg ) {
 
         GameScene.add(Blob.seed(pos, 100, Miasma.class));
 
@@ -145,32 +164,6 @@ public class Fiend extends MobRanged {
                 "Some demons seem to transcend their flesh and wear pure darkness as their form. Shadowy " +
                         "and menacing, these unholy abominations are born of malicious intent and are nothing " +
                         "more than incarnations of distilled evil, revelling only in death and pain.";
-    }
-
-    @Override
-    public boolean isMagical() {
-        return true;
-    }
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Mind.class);
-        RESISTANCES.add(DamageType.Frost.class);
-
-        IMMUNITIES.add(DamageType.Unholy.class);
-        IMMUNITIES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
     }
 
     @Override

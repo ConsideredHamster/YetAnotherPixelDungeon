@@ -26,13 +26,11 @@ import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroSubClass;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndChooseWay;
@@ -48,7 +46,7 @@ public class TomeOfMastery extends Item {
 	{
 		stackable = false;
 		name = "Tome of Mastery";
-		image = ItemSpriteSheet.MASTERY;
+//		image = ItemSpriteSheet.MASTERY;
 		
 		unique = true;
 	}
@@ -63,12 +61,7 @@ public class TomeOfMastery extends Item {
 	@Override
 	public void execute( Hero hero, String action ) {
 		if (action.equals( AC_READ )) {
-			
-			if (hero.buff( Blindness.class ) != null) {
-				GLog.w( TXT_BLINDED );
-				return;
-			}
-			
+
 			curUser = hero;
 			
 			HeroSubClass way1 = null;

@@ -20,18 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.misc;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Bleeding;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Stun;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ensnared;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Withered;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
@@ -52,7 +41,7 @@ public class Ankh extends Item {
 	{
         visible = false;
 		stackable = true;
-		name = "Ankh";
+		name = "ankh";
 		image = ItemSpriteSheet.ANKH;
 	}
 
@@ -81,26 +70,17 @@ public class Ankh extends Item {
 
         hero.HP = hero.HT;
 
-        Buff.detach(hero, Withered.class);
-        Buff.detach(hero, Burning.class);
-        Buff.detach(hero, Ooze.class);
-        Buff.detach(hero, Poison.class);
-        Buff.detach(hero, Bleeding.class);
-        Buff.detach(hero, Blindness.class);
-        Buff.detach(hero, Charm.class);
-        Buff.detach(hero, Frozen.class);
-        Buff.detach(hero, Stun.class);
-        Buff.detach(hero, Ensnared.class);
-        Buff.detach(hero, Confusion.class);
+        Debuff.removeAll(hero);
 
-        boolean procced = uncurse( curUser, curUser.belongings.backpack.items.toArray( new Item[0] ) );
+        uncurse( curUser, curUser.belongings.backpack.items.toArray( new Item[0] ) );
 
-        procced = procced | uncurse( curUser,
-                curUser.belongings.weap1,
-                curUser.belongings.weap2,
-                curUser.belongings.armor,
-                curUser.belongings.ring1,
-                curUser.belongings.ring2 );
+        uncurse( curUser,
+            curUser.belongings.weap1,
+            curUser.belongings.weap2,
+            curUser.belongings.armor,
+            curUser.belongings.ring1,
+            curUser.belongings.ring2
+        );
 
         hero.sprite.showStatus(CharSprite.POSITIVE, "resurrected!");
         GLog.w(TXT_RESURRECT);

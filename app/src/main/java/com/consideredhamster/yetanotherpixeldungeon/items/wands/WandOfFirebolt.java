@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -75,7 +75,7 @@ public class WandOfFirebolt extends Wand {
 
             if( Char.hit( curUser, ch, true, true ) ) {
 
-                ch.damage( Char.absorb(damageRoll(), ch.armorClass(), true), curUser, DamageType.FLAME );
+                ch.damage( Char.absorb(damageRoll(), ch.armorClass(), true), curUser, Element.FLAME );
 
 //                Burning buff = Buff.affect( ch, Burning.class );
 //

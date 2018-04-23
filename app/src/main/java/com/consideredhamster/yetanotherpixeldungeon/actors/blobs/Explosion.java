@@ -20,13 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Stun;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.BlastParticle;
@@ -67,9 +67,9 @@ public class Explosion {
             dmg /= ( radius + 2 );
 
             if (dmg > 0) {
-                ch.damage(Char.absorb(dmg, ch.armorClass() / 2 ), source, null);
+                ch.damage(Char.absorb(dmg, ch.armorClass(), true ), source, null);
                 if (ch.isAlive()) {
-                    Buff.prolong(ch, Stun.class, radius - r + 2);
+                    BuffActive.addFromDamage( ch, Vertigo.class, damage );
                 }
             }
         }

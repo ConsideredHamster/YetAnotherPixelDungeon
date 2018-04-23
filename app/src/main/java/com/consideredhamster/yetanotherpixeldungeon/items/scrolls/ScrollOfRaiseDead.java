@@ -20,8 +20,9 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Charm;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Controlled;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
@@ -39,45 +40,31 @@ public class ScrollOfRaiseDead extends Scroll {
         spellSprite = SpellSprite.SCROLL_RAISEDEAD;
         spellColour = SpellSprite.COLOUR_DARK;
 	}
-	
+
 	@Override
 	protected void doRead() {
 
-//        Char target = curUser;
+        ArrayList<Wraith> summoned = Wraith.spawnAround( curUser.magicSkill() / 3, curUser.pos, Random.IntRange( 3, 4 ) );
 
-//        for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-//            if ( Level.fieldOfView[mob.pos] && mob.hostile && !( mob instanceof Wraith ) && ( target == curUser || mob.HP > target.HP ) ) {
-//
-//                target = mob;
-//
-//            }
-//        }
 
-        ArrayList<Wraith> summoned = Wraith.spawnAround( curUser.pos, Random.IntRange( 2, 4 ) );
+            for( Wraith w : summoned ){
 
-        for (Wraith w : summoned) {
+                float duration = Random.Int( 16, 20 ) * ( 110 + curUser.magicSkill() ) / 100;
 
-//            w.EXP = 0;
+                Controlled buff = BuffActive.add( w, Controlled.class, duration );
 
-            float duration = Random.Int( 16, 20 ) * ( 110 + curUser.magicSkill() ) / 100;
+                if( buff != null ){
+                    buff.object = curUser.id();
+                }
 
-//            Buff.affect( w, Summoned.class, duration );
-
-            Charm buff = Buff.affectForced(w, Charm.class, duration );
-
-            if( buff != null ) {
-                buff.object = curUser.id();
             }
 
-//            w.aggro( target );
-
-        }
 
         Sample.INSTANCE.play(Assets.SND_DEATH);
-		
+
 		super.doRead();
 	}
-	
+
 	@Override
 	public String desc() {
 		return

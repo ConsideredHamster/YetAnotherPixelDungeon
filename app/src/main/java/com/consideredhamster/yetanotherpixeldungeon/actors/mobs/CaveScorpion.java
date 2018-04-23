@@ -20,16 +20,15 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
-import java.util.HashSet;
-
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ScorpionSprite;
+import com.watabou.utils.Random;
 
 public class CaveScorpion extends MobHealthy {
 
@@ -40,49 +39,28 @@ public class CaveScorpion extends MobHealthy {
 		name = "cave scorpion";
 		spriteClass = ScorpionSprite.class;
 
-//        baseSpeed = 0.75f;
-//		loot = new PotionOfHealing();
-//		lootChance = 0.125f;
+        resistances.put(Element.Acid.class, Element.Resist.PARTIAL);
 
-//        loot = new MysteryMeat();
-//        lootChance = 0.35f;
 	}
-	
-//	@Override
-//	protected boolean canAttack( Char enemy ) {
-//		return !Level.adjacent( pos, enemy.pos ) && Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos;
-//        return Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos && !isCharmedBy( enemy );
-//	}
 
     @Override
     public int attackProc( Char enemy, int damage, boolean blocked ) {
 
-        if ( damage < enemy.HP && damage > 0 ) {
-            Buff.affect(enemy, Ooze.class);
+        if( !blocked && Random.Int( 10 ) < tier ) {
+            BuffActive.addFromDamage( enemy, Corrosion.class, damage );
         }
-
-        enemy.sprite.burst( 0x007044, 5 );
 
         return damage;
     }
 
     @Override
-	public void die( Object cause, DamageType dmg ) {
+	public void die( Object cause, Element dmg ) {
 
         GameScene.add(Blob.seed(pos, 50, CorrosiveGas.class));
 
         super.die(cause, dmg);
     }
-	
-//	@Override
-//	protected boolean getCloser( int target ) {
-//		if (state == HUNTING) {
-//			return enemySeen && getFurther( target );
-//		} else {
-//			return super.getCloser( target );
-//		}
-//	}
-	
+
 	@Override
 	public String description() {
 		return
@@ -90,14 +68,4 @@ public class CaveScorpion extends MobHealthy {
             "due to a ability to inject acid with their tails.";
 	}
 
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
 }

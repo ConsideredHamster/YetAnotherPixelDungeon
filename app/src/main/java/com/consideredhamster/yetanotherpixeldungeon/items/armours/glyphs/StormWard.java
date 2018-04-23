@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs;
 
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Lightning;
@@ -45,8 +45,8 @@ public class StormWard extends Armour.Glyph {
     }
 
     @Override
-    public Class<? extends DamageType> resistance() {
-        return DamageType.Shock.class;
+    public Class<? extends Element> resistance() {
+        return Element.Shock.class;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class StormWard extends Armour.Glyph {
     @Override
     protected boolean proc_n( Char attacker, Char defender, int damage ) {
 
-        defender.damage(Random.IntRange(damage / 4, damage / 3), this, DamageType.SHOCK);
+        defender.damage(Random.IntRange(damage / 4, damage / 3), this, Element.SHOCK);
 
         return true;
     }
@@ -105,7 +105,7 @@ public class StormWard extends Armour.Glyph {
 
         affected.add(ch);
 
-        ch.damage(damage, this, DamageType.SHOCK);
+        ch.damage(damage, this, Element.SHOCK);
 
         points[nPoints++] = ch.pos;
 

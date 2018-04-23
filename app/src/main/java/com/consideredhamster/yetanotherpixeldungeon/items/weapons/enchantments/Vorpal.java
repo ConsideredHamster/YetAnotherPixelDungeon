@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
@@ -59,7 +59,7 @@ public class Vorpal extends Weapon.Enchantment {
     protected boolean proc_p( Char attacker, Char defender, int damage ) {
 
         if( damage > Random.Int( defender.HT * 2 ) ) {
-            defender.damage( Math.max( damage, !Bestiary.isBoss(defender) ? defender.HT : defender.HT / 4 ), this, DamageType.UNHOLY);
+            defender.damage( Math.max( damage, !Bestiary.isBoss(defender) ? defender.HT : defender.HT / 4 ), this, Element.UNHOLY);
             defender.sprite.emitter().burst(ShadowParticle.UP, (int) Math.sqrt(defender.HP / 4) + 1);
 
 //            if (!defender.isAlive() && attacker instanceof Hero) {
@@ -76,7 +76,7 @@ public class Vorpal extends Weapon.Enchantment {
     protected boolean proc_n( Char attacker, Char defender, int damage ) {
 
         if( damage > Random.Int( attacker.HT * 2 ) ) {
-            attacker.damage(attacker.HP / 2, this, DamageType.UNHOLY);
+            attacker.damage(attacker.HP / 2, this, Element.UNHOLY);
             attacker.sprite.emitter().burst(ShadowParticle.UP, (int) Math.sqrt(attacker.HP / 4) + 1);
 
             return true;

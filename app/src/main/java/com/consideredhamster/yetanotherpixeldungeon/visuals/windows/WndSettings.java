@@ -20,8 +20,10 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.windows;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
 import com.watabou.noosa.Camera;
+import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
@@ -42,7 +44,14 @@ public class WndSettings extends Window {
 	private static final String TXT_MUSIC	        = "Music";
 	
 	private static final String TXT_SOUND	        = "Sound FX";
-	
+
+	private static final String TXT_BUTTONS         = "Waterskins/lantern: %s";
+
+    private static final String[] TXT_BUTTONS_VAR  = {
+            "Right",
+            "Left",
+    };
+
 	private static final String TXT_BRIGHTNESS	    = "Brightness";
 
 	private static final String TXT_LOADING_TIPS  = "Loading tips: %s";
@@ -71,7 +80,7 @@ public class WndSettings extends Window {
 	private RedButton btnZoomOut;
 	private RedButton btnZoomIn;
 	
-	public WndSettings( boolean inGame ) {
+	public WndSettings( final boolean inGame ) {
 		super();
 		
 		CheckBox btnImmersive = null;
@@ -104,6 +113,22 @@ public class WndSettings extends Window {
 			
 			updateEnabled();
 
+            RedButton btnSearchBtn = new RedButton( searchButtonsText( YetAnotherPixelDungeon.searchButton() ) ) {
+                @Override
+                protected void onClick(){
+
+                    boolean val = !YetAnotherPixelDungeon.searchButton();
+
+                    YetAnotherPixelDungeon.searchButton( val );
+
+                    text.text( searchButtonsText( val ) );
+                    text.measure();
+                    layout();
+                }
+            };
+            btnSearchBtn.setRect( 0, BTN_HEIGHT + GAP, WIDTH, BTN_HEIGHT );
+            add( btnSearchBtn );
+
             CheckBox btnBrightness = new CheckBox( TXT_BRIGHTNESS ) {
                 @Override
                 protected void onClick() {
@@ -111,11 +136,12 @@ public class WndSettings extends Window {
                     YetAnotherPixelDungeon.brightness(checked());
                 }
             };
-            btnBrightness.setRect(0, BTN_HEIGHT + GAP, WIDTH, BTN_HEIGHT);
+            btnBrightness.setRect(0, btnSearchBtn.bottom()+ GAP, WIDTH, BTN_HEIGHT);
             btnBrightness.checked(YetAnotherPixelDungeon.brightness());
             add(btnBrightness);
-			
-		} else {
+
+
+        } else {
 
             RedButton btnOrientation = new RedButton( orientationText() ) {
                 @Override
@@ -137,6 +163,18 @@ public class WndSettings extends Window {
             btnScaleUp.setRect(0, btnOrientation.bottom() + GAP, WIDTH, BTN_HEIGHT);
             btnScaleUp.checked(YetAnotherPixelDungeon.scaleUp());
             add( btnScaleUp );
+
+            btnImmersive = new CheckBox( TXT_IMMERSIVE ) {
+                @Override
+                protected void onClick() {
+                    super.onClick();
+                    YetAnotherPixelDungeon.immerse(checked());
+                }
+            };
+            btnImmersive.setRect(0, btnScaleUp.bottom() + GAP, WIDTH, BTN_HEIGHT);
+            btnImmersive.checked(YetAnotherPixelDungeon.immersed());
+            btnImmersive.enable(android.os.Build.VERSION.SDK_INT >= 19);
+            add(btnImmersive);
 			
 		}
 		
@@ -147,49 +185,41 @@ public class WndSettings extends Window {
 				YetAnotherPixelDungeon.music(checked());
 			}
 		};
-		btnMusic.setRect( 0, ( BTN_HEIGHT + GAP ) * 2, WIDTH, BTN_HEIGHT );
+		btnMusic.setRect( 0, ( BTN_HEIGHT + GAP ) * 3, WIDTH, BTN_HEIGHT );
 		btnMusic.checked( YetAnotherPixelDungeon.music() );
 		add(btnMusic);
-		
-		CheckBox btnSound = new CheckBox( TXT_SOUND ) {
-			@Override
-			protected void onClick() {
-				super.onClick();
-				YetAnotherPixelDungeon.soundFx(checked());
-				Sample.INSTANCE.play(Assets.SND_CLICK);
-			}
-		};
-		btnSound.setRect(0, btnMusic.bottom() + GAP, WIDTH, BTN_HEIGHT);
-		btnSound.checked(YetAnotherPixelDungeon.soundFx());
-		add(btnSound);
 
-        btnImmersive = new CheckBox( TXT_IMMERSIVE ) {
+        CheckBox btnSound = new CheckBox( TXT_SOUND ) {
             @Override
             protected void onClick() {
                 super.onClick();
-                YetAnotherPixelDungeon.immerse(checked());
+                YetAnotherPixelDungeon.soundFx(checked());
+                Sample.INSTANCE.play(Assets.SND_CLICK);
             }
         };
-        btnImmersive.setRect(0, btnSound.bottom() + GAP, WIDTH, BTN_HEIGHT);
-        btnImmersive.checked(YetAnotherPixelDungeon.immersed());
-        btnImmersive.enable(android.os.Build.VERSION.SDK_INT >= 19);
-        add(btnImmersive);
+        btnSound.setRect(0, btnMusic.bottom() + GAP, WIDTH, BTN_HEIGHT);
+        btnSound.checked(YetAnotherPixelDungeon.soundFx());
+        add(btnSound);
 
-        RedButton btnSearchBtn = new RedButton( searchButtonsText(YetAnotherPixelDungeon.searchButton()) ) {
-            @Override
-            protected void onClick() {
-
-                boolean val = !YetAnotherPixelDungeon.searchButton();
-
-                YetAnotherPixelDungeon.searchButton( val );
-
-                text.text( searchButtonsText( val ) );
-                text.measure();
-                layout();
-            }
-        };
-        btnSearchBtn.setRect(0, btnImmersive.bottom() + GAP, WIDTH, BTN_HEIGHT);
-        add(btnSearchBtn);
+//        RedButton btnTracks = new RedButton( buttonsText( YetAnotherPixelDungeon.buttons() ) ) {
+//            @Override
+//            protected void onClick() {
+//                super.onClick();
+//
+//                boolean val = !YetAnotherPixelDungeon.buttons();
+//
+//                YetAnotherPixelDungeon.buttons( val );
+//
+//                Sample.INSTANCE.play( Assets.SND_CLICK );
+//
+//                text.text( buttonsText( val ) );
+//                text.measure();
+//                layout();
+//            }
+//        };
+//
+//        btnTracks.setRect(0, btnSound.bottom() + GAP, WIDTH, BTN_HEIGHT);
+//        add(btnTracks);
 
         RedButton btnTipsDelay = new RedButton( loadingTipsText( YetAnotherPixelDungeon.loadingTips() ) ) {
             @Override
@@ -205,10 +235,13 @@ public class WndSettings extends Window {
                 layout();
             }
         };
-        btnTipsDelay.setRect(0, btnSearchBtn.bottom() + GAP, WIDTH, BTN_HEIGHT);
+
+//        btnTipsDelay.setRect(0, btnTracks.bottom() + GAP, WIDTH, BTN_HEIGHT);
+        btnTipsDelay.setRect(0, btnSound.bottom() + GAP, WIDTH, BTN_HEIGHT);
         add(btnTipsDelay);
 
         resize(WIDTH, (int) btnTipsDelay.bottom());
+
 
 //			CheckBox btnQuickslot = new CheckBox( TXT_QUICKSLOT ) {
 //				@Override
@@ -249,5 +282,9 @@ public class WndSettings extends Window {
 
     private String loadingTipsText( int val ) {
         return Utils.format( TXT_LOADING_TIPS, TXT_TIPS_DELAY[ val ] );
+    }
+
+    private String buttonsText( boolean val ) {
+        return Utils.format( TXT_BUTTONS, TXT_BUTTONS_VAR[ val ? 1 : 0 ] );
     }
 }

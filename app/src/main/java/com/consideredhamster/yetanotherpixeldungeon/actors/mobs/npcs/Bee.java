@@ -90,7 +90,7 @@ public class Bee extends NPC {
     protected boolean act() {
         HP--;
         if (HP <= 0) {
-            die( null );
+            die( this );
             return true;
         } else {
             return super.act();

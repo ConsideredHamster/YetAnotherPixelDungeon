@@ -20,12 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ensnared;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Ensnared;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.LeafParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
@@ -118,8 +119,13 @@ public class Overgrowth extends Blob {
                         }
 
                         Char ch = Actor.findChar(i);
-                        if (ch != null && !ch.flying && ( Random.Int(50) < growth[i] || ch.buff(Ensnared.class) != null ) ) {
-                            Buff.affect( ch, Ensnared.class, TICK );
+                        if (ch != null && !ch.flying ) {
+
+                            if( ch.buff( Ensnared.class ) != null ){
+                                BuffActive.add( ch, Ensnared.class, TICK * 2 );
+                            } else if ( Random.Int(50) < growth[i] ) {
+                                BuffActive.add( ch, Ensnared.class, TICK );
+                            }
                         }
 
                     } else {

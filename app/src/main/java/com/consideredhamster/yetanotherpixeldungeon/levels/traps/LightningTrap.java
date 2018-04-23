@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -58,7 +58,7 @@ public class LightningTrap extends Trap {
 
                 power = Random.IntRange( power / 2, power );
 
-                ch.damage(n == 0 ? power : power / 2, TRAP, DamageType.SHOCK);
+                ch.damage(n == 0 ? power : power / 2, TRAP, Element.SHOCK);
 
             }
 

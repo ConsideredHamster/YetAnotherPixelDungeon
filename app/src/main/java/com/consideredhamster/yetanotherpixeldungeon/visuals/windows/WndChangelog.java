@@ -36,125 +36,87 @@ public class WndChangelog extends Window {
 	private static final int WIDTH_L	= 160;
 	private static final int HEIGHT_L	= 128;
 
-	private static final String TXT_TITLE	= "The long-awaited update!";
+	private static final String TXT_TITLE	= "CHANGELOG";
 
     private static final String TXT_DESCR =
 
-        "Glad to see you again! These several months were a bit rough for me, but there were many other reasons why I've delayed this update for so long, and I have to admit that not all of them are actually reasonable. I am sorry for this awful lack of updates during this time, but I promise it'll get better from now on. This update was in the works for a very, very long time, and despite this it consists mostly of a myriad of minor tweaks and bugfixes, but soon after that the work will go according to a specific schedule. As I've said before, this mod is not even 50% complete.\n" +
+        "Hello, fellow rat punchers! April Fools event is over, and this means that mob sprites are reverted back to normal. Also, classy suit armor was removed from the game - sorry about that. I liked it, but it had to go, as it was never intended to be in the game for real.\n" +
         "\n" +
-        "_IMPORTANT:_ if your supporter's badge was not saved properly in the version 0.3.0e, then you can contact me via my e-mail, consideredhamster@gmail.com. I can't restore the badge, but I can give you a refund. Sorry about that... I messed up. Mea culpa. But it works properly now!\n" +
+        "Apart from removing stuff from the game, I've also implemented new features for your waterskins and lantern. Now they can be used on adjacent tiles to splash them with water and set them on fire, respectively. Hope that this feature makes for a more fun runs, as it allows you to basically terraform this dungeon to suit your own needs.\n" +
         "\n" +
-        "Okay, here comes a SHORT version of the change log. Because of a sheer amount of tweaks, and most of them being too small and/or too obvious to mention them, I'll skip most of them and will try to highlight the most important parts. If you really want it, you can find the full change log on the YAPD's github repository. Also, don't forget that you can always see this screen again by tapping the version number in the lower right corner of the title screen!\n" +
+        "Additionally, this update fixes to most of the reported issues (all of the important ones, at least) and nerfs wraiths back to be a way more manageable threat. They are still resistant to physical damage and possess all the same abilities, but they got less beefy and less annoying.\n" +
         "\n" +
-        "_CHARACTER_\n" +
+        "Now I can start working on the next update, which will be mostly about making wands more powerful and interesting to use. It will also bring new potions and scrolls into the game, as well as change existing alchemy system and implement new ways to obtain scrolls for your character.\n" +
         "\n" +
-        "- changed Wand skill attribute into Magic skill, which determines your accuracy with wands as before, but also affects power of some of the scrolls\n" +
+        "_IMPORTANT:_ one thing which I want to remind to both rookie and veteran YAPD players is that this mod has its own set of articles on the PD wikia. They can be really useful for a newcomer to this mod, and I really recommend checking them out, they can be very helpful - despite the fact that they are a bit outdated by now...\n" +
         "\n" +
-        "- changed Detection attribute into Perception, which affects your chances to expose your enemy to counter attacks instead of your chances to prevent equipping a cursed item\n" +
+        "And that's where I need help of veteran players. I wrote all of these articles mostly by myself, and while I can update them myself as well, doing this is a very time consuming task for a single person. Wikis are supposed to be community-driven projects, so I just ask for some volunteers to spend just a little bit of their time and show some love to those articles.\n" +
         "\n" +
-        "- changed Magic power attribute into Willpower, which affects your chances to prevent equipping a cursed item instead of determining scroll's power\n" +
+        "Thank you in advance!\n" +
         "\n" +
-        "- Warrior now gets slightly less hp with levels\n" +
+        "-----\n" +
         "\n" +
-        "- Acolyte now gets slightly more hp with levels\n" +
-        "\n" +
-        "- shields now apply their armor class bonus only with 50% chance or on failed guard attempts\n" +
-        "\n" +
-        "- shields now degrade and proc only when applying their bonus or when guarding\n" +
-        "\n" +
-        "- debuffs now affect chance to apply shield's bonus AC instead of the shield's AC\n" +
-        "\n" +
-        "- guard effectiveness is now affected by your base strength instead of excess strength\n" +
-        "\n" +
-        "- hero's remains are now separated by difficulties\n" +
-        "\n" +
-        "_MOBS & BOSSES_\n" +
-        "\n" +
-        "- all enemies in the fifth chapter now count as magical (but not necessarily having body or mind immunity)\n" +
-        "\n" +
-        "- third boss does not counts as magical, while still having body and mind immunity\n" +
-        "\n" +
-        "- evil eyes now drop raw meat instead of cave scorpions\n" +
-        "\n" +
-        "- fire elementals and evil eyes now only partially pierce target's armor instead of completely ignoring it\n" +
-        "\n" +
-        "- imps now deal physical damage and don't have fire resistance anymore\n" +
-        "\n" +
-        "- imps now will steal random amount of stackable items instead of the full stack\n" +
-        "\n" +
-        "_ITEMS & SHOPS_\n" +
-        "\n" +
-        "- ankhs now weaken curses on all of your items on activation\n" +
-        "\n" +
-        "- waterskins now can be used to wash away caustic ooze and douze burning effct on self\n" +
-        "\n" +
-        "- potions of Mending now heal 25% of health immediately\n" +
-        "\n" +
-        "- base duration of the effect of potions of Mending decreased to 15 turns instead of 20\n" +
-        "\n" +
-        "- base duration of effect of potions of Levitation increased to 20 turns (from 15 turns)\n" +
-        "\n" +
-        "- first four shops will not sell same repair tools in stock\n" +
-        "\n" +
-        "- first four shops will not have more than two of the same type of ammunition in stock\n" +
-        "\n" +
-        "_RANGED WEAPONS_\n" +
-        "\n" +
-        "- flintlock weapons now can be reloaded while moving\n" +
-        "\n" +
-        "- fixed issue with flintlock weapons being almost unable to deal sneak attacks\n" +
-        "\n" +
-        "- trying to shoot from a non-loaded flintlock weapon now will reload it instead of showing a warning\n" +
-        "\n" +
-        "- increased durability of missile and firearm weapons\n" +
-        "\n" +
-        "- decreased price modifier when purchasing throwing weapons and ammunitions in shops\n" +
-        "\n" +
-        "- rebalanced amount of throwing weapons and ammunitions when generated in a wrong chapter\n" +
-        "\n" +
-        "_WANDS & RINGS_\n" +
-        "\n" +
-        "- wands of Disintegration/Firebolt do not completely ignore target's armor class anymore\n" +
-        "\n" +
-        "- wand of Entanglement is twice as effective now\n" +
-        "\n" +
-        "- rings of Perception were renamed into rings of Awareness and now affect bonus damage from counter attacks instead of view distance\n" +
-        "\n" +
-        "- rings of Energy were renamed into rings of Concentration and now increase mind resistance chance instead of enchantment's proc chance\n" +
-        "\n" +
-        "- rings of Sorcery now affect enchantment's proc chance instead of wand's miscast/squeeze chance\n" +
-        "\n" +
-        "- rings of Protection do not affect your mind and body resistance chance anymore\n" +
-        "\n" +
-        "_SCROLLS_\n" +
-        "\n" +
-        "- scrolls are now affected by your Magic skill instead of Willpower\n" +
-        "\n" +
-        "- scrolls of Challenge will not affect passive animated statues \n" +
-        "\n" +
-        "- scrolls of Enchantment now can be used to transmute fully upgraded rings/wands into another ones\n" +
-        "\n" +
-        "- scrolls of Torment are more powerful and reliable now, but their radius of effect is limited\n" +
-        "\n" +
-        "- scrolls of Transmutation can be used on ammunition and throwing weapons\n" +
-        "\n" +
-        "- scrolls of Transmutation should be way more useful now\n" +
+        "Ok, now that's everything is said and done, here is a list of changes brought by this update:\n" +
         "\n" +
         "_GENERAL_\n" +
         "\n" +
-        "- added confirmation window when trying to step on a revealed trap\n" +
+        "- lantern can be used to spend your oil flasks to ignite nearby tiles\n" +
         "\n" +
-        "- added confirmation window when trying to equip an obviously cursed item\n" +
+        "- amount of oil flasks spawned is increased\n" +
         "\n" +
-        "- added confirmation window when trying to drink water while not being injured enough\n" +
+        "- waterskins can be used to pour water on adjacent tiles (or yourself)\n" +
         "\n" +
-        "- added confirmation window when trying to eat food while your satiety is too high\n" +
+        "- pouring water now creates a patch of water on affected tile\n" +
         "\n" +
-        "- added donation feature on the title screen (may be somewhat unstable, but works fine)\n" +
+        "- wands of Magic Missile now inflict energy damage with their spells (instead physical)\n" +
         "\n" +
-        "- added new lore about winners of The Impossible Contest into the game ;)\n" +
+        "_ENEMIES_\n" +
         "\n" +
-        "- lots of tweaks, bugfixes and minor visual improvements";
+        "- decreased wraith HP\n" +
+        "\n" +
+        "- decreased wraith blink chance\n" +
+        "\n" +
+        "- restored wraith spawn rate on haunted floor to the previous value\n" +
+        "\n" +
+        "- gnoll shamans now inflict energy damage with their spells (instead of physical)\n" +
+        "\n" +
+        "_MISC_\n" +
+        "\n" +
+        "- weapons ands armors in shops can be enchanted now\n" +
+        "\n" +
+        "- increased duration of \"Withered\" caused by unholy damage\n" +
+        "\n" +
+        "- thunderstorm clouds now can remove Corrosion\n" +
+        "\n" +
+        "- updated loading tips\n" +
+        "\n" +
+        "- updated tutorial\n" +
+        "\n" +
+        "_BUGFIXES_\n" +
+        "\n" +
+        "- fixed first boss not spawning minions when hit\n" +
+        "\n" +
+        "- fixed issue with weapons being degraded too fast\n" +
+        "\n" +
+        "- fixed scroll of Challenge crashing the game\n" +
+        "\n" +
+        "- fixed scroll of Transmutation and throwing weapons/ammunitions issue\n" +
+        "\n" +
+        "- fixed issue when using throwing weapons with ranged weapon in your main hand\n" +
+        "\n" +
+        "- fixed issue with quickslots acting as offhand slots when item in them is equipped\n" +
+        "\n" +
+        "- fixed scroll of Transmutation not showing a message when transmuting rings\n" +
+        "\n" +
+        "- fixed some typos and grammar mistakes\n" +
+        "\n" +
+        "_UPDATE 0.3.1h_:\n" +
+        "\n" +
+        "- fixed ranged weapons working incorrectly after all of the bugfixes... *sigh*\n" +
+        "\n" +
+        "-----\n" +
+        "\n" +
+        "Well, that's all for now. Thank you for playing this mod!";
 
 	private BitmapText txtTitle;
 	private ScrollPane list;

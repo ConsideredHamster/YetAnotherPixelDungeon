@@ -20,12 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfHarm;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
 import com.watabou.utils.Random;
@@ -65,11 +66,29 @@ public class Vampiric extends Weapon.Enchantment {
     @Override
     protected boolean proc_p( Char attacker, Char defender, int damage ) {
 
-        if ( attacker.isAlive() && !defender.isMagical() ) {
+        if ( attacker.isAlive() ) {
 
-            int effValue = Math.min( Random.IntRange(damage / 3, damage / 2), attacker.HT - attacker.HP );
+            int effValue = Random.IntRange(damage / 3, damage / 2);
 
-            effValue *= attacker.ringBuffsHalved( RingOfVitality.Vitality.class );
+            float resist = Element.Resist.getResistance( defender, Element.BODY );
+
+            if( !Element.Resist.checkIfDefault( resist ) ) {
+
+                if ( Element.Resist.checkIfNegated( resist ) ) {
+
+                    effValue = 0;
+
+                } else if ( Element.Resist.checkIfPartial( resist ) ) {
+
+                    effValue = effValue / 2 + Random.Int( (int)effValue % 2 + 1 );
+
+                } else if ( Element.Resist.checkIfAmplified( resist ) ) {
+
+                    effValue *= 2;
+
+                }
+
+            }
 
             if( effValue > defender.HP ) {
                 effValue = defender.HP;
@@ -77,10 +96,11 @@ public class Vampiric extends Weapon.Enchantment {
 
             if ( effValue > 0 ) {
 
-                attacker.HP += effValue;
-                attacker.sprite.showStatus(CharSprite.POSITIVE, Integer.toString(effValue));
-                defender.sprite.burst(0x660022, (int) Math.sqrt(effValue / 2) + 1);
+                attacker.heal( effValue );
 
+                if( attacker.sprite.visible ) {
+                    attacker.sprite.emitter().burst( Speck.factory(Speck.HEALING), 1);
+                }
                 return true;
 
             } else {
@@ -94,7 +114,7 @@ public class Vampiric extends Weapon.Enchantment {
 
     @Override
     protected boolean proc_n( Char attacker, Char defender, int damage ) {
-        attacker.damage(Random.IntRange(damage / 3, damage / 2), this, DamageType.BODY);
+        attacker.damage(Random.IntRange(damage / 3, damage / 2), this, Element.BODY);
         attacker.sprite.burst(0x660022, (int) Math.sqrt(damage / 2) + 1);
         return true;
     }

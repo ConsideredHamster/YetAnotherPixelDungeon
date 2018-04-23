@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.AmbitiousImpSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ImpSprite;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
 
@@ -29,7 +31,7 @@ public class ShopkeeperDemon extends Shopkeeper {
 	
 	{
 		name = "ambitious imp";
-		spriteClass = ImpSprite.class;
+		spriteClass = AmbitiousImpSprite.class;
 	}
 
     @Override

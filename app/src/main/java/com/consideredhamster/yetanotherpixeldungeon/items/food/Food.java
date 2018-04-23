@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.food;
 
 import java.util.ArrayList;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
@@ -29,7 +30,7 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.CarrionSwarm;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
@@ -40,22 +41,22 @@ import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public class Food extends Item {
 
-	private static final float TIME_TO_EAT	= 3f;
     private static final String TXT_STUFFED		= "You are overfed... Can't eat anymore.";
 
     private static final String TXT_NOT_THAT_HUNGRY = "Don't waste your food!";
 
     private static final String TXT_R_U_SURE =
         "Your satiety cannot be greater than 100% anyway, so probably it would be a better idea to " +
-        "spend some more time before eating this kind of food. Are you sure you want to eat it now?";
+        "spend some more time before eating this piece of food. Are you sure you want to eat it now?";
 
     private static final String TXT_YES			= "Yes, I know what I'm doing";
     private static final String TXT_NO			= "No, I changed my mind";
 	
 	public static final String AC_EAT	= "EAT";
 
-	public float energy = Hunger.HUNGRY;
-	public String message = "That food tasted delicious!";
+	public float time = 3f;
+	public float energy = Satiety.MAXIMUM * 0.75f;
+	public String message = "That food tasted very good!";
 
 	{
 		stackable = true;
@@ -77,32 +78,41 @@ public class Food extends Item {
 	
 	@Override
 	public void execute( final Hero hero, String action ) {
+
 		if ( action.equals( AC_EAT ) && hero != null ) {
 
-            final Hunger hunger = hero.buff(Hunger.class);
+            final Satiety hunger = hero.buff(Satiety.class);
 
-            if( hunger != null && !hunger.isOverfed() ) {
+            if( hero.buff( Poisoned.class ) == null ){
 
-                if( hunger.level() < energy ){
+//                if( hunger != null && !hunger.isOverfed() ){
 
-                    GameScene.show(
-                            new WndOptions( TXT_NOT_THAT_HUNGRY, TXT_R_U_SURE, TXT_YES, TXT_NO ) {
-                                @Override
-                                protected void onSelect( int index ){
-                                    if( index == 0 ){
-                                        consume( hunger, hero );
+                    if( hunger.energy() + energy > Satiety.MAXIMUM ){
+
+                        GameScene.show(
+                                new WndOptions( TXT_NOT_THAT_HUNGRY, TXT_R_U_SURE, TXT_YES, TXT_NO ) {
+                                    @Override
+                                    protected void onSelect( int index ){
+                                        if( index == 0 ){
+                                            consume( hunger, hero );
+                                        }
                                     }
                                 }
-                            }
-                    );
+                        );
 
-                } else {
-                    consume( hunger, hero );
-                }
+                    } else {
+                        consume( hunger, hero );
+                    }
+
+//                } else {
+//
+//                    GLog.i( TXT_STUFFED );
+//
+//                }
 
             } else {
 
-                GLog.i( TXT_STUFFED );
+                GLog.n( Poisoned.TXT_CANNOT_EAT );
 
             }
 			
@@ -113,9 +123,9 @@ public class Food extends Item {
 		}
 	}
 
-    private void consume( Hunger hunger, Hero hero ) {
+    private void consume( Satiety hunger, Hero hero ) {
 
-        hunger.satisfy(energy);
+        hunger.increase(energy);
         detach(hero.belongings.backpack);
         onConsume( hero );
 
@@ -124,7 +134,7 @@ public class Food extends Item {
         SpellSprite.show( hero, SpellSprite.FOOD );
         Sample.INSTANCE.play( Assets.SND_EAT );
 
-        hero.spend(TIME_TO_EAT);
+        hero.spend( time );
 
         for (Mob mob : Dungeon.level.mobs) {
             if ( mob instanceof CarrionSwarm ) {
@@ -138,7 +148,7 @@ public class Food extends Item {
     }
 	
 	@Override
-	public String info() {
+	public String desc() {
 		return 
 			"Nothing fancy here: dried meat, " +
 			"some biscuits - things like that.";

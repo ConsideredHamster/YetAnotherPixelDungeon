@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import java.util.HashSet;
 
 import com.watabou.utils.Callback;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Tomahawks;
@@ -45,6 +45,9 @@ public class GnollBrute extends MobPrecise {
 		
 		loot = Gold.class;
 		lootChance = 0.25f;
+
+        resistances.put(Element.Body.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
 	}
 
 //	private boolean enraged = false;
@@ -131,15 +134,4 @@ public class GnollBrute extends MobPrecise {
 			"Brutes are the largest, strongest and toughest of all gnolls. They are a clumsy, " +
             "but very ferocious fighters. Their blows grow stronger the closer they are to death.";
 	}
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    static {
-        RESISTANCES.add(DamageType.Mind.class);
-        RESISTANCES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
 }

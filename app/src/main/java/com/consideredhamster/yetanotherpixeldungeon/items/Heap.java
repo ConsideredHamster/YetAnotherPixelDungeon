@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Dewdrop;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
@@ -32,8 +33,8 @@ import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mimic;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Wraith;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
@@ -130,6 +131,7 @@ public class Heap implements Bundlable {
                 Wraith.spawnAround(pos, 1);
             }
 			break;
+
 		case BONES:
             CellEmitter.center( pos ).start(Speck.factory(Speck.RATTLE), 0.1f, 3);
             Sample.INSTANCE.play(Assets.SND_BONES, 1, 1, 1.0f);
@@ -253,14 +255,11 @@ public class Heap implements Bundlable {
 		if (type == Type.CHEST_MIMIC) {
 			Mimic m = Mimic.spawnAt(hp, pos, items);
 			if (m != null) {
+
                 Burning buff = Buff.affect( m, Burning.class );
-
-                if( buff != null ) {
-                    buff.reignite(m);
-                }
-
-				m.sprite.emitter().burst( FlameParticle.FACTORY, 5 );
+                buff.add( Actor.TICK * 2 );
 				destroy();
+
 			}
 		}
 		if (type != Type.HEAP) {
@@ -314,12 +313,13 @@ public class Heap implements Bundlable {
         }
 	}
 	
-	public void freeze() {
+	public void freeze( float duration ) {
 		
 		if (type == Type.CHEST_MIMIC) {
 			Mimic m = Mimic.spawnAt( hp, pos, items );
 			if (m != null) {
-				Buff.prolong(m, Frozen.class, Frozen.duration(m) * Random.Float(1.0f, 1.5f));
+                Frozen buff = Buff.affect( m, Frozen.class );
+                buff.add( duration );
 				destroy();
 			}
 		}

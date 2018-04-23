@@ -20,22 +20,23 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas;
+import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Freezing;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.FrigidVapours;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.BArray;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 public class PotionOfFrigidVapours extends Potion {
-	
-	private static final int DISTANCE	= 2;
 
-    public static final float BASE_VAL	= 1.0f;
-    public static final float MODIFIER	= 0.2f;
+    public static final int BASE_VAL	= 150;
+    public static final int MODIFIER	= 15;
 	
 	{
 		name = "Potion of Frigid Vapours";
@@ -45,25 +46,36 @@ public class PotionOfFrigidVapours extends Potion {
 	
 	@Override
 	public void shatter( int cell ) {
-		
-		PathFinder.buildDistanceMap( cell, BArray.not( Level.losBlockHigh, null ), DISTANCE );
-		
-		Fire fire = (Fire)Dungeon.level.blobs.get( Fire.class );
 
-		boolean visible = false;
-        float chance = BASE_VAL + MODIFIER * alchemySkill();
+        GameScene.add( Blob.seed( cell, BASE_VAL + MODIFIER * alchemySkill(), FrigidVapours.class ) );
 
-		for (int i=0; i < Level.LENGTH; i++) {
-			if (PathFinder.distance[i] < Integer.MAX_VALUE && chance / ( PathFinder.distance[i] + 1 ) > Random.Float() ) {
-				visible = Freezing.affect( i, 10, fire ) || visible;
-			}
-		}
-		
-		if (visible) {
-			setKnown();
+        if (Dungeon.visible[cell]) {
+            setKnown();
+
             splash( cell );
             Sample.INSTANCE.play( Assets.SND_SHATTER );
         }
+
+//		PathFinder.buildDistanceMap( cell, BArray.not( Level.losBlockHigh, null ), DISTANCE );
+//
+//		Fire fire = (Fire)Dungeon.energy.blobs.get( Fire.class );
+//
+//		boolean visible = false;
+//        float chance = BASE_VAL + MODIFIER * alchemySkill();
+//
+//
+//        GameScene.add( Blob.seed( cell, BASE_VAL + MODIFIER * alchemySkill(), CorrosiveGas.class ) );
+//		for (int i=0; i < Level.LENGTH; i++) {
+//			if (PathFinder.distance[i] < Integer.MAX_VALUE && chance / ( PathFinder.distance[i] + 1 ) > Random.Float() ) {
+//				visible = FrigidVapours.affect( i, 10, fire ) || visible;
+//			}
+//		}
+//
+//		if (visible) {
+//			setKnown();
+//            splash( cell );
+//            Sample.INSTANCE.play( Assets.SND_SHATTER );
+//        }
 	}
 	
 	@Override

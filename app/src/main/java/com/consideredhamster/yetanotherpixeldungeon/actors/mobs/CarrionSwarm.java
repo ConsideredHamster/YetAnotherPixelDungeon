@@ -20,12 +20,10 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SwarmSprite;
-
-import java.util.HashSet;
 
 public class CarrionSwarm extends MobEvasive {
 
@@ -39,6 +37,9 @@ public class CarrionSwarm extends MobEvasive {
         spriteClass = SwarmSprite.class;
 
         flying = true;
+
+        resistances.put(Element.Body.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Acid.class, Element.Resist.PARTIAL);
 
 	}
 
@@ -59,113 +60,16 @@ public class CarrionSwarm extends MobEvasive {
 
         if( !blocked && damage > 0 ){
 
-            Hunger hunger = enemy.buff( Hunger.class );
+            Satiety hunger = enemy.buff( Satiety.class );
 
             if( hunger != null ){
 
-                hunger.satisfy( Hunger.STARVING / 100f * ( -1 ) );
+                hunger.decrease( Satiety.POINT * 10 );
 
             }
 
         }
 
         return damage;
-    }
-
-//	@Override
-//	public void die( Object cause ) {
-//
-//		super.die( cause );
-//
-//        GameScene.add(Blob.seed(pos, 10, CorrosiveGas.class));
-//	}
-
-//	private static final float SPLIT_DELAY	= 1f;
-
-//	int generation	= 0;
-
-//	private static final String GENERATION	= "generation";
-
-//	@Override
-//	public void storeInBundle( Bundle bundle ) {
-//		super.storeInBundle( bundle );
-//		bundle.put( GENERATION, generation );
-//	}
-
-//	@Override
-//	public void restoreFromBundle( Bundle bundle ) {
-//		super.restoreFromBundle( bundle );
-//		generation = bundle.getInt( GENERATION );
-//	}
-
-//	@Override
-//	public int defenseProc( Char enemy, int damage ) {
-//
-//		if (HP >= damage + 2) {
-//			ArrayList<Integer> candidates = new ArrayList<Integer>();
-//			boolean[] passable = Level.passable;
-//
-//			int[] neighbours = {pos + 1, pos - 1, pos + Level.WIDTH, pos - Level.WIDTH};
-//			for (int n : neighbours) {
-//				if (passable[n] && Actor.findChar( n ) == null) {
-//					candidates.add( n );
-//				}
-//			}
-//
-//			if (candidates.size() > 0) {
-//
-//				Swarm clone = split();
-//				clone.HP = (HP - damage) / 2;
-//				clone.pos = Random.element( candidates );
-//				clone.state = clone.HUNTING;
-//
-//				if (Dungeon.bonus.map[clone.pos] == Terrain.DOOR_CLOSED) {
-//					Door.enter( clone.pos );
-//				}
-//
-//				GameScene.add( clone, SPLIT_DELAY );
-//				Actor.addDelayed( new Pushing( clone, pos, clone.pos ), -1 );
-//
-//				HP -= clone.HP;
-//			}
-//		}
-//
-//		return damage;
-//	}
-
-//	@Override
-//	public String defenseVerb() {
-//		return "evaded";
-//	}
-
-//	private Swarm split() {
-//		Swarm clone = new Swarm();
-//		clone.generation = generation + 1;
-//		if (buff( Burning.class ) != null) {
-//			Buff.affect( clone, Burning.class ).reignite( clone );
-//		}
-//		if (buff( Poison.class ) != null) {
-//			Buff.affect( clone, Poison.class ).set( 2 );
-//		}
-//		return clone;
-//	}
-
-//	@Override
-//	protected void dropLoot() {
-//		if (Random.Int( 5 * (generation + 1) ) == 0) {
-//			Dungeon.bonus.drop( new PotionOfHealing(), pos ).sprite.drop();
-//		}
-//	}
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Body.class);
-        RESISTANCES.add(DamageType.Acid.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
     }
 }

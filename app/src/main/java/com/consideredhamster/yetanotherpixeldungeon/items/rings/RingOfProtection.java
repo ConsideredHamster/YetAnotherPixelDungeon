@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
 import java.util.HashSet;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 
 public class RingOfProtection extends Ring {
 
@@ -47,14 +47,17 @@ public class RingOfProtection extends Ring {
         super.desc();
 	}
 
-    public static final HashSet<Class<? extends DamageType>> RESISTS = new HashSet<>();
+    public static final HashSet<Class<? extends Element>> RESISTS = new HashSet<>();
     static {
-        RESISTS.add(DamageType.Flame.class);
-        RESISTS.add(DamageType.Frost.class);
-        RESISTS.add(DamageType.Shock.class);
-        RESISTS.add(DamageType.Acid.class);
-        RESISTS.add(DamageType.Energy.class);
-        RESISTS.add(DamageType.Unholy.class);
+        RESISTS.add(Element.Flame.class);
+        RESISTS.add(Element.Flame.Periodic.class);
+        RESISTS.add(Element.Shock.class);
+        RESISTS.add(Element.Shock.Periodic.class);
+        RESISTS.add(Element.Acid.class);
+        RESISTS.add(Element.Acid.Periodic.class);
+        RESISTS.add(Element.Frost.class);
+        RESISTS.add(Element.Energy.class);
+        RESISTS.add(Element.Unholy.class);
     }
 	
 	public class Protection extends RingBuff {

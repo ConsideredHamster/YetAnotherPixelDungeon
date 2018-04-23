@@ -20,12 +20,12 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.PoisonParticle;
 
@@ -39,13 +39,9 @@ public class PoisonTrap extends Trap {
 
         if (ch != null) {
 
-            int power = 10 + Dungeon.chapter() * 6;
+            int power = 5 + Dungeon.chapter() * 3;
+            BuffActive.addFromDamage( ch, Poisoned.class, Random.IntRange( power, power * 2 ) );
 
-            Poison buff = Buff.affect( ch, Poison.class );
-
-            if( buff != null ) {
-                buff.addDuration( Random.IntRange(power / 2, power) );
-            }
 		}
 		
 		CellEmitter.center( pos ).burst( PoisonParticle.SPLASH, 3 );

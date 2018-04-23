@@ -47,8 +47,8 @@ public enum Icons {
 
     INFO,
     MASTERY,
-    PREFS,
-    EXIT,
+    GOLD,
+    ANKH,
     DONATE_DISABLED,
     DONATE_ENABLED,
     MIMIC_DAMAGED,
@@ -60,6 +60,8 @@ public enum Icons {
     WARNING,
     CLOSE,
     RESUME,
+    PREFS,
+    EXIT,
     WATA,
 
     BACKPACK,
@@ -80,6 +82,10 @@ public enum Icons {
 	SCROLLS,
 	WANDS,
 	RINGS,
+    DIFF0,
+    DIFF1,
+    DIFF2,
+    DIFF3,
 
     COMPASS,
 
@@ -152,13 +158,12 @@ public enum Icons {
             case MASTERY:
                 icon.frame( rect( icon, 14, 40, 14, 14) );
                 break;
-            case PREFS:
-                icon.frame( rect( icon, 28, 40, 14, 14) );
+            case GOLD:
+                icon.frame( rect( icon, 28, 40, 16, 14) );
                 break;
-            case EXIT:
-                icon.frame( rect( icon, 42, 40, 14, 14) );
+            case ANKH:
+                icon.frame( rect( icon, 44, 40, 12, 14) );
                 break;
-
             case DONATE_DISABLED:
                 icon.frame( rect( icon, 56, 40, 14, 14) );
                 break;
@@ -190,8 +195,14 @@ public enum Icons {
             case RESUME:
                 icon.frame( rect( icon, 48, 54, 11, 11 ) );
                 break;
+            case PREFS:
+                icon.frame( rect( icon, 60, 54, 12, 12) );
+                break;
+            case EXIT:
+                icon.frame( rect( icon, 72, 54, 14, 12) );
+                break;
             case WATA:
-                icon.frame( rect( icon, 60, 54, 15, 12) );
+                icon.frame( rect( icon, 86, 54, 15, 12) );
                 break;
 
             case BACKPACK:
@@ -245,6 +256,18 @@ public enum Icons {
                 break;
             case RINGS:
                 icon.frame( rect( icon, 80, 76, 8, 8) );
+                break;
+            case DIFF0:
+                icon.frame( rect( icon, 88, 76, 10, 8) );
+                break;
+            case DIFF1:
+                icon.frame( rect( icon, 98, 76, 10, 8) );
+                break;
+            case DIFF2:
+                icon.frame( rect( icon, 108, 76, 10, 8) );
+                break;
+            case DIFF3:
+                icon.frame( rect( icon, 118, 76, 10, 8) );
                 break;
 
             case COMPASS:

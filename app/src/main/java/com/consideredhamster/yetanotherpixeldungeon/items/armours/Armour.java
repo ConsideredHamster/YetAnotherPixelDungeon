@@ -25,7 +25,7 @@ import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
@@ -259,7 +259,7 @@ public abstract class Armour extends EquipableItem {
         protected abstract boolean proc_p( Char attacker, Char defender, int damage );
         protected abstract boolean proc_n( Char attacker, Char defender, int damage );
 
-        public Class<? extends DamageType> resistance() {
+        public Class<? extends Element> resistance() {
             return null;
         }
 

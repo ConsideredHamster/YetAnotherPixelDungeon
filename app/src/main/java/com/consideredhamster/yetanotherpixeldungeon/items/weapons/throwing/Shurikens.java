@@ -26,7 +26,7 @@ public class Shurikens extends ThrowingWeaponLight {
 
 	{
 		name = "shurikens";
-		image = ItemSpriteSheet.SHURIKEN;
+		image = ItemSpriteSheet.THROWING_STAR;
 	}
 	
 	public Shurikens() {

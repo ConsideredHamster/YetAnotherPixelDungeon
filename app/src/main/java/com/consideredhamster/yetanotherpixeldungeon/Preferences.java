@@ -33,6 +33,7 @@ enum Preferences {
 	public static final String KEY_GOOGLE_PLAY	= "google_play";
 	public static final String KEY_SCALE_UP		= "scaleup";
 	public static final String KEY_MUSIC		= "music";
+	public static final String KEY_BUTTONS = "buttons";
 	public static final String KEY_SOUND_FX		= "soundfx";
 	public static final String KEY_ZOOM			= "zoom";
 	public static final String KEY_LAST_CLASS	= "last_class";

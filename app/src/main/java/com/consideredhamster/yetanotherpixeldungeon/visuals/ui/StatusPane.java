@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.ui;
 
+import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.watabou.input.Touchscreen.Touch;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
@@ -44,8 +45,9 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndHero;
 public class StatusPane extends Component {
 	
 	private NinePatch shield;
+	private Image difficulty;
 	private Image avatar;
-	private Emitter blood;
+//	private Emitter blood;
 	
 	private int lastTier = 0;
 	private int bottom = 0;
@@ -56,17 +58,21 @@ public class StatusPane extends Component {
 	private int lastLvl = -1;
 	private int lastKeys = -1;
 
+	private BitmapText health;
 	private BitmapText level;
 	private BitmapText depth;
 	private BitmapText keys;
 
-	private DangerIndicator danger;
-    private AttackIndicator attack;
-    private PickupIndicator pickup;
-	private ResumeButton resume;
+	private TagDanger danger;
+    private TagAttack attack;
+    private TagPickup pickup;
+	private TagResume resume;
 	private BuffIndicator buffs;
 	private Compass compass;
-	
+
+    private TagWaterskin btnWaterskin;
+    private TagOilLantern btnOilLantern;
+
 	private MenuButton btnMenu;
 
     public StatusPane( int bottom ) {
@@ -77,7 +83,7 @@ public class StatusPane extends Component {
 	@Override
 	protected void createChildren() {
 		
-		shield = new NinePatch( Assets.STATUS, 80, 0, 30 + 18, 0 );
+		shield = new NinePatch( Assets.STATUS, 80, 0, 48, 0 );
 		add( shield );
 		
 		add( new TouchArea( 0, 1, 30, 30 ) {
@@ -93,16 +99,19 @@ public class StatusPane extends Component {
 		
 		btnMenu = new MenuButton();
 		add( btnMenu );
+
+        difficulty = new IconDifficulty();
+        add(difficulty);
+
+        avatar = HeroSprite.avatar( Dungeon.hero.heroClass, lastTier );
+        add(avatar);
 		
-		avatar = HeroSprite.avatar( Dungeon.hero.heroClass, lastTier );
-		add(avatar);
-		
-		blood = new Emitter();
-		blood.pos(avatar);
-		blood.pour(BloodParticle.FACTORY, 0.3f);
-		blood.autoKill = false;
-		blood.on = false;
-		add(blood);
+//		blood = new Emitter();
+//		blood.pos(avatar);
+//		blood.pour(BloodParticle.FACTORY, 0.3f);
+//		blood.autoKill = false;
+//		blood.on = false;
+//		addFromDamage(blood);
 		
 		compass = new Compass( Dungeon.level.exit );
 		add( compass );
@@ -112,10 +121,14 @@ public class StatusPane extends Component {
 		
 		exp = new Image( Assets.XP_BAR );
 		add(exp);
-		
-		level = new BitmapText( PixelScene.font1x );
-		level.hardlight(0xFFEBA4);
-		add(level);
+
+        level = new BitmapText( PixelScene.font1x );
+        level.hardlight(0xFFEBA4);
+        add(level);
+
+        health = new BitmapText( PixelScene.font1x );
+        health.hardlight(0xCACFC2);
+        add(health);
 		
 		depth = new BitmapText( Integer.toString( Dungeon.depth ), PixelScene.font1x );
 		depth.hardlight(0xCACFC2);
@@ -127,26 +140,29 @@ public class StatusPane extends Component {
 		keys.hardlight(0xCACFC2);
 		add(keys);
 		
-		danger = new DangerIndicator();
+		danger = new TagDanger();
 		add(danger);
-		
 
-
-        attack = new AttackIndicator();
-//        attack.camera = uiCamera;
-//        attack.setPos(
-//                uiCamera.width - attack.width(),
-//                toolbar.btnQuick0.top() - attack.height());
+        attack = new TagAttack();
         add( attack );
 
-        pickup = new PickupIndicator();
+        pickup = new TagPickup();
         add(pickup);
 		
-		resume = new ResumeButton();
+		resume = new TagResume();
 		add( resume );
+
+
+
+        btnWaterskin = new TagWaterskin();
+        add(btnWaterskin);
+
+        btnOilLantern = new TagOilLantern();
+        add(btnOilLantern);
 		
 		buffs = new BuffIndicator( Dungeon.hero );
 		add( buffs );
+
 	}
 	
 	@Override
@@ -155,7 +171,7 @@ public class StatusPane extends Component {
 		height = 32;
 		
 		shield.size( width, shield.height );
-		
+
 		avatar.x = PixelScene.align( camera(), shield.x + 15 - avatar.width / 2 );
 		avatar.y = PixelScene.align( camera(), shield.y + 16 - avatar.height / 2 );
 		
@@ -171,10 +187,21 @@ public class StatusPane extends Component {
 		keys.y = 6;
 		
 		layoutTags( bottom );
-		
+
+        if( YetAnotherPixelDungeon.buttons() ){
+            btnWaterskin.setPos( 0, height );
+            btnOilLantern.setPos( 0, btnWaterskin.bottom() + 3 );
+        } else {
+            btnWaterskin.setPos( width - btnWaterskin.width(), height + 10 );
+            btnOilLantern.setPos( width - btnOilLantern.width(), btnWaterskin.bottom() + 3 );
+        }
+
 		buffs.setPos( 32, 11 );
 		
 		btnMenu.setPos( width - btnMenu.width(), 1 );
+
+        difficulty.x = btnMenu.left() + btnMenu.width() / 2 - difficulty.width() / 2;
+        difficulty.y = btnMenu.bottom() + 2;
 	}
 	
 	private void layoutTags( int bottom ) {
@@ -216,11 +243,11 @@ public class StatusPane extends Component {
             tagPickup != pickup.visible ||
             tagResume != resume.visible
         ) {
-			
-			tagDanger = danger.visible;
+
+            tagDanger = danger.visible;
             tagAttack = attack.visible;
             tagPickup = pickup.visible;
-			tagResume = resume.visible;
+            tagResume = resume.visible;
 			
 			layoutTags( bottom );
 		}
@@ -229,13 +256,13 @@ public class StatusPane extends Component {
 		
 		if (health_percent == 0) {
 			avatar.tint( 0x000000, 0.6f );
-			blood.on = false;
-		} else if (health_percent < 0.25f) {
-			avatar.tint( 0xcc0000, 0.4f );
-			blood.on = true;
+//			blood.on = false;
+//		} else if (health_percent < 0.25f) {
+//			avatar.tint( 0xcc0000, 0.4f );
+//			blood.on = true;
 		} else {
 			avatar.resetColorAlpha();
-			blood.on = false;
+//			blood.on = false;
 		}
 		
 		hp.scale.x = health_percent;
@@ -246,17 +273,24 @@ public class StatusPane extends Component {
 			if (lastLvl != -1) {
 				Emitter emitter = (Emitter)recycle( Emitter.class );
 				emitter.revive();
-				emitter.pos( 27, 27 );
+				emitter.pos( 26, 26 );
 				emitter.burst( Speck.factory( Speck.STAR ), 12 );
 			}
 			
 			lastLvl = Dungeon.hero.lvl;
 			level.text( Integer.toString( lastLvl ) );
 			level.measure();
-			level.x = PixelScene.align( 27.0f - level.width() / 2 );
-			level.y = PixelScene.align( 27.5f - level.baseLine() / 2 );
+			level.x = PixelScene.align( 26.0f - level.width() / 2 );
+			level.y = PixelScene.align( 26.5f - level.baseLine() / 2 );
+
 		}
-		
+
+        health.text( String.format( "%d/%d", Dungeon.hero.HP, Dungeon.hero.HT ) );
+        health.measure();
+        health.x = PixelScene.align( 53.0f - health.width() / 2 );
+        health.y = PixelScene.align( 4.0f - health.baseLine() / 2 );
+        health.alpha( 0.5f );
+
 		int k = IronKey.curDepthQuantity;
 		if (k != lastKeys) {
 			lastKeys = k;

@@ -20,10 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.BlackguardSprite;
-
-import java.util.HashSet;
 
 public class Blackguard extends MobHealthy {
 
@@ -34,36 +32,22 @@ public class Blackguard extends MobHealthy {
 		name = "blackguard";
 		spriteClass = BlackguardSprite.class;
 
+        resistances.put( Element.Flame.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Acid.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Frost.class, Element.Resist.PARTIAL );
+
+        resistances.put( Element.Energy.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Dispel.class, Element.Resist.PARTIAL );
+
+        resistances.put( Element.Body.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
+
 	}
 
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Flame.class);
-        RESISTANCES.add(DamageType.Frost.class);
-        RESISTANCES.add(DamageType.Acid.class);
-        RESISTANCES.add(DamageType.Energy.class);
-        RESISTANCES.add(DamageType.Unholy.class);
-        RESISTANCES.add(DamageType.Dispel.class);
-        RESISTANCES.add(DamageType.Mind.class);
-
-        IMMUNITIES.add(DamageType.Body.class);
-    }
-    
     @Override
     public boolean isMagical() {
         return true;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
     }
 
 	@Override

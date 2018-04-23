@@ -23,12 +23,12 @@ package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Blinded;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Blindness;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Confusion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
@@ -131,14 +131,16 @@ public abstract class Scroll extends Item {
 	public void execute( Hero hero, String action ) {
 		if (action.equals( AC_READ )) {
 
-            if (hero.buff( Blindness.class ) != null) {
-                GLog.w( TXT_BLINDED );
-            } else if (hero.buff( Confusion.class ) != null) {
-                GLog.w( TXT_CONFUSED );
+            if (hero.buff( Blinded.class ) != null) {
+
+                GLog.w( Blinded.TXT_CANNOT_READ );
+
             } else {
+
 				curUser = hero;
 				curItem = detach( hero.belongings.backpack );
 				doRead();
+
 			}
 			
 		} else {
@@ -210,7 +212,6 @@ public abstract class Scroll extends Item {
         user.spendAndNext(TIME_TO_READ);
         Sample.INSTANCE.play(Assets.SND_READ);
         QuickSlot.refresh();
-
 
         SpellSprite.show(user, scroll.spellSprite, scroll.spellColour);
         new Flare( 6, 32 ).color(scroll.spellColour, true).show(curUser.sprite, 2f);

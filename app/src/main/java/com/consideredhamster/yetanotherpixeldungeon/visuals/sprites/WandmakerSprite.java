@@ -65,6 +65,7 @@ public class WandmakerSprite extends MobSprite {
 		if (shield != null) {
 			shield.putOut();
 		}
+
 		emitter().start( ElmoParticle.FACTORY, 0.03f, 60 );
 	}
 	

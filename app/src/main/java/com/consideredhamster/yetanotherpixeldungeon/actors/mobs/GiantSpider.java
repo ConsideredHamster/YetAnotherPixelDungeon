@@ -23,9 +23,9 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Web;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Terror;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SpinnerSprite;
@@ -50,24 +50,20 @@ public class GiantSpider extends MobHealthy {
 	protected boolean act() {
 		boolean result = super.act();
 
-		if (state == FLEEING && buff( Terror.class ) == null) {
-			if (enemy != null && enemySeen && enemy.buff( Poison.class ) == null) {
+		if (state == FLEEING && !isScared() ) {
+			if (enemy != null && enemySeen && enemy.buff( Poisoned.class ) == null) {
 				state = HUNTING;
 			}
 		}
+
 		return result;
 	}
 	
 	@Override
 	public int attackProc( Char enemy, int damage, boolean blocked ) {
-        if ( !blocked && Random.Int( enemy.HT ) < damage ) {
 
-            Poison buff = Buff.affect( enemy, Poison.class );
-
-            if( buff != null ) {
-                buff.addDuration(Random.IntRange( damage / 3, damage / 2 ));
-            }
-
+        if( !blocked && Random.Int( 10 ) < tier ) {
+            BuffActive.addFromDamage( enemy, Poisoned.class, damage );
             state = FLEEING;
 		}
 
@@ -96,7 +92,7 @@ public class GiantSpider extends MobHealthy {
 	private class Fleeing extends Mob.Fleeing {
 		@Override
 		protected void nowhereToRun() {
-			if (buff( Terror.class ) == null) {
+			if (buff( Tormented.class ) == null) {
 				state = HUNTING;
 			} else {
 				super.nowhereToRun();

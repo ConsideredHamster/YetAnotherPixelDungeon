@@ -20,8 +20,15 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfLevitation;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.watabou.utils.Random;
 
 public class WhirlvineHerb extends Herb {
     {
@@ -29,11 +36,25 @@ public class WhirlvineHerb extends Herb {
         image = ItemSpriteSheet.HERB_WHIRLVINE;
 
         alchemyClass = PotionOfLevitation.class;
+        message = "That herb tasted... acerbic, but edible.";
+    }
+
+    @Override
+    public void onConsume( Hero hero ) {
+
+        int maxDuration = (int)( Satiety.MAXIMUM - hero.buff( Satiety.class ).energy() ) / 250 + 1;
+
+        Vertigo debuff = Debuff.add( hero, Vertigo.class, (float) Random.Int( maxDuration ) );
+
+        if( debuff != null ) debuff.delay( time );
+
+        super.onConsume( hero );
     }
 
     @Override
     public String desc() {
-        return "Whirlvine herbs are used to brew potions of Levitation.";
+        return "Some say that eating Whirlvine herbs can induce a very weird state, like your head " +
+                "is floating. Such herbs are usually used to brew potions of Levitation.";
     }
 }
 

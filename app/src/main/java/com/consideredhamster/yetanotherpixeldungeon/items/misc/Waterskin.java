@@ -22,10 +22,22 @@ package com.consideredhamster.yetanotherpixeldungeon.items.misc;
 
 import java.util.ArrayList;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Elemental;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
+import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.scenes.CellSelector;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Splash;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
@@ -38,11 +50,12 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSh
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Random;
 
 public class Waterskin extends Item {
 
-	private static final String AC_DRINK	= "DRINK";
-	private static final String AC_WASH 	= "WASH";
+	public static final String AC_DRINK	= "DRINK";
+	public static final String AC_POUR = "POUR";
 
 	private static final float TIME_TO_DRINK = 1f;
 
@@ -52,10 +65,8 @@ public class Waterskin extends Item {
 	private static final String TXT_FULL		= "Your waterskins are full!";
 	private static final String TXT_EMPTY		= "Your waterskins are empty!";
 
-	private static final String TXT_SPLASH_NOTHING	= "You splash water on yourself. Nothing happens.";
-	private static final String TXT_SPLASH_BURNING	= "You splash water on yourself and burning is extinguished.";
-	private static final String TXT_SPLASH_CAUSTIC	= "You splash water on yourself and ooze is washed away.";
-	private static final String TXT_SPLASH_SPECIAL	= "You splash water on yourself, just in time to save yourself.";
+	private static final String TXT_POUR_SELF	= "You pour water from one of your waterskins on yourself.";
+	private static final String TXT_POUR_TILE	= "You pour water from one of your waterskins on nearby tile.";
 
     private static final String TXT_HEALTH_FULL = "Your health is already full.";
 
@@ -106,7 +117,7 @@ public class Waterskin extends Item {
 		ArrayList<String> actions = super.actions( hero );
 
         actions.add( AC_DRINK );
-        actions.add( AC_WASH );
+        actions.add( AC_POUR );
 
         actions.remove( AC_THROW );
         actions.remove( AC_DROP );
@@ -146,35 +157,14 @@ public class Waterskin extends Item {
                 GLog.w( TXT_EMPTY );
             }
 
-        } else if( action.equals( AC_WASH ) ){
+        } else if( action.equals( AC_POUR ) ){
 
             if( value > 0 ){
 
-                boolean burning = hero.buffs( Burning.class ) != null;
-                boolean caustic = hero.buffs( Ooze.class ) != null;
+                curUser = hero;
+                curItem = this;
 
-                if( burning && caustic ) {
-                    GLog.p( TXT_SPLASH_SPECIAL );
-                } else if( burning ) {
-                    GLog.p( TXT_SPLASH_BURNING );
-                } else if ( caustic ) {
-                    GLog.p( TXT_SPLASH_CAUSTIC );
-                } else {
-                    GLog.p( TXT_SPLASH_NOTHING );
-                }
-
-                Buff.detach( hero, Burning.class );
-                Buff.detach( hero, Ooze.class );
-
-                this.value--;
-
-                hero.spend( TIME_TO_DRINK );
-                hero.busy();
-
-                Sample.INSTANCE.play( Assets.SND_DRINK );
-                hero.sprite.operate( hero.pos );
-
-                updateQuickslot();
+                GameScene.selectCell( pourer );
 
             } else {
                 GLog.w( TXT_EMPTY );
@@ -309,4 +299,79 @@ public class Waterskin extends Item {
 	public String toString() {
 		return super.toString() + " (" + status() +  ")" ;
 	}
+
+
+    protected static CellSelector.Listener pourer = new CellSelector.Listener() {
+        @Override
+        public void onSelect( Integer target ) {
+
+            if (target != null) {
+
+                Ballistica.cast( curUser.pos, target, false, true );
+
+                int cell = Ballistica.trace[ 0 ];
+
+                if( Ballistica.distance > 1 ){
+                    cell = Ballistica.trace[ 1 ];
+                }
+
+                Blob blob = Dungeon.level.blobs.get( Fire.class );
+
+                if (blob != null) {
+
+                    int cur[] = blob.cur;
+
+                    if ( cur[ cell ] > 0) {
+                        blob.volume -= cur[ cell ];
+                        cur[ cell ] = 0;
+                    }
+                }
+
+                if ( !Level.water[ cell ] && !Level.important[ cell ] && !Level.solid[ cell ] && !Level.chasm[ cell ] ) {
+
+                    int oldTile = Dungeon.level.map[ cell ];
+                    Level.set( cell, Terrain.WATER);
+
+                    GameScene.discoverTile( cell, oldTile );
+
+                    GameScene.updateMap();
+                    Dungeon.observe();
+
+                }
+
+                Char ch = Actor.findChar( cell );
+
+                if (ch != null) {
+                    if( ch instanceof Elemental ) {
+                        ch.damage( Random.IntRange( 1, (int)Math.sqrt( ch.HT / 2 + 1 ) ), this, null );
+                    } else {
+                        Buff.detach(ch, Burning.class);
+                        Buff.detach(ch, Corrosion.class);
+                    }
+                }
+
+                ((Waterskin)curItem).value--;
+                Invisibility.dispel();
+
+                if( curUser.pos == cell ) {
+                    GLog.i( TXT_POUR_SELF );
+                } else {
+                    GLog.i( TXT_POUR_TILE );
+                }
+
+                Splash.at( cell, 0xFFFFFF, 5 );
+                Sample.INSTANCE.play(Assets.SND_WATER, 0.6f, 0.6f, 1.5f);
+
+                curUser.spend( TIME_TO_DRINK );
+                curUser.sprite.operate(cell);
+                curUser.busy();
+
+
+            }
+        }
+        @Override
+        public String prompt() {
+            return "Select nearby tile to splash";
+        }
+    };
 }

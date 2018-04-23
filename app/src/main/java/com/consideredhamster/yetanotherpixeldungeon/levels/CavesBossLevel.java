@@ -20,8 +20,10 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
+import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Scene;
+import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Bones;
@@ -257,11 +259,13 @@ public class CavesBossLevel extends Level {
 			
 			set( arenaDoor, Terrain.WALL );
 			GameScene.updateMap( arenaDoor );
-			Dungeon.observe();
 			
 			CellEmitter.get( arenaDoor ).start(Speck.factory(Speck.ROCK), 0.07f, 10 );
 			Camera.main.shake(3, 0.7f );
-			Sample.INSTANCE.play(Assets.SND_ROCKS );
+			Sample.INSTANCE.play( Assets.SND_ROCKS );
+            Dungeon.observe();
+
+            Music.INSTANCE.play( currentTrack(), true );
 		}
 	}
 	
@@ -277,6 +281,8 @@ public class CavesBossLevel extends Level {
 			set(arenaDoor, Terrain.EMPTY_DECO);
 			GameScene.updateMap(arenaDoor);
 			Dungeon.observe();
+
+            Music.INSTANCE.play( currentTrack(), true );
 		}
 		
 		return super.drop( item, cell );
@@ -307,4 +313,8 @@ public class CavesBossLevel extends Level {
 	public void addVisuals( Scene scene ) {
 		CavesLevel.addVisuals( this, scene );
 	}
+
+    public String currentTrack() {
+        return enteredArena && !keyDropped ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
+    };
 }

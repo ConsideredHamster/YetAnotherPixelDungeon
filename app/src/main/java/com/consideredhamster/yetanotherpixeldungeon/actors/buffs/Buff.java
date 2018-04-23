@@ -20,46 +20,67 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
-import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 
-public class Buff extends Actor {
+public abstract class Buff extends Actor {
 
 	public Char target;
 
-    public Class<? extends DamageType> buffType() {
-        return null;
+    public String description() {
+        return "";
     }
 
-    public boolean tryAttach( Char target ) {
+    public String playerMessage() { return null; }
+    public String messagePrefix() { return null; }
 
-        if (target.immunities().contains(buffType())) {
-            target.sprite.showStatus(CharSprite.NEUTRAL, "immune");
-            return false;
-        } else if (target.resistances().contains(buffType())) {
-            if (Random.Int(2) == 0) {
-                target.sprite.showStatus(CharSprite.WARNING, "resisted");
-                return false;
-            }
-        }
+    public String statusMessage() { return null; }
+    public int statusColor() { return CharSprite.DEFAULT; }
 
-        return attachTo(target);
+    public String status() { return null; }
+
+    public void applyVisual() {}
+    public void removeVisual() {}
+
+    // FIXME
+    public boolean attachOnLoad( Char target ) {
+        this.target = target;
+        return target.add(this);
     }
 
     public boolean attachTo( Char target ) {
 
         this.target = target;
 
-        return target.add(this);
+        if( target.add(this) ){
 
+            if( statusMessage() != null ) {
+                target.sprite.showStatus( statusColor(), statusMessage() );
+            }
+
+            if( playerMessage() != null && Dungeon.hero == target ) {
+                GLog.i( messagePrefix() + playerMessage() );
+            }
+
+            applyVisual();
+
+            return true;
+
+        } else {
+
+            return false;
+
+        }
     }
 	
 	public void detach() {
-		target.remove(this);
+        removeVisual();
+        target.remove(this);
 	}
 	
 	@Override
@@ -78,31 +99,19 @@ public class Buff extends Actor {
 
     public boolean awakensMobs() { return true; }
 
-    public static<T extends Buff> T appendForced( Char target, Class<T> buffClass ) {
-        try {
-
-            T buff = buffClass.newInstance();
-
-            return buff.attachTo( target ) ? buff : null;
-
-        } catch (Exception e) {
-            return null;
-        }
-    }
-	
 	public static<T extends Buff> T append( Char target, Class<T> buffClass ) {
 		try {
 
 			T buff = buffClass.newInstance();
 
-            return buff.tryAttach( target ) ? buff : null;
+            return buff.attachTo( target ) ? buff : null;
 
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
-	public static<T extends PassiveBuff> T append( Char target, Class<T> buffClass, float duration ) {
+	public static<T extends BuffPassive> T append( Char target, Class<T> buffClass, float duration ) {
 		T buff = append(target, buffClass);
 
         if (buff != null) {
@@ -111,25 +120,6 @@ public class Buff extends Actor {
 
 		return buff;
 	}
-
-    public static<T extends Buff> T affectForced( Char target, Class<T> buffClass ) {
-        T buff = target.buff(buffClass);
-        if (buff != null) {
-            return buff;
-        } else {
-            return appendForced( target, buffClass );
-        }
-    }
-
-    public static<T extends PassiveBuff> T affectForced( Char target, Class<T> buffClass, float duration ) {
-        T buff = affectForced(target, buffClass);
-
-        if (buff != null) {
-            buff.spend(duration);
-        }
-
-        return buff;
-    }
 	
 	public static<T extends Buff> T affect( Char target, Class<T> buffClass ) {
 		T buff = target.buff(buffClass);
@@ -140,7 +130,7 @@ public class Buff extends Actor {
 		}
 	}
 	
-	public static<T extends PassiveBuff> T affect( Char target, Class<T> buffClass, float duration ) {
+	public static<T extends BuffPassive> T affect( Char target, Class<T> buffClass, float duration ) {
 		T buff = affect(target, buffClass);
 
         if (buff != null) {
@@ -149,18 +139,18 @@ public class Buff extends Actor {
 
 		return buff;
 	}
-	
-	public static<T extends PassiveBuff> T prolong( Char target, Class<T> buffClass, float duration ) {
-		T buff = affect( target, buffClass );
+
+    public static <T extends BuffPassive> T prolong( Char target, Class<T> buffClass, float duration ) {
+        T buff = affect( target, buffClass );
 
         if (buff != null) {
             buff.postpone(duration);
         }
 
-		return buff;
-	}
+        return buff;
+    }
 
-    public static<T extends PassiveBuff> T shorten( Char target, Class<T> buffClass, float duration ) {
+    public static<T extends BuffPassive> T shorten( Char target, Class<T> buffClass, float duration ) {
         T buff = affect( target, buffClass );
 
         if (buff != null) {

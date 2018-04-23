@@ -20,11 +20,11 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 
-import com.watabou.utils.Random;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Stun;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.watabou.utils.Random;
 
 public class Boomerangs extends ThrowingWeaponSpecial {
 
@@ -56,9 +56,7 @@ public class Boomerangs extends ThrowingWeaponSpecial {
     public void proc( Char attacker, Char defender, int damage ) {
         super.proc(attacker, defender, damage);
 
-        if (Random.Int(defender.HT) < damage * 2) {
-            Buff.prolong(defender, Stun.class, 1f);
-        }
+        BuffActive.addFromDamage(defender, Vertigo.class, damage);
     }
 	
 	@Override

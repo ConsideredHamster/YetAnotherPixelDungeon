@@ -51,7 +51,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.misc.Battery;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.CraftingKit;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Explosives;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
-import com.consideredhamster.yetanotherpixeldungeon.items.misc.Torch;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Whetstone;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.*;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.*;
@@ -264,7 +264,7 @@ public class Generator {
             Explosives.BombStick.class,
 
             OverpricedRation.class,
-            Torch.class,
+            OilLantern.OilFlask.class,
 
             Whetstone.class,
             ArmorerKit.class,

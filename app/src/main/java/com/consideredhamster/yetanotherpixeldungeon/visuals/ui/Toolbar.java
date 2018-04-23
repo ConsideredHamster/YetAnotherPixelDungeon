@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.visuals.ui;
 
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.Waterskin;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Image;
@@ -50,9 +51,8 @@ public class Toolbar extends Component {
 
 	private Tool btnWait;
 	private Tool btnSearch;
-//	private Tool btnJump;
-//	private Tool btnInfo;
 	private Tool btnInventory;
+
 	public Tool btnQuick0;
 	private Tool btnQuick1;
 	private Tool btnQuick2;
@@ -74,7 +74,22 @@ public class Toolbar extends Component {
 	
 	@Override
 	protected void createChildren() {
-		
+
+
+
+
+        add( btnWait = new Tool( 0, 0, 20, 24 ) {
+            @Override
+            protected void onClick() {
+                Dungeon.hero.rest( false );
+            };
+
+            protected boolean onLongClick() {
+                Dungeon.hero.rest( true );
+                return true;
+            };
+        } );
+
 		add( btnWait = new Tool( 0, 0, 20, 24 ) {
 			@Override
 			protected void onClick() {
@@ -114,6 +129,33 @@ public class Toolbar extends Component {
             };
 		} );
 
+        add( btnSearch = new Tool( 20, 0, 20, 24 ) {
+            @Override
+            protected void onClick() {
+
+                if( YetAnotherPixelDungeon.searchButton() ) {
+                    Dungeon.hero.search( true );
+                } else {
+                    if( GameScene.checkListener( informer ) ) {
+                        Dungeon.hero.search( true );
+                    } else {
+                        GameScene.selectCell(informer);
+                    }
+                }
+
+            };
+            protected boolean onLongClick() {
+
+                if( !YetAnotherPixelDungeon.searchButton() ) {
+                    Dungeon.hero.search( true );
+                } else {
+                    GameScene.selectCell(informer);
+                }
+
+                return true;
+            };
+        } );
+
         add( btnQuick0 = new QuickslotTool( 82, 0, 22, 24 ) );
         add( btnQuick1 = new QuickslotTool( 82, 0, 22, 24, 1 ) );
         add( btnQuick2 = new QuickslotTool( 82, 0, 22, 24, 2 ) );
@@ -130,6 +172,7 @@ public class Toolbar extends Component {
                 GameScene.show( new WndBag( Dungeon.hero.belongings.getItem( Keyring.class ), null, WndBag.Mode.ALL, null ) );
 				return true;
 			};
+
 			@Override
 			protected void createChildren() {
 				super.createChildren();
@@ -142,9 +185,7 @@ public class Toolbar extends Component {
 				gold.fill( this );
 			};
 		} );
-		
 
-		
 		add( pickedUp = new PickedUpItem() );
 	}
 	
@@ -152,20 +193,12 @@ public class Toolbar extends Component {
 	protected void layout() {
 		btnWait.setPos(x, y);
 		btnSearch.setPos( btnWait.right(), y );
-//		btnJump.setPos( btnSearch.right(), y );
-//		btnInfo.setPos( btnSearch.right(), y );
         btnInventory.setPos( width - btnInventory.width(), y );
 
         btnQuick0.setPos( width - btnQuick0.width(), y - btnQuick0.height() );
         btnQuick3.setPos( btnInventory.left() - btnQuick3.width(), y );
         btnQuick2.setPos( btnQuick3.left() - btnQuick2.width(), y );
         btnQuick1.setPos( btnQuick2.left() - btnQuick1.width(), y );
-//		if (btnQuick2.visible) {
-//			btnQuick2.setPos(btnQuick1.left() - btnQuick2.width(), y );
-//			btnInventory.setPos( btnQuick2.left() - btnInventory.width(), y );
-//		} else {
-//			btnInventory.setPos( btnQuick1.left() - btnInventory.width(), y );
-//		}
 	}
 	
 	@Override

@@ -25,7 +25,7 @@ import java.util.Collection;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Journal;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
@@ -237,7 +237,7 @@ public class Blacksmith extends NPC {
 //	}
 	
 	@Override
-	public void damage( int dmg, Object src, DamageType type ) {
+	public void damage( int dmg, Object src, Element type ) {
 	}
 	
 	@Override

@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Lightning;
@@ -90,7 +90,7 @@ public class Shocking extends Weapon.Enchantment {
     @Override
     protected boolean proc_n( Char attacker, Char defender, int damage ) {
 
-        attacker.damage(damage, this, DamageType.SHOCK);
+        attacker.damage(damage, this, Element.SHOCK);
 
         return true;
     }
@@ -102,7 +102,7 @@ public class Shocking extends Weapon.Enchantment {
         }
 
         affected.add(ch);
-        ch.damage(damage, this, DamageType.SHOCK);
+        ch.damage(damage, this, Element.SHOCK);
 
         points[nPoints++] = ch.pos;
 

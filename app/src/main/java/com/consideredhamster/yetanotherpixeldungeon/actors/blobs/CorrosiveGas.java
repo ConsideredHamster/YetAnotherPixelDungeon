@@ -20,14 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Elemental;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
@@ -64,13 +63,15 @@ public class CorrosiveGas extends Blob {
 //                    Buff.prolong(ch, Gas.class, TICK).proliferate( this );
 //                }
 
-                ch.damage( Random.IntRange( 1, (int)Math.sqrt( !Bestiary.isBoss(ch) ? ch.HT : ch.HT / 4 ) / 2 + 1 ), this, DamageType.ACID );
+//                ch.damage( Random.IntRange( 1, (int)Math.sqrt( !Bestiary.isBoss(ch) ? ch.HT : ch.HT / 4 ) / 2 + 1 ), this, EffectType.ACID );
 
-                Ooze buff = ch.buff( Ooze.class );
+                BuffActive.add( ch, Corrosion.class, TICK * 2 );
 
-                if ( buff != null) {
-                    buff.delay( TICK );
-                }
+//                Blighted buff = ch.buff( Blighted.class );
+//
+//                if ( buff != null) {
+//                    buff.delay( TICK );
+//                }
 //                Buff.affect(ch, Ooze.class);
 
                 // FIXME

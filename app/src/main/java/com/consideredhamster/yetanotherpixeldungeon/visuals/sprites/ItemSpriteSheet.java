@@ -65,17 +65,17 @@ public class ItemSpriteSheet {
     public static final int ARROWS		        = 43;
     public static final int QUARRELS	        = 44;
     public static final int GUNPOWDER	    	= 45;
-    public static final int BOMB_STICK = 46;
-    public static final int BOMB_BUNDLE = 47;
+    public static final int BOMB_STICK          = 46;
+    public static final int BOMB_BUNDLE         = 47;
 
 	// Throwing
 
     public static final int THROWING_DART       = 48;
-    public static final int BOLAS   		    = 49;
+    public static final int HUNTING_BOLAS       = 49;
     public static final int BOOMERANG	        = 50;
     public static final int THROWING_KNIFE      = 51;
-    public static final int SHURIKEN		    = 52;
-    public static final int CHAKRAM             = 53;
+    public static final int THROWING_STAR       = 52;
+    public static final int THROWING_ANUS       = 53;
     public static final int JAVELIN			    = 54;
     public static final int TOMAHAWK		    = 55;
     public static final int HARPOON             = 56;
@@ -88,12 +88,12 @@ public class ItemSpriteSheet {
     public static final int ARMOR_MAGE		    = 60;
     public static final int ARMOR_ROGUE		    = 61;
     public static final int ARMOR_HUNTRESS	    = 62;
-    public static final int ARMOR_STUDDED = 63;
-    public static final int ARMOR_DISC = 64;
+    public static final int ARMOR_STUDDED       = 63;
+    public static final int ARMOR_DISC          = 64;
     public static final int ARMOR_MAIL		    = 65;
-    public static final int ARMOR_SPLINT = 66;
-    public static final int ARMOR_SCALE = 67;
-    public static final int ARMOR_PLATE = 68;
+    public static final int ARMOR_SPLINT        = 66;
+    public static final int ARMOR_SCALE         = 67;
+    public static final int ARMOR_PLATE         = 68;
     public static final int SHIELD_ROUND	    = 69;
     public static final int SHIELD_KITE		    = 70;
     public static final int SHIELD_TOWER		= 71;
@@ -165,7 +165,7 @@ public class ItemSpriteSheet {
     public static final int HERB_SORROWMOSS	    = 122;
     public static final int HERB_DREAMWEED      = 123;
     public static final int HERB_SUNGRASS	    = 124;
-    public static final int HERB_WHIRLVINE = 125;
+    public static final int HERB_WHIRLVINE      = 125;
     public static final int HERB_FADELEAF	    = 126;
 
     // Bags
@@ -192,32 +192,28 @@ public class ItemSpriteSheet {
     public static final int GOLDEN_KEY     	    = 157;
     public static final int SKELETON_KEY        = 158;
     public static final int ROSE       	        = 159;
-    public static final int SKULL	            = 160;
-    public static final int DUST                = 161;
-    public static final int HERB_ROTBERRY		= 162;
+    public static final int DUST                = 160;
+    public static final int VIAL     	        = 161;
+    public static final int DEWDROP     	    = 162;
     public static final int PICKAXE	            = 163;
     public static final int ORE                 = 164;
     public static final int TOKEN	            = 165;
-    public static final int AMULET	            = 166;
-    public static final int VIAL	            = 167;
-
+    public static final int SKULL	            = 166;
+    public static final int AMULET	            = 167;
 
     // Misc
 
     public static final int GOLD	            = 168;
-    public static final int DEWDROP     	    = 169;
-    public static final int WATERSKIN           = 170;
-    public static final int TORCH       	    = 171;
-    public static final int CRAFTING_KIT        = 172;
-    public static final int WHETSTONE           = 173;
-    public static final int ARMORER_KIT         = 174;
-    public static final int BATTERY             = 175;
-    public static final int HONEYPOT            = 176;
-    public static final int BEACON	            = 177;
-    public static final int ANKH	            = 178;
-    public static final int MASTERY     	    = 179;
-
-    public static final int HARPOON_THROWN    	= 181;
-    public static final int HARPOON_RETURN    	= 182;
+    public static final int WATERSKIN           = 169;
+    public static final int LANTERN       	    = 170;
+    public static final int LANTERN_LIT       	= 171;
+    public static final int OIL_FLASK       	= 172;
+    public static final int CRAFTING_KIT        = 173;
+    public static final int WHETSTONE           = 174;
+    public static final int ARMORER_KIT         = 175;
+    public static final int BATTERY             = 176;
+    public static final int ANKH	            = 177;
+    public static final int HARPOON_THROWN    	= 178;
+    public static final int HARPOON_RETURN    	= 179;
 
 }

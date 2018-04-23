@@ -20,23 +20,16 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 
-import com.watabou.noosa.audio.Sample;
-import com.watabou.noosa.tweeners.AlphaTweener;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public class PotionOfInvisibility extends Potion {
-
-	private static final float ALPHA	= 0.4f;
 
     public static final float DURATION	= 10f;
     public static final float MODIFIER	= 1.0f;
 
-	
 	{
 		name = "Potion of Invisibility";
         shortName = "In";
@@ -44,9 +37,7 @@ public class PotionOfInvisibility extends Potion {
 	
 	@Override
 	protected void apply( Hero hero ) {
-		Buff.affect( hero, Invisibility.class, DURATION + alchemySkill() * MODIFIER );
-        GLog.i( "You see your hands turn invisible!" );
-        Sample.INSTANCE.play( Assets.SND_MELD );
+        BuffActive.add( hero, Invisibility.class, DURATION + alchemySkill() * MODIFIER );
         setKnown();
     }
 	
@@ -63,12 +54,5 @@ public class PotionOfInvisibility extends Potion {
     public int price() {
         return isTypeKnown() ? 45 * quantity : super.price();
     }
-	
-	public static void melt( Char ch ) {
-		if (ch.sprite.parent != null) {
-			ch.sprite.parent.add( new AlphaTweener( ch.sprite, ALPHA, 0.4f ) );
-		} else {
-			ch.sprite.alpha( ALPHA );
-		}
-	}
+
 }

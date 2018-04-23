@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs;
 
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
@@ -36,8 +36,8 @@ public class Retribution extends Armour.Glyph {
 	}
 
     @Override
-    public Class<? extends DamageType> resistance() {
-        return DamageType.Body.class;
+    public Class<? extends Element> resistance() {
+        return Element.Body.class;
     }
 
     @Override

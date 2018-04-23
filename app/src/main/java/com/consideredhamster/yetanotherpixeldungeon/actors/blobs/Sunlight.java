@@ -20,18 +20,17 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Rejuvenation;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Rejuvenation;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Disrupted;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShaftParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
@@ -105,21 +104,8 @@ public class Sunlight extends Blob {
                 if (cur[i] > 0 ) {
                     Char ch = Actor.findChar(i);
 
-                    if( ch != null && !ch.isMagical() ) {
-
-                        Rejuvenation buff = Buff.prolong(ch, Rejuvenation.class, TICK);
-
-                        if ( buff != null ) {
-
-                            int healingRate = (int) ( ( !Bestiary.isBoss(ch) ? ch.HT * 2 : ch.HT / 2 ) *
-                                    ch.ringBuffsHalved(RingOfVitality.Vitality.class));
-
-                            Buff.prolong(ch, Rejuvenation.class, TICK).proliferate(
-
-                                    healingRate / 25 + (healingRate % 25 > Random.Int(25) ? 1 : 0)
-
-                            );
-                        }
+                    if( ch != null ){
+                        BuffActive.add( ch, ch.isMagical() ? Disrupted.class : Rejuvenation.class, TICK );
                     }
                 }
             }

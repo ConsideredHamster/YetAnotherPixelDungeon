@@ -20,8 +20,15 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfCorrosiveGas;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.watabou.utils.Random;
 
 public class SorrowmossHerb extends Herb {
     {
@@ -29,11 +36,25 @@ public class SorrowmossHerb extends Herb {
         image = ItemSpriteSheet.HERB_SORROWMOSS;
 
         alchemyClass = PotionOfCorrosiveGas.class;
+        message = "That herb tasted bitter like defeat.";
+    }
+
+    @Override
+    public void onConsume( Hero hero ) {
+
+        int maxDuration = (int)( Satiety.MAXIMUM - hero.buff( Satiety.class ).energy() ) / 250 + 1;
+
+        Poisoned debuff = Debuff.add( hero, Poisoned.class, (float) Random.Int( maxDuration ) );
+
+        if( debuff != null ) debuff.delay( time );
+
+        super.onConsume( hero );
     }
 
     @Override
     public String desc() {
-        return "Sorrowmoss herbs are used to brew potions of Corrosive Gas.";
+        return "Sorrowmoss herbs are used to brew potions of Corrosive Gas. Eating this herb " +
+                "would probably not the best idea.";
     }
 }
 

@@ -20,9 +20,12 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.food;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
@@ -33,29 +36,26 @@ public class MysteryMeat extends Food {
 	{
 		name = "raw meat";
 		image = ItemSpriteSheet.MEAT;
-		energy = Hunger.STARVING / 4;
+		energy = Satiety.MAXIMUM * 0.25f;
 		message = "That food tasted... strange.";
 	}
 
     @Override
     public void onConsume( Hero hero ) {
 
+        GLog.w("You are not feeling well.");
+
+        int maxDuration = (int)( Satiety.MAXIMUM - hero.buff( Satiety.class ).energy() ) / 250 + 1;
+
+        Poisoned debuff = Debuff.add( hero, Poisoned.class, (float) Random.Int( maxDuration ) );
+
+        if( debuff != null ) debuff.delay( time );
+
         super.onConsume( hero );
-
-        if( Random.Int( 1 ) == 0 ) {
-
-            GLog.w("You are not feeling well.");
-
-            Poison buff = Buff.affect(hero, Poison.class);
-
-            if (buff != null) {
-                buff.addDuration(Random.Int(5, 10));
-            }
-        }
-	}
+    }
 	
 	@Override
-	public String info() {
+	public String desc() {
 		return "Eating this is better than starving, but it is still better be cooked.";
 	}
 	

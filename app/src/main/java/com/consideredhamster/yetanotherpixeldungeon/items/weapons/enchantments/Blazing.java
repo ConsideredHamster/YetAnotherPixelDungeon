@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfFirebolt;
@@ -62,13 +62,13 @@ public class Blazing extends Weapon.Enchantment {
 
 	@Override
 	protected boolean proc_p( Char attacker, Char defender, int damage ) {
-            defender.damage(Random.IntRange(damage / 3, damage / 2), this, DamageType.FLAME);
+            defender.damage(Random.IntRange(damage / 3, damage / 2), this, Element.FLAME);
             return true;
 	}
 
     @Override
     protected boolean proc_n( Char attacker, Char defender, int damage ) {
-            attacker.damage(Random.IntRange(damage / 3, damage / 2), this, DamageType.FLAME);
+            attacker.damage(Random.IntRange(damage / 3, damage / 2), this, Element.FLAME);
             return true;
     }
 }

@@ -20,6 +20,9 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
@@ -27,8 +30,6 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Stun;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
@@ -97,10 +98,10 @@ public class BoulderTrap extends Trap {
             int dmg = Char.absorb( Random.IntRange( power / 2 , power ), ch.armorClass() );
 //                    int dmg = Math.max(0, Random.IntRange(Dungeon.depth, Dungeon.depth + 10) - Random.NormalIntRange(0, ch.armorClass()));
 
-            ch.damage(dmg, TRAP, null);
+            ch.damage(dmg, TRAP, Element.PHYSICAL);
 
-            if (ch.isAlive() && dmg > Random.Int( ch.HT ) ) {
-                Buff.prolong(ch, Stun.class, 2);
+            if (ch.isAlive() ) {
+                BuffActive.addFromDamage(ch, Vertigo.class, dmg);
             }
         }
 

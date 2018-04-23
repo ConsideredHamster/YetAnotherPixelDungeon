@@ -21,24 +21,25 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.PassiveBuff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffPassive;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
@@ -67,6 +68,11 @@ public class Yog extends Mob {
         lootChance = 4f;
 		
 		state = PASSIVE;
+
+        resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Body.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
+
 	}
 
     private final static int FIST_RESPAWN_MIN = 25;
@@ -82,6 +88,8 @@ public class Yog extends Mob {
         return 2.0f;
     }
 
+    @Override
+    protected float healthValueModifier() { return 0.25f; }
 
     @Override
     public boolean immovable(){
@@ -106,7 +114,7 @@ public class Yog extends Mob {
 	}
 	
 	@Override
-	public void damage( int dmg, Object src, DamageType type ) {
+	public void damage( int dmg, Object src, Element type ) {
 
         int decreaseValue = 1;
 
@@ -142,7 +150,7 @@ public class Yog extends Mob {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void die( Object cause, DamageType dmg ) {
+	public void die( Object cause, Element dmg ) {
 
 		for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
 			if (mob instanceof BurningFist || mob instanceof RottingFist) {
@@ -172,17 +180,20 @@ public class Yog extends Mob {
 			
 	}
 
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-        IMMUNITIES.add(DamageType.Mind.class);
-        IMMUNITIES.add(DamageType.Body.class);
-        IMMUNITIES.add(DamageType.Dispel.class);
-    }
-
     @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
+    public HashMap<Class<? extends Element>, Float> resistances() {
+
+        HashMap<Class<? extends Element>, Float> result = super.resistances();
+
+        if( buff( RespawnBurning.class ) == null ){
+            resistances.put( Element.Flame.class, Element.Resist.IMMUNE );
+        }
+
+        if( buff( RespawnRotting.class ) == null ){
+            resistances.put( Element.Acid.class, Element.Resist.IMMUNE );
+        }
+
+        return result;
     }
 	
 	public static class RottingFist extends MobHealthy {
@@ -196,10 +207,16 @@ public class Yog extends Mob {
 			EXP = 0;
 			
 			state = WANDERING;
+
+            resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
+            resistances.put( Element.Dispel.class, Element.Resist.PARTIAL );
+
+            resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
+            resistances.put( Element.Body.class, Element.Resist.IMMUNE );
 		}
 
         @Override
-        public void die( Object cause, DamageType dmg ) {
+        public void die( Object cause, Element dmg ) {
             super.die( cause, dmg );
 
             for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
@@ -212,15 +229,15 @@ public class Yog extends Mob {
 		@Override
 		public int attackProc( Char enemy, int damage, boolean blocked ) {
 
-            Buff.affect( enemy, Ooze.class );
+            BuffActive.addFromDamage( enemy, Corrosion.class, damage );
 
 			return damage;
 		}
 
         @Override
-        public void damage( int dmg, Object src, DamageType type ) {
+        public void damage( int dmg, Object src, Element type ) {
 
-            if ( type == DamageType.ACID ) {
+            if ( type == Element.ACID ) {
 
                 if (HP < HT) {
                     int reg = Math.min( dmg / 2, HT - HP );
@@ -242,7 +259,7 @@ public class Yog extends Mob {
         @Override
         public boolean add( Buff buff ) {
 
-            return !(buff instanceof Ooze) && super.add( buff );
+            return !(buff instanceof Corrosion ) && super.add( buff );
 
         }
 
@@ -259,27 +276,6 @@ public class Yog extends Mob {
 			return TXT_DESC;
 				
 		}
-
-        public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-        public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-        static {
-            RESISTANCES.add(DamageType.Unholy.class);
-            RESISTANCES.add(DamageType.Dispel.class);
-
-            IMMUNITIES.add(DamageType.Mind.class);
-            IMMUNITIES.add(DamageType.Body.class);
-        }
-
-        @Override
-        public HashSet<Class<? extends DamageType>> resistances() {
-            return RESISTANCES;
-        }
-
-        @Override
-        public HashSet<Class<? extends DamageType>> immunities() {
-            return IMMUNITIES;
-        }
 	}
 	
 	public static class BurningFist extends MobRanged {
@@ -293,10 +289,17 @@ public class Yog extends Mob {
 			EXP = 0;
 			
 			state = WANDERING;
+
+            resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
+            resistances.put( Element.Dispel.class, Element.Resist.PARTIAL );
+
+            resistances.put( Element.Flame.class, Element.Resist.IMMUNE );
+            resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
+            resistances.put( Element.Body.class, Element.Resist.IMMUNE );
 		}
 		
 		@Override
-		public void die( Object cause, DamageType dmg ) {
+		public void die( Object cause, Element dmg ) {
 			super.die( cause, dmg );
 
             for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
@@ -309,7 +312,7 @@ public class Yog extends Mob {
         @Override
         public boolean act() {
 
-            GameScene.add( Blob.seed( pos, 2, com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire.class ) );
+            GameScene.add( Blob.seed( pos, 2, Fire.class ) );
 
             return super.act();
         }
@@ -340,7 +343,7 @@ public class Yog extends Mob {
 
             if (hit( this, enemy, true, true )) {
 
-                enemy.damage( damageRoll() / 2, this, DamageType.FLAME );
+                enemy.damage( damageRoll() / 2, this, Element.FLAME );
 
             } else {
 
@@ -350,13 +353,6 @@ public class Yog extends Mob {
 
             return true;
         }
-
-        @Override
-        public boolean add( Buff buff ) {
-
-            return !(buff instanceof Burning) && super.add( buff );
-
-        }
 		
 		@Override
 		public String description() {
@@ -364,29 +360,9 @@ public class Yog extends Mob {
 				
 		}
 
-        public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-        public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-        static {
-            RESISTANCES.add(DamageType.Flame.class);
-            RESISTANCES.add(DamageType.Dispel.class);
-
-            IMMUNITIES.add(DamageType.Mind.class);
-            IMMUNITIES.add(DamageType.Body.class);
-        }
-
-        @Override
-        public HashSet<Class<? extends DamageType>> resistances() {
-            return RESISTANCES;
-        }
-
-        @Override
-        public HashSet<Class<? extends DamageType>> immunities() {
-            return IMMUNITIES;
-        }
 	}
 
-    public static class RespawnBurning extends PassiveBuff {
+    public static class RespawnBurning extends BuffPassive {
 
         private boolean warned = false;
 
@@ -448,7 +424,7 @@ public class Yog extends Mob {
         }
     }
 
-    public static class RespawnRotting extends PassiveBuff {
+    public static class RespawnRotting extends BuffPassive {
 
         private boolean warned = false;
 

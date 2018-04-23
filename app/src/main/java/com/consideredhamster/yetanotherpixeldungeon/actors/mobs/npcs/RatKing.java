@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
@@ -52,7 +52,7 @@ public class RatKing extends NPC {
 	}
 	
 	@Override
-    public void damage( int dmg, Object src, DamageType type ) {
+    public void damage( int dmg, Object src, Element type ) {
 	}
 	
 	@Override

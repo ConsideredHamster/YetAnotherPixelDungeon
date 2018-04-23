@@ -37,7 +37,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.misc.CraftingKit;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.items.misc.Torch;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Waterskin;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Whetstone;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
@@ -250,7 +250,7 @@ public class ShopPainter extends Painter {
             items.add(new Pasty());
 
             items.add(new Waterskin());
-            items.add(new Torch());
+            items.add(new OilLantern.OilFlask());
 
         } else {
 
@@ -304,16 +304,31 @@ public class ShopPainter extends Painter {
 
             if( weapon != null ) {
                 weapon.repair().fix().upgrade(Random.Int(Dungeon.chapter()));
+
+                if( Random.Int( 5 ) < Dungeon.chapter() ) {
+                    weapon.enchant();
+                }
+
                 items.add(weapon);
             }
 
             if( armour != null ) {
                 armour.repair().fix().upgrade( Random.Int( Dungeon.chapter() ) );
+
+                if( Random.Int( 5 ) < Dungeon.chapter() ) {
+                    armour.inscribe();
+                }
+
                 items.add(armour);
             }
 
             if( ranged instanceof RangedWeapon ) {
                 ranged.repair().fix().upgrade(Random.Int(Dungeon.chapter()));
+
+                if( Random.Int( 5 ) < Dungeon.chapter() ) {
+                    ((RangedWeapon)ranged).enchant();
+                }
+
                 items.add(ranged);
             } else if( ranged instanceof ThrowingWeapon || ranged instanceof Explosives) {
                 ranged.random();
@@ -351,7 +366,7 @@ public class ShopPainter extends Painter {
 
             items.add(new Pasty());
             items.add(new Waterskin());
-            items.add(new Torch());
+            items.add(new OilLantern.OilFlask());
         }
 		
 		Item[] range = items.toArray( new Item[0] );

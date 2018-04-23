@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -136,14 +136,14 @@ public class WandOfFlock extends WandUtility {
 		}
 		
 		@Override
-        public void damage( int dmg, Object src, DamageType type ) {
+        public void damage( int dmg, Object src, Element type ) {
 		}
 		
 		@Override
 		public String description() {
 			return 
 				"This is a magic sheep. What's so magical about it? You can't kill it. " +
-				"It will stand there until it magcially fades away, all the while chewing cud with a blank stare.";
+				"It will stand there until it magically fades away, all the while chewing cud with a blank stare.";
 		}
 
 		@Override

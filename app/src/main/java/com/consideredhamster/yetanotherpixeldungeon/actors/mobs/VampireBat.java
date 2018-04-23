@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -65,16 +66,36 @@ public class VampireBat extends MobEvasive {
 	@Override
 	public int attackProc( Char enemy, int damage, boolean blocked ) {
 
-        if ( !blocked && isAlive() && !enemy.isMagical() ) {
+        if ( !blocked && isAlive() ) {
 
-            int reg = Math.min(Random.Int(damage + 1), HT - HP);
+            int healed = damage / 2;
 
-            if (reg > 0) {
-                HP += reg;
+            float resist = Element.Resist.getResistance( enemy, Element.BODY );
+
+            if( !Element.Resist.checkIfDefault( resist ) ) {
+
+                if ( Element.Resist.checkIfNegated( resist ) ) {
+
+                    healed = 0;
+
+                } else if ( Element.Resist.checkIfPartial( resist ) ) {
+
+                    healed = healed / 2 + Random.Int( (int)healed % 2 + 1 );
+
+                } else if ( Element.Resist.checkIfAmplified( resist ) ) {
+
+                    healed *= 2;
+
+                }
+
+            }
+
+            if (healed > 0) {
+
+                heal( healed );
 
                 if( sprite.visible ) {
                     sprite.emitter().burst(Speck.factory(Speck.HEALING), 1);
-                    sprite.showStatus(CharSprite.POSITIVE, Integer.toString(reg));
                 }
             }
         }

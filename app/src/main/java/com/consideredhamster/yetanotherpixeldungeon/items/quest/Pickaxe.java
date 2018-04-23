@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
@@ -111,9 +111,9 @@ public class Pickaxe extends Item {
 								Dungeon.level.drop( gold, hero.pos ).sprite.drop();
 							}
 							
-							Hunger hunger = hero.buff( Hunger.class );
+							Satiety hunger = hero.buff( Satiety.class );
 							if (hunger != null && !hunger.isStarving()) {
-								hunger.satisfy( -Hunger.STARVING / 20 );
+								hunger.decrease( Satiety.POINT * 50 );
 								BuffIndicator.refreshHero();
 							}
 							

@@ -76,13 +76,13 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
             item.identify( CURSED_KNOWN );
             GLog.w( TXT_ITEM_UNKNOWN, item.name() );
-            curUser.sprite.emitter().start( Speck.factory(Speck.CHANGE), 0.1f, 3 );
+//            curUser.sprite.emitter().start( Speck.factory(Speck.CHANGE), 0.1f, 3 );
 
 		} else {
 
             item.fix();
             item.identify( CURSED_KNOWN );
-            curUser.sprite.emitter().start( Speck.factory(Speck.CHANGE), 0.1f, 5 );
+//            curUser.sprite.emitter().start( Speck.factory(Speck.CHANGE), 0.1f, 5 );
 
         }
 	}
@@ -105,7 +105,7 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
             } else {
 
-                item.detach(Dungeon.hero.belongings.backpack);
+                item.detachAll(Dungeon.hero.belongings.backpack);
 
                 if (!newItem.doPickUp(curUser)) {
                     Dungeon.level.drop(newItem, curUser.pos).sprite.drop();
@@ -174,6 +174,8 @@ public class ScrollOfTransmutation extends InventoryScroll {
         } else if (item instanceof Ring) {
 
             Item newItem = changeRing((Ring) item);
+
+            GLog.i(TXT_ITEM_TRANSMUTED, item.name(), newItem.name());
 
             if( curUser.belongings.ring1 == item ) {
 

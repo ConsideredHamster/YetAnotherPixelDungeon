@@ -22,7 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.items.armours.shields;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Guard;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Guard;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.watabou.utils.GameMath;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
@@ -76,9 +77,8 @@ public abstract class Shield extends Armour {
 
             }  else {
 
-                Buff.affect(hero, Guard.class );
-
-                hero.sprite.showStatus(CharSprite.DEFAULT, TXT_GUARD);
+                hero.buff( Satiety.class ).decrease( (float)str() / hero.STR() );
+                Buff.affect(hero, Guard.class, Actor.TICK * 1.01f );
                 hero.spendAndNext( Actor.TICK );
 
             }

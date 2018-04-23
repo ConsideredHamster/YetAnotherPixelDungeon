@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.sprites;
 
 import android.graphics.RectF;
 
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.Camera;
@@ -47,12 +48,12 @@ public class HeroSprite extends CharSprite {
 
 	public HeroSprite() {
 		super();
-		
-		link( Dungeon.hero );
-		
-		texture( Dungeon.hero.heroClass.spritesheet() );
-		updateArmor();
-		
+
+        link( Dungeon.hero );
+
+        texture( Dungeon.hero.heroClass.spritesheet() );
+        updateArmor();
+
 		idle();
 	}
 	

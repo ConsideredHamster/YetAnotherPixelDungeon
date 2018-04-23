@@ -20,17 +20,17 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 
-import com.watabou.utils.Random;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ensnared;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Ensnared;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.watabou.utils.Random;
 
 public class Bolas extends ThrowingWeaponSpecial {
 
 	{
 		name = "bolas";
-		image = ItemSpriteSheet.BOLAS;
+		image = ItemSpriteSheet.HUNTING_BOLAS;
 	}
 
 	public Bolas() {
@@ -46,9 +46,7 @@ public class Bolas extends ThrowingWeaponSpecial {
     public void proc( Char attacker, Char defender, int damage ) {
         super.proc(attacker, defender, damage);
 
-        if( Random.Int( defender.HT ) < damage * 2) {
-            Buff.prolong(defender, Ensnared.class, damage);
-        }
+        BuffActive.addFromDamage(defender, Ensnared.class, damage * 2 );
     }
 	
 	@Override

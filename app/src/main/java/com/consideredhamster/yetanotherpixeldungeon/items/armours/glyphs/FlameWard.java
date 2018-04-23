@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs;
 
 import com.watabou.utils.Random;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
@@ -35,8 +35,8 @@ public class FlameWard extends Armour.Glyph {
     }
 
     @Override
-    public Class<? extends DamageType> resistance() {
-        return DamageType.Flame.class;
+    public Class<? extends Element> resistance() {
+        return Element.Flame.class;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class FlameWard extends Armour.Glyph {
 	protected boolean proc_p( Char attacker, Char defender, int damage ) {
 
         if (Level.adjacent(attacker.pos, defender.pos)) {
-            attacker.damage(Random.IntRange(damage / 4, damage / 3), this, DamageType.FLAME);
+            attacker.damage(Random.IntRange(damage / 4, damage / 3), this, Element.FLAME);
             return true;
         }
 
@@ -73,7 +73,7 @@ public class FlameWard extends Armour.Glyph {
     @Override
     protected boolean proc_n( Char attacker, Char defender, int damage ) {
 
-            defender.damage(Random.IntRange(damage / 4, damage / 3), this, DamageType.FLAME);
+            defender.damage(Random.IntRange(damage / 4, damage / 3), this, Element.FLAME);
             return true;
 
     }

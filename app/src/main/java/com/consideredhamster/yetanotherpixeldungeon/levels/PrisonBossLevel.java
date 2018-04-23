@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.levels;
 
 import java.util.List;
 
+import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.watabou.noosa.Scene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Bones;
@@ -37,6 +38,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.keys.SkeletonKey;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room.Type;
 import com.consideredhamster.yetanotherpixeldungeon.levels.painters.Painter;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
+import com.watabou.noosa.audio.Music;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Graph;
 import com.watabou.utils.Point;
@@ -328,6 +330,8 @@ public class PrisonBossLevel extends RegularLevel {
 			set( arenaDoor, Terrain.LOCKED_DOOR );
 			GameScene.updateMap( arenaDoor );
 			Dungeon.observe();
+
+            Music.INSTANCE.play( currentTrack(), true );
 		}
 	}
 	
@@ -341,6 +345,8 @@ public class PrisonBossLevel extends RegularLevel {
 			set( arenaDoor, Terrain.DOOR_CLOSED);
 			GameScene.updateMap( arenaDoor );
 			Dungeon.observe();
+
+            Music.INSTANCE.play( currentTrack(), true );
 		}
 		
 		return super.drop( item, cell );
@@ -394,4 +400,8 @@ public class PrisonBossLevel extends RegularLevel {
     public int nMobs() {
         return 0;
     }
+
+    public String currentTrack() {
+        return enteredArena && !keyDropped ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
+    };
 }

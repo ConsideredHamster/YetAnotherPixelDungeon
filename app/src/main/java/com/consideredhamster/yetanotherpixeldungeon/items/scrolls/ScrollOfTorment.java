@@ -21,11 +21,13 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
 import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
@@ -52,34 +54,26 @@ public class ScrollOfTorment extends Scroll {
 
 		Mob affected = null;
 
-        int distance = 2 + curUser.magicSkill() / 5;
-
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 
-			if (Level.fieldOfView[mob.pos] && Level.distance( curUser.pos, mob.pos ) <= distance ) {
+			if (Level.fieldOfView[mob.pos] ) {
 
                 new Flare( 6, 32 ).color( SpellSprite.COLOUR_DARK, true ).show(mob.sprite, 2f);
 
-                int baseHP = Math.max( 0, ( !Bestiary.isBoss(mob) ? mob.HP : mob.HP / 4 ) - 1 );
+                int dmg = 10 + curUser.magicSkill();
 
-                int damage = Math.min( baseHP, Random.IntRange( baseHP * 4 / 5, baseHP ) );
-
-                mob.damage( damage, curUser, DamageType.MIND );
-
-//                if (!Bestiary.isBoss(mob) && Random.Int( mob.HP ) < damage ) {
-//                    Terror buff = Buff.affect(mob, Terror.class, Terror.DURATION);
-//
-//                    if (buff != null) buff.object = curUser.id();
-//                }
+                mob.damage( mob.currentHealthValue() * dmg / 100, curUser, Element.MIND );
+                BuffActive.add( mob, Tormented.class, dmg );
 
 				affected = mob;
                 count++;
+
             }
 		}
 
-        int baseHP = Math.max( 0, curUser.HP - ( Dungeon.difficulty == Difficulties.IMPOSSIBLE ? 2 : 1 ) );
+        int dmg = Math.min( curUser.HP - 1, curUser.HP * ( 190 - curUser.magicSkill() ) / 400 );
 
-        curUser.damage( ( Random.IntRange( baseHP * 2 / 5, baseHP / 2 ) ), curUser, DamageType.MIND);
+        curUser.damage( dmg, curUser, Element.MIND );
 
         GameScene.flash(SpellSprite.COLOUR_DARK - 0x660000);
         Sample.INSTANCE.play(Assets.SND_FALLING);
@@ -104,10 +98,12 @@ public class ScrollOfTorment extends Scroll {
 	@Override
 	public String desc() {
 		return
-			"Upon reading this parchment, a flash of mind-tearing agony will overwhelm both its reader " +
-            "and all the present creatures in the radius of the effect, bringing most of them to a brink " +
-            "of death - but not any further. The user of this scroll is partially protected from its effect. " +
-            "\n\nRadius of effect of this scroll depends on magic skill of the reader.";
+			"Upon reading this parchment, mind-tearing flash of pain will affect all the " +
+            "present creatures in the field of view, harming them and making them flee. " +
+            "The user of this scroll is only partially affected by this effect, and higher " +
+            "magic skill allows to diminish this backlash even further." +
+            "\n\nPower of these effects depend on magic skill of the reader and current " +
+            "health of the target.";
 	}
 	
 	@Override

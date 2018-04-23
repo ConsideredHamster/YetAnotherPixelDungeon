@@ -21,12 +21,12 @@
 package com.consideredhamster.yetanotherpixeldungeon;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Bleeding;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Crippled;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Hunger;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Ooze;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Poison;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.DwarfMonk;
@@ -49,20 +49,20 @@ public abstract class ResultDescriptions {
 //    public static final String FAIL	= "%s";
     public static final String WIN	= "Obtained the Amulet of Yendor";
 
-    public static String generateResult( Object killedBy, DamageType killedWith ) {
+    public static String generateResult( Object killedBy, Element killedWith ) {
 
         return Utils.capitalize( killedBy == Dungeon.hero ? killedWith( killedBy, killedWith ) +
                 ( Dungeon.hero.heroClass == HeroClass.ACOLYTE ? " herself" : " himself" ) :
                 killedWith( killedBy, killedWith ) + " by " + killedBy( killedBy ) );
     }
 
-    public static String generateMessage( Object killedBy, DamageType killedWith ) {
+    public static String generateMessage( Object killedBy, Element killedWith ) {
 
         return ( killedBy == Dungeon.hero ? "You " + killedWith( killedBy, killedWith ) + " yourself" :
                 "You were " + killedWith( killedBy, killedWith ) + " by " + killedBy( killedBy ) ) + "...";
     }
 
-    private static String killedWith( Object killedBy, DamageType killedWith ) {
+    private static String killedWith( Object killedBy, Element killedWith ) {
 
         String result = "killed";
 
@@ -117,9 +117,9 @@ public abstract class ResultDescriptions {
 //            result = "burned to crisp";
 //        } else if( killedWith instanceof DamageType.Frost) {
 //            result = "chilled to death";
-        } else if( killedWith instanceof DamageType.Shock) {
+        } else if( killedWith instanceof Element.Shock) {
             result = "electrocuted";
-        } else if( killedWith instanceof DamageType.Acid) {
+        } else if( killedWith instanceof Element.Acid) {
             result = "dissolved";
 //        } else if( killedWith instanceof DamageType.Mind) {
 //            result = "";
@@ -149,15 +149,15 @@ public abstract class ResultDescriptions {
         } else if( killedBy instanceof Armour.Glyph ) {
             result = "cursed armor";
         } else if( killedBy instanceof Buff ) {
-            if( killedBy instanceof Bleeding) {
+            if( killedBy instanceof Crippled ) {
                 result = "excessive bleeding";
-            } else if( killedBy instanceof Poison ) {
+            } else if( killedBy instanceof Poisoned ) {
                 result = "poison";
-            } else if( killedBy instanceof Hunger ) {
+            } else if( killedBy instanceof Satiety ) {
                 result = "starvation";
             } else if( killedBy instanceof Burning ) {
                 result = "being burned alive";
-            } else if( killedBy instanceof Ooze ) {
+            } else if( killedBy instanceof Corrosion ) {
                 result = "caustic ooze";
             }
         } else if( killedBy instanceof Trap ) {

@@ -20,7 +20,14 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMending;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
 
@@ -30,10 +37,22 @@ public class SungrassHerb extends Herb {
         image = ItemSpriteSheet.HERB_SUNGRASS;
 
         alchemyClass = PotionOfMending.class;
+        message = "That herb tasted slightly sour.";
+    }
+
+    @Override
+    public void onConsume( Hero hero ) {
+
+//        GLog.w("You feel somewhat better.");
+
+        Debuff.remove( hero, Poisoned.class );
+
+        super.onConsume( hero );
     }
 
     @Override
     public String desc() {
-        return "Sungrass herbs are used to brew potions of Mending.";
+        return "Wild animals often eat Sungrass herbs to purge their body of toxins. Such herbs " +
+                "are used to brew potions of Mending.";
     }
 }

@@ -20,7 +20,9 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
+import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.watabou.noosa.Scene;
+import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Bones;
@@ -336,6 +338,8 @@ public class CityBossLevel extends Level {
 			set( arenaDoor, Terrain.LOCKED_DOOR );
 			GameScene.updateMap( arenaDoor );
 			Dungeon.observe();
+
+            Music.INSTANCE.play( currentTrack(), true );
 		}
 	}
 	
@@ -349,6 +353,8 @@ public class CityBossLevel extends Level {
 			set( arenaDoor, Terrain.DOOR_CLOSED);
 			GameScene.updateMap( arenaDoor );
 			Dungeon.observe();
+
+            Music.INSTANCE.play( currentTrack(), true );
 		}
 		
 		return super.drop( item, cell );
@@ -378,4 +384,8 @@ public class CityBossLevel extends Level {
         super.addVisuals( scene );
         CityLevel.addVisuals(this, scene);
     }
+
+    public String currentTrack() {
+        return enteredArena && !keyDropped ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
+    };
 }

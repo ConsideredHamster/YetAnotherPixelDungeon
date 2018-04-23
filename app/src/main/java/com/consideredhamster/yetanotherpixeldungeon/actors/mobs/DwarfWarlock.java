@@ -22,9 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.HashSet;
 
-import com.watabou.noosa.Camera;
 import com.watabou.utils.Bundle;
-import com.consideredhamster.yetanotherpixeldungeon.DamageType;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Lightning;
@@ -49,6 +48,10 @@ public class DwarfWarlock extends MobRanged {
 		
 		loot = Gold.class;
 		lootChance = 0.25f;
+
+        resistances.put(Element.Body.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
+
 	}
 
     @Override
@@ -111,18 +114,7 @@ public class DwarfWarlock extends MobRanged {
 
         if ( hit( this, enemy, false, true ) ) {
 
-				enemy.damage(damageRoll(), this, DamageType.SHOCK);
-
-				if (enemy == Dungeon.hero) {
-
-					Camera.main.shake( 2, 0.3f );
-
-//					if (!enemy.isAlive()) {
-//						Dungeon.fail( Utils.format( ResultDescriptions.MOB,
-//							Utils.indefinite( name ), Dungeon.depth ) );
-//						GLog.n( TXT_LIGHTNING_KILLED, name );
-//					}
-				}
+				enemy.damage(damageRoll(), this, Element.SHOCK);
 
                 return true;
 
@@ -150,24 +142,6 @@ public class DwarfWarlock extends MobRanged {
 			"warlocks have come to power in the city. They started with elemental magic, " +
 			"but soon switched to demonology and necromancy.";
 	}
-
-    public static final HashSet<Class<? extends DamageType>> RESISTANCES = new HashSet<>();
-    public static final HashSet<Class<? extends DamageType>> IMMUNITIES = new HashSet<>();
-
-    static {
-        RESISTANCES.add(DamageType.Unholy.class);
-        RESISTANCES.add(DamageType.Body.class);
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> resistances() {
-        return RESISTANCES;
-    }
-
-    @Override
-    public HashSet<Class<? extends DamageType>> immunities() {
-        return IMMUNITIES;
-    }
 
     @Override
     public void storeInBundle( Bundle bundle ) {

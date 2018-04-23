@@ -20,8 +20,18 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfFrigidVapours;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.watabou.utils.Random;
 
 public class IcecapHerb extends Herb {
     {
@@ -29,11 +39,25 @@ public class IcecapHerb extends Herb {
         image = ItemSpriteSheet.HERB_ICECAP;
 
         alchemyClass = PotionOfFrigidVapours.class;
+        message = "That herb tasted fresh like mint.";
+    }
+
+    @Override
+    public void onConsume( Hero hero ) {
+
+        int maxDuration = (int)( Satiety.MAXIMUM - hero.buff( Satiety.class ).energy() ) / 250 + 1;
+
+        Frozen debuff = Debuff.add( hero, Frozen.class, (float)Random.Int( maxDuration ) );
+
+        if( debuff != null ) debuff.delay( time );
+
+        super.onConsume( hero );
     }
 
     @Override
     public String desc() {
-        return "Icecap herbs are used to brew potions of Frigid Vapours.";
+        return "Icecap herbs feel cold to touch and have some numbing capabilities. They are also " +
+                "used to brew potions of Frigid Vapours.";
     }
 }
 

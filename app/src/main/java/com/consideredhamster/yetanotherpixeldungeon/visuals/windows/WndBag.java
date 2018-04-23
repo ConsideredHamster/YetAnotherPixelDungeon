@@ -22,12 +22,16 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.windows;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.EquipableItem;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmorCloth;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
+import com.watabou.input.Touchscreen;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
+import com.watabou.noosa.TouchArea;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
@@ -60,6 +64,7 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Icons;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.ItemSlot;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.QuickSlot;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.watabou.noosa.ui.Button;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -102,7 +107,7 @@ public class WndBag extends WndTabbed {
 	protected static final int SLOT_SIZE	= 24;
 	protected static final int SLOT_MARGIN	= 1;
 
-	protected static final int TITLE_HEIGHT	= 12;
+	protected static final int TITLE_HEIGHT	= 16;
 
 	protected static final int DURABILITY_COLORS[] = {
             0xFFCC0000,
@@ -146,13 +151,7 @@ public class WndBag extends WndTabbed {
 		int slotsWidth = SLOT_SIZE * nCols + SLOT_MARGIN * (nCols - 1);
 		int slotsHeight = SLOT_SIZE * nRows + SLOT_MARGIN * (nRows - 1);
 
-		BitmapText txtTitle = PixelScene.createText( title != null ? title : Utils.capitalize( bag.name() ), 9 );
-		txtTitle.hardlight( TITLE_COLOR );
-		txtTitle.measure();
-		txtTitle.x = (int)(slotsWidth - txtTitle.width()) / 2;
-		txtTitle.y = (int)(TITLE_HEIGHT - txtTitle.height()) / 2;
-		add( txtTitle );
-
+		placeTitle( bag, slotsWidth, mode == Mode.ALL || mode == Mode.FOR_SALE, mode == Mode.ALL );
 		placeItems( bag );
 
 		resize( slotsWidth, slotsHeight + TITLE_HEIGHT );
@@ -201,14 +200,81 @@ public class WndBag extends WndTabbed {
 			new WndBag( pouch, listener, mode, title ) :
 			new WndBag( Dungeon.hero.belongings.backpack, listener, mode, title );
 	}
+
+	protected void placeTitle( Bag bag, int width, boolean showGold, boolean showAnkhs ) {
+
+        float pos = 0;
+
+        BitmapText txtTitle = PixelScene.createText( title != null ? title : Utils.capitalize( bag.name() ), 9 );
+        txtTitle.hardlight( TITLE_COLOR );
+        txtTitle.measure();
+        txtTitle.x = 1;
+//        txtTitle.x = (int)(slotsWidth - txtTitle.width()) / 2;
+        txtTitle.y = (int)(TITLE_HEIGHT - txtTitle.height()) / 2;
+        add( txtTitle );
+
+         if( showGold ){
+
+             Image goldIcon = Icons.get( Icons.GOLD );
+             goldIcon.x = width - goldIcon.width() - 1;
+             goldIcon.y = ( TITLE_HEIGHT - goldIcon.height() ) / 2f - 1;
+             add( goldIcon );
+
+
+             BitmapText goldText = new BitmapText( Integer.toString( Dungeon.gold ), PixelScene.font1x );
+             goldText.measure();
+             goldText.x = width - goldIcon.width() - goldText.width() - 3;
+             goldText.y = ( TITLE_HEIGHT - goldText.baseLine() ) / 2f - 1;
+             add( goldText );
+
+             TouchArea goldArea = new TouchArea( goldText.x, goldText.y, goldIcon.width() + goldText.width(), goldIcon.height() + goldText.height() ) {
+                 @Override
+                 protected void onClick( Touchscreen.Touch touch ){
+                     WndBag.this.add( new WndItem( WndBag.this, new Gold( Dungeon.gold ) ) );
+                 }
+             };
+             add( goldArea );
+
+             pos += goldIcon.width() + goldText.width();
+         }
+
+         if( showAnkhs ){
+             final Ankh ankh = Dungeon.hero.belongings.getItem( Ankh.class );
+             if( ankh != null ){
+
+                 Image ankhIcon = Icons.get( Icons.ANKH );
+                 ankhIcon.x = width - ankhIcon.width() - pos - 8;
+                 ankhIcon.y = ( TITLE_HEIGHT - ankhIcon.height() ) / 2f - 1;
+                 add( ankhIcon );
+
+                 BitmapText ankhText = new BitmapText( Integer.toString( ankh.quantity ), PixelScene.font1x );
+                 ankhText.measure();
+                 ankhText.measure();
+                 ankhText.x = width - ankhIcon.width() - ankhText.width() - pos - 8;
+                 ankhText.y = ( TITLE_HEIGHT - ankhText.baseLine() ) / 2f - 1;
+                 add( ankhText );
+
+                 TouchArea ankhArea = new TouchArea( ankhText.x, ankhText.y, ankhIcon.width() + ankhText.width(), ankhIcon.height() + ankhText.height() ) {
+                     @Override
+                     protected void onClick( Touchscreen.Touch touch ){
+                         WndBag.this.add( new WndItem( WndBag.this, ankh ) );
+                     }
+                 };
+                 add( ankhArea );
+
+             }
+         }
+    }
 	
 	protected void placeItems( Bag container ) {
 
         Belongings stuff = Dungeon.hero.belongings;
 
-        Gold gold = new Gold(Dungeon.gold);
+//        Gold gold = new Gold( Dungeon.gold );
+
+//        Ankh ankh = stuff.getItem( Ankh.class );
         Waterskin vial = stuff.getItem( Waterskin.class );
-        Ankh ankh = stuff.getItem( Ankh.class );
+        OilLantern lamp = stuff.getItem( OilLantern.class );
 
         if( YetAnotherPixelDungeon.landscape() ) {
 
@@ -221,7 +287,6 @@ public class WndBag extends WndTabbed {
         placeItem( stuff.armor != null ? stuff.armor : new Placeholder( ItemSpriteSheet.ARMOR ) );
         placeItem( stuff.ring1 != null ? stuff.ring1 : new Placeholder( ItemSpriteSheet.RING ) );
         placeItem( stuff.ring2 != null ? stuff.ring2 : new Placeholder( ItemSpriteSheet.RING ) );
-
 
         if( !YetAnotherPixelDungeon.landscape() ) {
 
@@ -262,11 +327,11 @@ public class WndBag extends WndTabbed {
 
         if( YetAnotherPixelDungeon.landscape() ) {
 
-            if( ankh != null ) {
-                row = 0;
-                col = nCols - 1;
-                placeItem( ankh );
-            }
+//            if( ankh != null ) {
+//                row = 0;
+//                col = nCols - 1;
+//                placeItem( ankh );
+//            }
 
             if( vial != null ) {
                 row = nRows - 1;
@@ -274,29 +339,29 @@ public class WndBag extends WndTabbed {
                 placeItem( vial );
             }
 
-            if( gold != null ) {
+            if( lamp != null ) {
                 row = nRows - 1;
                 col = nCols - 1;
-                placeItem( gold );
+                placeItem( lamp );
             }
 
         } else {
 
             row = nRows - 1;
 
-            if( ankh != null ) {
-                col = 2;
-                placeItem( ankh );
-            }
+//            if( ankh != null ) {
+//                col = 2;
+//                placeItem( ankh );
+//            }
 
             if( vial != null ) {
                 col = 3;
                 placeItem( vial );
             }
 
-            if( gold != null ) {
+            if( lamp != null ) {
                 col = 4;
-                placeItem( gold );
+                placeItem( lamp );
             }
 
         }
@@ -501,7 +566,7 @@ public class WndBag extends WndTabbed {
 						mode == Mode.OFFHAND && (item instanceof MeleeWeaponLightOH || item instanceof ThrowingWeapon || item instanceof Shield || item instanceof Wand) ||
 						mode == Mode.FOR_SALE && (item.visible && item.price() > 0) && (!item.isEquipped( Dungeon.hero ) || item.bonus >= 0) ||
 						mode == Mode.UPGRADEABLE && ( item.isUpgradeable() && ( !item.isIdentified() || item.bonus < 3 ) || item.isRepairable() && item.state < 3 ) ||
-						mode == Mode.ENCHANTABLE && item instanceof EquipableItem ||
+						mode == Mode.ENCHANTABLE && item instanceof EquipableItem && !( item instanceof ThrowingWeapon ) ||
 						mode == Mode.REPAIRABLE && item.isRepairable() && item.state < 3 ||
 						mode == Mode.UNIDENTIFED && !item.isIdentified() ||
 						mode == Mode.WEAPON && item instanceof Weapon && item.isRepairable() && item.state < 3 ||

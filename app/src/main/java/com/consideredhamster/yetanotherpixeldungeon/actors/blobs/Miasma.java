@@ -20,13 +20,14 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Suffocation;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
@@ -50,11 +51,16 @@ public class Miasma extends Blob {
 
                 if( !ch.isMagical() ) {
 
-                    Suffocation buff = Buff.prolong(ch, Suffocation.class, TICK);
+                    int effect = (int)Math.sqrt( ch.totalHealthValue() );
 
-                    if ( buff != null ) {
-                        Buff.prolong(ch, Suffocation.class, TICK).proliferate((int) (Math.sqrt(ch.HT) / 2));
+                    Withered debuff = ch.buff( Withered.class );
+
+                    if( debuff != null ) {
+                        effect += debuff.getDuration();
                     }
+
+                    ch.damage( Random.Int( effect ) + 1, this, Element.BODY );
+                    BuffActive.add( ch, Withered.class, TICK );
 
                 }
 
