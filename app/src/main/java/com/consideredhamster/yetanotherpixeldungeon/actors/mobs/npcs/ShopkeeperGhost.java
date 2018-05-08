@@ -45,7 +45,7 @@ public class ShopkeeperGhost extends Shopkeeper {
 	@Override
 	public String description() {
 		return 
-			"This guy doesn't looks threatening in any way. Yet, for some reason, mere presence of this mysterious fellow " +
+			"This guy doesn't look threatening in any way. Yet, for some reason, mere presence of this mysterious fellow " +
             "unnerves you. You wonder what business he can lead here?";
 	}
 }
