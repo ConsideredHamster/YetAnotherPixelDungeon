@@ -25,6 +25,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
+import com.watabou.utils.Random;
 
 public class FireTrap extends Trap {
 
@@ -32,7 +33,7 @@ public class FireTrap extends Trap {
 	
 	public static void trigger( int pos ) {
 		
-		GameScene.add( Blob.seed( pos, 2, Fire.class ) );
+		GameScene.add( Blob.seed( pos, Random.IntRange( 4, 6 ), Fire.class ) );
 		CellEmitter.get( pos ).burst( FlameParticle.FACTORY, 5 );
 		
 	}

@@ -20,14 +20,14 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffReactive;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 import com.watabou.utils.Bundle;
-import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedWeaponFlintlock;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 
-public class Combo extends Buff {
+public class Combo extends BuffReactive {
 	
 	private static String TXT_COMBO = "combo %dx!";
 	
@@ -47,27 +47,34 @@ public class Combo extends Buff {
     public String description() {
         return "Every consecutive attack increases your damage slightly. Performing any actions " +
                 "except attacking again will reset this counter, though.";
+    }@Override
+    public boolean attachTo( Char target ) {
+
+        Buff.detach( target, Guard.class);
+        Buff.detach( target, Focus.class );
+
+        return super.attachTo( target );
     }
 
-
-	
 	public void hit( ) {
 
 		count++;
 
-        if (target.sprite.visible && count >= 3) {
-            target.sprite.showStatus(CharSprite.DEFAULT, TXT_COMBO, count);
+        reset( 1 );
+
+        if ( target.sprite.visible && count >= 3 ) {
+            target.sprite.showStatus( CharSprite.DEFAULT, TXT_COMBO, count );
         }
 
-        if( target instanceof Hero && ((Hero) target).rangedWeapon instanceof RangedWeaponFlintlock ) {
-
-            postpone( target.attackDelay() * 3 / 2 * 1.01f );
-
-        } else {
-
-            postpone( target.attackDelay() * 1.01f );
-
-        }
+//        if( target instanceof Hero && ((Hero) target).rangedWeapon instanceof RangedWeaponFlintlock ) {
+//
+//            postpone( target.attackDelay() * 3 / 2  );
+//
+//        } else {
+//
+//            postpone( target.attackDelay() * 1.01f );
+//
+//        }
 	}
 
     public float modifier() {
@@ -83,11 +90,11 @@ public class Combo extends Buff {
         }
     }
 
-	@Override
-	public boolean act() {
-		detach();
-		return true;
-	}
+//	@Override
+//	public boolean act() {
+//		detach();
+//		return true;
+//	}
 
     private static final String COUNT	= "count";
 

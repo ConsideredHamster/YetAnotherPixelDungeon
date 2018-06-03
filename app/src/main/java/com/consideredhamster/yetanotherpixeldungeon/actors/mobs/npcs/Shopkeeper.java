@@ -40,13 +40,11 @@ import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndBag;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndTradeItem;
 
-import java.util.ArrayList;
-
 public class Shopkeeper extends NPC {
 
     private static final String TXT_GREETINGS = "Good day! Are you interested in my wares?";
 
-    private static String[][] LINES = {
+    private static String[][] LINES_THREATENED = {
 
             {
                     "Hey, cut it off.",
@@ -69,6 +67,62 @@ public class Shopkeeper extends NPC {
                     "Ah, screw it. I am leaving.",
                     "That's it. I am outta here.",
                     "Why don't you leave me alone!",
+            },
+    };
+
+    private static String[][] LINES_CAUGHT = {
+
+            {
+                    "No touching!",
+                    "Don't touch items on sell, please.",
+                    "Just look, don't touch.",
+                    "You can just ask me instead of touching.",
+                    "What was it that you put in your bag there?",
+            },
+            {
+                    "Hey, put that back!",
+                    "Erm... Did you really tried to steal from me?",
+                    "Did I see you take something?",
+                    "I saw you trying to steal this!",
+            },
+            {
+                    "Does your mother approves your stealing?",
+                    "Thief! Thief! I saw everything!",
+                    "Do you feel lucky, punk?",
+                    "Stop right there criminal scum!",
+            },
+            {
+                    "Nah, I am leaving now. I had enough.",
+                    "Thieves like you should be banned. Bye.",
+                    "What's up with these adventurers nowadays?...",
+            },
+    };
+
+
+
+    private static String[][] LINES_STOLEN = {
+
+            {
+                    "Huh?",
+                    "Like what you see?",
+                    "Examining my assortment?",
+                    "Hmmm...",
+                    "Weird.",
+            },
+            {
+                    "Something's wrong...",
+                    "Hmm... Where did that thing go?",
+                    "That's strange.",
+            },
+            {
+                    "Why do you act so suspiciously?",
+                    "I can swear I had more items before you entered.",
+                    "Snooping as usual, I see.",
+            },
+            {
+                    "Not gonna wait 'til you steal everything else.",
+                    "Feeling so smart, right? Huh, good luck then!",
+                    "I will not tolerate your stealing any more.",
             },
     };
 
@@ -106,13 +160,13 @@ public class Shopkeeper extends NPC {
 	
 	@Override
     public void damage( int dmg, Object src, Element type ) {
-        react();
+        onAssault();
 	}
 
 	@Override
     public boolean add( Buff buff ) {
         if( !( buff instanceof Rejuvenation ) ) {
-            react();
+            onAssault();
         }
 
         return false;
@@ -121,11 +175,41 @@ public class Shopkeeper extends NPC {
     protected void greetings() {
         yell(Utils.format(TXT_GREETINGS));
     }
-	
-	protected void react() {
 
-        if( threatened < LINES.length ) {
-            yell(LINES[threatened][Random.Int(LINES[threatened].length)]);
+    protected void onAssault() {
+
+        if( threatened < LINES_THREATENED.length ) {
+            yell( LINES_THREATENED[threatened][Random.Int( LINES_THREATENED[threatened].length)]);
+        }
+
+        if( threatened >= 3 ) {
+            runAway();
+        } else if( threatened >= 2 ) {
+            callForHelp();
+        }
+
+        threatened++;
+    }
+
+    public void onStealing() {
+
+        if( threatened < LINES_STOLEN.length ) {
+            yell( LINES_STOLEN[threatened][Random.Int( LINES_STOLEN[threatened].length)]);
+        }
+
+        if( threatened >= 3 ) {
+            runAway();
+//        } else if( threatened >= 2 ) {
+//            callForHelp();
+        }
+
+        threatened++;
+    }
+
+    public void onCaught() {
+
+        if( threatened < LINES_CAUGHT.length ) {
+            yell( LINES_CAUGHT[threatened][Random.Int( LINES_CAUGHT[threatened].length)]);
         }
 
         if( threatened >= 3 ) {
@@ -152,34 +236,17 @@ public class Shopkeeper extends NPC {
         Sample.INSTANCE.play( Assets.SND_CHALLENGE );
     }
 
-	protected void runAway() {
-
-        ArrayList<Heap> forSale = new ArrayList<>();
+    protected void runAway() {
 
         for (Heap heap : Dungeon.level.heaps.values()) {
             if (heap.type == Heap.Type.FOR_SALE) {
 
-                forSale.add( heap );
+                CellEmitter.get(heap.pos).burst( Speck.factory( Speck.WOOL ), 5 );
+                heap.destroy();
 
             }
         }
 
-        int amount = forSale.size();
-
-		for ( Heap heap : forSale ) {
-
-            if( Random.Int( amount + 1 ) > 0 ) {
-
-                CellEmitter.get(heap.pos).burst( Speck.factory( Speck.WOOL ), 5 );
-                heap.destroy();
-
-            } else {
-
-                heap.type = Heap.Type.HEAP;
-
-            }
-		}
-		
 		destroy();
 		sprite.killAndErase();
 		
@@ -204,6 +271,14 @@ public class Shopkeeper extends NPC {
 			"than this little black market down here. Better for you, anyway.";
 	}
 	
+	public float stealingChance( Item item  ) {
+
+        float baseChance = item.stealingDifficulty() * ( threatened + 1 );
+
+        return Math.max( 0.0f, 1.0f - baseChance / Dungeon.hero.stealth() );
+
+    }
+
 	public static WndBag sell() {
 		return GameScene.selectItem( itemSelector, WndBag.Mode.FOR_SALE, "Select an item to sell" );
 	}

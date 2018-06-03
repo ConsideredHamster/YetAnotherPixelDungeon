@@ -31,11 +31,10 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Disrupt
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Ensnared;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Exposed;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Focused;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Focus;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Guard;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Light;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
@@ -107,6 +106,7 @@ public abstract class Char extends Actor {
 	
 	@Override
 	protected boolean act() {
+
 		Dungeon.level.updateFieldOfView( this );
 
         moving = false;
@@ -122,6 +122,11 @@ public abstract class Char extends Actor {
 	private static final String TAG_HP		= "HP";
 	private static final String TAG_HT		= "HT";
 	private static final String BUFFS		= "buffs";
+
+    @Override
+    public int actingPriority(){
+        return 3;
+    }
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -170,10 +175,11 @@ public abstract class Char extends Actor {
 
             if( !isRanged() && Random.Float() < counterChance() ){
 
-                Exposed exposed = Buff.affect( this, Exposed.class, TICK );
+                Exposed exposed = Buff.affect( this, Exposed.class );
 
                 if( exposed != null ) {
                     exposed.object = enemy.id();
+                    exposed.reset(1);
                 }
 
             }
@@ -256,7 +262,7 @@ public abstract class Char extends Actor {
         if( Level.fieldOfView[ defender.pos ] )
             attValue *= 2;
 
-        if( attacker.buff( Focused.class ) != null ){
+        if( attacker.buff( Focus.class ) != null ){
             attValue *= 2;
         }
 

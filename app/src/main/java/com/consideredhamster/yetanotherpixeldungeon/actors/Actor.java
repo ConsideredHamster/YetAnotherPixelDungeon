@@ -29,6 +29,7 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffReactive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
@@ -49,7 +50,9 @@ public abstract class Actor implements Bundlable {
 		this.time += time;
 	}
 
-
+    public int actingPriority(){
+        return 0;
+    }
 	
 	protected void postpone( float time ) {
 //		if (this.time < now + time) {
@@ -184,25 +187,16 @@ public abstract class Actor implements Bundlable {
 
 			current = null;
 
-            Actor currentChar = null;
-            Actor currentBlob = null;
-            Actor currentBuff = null;
-
 			Arrays.fill( chars, null );
 			
 			for (Actor actor : all) {
-				if (actor.time < now) {
+
+				if (actor.time < now || actor.time <= now && actor.actingPriority() > current.actingPriority() ) {
+
 					now = actor.time;
 
 					current = actor;
 
-                    if(actor instanceof Char) {
-                        currentChar = actor;
-                    } else if(actor instanceof Blob) {
-                        currentBlob = actor;
-                    } else if(actor instanceof Buff) {
-                        currentBuff = actor;
-                    }
 				}
 				
 				if (actor instanceof Char) {
@@ -210,22 +204,6 @@ public abstract class Actor implements Bundlable {
 					chars[ch.pos] = ch;
 				}
 			}
-
-//            for (Actor actor : all) {
-//
-//                if (actor instanceof Char) {
-//                    Char ch = (Char)actor;
-//                    chars[ch.pos] = ch;
-//                }
-//            }
-
-            if( currentBuff != null && currentBuff.time <= now ) {
-                current = currentBuff;
-            } else if( currentBlob != null && currentBlob.time <= now ) {
-                current = currentBlob;
-            } else if( currentChar != null && currentChar.time <= now ) {
-                current = currentChar;
-            }
 
             if (current != null) {
 				
@@ -237,6 +215,12 @@ public abstract class Actor implements Bundlable {
 				}
 				
 				doNext = current.act();
+
+                if (current instanceof Char) {
+                    BuffReactive.check( (Char)current );
+                }
+
+
 
 				if (doNext && !Dungeon.hero.isAlive()) {
 					doNext = false;

@@ -59,7 +59,7 @@ public abstract class Buff extends Actor {
 
         if( target.add(this) ){
 
-            if( statusMessage() != null ) {
+            if( statusMessage() != null && target.sprite != null ) {
                 target.sprite.showStatus( statusColor(), statusMessage() );
             }
 
@@ -88,6 +88,11 @@ public abstract class Buff extends Actor {
 		deactivate();
 		return true;
 	}
+
+    @Override
+    public int actingPriority(){
+        return 1;
+    }
 	
 	public int icon() {
 		return BuffIndicator.NONE;

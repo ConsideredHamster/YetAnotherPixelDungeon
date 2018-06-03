@@ -45,8 +45,8 @@ public class Web extends Blob {
 				Char ch = Actor.findChar( i );
 
 				if ( ch != null ) {
-                    if( ch.buff( Ensnared.class ) != null ){
-                        BuffActive.add( ch, Ensnared.class, TICK * 2 );
+                    if( ch.buff( Ensnared.class ) == null ){
+                        BuffActive.add( ch, Ensnared.class, TICK * 3 );
                     } else {
                         BuffActive.add( ch, Ensnared.class, TICK );
                     }

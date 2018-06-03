@@ -147,6 +147,9 @@ public abstract class Armour extends EquipableItem {
     @Override
     public int priceModifier() { return 3; }
 
+    @Override
+    public float stealingDifficulty() { return 0.75f; }
+
     public String descType() {
         return "";
     }

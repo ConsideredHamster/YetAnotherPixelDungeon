@@ -130,7 +130,7 @@ public class Fire extends Blob {
 		Char ch = Actor.findChar(pos);
 		if (ch != null) {
             if( ch.buff( Burning.class ) == null ){
-                BuffActive.add( ch, Burning.class, TICK * 3 );
+                BuffActive.add( ch, Burning.class, TICK * 5 );
             } else {
                 BuffActive.add( ch, Burning.class, TICK );
             }

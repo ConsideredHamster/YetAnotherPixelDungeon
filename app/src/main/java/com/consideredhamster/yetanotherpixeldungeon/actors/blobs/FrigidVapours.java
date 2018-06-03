@@ -57,11 +57,11 @@ public class FrigidVapours extends Blob {
                 Char ch = Actor.findChar( i );
 
                 if( ch != null ){
-                    if( ch.buff( Frozen.class ) != null ){
+//                    if( ch.buff( Frozen.class ) == null ){
                         BuffActive.add( ch, Frozen.class, TICK * 2 );
-                    } else {
-                        BuffActive.add( ch, Frozen.class, TICK );
-                    }
+//                    } else {
+//                        BuffActive.add( ch, Frozen.class, TICK );
+//                    }
                 }
 
                 Heap heap = Dungeon.level.heaps.get( i );

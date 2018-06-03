@@ -35,6 +35,7 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.RedButton;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Window;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.watabou.utils.Random;
 
 public class WndTradeItem extends Window {
 	
@@ -48,10 +49,14 @@ public class WndTradeItem extends Window {
 	private static final String TXT_SELL_1		= "Sell 1 for %dg";
 	private static final String TXT_SELL_ALL	= "Sell all for %dg";
 	private static final String TXT_CANCEL		= "Never mind";
-	
-	private static final String TXT_SOLD	= "You've sold your %s for %dg";
-	private static final String TXT_BOUGHT	= "You've bought %s for %dg";
-	
+
+    private static final String TXT_BOUGHT	= "You've bought %s for %dg";
+    private static final String TXT_SOLD	= "You've sold your %s for %dg";
+
+    private static final String TXT_STEAL	    = "Steal (%d%% chance)";
+    private static final String TXT_STOLEN	    = "You successfully steal %s!.";
+    private static final String TXT_CAUGHT	    = "You fail to steal %s.";
+
 	private WndBag owner;
 
     private BitmapTextMultiline normal;
@@ -117,7 +122,7 @@ public class WndTradeItem extends Window {
 		resize( WIDTH, (int)btnCancel.bottom() );
 	}
 	
-	public WndTradeItem( final Heap heap, boolean canBuy ) {
+	public WndTradeItem( final Heap heap, final Shopkeeper shopkeeper ) {
 		
 		super();
 		
@@ -127,21 +132,35 @@ public class WndTradeItem extends Window {
             item.identify();
 		
 		float pos = createDescription( item, true );
-		
-		int price = price( item );
-		
-		if (canBuy) {
-			
-			RedButton btnBuy = new RedButton( Utils.format( TXT_BUY, price ) ) {
-				@Override
-				protected void onClick() {
-					hide();
-					buy( heap );
-				}
-			};
-			btnBuy.setRect( 0, pos + GAP, WIDTH, BTN_HEIGHT );
-			btnBuy.enable( price <= Dungeon.gold );
-			add( btnBuy );
+
+
+        if ( shopkeeper != null ) {
+
+            int price = price( item );
+
+            RedButton btnBuy = new RedButton( Utils.format( TXT_BUY, price ) ) {
+                @Override
+                protected void onClick() {
+                    hide();
+                    buy( heap );
+                }
+            };
+            btnBuy.setRect( 0, pos + GAP, WIDTH, BTN_HEIGHT );
+            btnBuy.enable( price <= Dungeon.gold );
+            add( btnBuy );
+
+            float chance = shopkeeper.stealingChance( item );
+
+            RedButton btnSteal = new RedButton( Utils.format( TXT_STEAL, (int)( chance * 100 ) ) ) {
+                @Override
+                protected void onClick() {
+                    hide();
+                    steal( heap, shopkeeper );
+                }
+            };
+            btnSteal.setRect( 0, btnBuy.bottom() + GAP, WIDTH, BTN_HEIGHT );
+            btnSteal.enable( chance > 0.0f );
+            add( btnSteal );
 			
 			RedButton btnCancel = new RedButton( TXT_CANCEL ) {
 				@Override
@@ -149,7 +168,7 @@ public class WndTradeItem extends Window {
 					hide();
 				}
 			};
-			btnCancel.setRect( 0, btnBuy.bottom() + GAP, WIDTH, BTN_HEIGHT );
+			btnCancel.setRect( 0, btnSteal.bottom() + GAP, WIDTH, BTN_HEIGHT );
 			add( btnCancel );
 			
 			resize( WIDTH, (int)btnCancel.bottom() );
@@ -257,24 +276,49 @@ public class WndTradeItem extends Window {
 	private int price( Item item ) {
 
         int price = item.price() * item.priceModifier() * Dungeon.chapter();
-//		if (Dungeon.hero.buff( RingOfFortune.Fortune.class ) != null && price >= 2) {
-//			price /= 2;
-//		}
+
 		return price;
 	}
-	
-	private void buy( Heap heap ) {
-		
-		Hero hero = Dungeon.hero;
-		Item item = heap.pickUp();
-		
-		int price = price( item );
-		Dungeon.gold -= price;
-		
-		GLog.i( TXT_BOUGHT, item.name(), price );
-		
-		if (!item.doPickUp( hero )) {
-			Dungeon.level.drop( item, heap.pos ).sprite.drop();
-		}
-	}
+
+    private void buy( Heap heap ) {
+
+        Hero hero = Dungeon.hero;
+        Item item = heap.pickUp();
+
+        int price = price( item );
+        Dungeon.gold -= price;
+
+        GLog.i( TXT_BOUGHT, item.name(), price );
+
+        if (!item.doPickUp( hero )) {
+            Dungeon.level.drop( item, heap.pos ).sprite.drop();
+        }
+    }
+
+    private void steal( Heap heap, Shopkeeper shopkeeper ) {
+
+        Hero hero = Dungeon.hero;
+
+        Item item = heap.peek();
+
+        if( Random.Float() < shopkeeper.stealingChance( item ) ){
+
+            item = heap.pickUp();
+
+            if (!item.doPickUp( hero )) {
+                Dungeon.level.drop( item, heap.pos ).sprite.drop();
+            }
+
+            GLog.i( TXT_STOLEN, item.name() );
+
+            shopkeeper.onStealing();
+
+        } else {
+
+            GLog.w( TXT_CAUGHT, item.name() );
+
+            shopkeeper.onCaught();
+
+        }
+    }
 }

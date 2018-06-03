@@ -598,7 +598,10 @@ public abstract class Wand extends EquipableItem {
     public static HashSet<Class<? extends Wand>> getKnown() {
         return handler.known();
     }
-	
+
+    @Override
+    public float stealingDifficulty() { return 0.75f; }
+
 	@Override
 	public int price() {
 

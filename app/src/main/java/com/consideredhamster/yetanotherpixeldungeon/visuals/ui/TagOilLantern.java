@@ -71,18 +71,18 @@ public class TagOilLantern extends Tag {
 
 		super.layout();
 
-        if( YetAnotherPixelDungeon.buttons() ){
+//        if( YetAnotherPixelDungeon.buttons() ){
 
             bg.scale.x = -1.0f;
             bg.x += bg.width;
 
             slot.setRect( x + 2, y + 2, width - 5, height - 4 );
 
-        } else {
-
-            slot.setRect( x + 2, y + 3, width - 2, height - 6 );
-
-        }
+//        } else {
+//
+//            slot.setRect( x + 2, y + 3, width - 2, height - 6 );
+//
+//        }
 
 	}
 	

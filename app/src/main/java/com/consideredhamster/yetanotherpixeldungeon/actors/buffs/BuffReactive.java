@@ -18,32 +18,52 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special;
+package com.consideredhamster.yetanotherpixeldungeon.actors.buffs;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffPassive;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffReactive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.watabou.utils.Bundle;
 
-public class Exposed extends BuffReactive {
+import java.util.HashSet;
 
-    public int object = 0;
+public abstract class BuffReactive extends Buff {
 
-    private static final String OBJECT	= "object";
+    protected int duration;
+
+    public void reset( int value ) {
+        duration = value;
+    }
+
+    public void check(){
+        if( duration > 0 ) {
+            duration--;
+        } else {
+            detach();
+        }
+    }
+
+    public static void check( Char ch ){
+        for( BuffReactive buff : (HashSet<BuffReactive>)ch.buffs( BuffReactive.class ).clone() ) {
+            buff.check();
+        }
+    }
 
     @Override
-    public String statusMessage() { return "exposed"; }
+    public boolean act() {
+        spend( TICK );
+        return true;
+    }
+
+    private static final String DURATION	= "duration";
 
     @Override
     public void storeInBundle( Bundle bundle ) {
         super.storeInBundle( bundle );
-        bundle.put( OBJECT, object );
-
+        bundle.put( DURATION, duration );
     }
 
     @Override
     public void restoreFromBundle( Bundle bundle ) {
         super.restoreFromBundle(bundle);
-        object = bundle.getInt( OBJECT );
+        duration = bundle.getInt( DURATION );
     }
-
 }

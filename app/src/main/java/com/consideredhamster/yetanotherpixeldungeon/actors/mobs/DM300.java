@@ -86,12 +86,22 @@ public class DM300 extends MobHealthy {
 
     @Override
     public float moveSpeed() {
-        return buff( Enraged.class ) != null ? 1.0f : 0.75f;
+        return buff( Enraged.class ) != null ? 1.0f : 0.75f + breaks * 0.05f;
     }
 
     @Override
     protected float healthValueModifier() {
         return 0.25f;
+    }
+
+    @Override
+    public void damage( int dmg, Object src, Element type ) {
+
+        if( buff( Enraged.class ) != null ) {
+            dmg /= 2;
+        }
+
+        super.damage( dmg, src, type );
     }
 	
 	@Override

@@ -92,7 +92,7 @@ public class Heap implements Bundlable {
 		switch (type) {
 		case HEAP:
 		case FOR_SALE:
-			return size() > 0 ? items.peek().image() : 0;
+			return items.size() > 0 ? items.peek().image() : 0;
 		case CHEST:
 		case CHEST_MIMIC:
 			return ItemSpriteSheet.CHEST;

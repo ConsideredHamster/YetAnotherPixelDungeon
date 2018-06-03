@@ -138,7 +138,7 @@ public class Chasm {
         if( useLevitation ) {
 
             BuffActive.add( hero, Levitation.class, Math.round( Random.Float(PotionOfLevitation.DURATION / 5, PotionOfLevitation.DURATION / 4 ) ));
-            GLog.i("\n" + TXT_LANDS_SAFELY );
+            GLog.p( TXT_LANDS_SAFELY );
             useLevitation = false;
 
         } else {

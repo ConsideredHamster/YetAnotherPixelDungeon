@@ -60,7 +60,12 @@ public class Miasma extends Blob {
                     }
 
                     ch.damage( Random.Int( effect ) + 1, this, Element.BODY );
-                    BuffActive.add( ch, Withered.class, TICK );
+
+                    if( ch.buff( Withered.class ) == null ){
+                        BuffActive.add( ch, Withered.class, TICK * 3 );
+                    } else {
+                        BuffActive.add( ch, Withered.class, TICK );
+                    }
 
                 }
 

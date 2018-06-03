@@ -33,7 +33,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Control
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Disrupted;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Focused;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Focus;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Shopkeeper;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Knuckles;
@@ -264,6 +265,11 @@ public class Hero extends Char {
 //        updateAwareness();
 
 //		belongings.restoreFromBundle(bundle);
+    }
+
+    @Override
+    public int actingPriority(){
+        return 4;
     }
 
     public static void preview( GamesInProgress.Info info, Bundle bundle ){
@@ -597,6 +603,8 @@ public class Hero extends Char {
         checkVisibleMobs();
         TagAttack.updateState();
 
+
+
         if( curAction == null ){
 
             if( restoreHealth ){
@@ -688,7 +696,11 @@ public class Hero extends Char {
     }
 
     public void ready(){
-        sprite.idle();
+
+        if( sprite != null ){
+            sprite.idle();
+        }
+
         curAction = null;
         ready = true;
 
@@ -797,7 +809,17 @@ public class Hero extends Char {
 
             Heap heap = Dungeon.level.heaps.get( dst );
             if( heap != null && heap.type == Type.FOR_SALE && heap.size() == 1 ){
-                GameScene.show( new WndTradeItem( heap, true ) );
+
+                Shopkeeper shopkeeper = null;
+
+                for( Mob mob : Dungeon.level.mobs ){
+                    if( mob instanceof Shopkeeper ){
+                        shopkeeper = (Shopkeeper)mob;
+                        break;
+                    }
+                }
+
+                GameScene.show( new WndTradeItem( heap, shopkeeper ) );
             }
 
             return false;
@@ -1230,8 +1252,8 @@ public class Hero extends Char {
 
         if( !sleep ){
 
-            Buff.affect( this, Focused.class, Actor.TICK * 1.01f );
             sprite.showStatus( CharSprite.DEFAULT, TXT_WAIT );
+            Buff.affect( this, Focus.class ).reset( 1 );
             search( false );
 
         } else {
@@ -1428,15 +1450,15 @@ public class Hero extends Char {
 
         if( step < 0 ) return false;
 
+        buff( Satiety.class ).decrease(
+                ( belongings.armor != null ?
+                        (float)belongings.armor.str()
+                        : 5.0f ) / STR()
+        );
+
         int oldPos = pos;
         move( step );
         sprite.move( oldPos, pos );
-
-        buff( Satiety.class ).decrease(
-            ( belongings.armor != null ?
-            (float)belongings.armor.str()
-            : 5.0f ) / STR()
-        );
 
         if( belongings.weap1 instanceof RangedWeaponFlintlock && belongings.weap2 instanceof Bullets ) {
 

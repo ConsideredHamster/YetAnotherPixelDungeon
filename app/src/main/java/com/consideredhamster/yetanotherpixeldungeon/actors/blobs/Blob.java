@@ -135,6 +135,11 @@ public class Blob extends Actor {
 		
 		return true;
 	}
+
+    @Override
+    public int actingPriority(){
+        return 2;
+    }
 	
 	public void use( BlobEmitter emitter ) {
 		this.emitter = emitter;

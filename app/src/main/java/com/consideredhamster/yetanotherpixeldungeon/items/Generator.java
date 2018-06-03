@@ -39,12 +39,14 @@ import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.TowerS
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.OverpricedRation;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.DreamweedHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.EarthrootHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.WhirlvineHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.FirebloomHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.Herb;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.IcecapHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.SorrowmossHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.SungrassHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.WyrmflowerHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Ankh;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.ArmorerKit;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Battery;
@@ -274,14 +276,16 @@ public class Generator {
             Ankh.class,
         };
 
-        Category.HERB.probs = null;
+        Category.HERB.probs = new float[]{ 7, 7, 7, 7, 7, 7, 7, 1 };
         Category.HERB.classes = new Class<?>[]{
             FirebloomHerb.class,
             IcecapHerb.class,
             SorrowmossHerb.class,
             DreamweedHerb.class,
             SungrassHerb.class,
-            WhirlvineHerb.class
+            WhirlvineHerb.class,
+            EarthrootHerb.class,
+            WyrmflowerHerb.class,
         };
 
         Category.AMMO.probs = null;

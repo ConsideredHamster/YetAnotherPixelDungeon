@@ -43,6 +43,11 @@ public class Boomerangs extends ThrowingWeaponSpecial {
 	}
 
     @Override
+    public boolean returnsWhenThrown() {
+        return true;
+    }
+
+    @Override
     public int str( int bonus ) {
         return super.str( bonus ) + 1;
     }

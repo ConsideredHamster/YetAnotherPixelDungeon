@@ -18,50 +18,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
+package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
-package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
-
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfStrength;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
-public class Chakrams extends ThrowingWeaponLight {
-
+public class WyrmflowerHerb extends Herb {
     {
-        name = "chakrams";
-        image = ItemSpriteSheet.THROWING_ANUS;
-    }
+        name = "wyrmflower herb";
+        image = ItemSpriteSheet.HERB_WYRMFLOWER;
 
-    public Chakrams() {
-        this( 1 );
-    }
-
-    public Chakrams(int number) {
-        super( 3 );
-        quantity = number;
+        alchemyClass = PotionOfStrength.class;
+        message = "That herb had a very mighty taste, I can say.";
     }
 
     @Override
-    public boolean returnsWhenThrown() {
-        return true;
-    }
+    public void onConsume( Hero hero ) {
 
-    @Override
-    public int str( int bonus ) {
-        return super.str( bonus ) + 2 ;
-    }
+        int hpBonus = 2;
 
-    @Override
-    public int max( int bonus ) {
-        return super.max(bonus) + 2 ;
-    }
+        hero.HP = hero.HT += hpBonus;
 
-    @Override
-    public int lootChapter() {
-        return super.lootChapter() + 1;
+        hero.sprite.showStatus( CharSprite.POSITIVE, "+%d hp", hpBonus );
+
+        super.onConsume( hero );
     }
 
     @Override
     public String desc() {
-        return "This razor-edged missile is made in such curious way that skilled user returns to " +
-                "the hands of the thrower on successful hit.";
+        return "A very rare herb, it is often sought by alchemist for its powerful alchemical " +
+                "properties. Such herbs are usually used to brew potions of Strength.";
     }
 }
+

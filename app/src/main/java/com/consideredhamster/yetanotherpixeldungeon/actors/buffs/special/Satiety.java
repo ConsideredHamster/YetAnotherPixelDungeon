@@ -123,17 +123,24 @@ public class Satiety extends Buff {
 
             if( surplus >= 1.0f ) {
 
-                hero.HP = Math.min( hero.HT, hero.HP + (int)surplus );
-                surplus = surplus % 1.0f;
+                if( target.HP < target.HT ){
 
-                if( target.HP == target.HT && ((Hero) target).restoreHealth ) {
+                    target.HP = Math.min( target.HT, target.HP + (int) surplus );
 
-                    ((Hero) target).interrupt( Level.water[ target.pos ] ?
-                        "You don't feel well. Better not sleep in the water next time." :
-                        "You feel well rested.", !Level.water[ target.pos ]
-                    );
+                    if( target.HP == target.HT && ( (Hero) target ).restoreHealth ){
+
+                        ( (Hero) target ).interrupt(
+//                                Level.water[ target.pos ] ?
+//                                "You don't feel well. Better not sleep in the water next time." :
+                                "You feel well rested."
+//                                , !Level.water[ target.pos ]
+                        );
+
+                    }
 
                 }
+
+                surplus = surplus % 1.0f;
 
             } else if( surplus <= -1.0f ) {
 

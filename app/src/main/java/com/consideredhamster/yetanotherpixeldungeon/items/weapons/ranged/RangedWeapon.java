@@ -114,6 +114,9 @@ public abstract class RangedWeapon extends Weapon {
 //	}
 
     @Override
+    public float stealingDifficulty() { return 0.75f; }
+
+    @Override
     public int price() {
 
         int price = 20 + state * 10;

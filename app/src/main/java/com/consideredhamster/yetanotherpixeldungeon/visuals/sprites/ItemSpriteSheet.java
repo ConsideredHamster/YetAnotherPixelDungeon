@@ -165,8 +165,9 @@ public class ItemSpriteSheet {
     public static final int HERB_SORROWMOSS	    = 122;
     public static final int HERB_DREAMWEED      = 123;
     public static final int HERB_SUNGRASS	    = 124;
-    public static final int HERB_WHIRLVINE      = 125;
-    public static final int HERB_FADELEAF	    = 126;
+    public static final int HERB_EARTHROOT      = 125;
+    public static final int HERB_WHIRLVINE      = 126;
+    public static final int HERB_WYRMFLOWER = 127;
 
     // Bags
 

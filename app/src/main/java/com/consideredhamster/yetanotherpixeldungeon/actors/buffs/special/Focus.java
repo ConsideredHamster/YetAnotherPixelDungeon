@@ -21,14 +21,17 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffPassive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffReactive;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 
-public class Focused extends BuffPassive {
+public class Focus extends BuffReactive {
 
     @Override
     public int icon() {
@@ -42,6 +45,15 @@ public class Focused extends BuffPassive {
 
 //    @Override
 //    public String statusMessage() { return "focused"; }
+
+    @Override
+    public boolean attachTo( Char target ) {
+
+        Buff.detach( target, Combo.class);
+        Buff.detach( target, Guard.class );
+
+        return super.attachTo( target );
+    }
 
     @Override
     public String description() {

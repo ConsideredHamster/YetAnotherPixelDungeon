@@ -340,13 +340,17 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		switch (state) {
 
             case MENDING:
-                mending = emitter();
-                mending.pour(Speck.factory(Speck.HEALING), 0.5f);
+                if (mending == null){
+                    mending = emitter();
+                    mending.pour( Speck.factory( Speck.HEALING ), 0.5f );
+                }
                 break;
 
             case LEVITATING:
-                levitation = bottomEmitter();
-                levitation.pour(Speck.factory(Speck.JET), 0.1f);
+                if (levitation == null){
+                    levitation = bottomEmitter();
+                    levitation.pour( Speck.factory( Speck.JET ), 0.1f );
+                }
                 break;
 
             case INVISIBLE:
@@ -360,62 +364,89 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                 break;
 
             case ENRAGED:
-                enraged = EnragedFX.fury( this );
+                if (enraged == null){
+                    enraged = EnragedFX.fury( this );
+                }
                 break;
 
             case PROTECTION:
-                GameScene.effect( ward = new Shield( this ) );
+                if (ward == null){
+                    GameScene.effect( ward = new Shield( this ) );
+                }
                 break;
 
 
             case BURNING:
-                burning = emitter();
-                burning.pour( FlameParticle.FACTORY, 0.06f );
+                if (burning == null){
+                    burning = emitter();
+                    burning.pour( FlameParticle.FACTORY, 0.06f );
+                }
                 break;
+
             case BLIGHTED:
-                blighted = emitter();
-                blighted.pour( AcidParticle.FACTORY, 0.3f );
+                if (blighted == null){
+                    blighted = emitter();
+                    blighted.pour( AcidParticle.FACTORY, 0.3f );
+                }
                 break;
 
 
             case POISONED:
-                poisoned = emitter();
-                poisoned.pour(Speck.factory( Speck.POISON ), 0.5f);
+                if (poisoned == null){
+                    poisoned = emitter();
+                    poisoned.pour( Speck.factory( Speck.POISON ), 0.5f );
+                }
                 break;
             case BLEEDING:
-                bleeding = emitter();
-                bleeding.pour(BloodParticle.FACTORY, 0.5f);
+                if (bleeding == null){
+                    bleeding = emitter();
+                    bleeding.pour( BloodParticle.FACTORY, 0.5f );
+                }
                 break;
             case WITHERED:
-                withered = emitter();
-                withered.pour(ShadowParticle.UP, 0.25f);
+                if (withered == null){
+                    withered = emitter();
+                    withered.pour( ShadowParticle.UP, 0.25f );
+                }
                 break;
 
             case VERTIGO:
-                vertigo = topEmitter();
-                vertigo.pour(Speck.factory(Speck.VERTIGO), 0.5f);
+                if (vertigo == null){
+                    vertigo = topEmitter();
+                    vertigo.pour( Speck.factory( Speck.VERTIGO ), 0.5f );
+                }
                 break;
             case CHARMED:
-                charmed = emitter();
-                charmed.pour(Speck.factory(Speck.HEART), 0.25f);
+                if (charmed == null){
+                    charmed = emitter();
+                    charmed.pour( Speck.factory( Speck.HEART ), 0.25f );
+                }
                 break;
 
             case CHILLED:
-                chilled = emitter();
-                chilled.pour( SnowParticle.FACTORY, 0.1f );
+                if (chilled == null){
+                    chilled = emitter();
+                    chilled.pour( SnowParticle.FACTORY, 0.1f );
+                }
                 break;
 
             case CONTROLLED:
-                controlled = emitter();
-                controlled.pour( Speck.factory(Speck.CONTROL), 0.25f );
+                if (controlled == null){
+                    controlled = emitter();
+                    controlled.pour( Speck.factory( Speck.CONTROL ), 0.25f );
+                }
                 break;
 
             case ILLUMINATED:
-                GameScene.effect( halo = new TorchHalo( this ) );
+                if (halo == null){
+                    GameScene.effect( halo = new TorchHalo( this ) );
+                }
                 break;
 
             case UNHOLYARMOR:
-                GameScene.effect( unholyArmor = new UnholyArmor( this ) );
+                if (unholyArmor == null){
+                    GameScene.effect( unholyArmor = new UnholyArmor( this ) );
+                }
                 break;
 
             case PARALYSED:
@@ -431,7 +462,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public void remove( State state ) {
 		switch (state) {
 
-
             case MENDING:
                 if (mending != null) {
                     mending.on = false;
@@ -441,6 +471,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 
             case LEVITATING:
                 if (levitation != null) {
+
                     levitation.on = false;
                     levitation = null;
                 }
@@ -456,6 +487,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
             case PROTECTION:
                 if (ward != null) {
                     ward.putOut();
+                    ward = null;
                 }
                 break;
 
@@ -533,12 +565,14 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
             case ILLUMINATED:
                 if (halo != null) {
                     halo.putOut();
+                    halo = null;
                 }
                 break;
 
             case UNHOLYARMOR:
                 if (unholyArmor != null) {
                     unholyArmor.putOut();
+                    unholyArmor = null;
                 }
                 break;
 

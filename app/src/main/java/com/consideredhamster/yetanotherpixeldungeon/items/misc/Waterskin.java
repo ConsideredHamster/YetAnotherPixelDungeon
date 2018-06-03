@@ -32,6 +32,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisib
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Elemental;
+import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
+import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
@@ -179,19 +181,11 @@ public class Waterskin extends Item {
 
     private void drink( Hero hero ) {
 
-        int healthLost = hero.HT - hero.HP;
+        int healed = ( hero.HT - hero.HP ) * 2 / 3;
 
-        int value = healthLost * 2 / 3;
+        healed = (int) ( healed * hero.ringBuffsHalved( RingOfVitality.Vitality.class ) );
 
-        value = (int) ( value * hero.ringBuffsHalved( RingOfVitality.Vitality.class ) );
-
-        int effect = Math.min( healthLost, value );
-
-        if( effect > 0 ){
-            hero.HP += effect;
-            hero.sprite.showStatus( CharSprite.POSITIVE, TXT_VALUE, effect );
-            hero.sprite.emitter().burst( Speck.factory( Speck.HEALING ), Math.max( 1, (int) Math.sqrt( value ) ) );
-        }
+        hero.heal( healed );
 
         this.value--;
 
@@ -327,10 +321,26 @@ public class Waterskin extends Item {
                     }
                 }
 
-                if ( !Level.water[ cell ] && !Level.important[ cell ] && !Level.solid[ cell ] && !Level.chasm[ cell ] ) {
+                boolean mapUpdated = false;
+                int oldTile = Dungeon.level.map[cell];
 
-                    int oldTile = Dungeon.level.map[ cell ];
-                    Level.set( cell, Terrain.WATER);
+                if (oldTile == Terrain.EMBERS) {
+
+                    Level.set(cell, Terrain.GRASS);
+                    mapUpdated = true;
+
+                } else if (oldTile == Terrain.GRASS) {
+
+                    Level.set(cell, Terrain.HIGH_GRASS);
+                    mapUpdated = true;
+
+                } else if (oldTile == Terrain.HIGH_GRASS ) {
+
+                    Dungeon.level.drop( Generator.random(Generator.Category.HERB), cell, true).type = Heap.Type.HEAP;
+
+                }
+
+                if ( mapUpdated ) {
 
                     GameScene.discoverTile( cell, oldTile );
 

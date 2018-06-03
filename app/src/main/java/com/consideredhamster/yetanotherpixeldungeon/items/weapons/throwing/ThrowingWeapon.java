@@ -69,6 +69,10 @@ public abstract class ThrowingWeapon extends Weapon {
         stackable = true;
     }
 
+    public boolean returnsWhenThrown() {
+        return false;
+    }
+
     @Override
     public String equipAction() {
         return AC_SHOOT;
@@ -100,6 +104,7 @@ public abstract class ThrowingWeapon extends Weapon {
     public int lootLevel() {
         return ( lootChapter() - 1 ) * 6 + 6 * quantity / baseAmount();
     }
+
 
     public int baseAmount() {
         return 1;
@@ -400,7 +405,7 @@ public abstract class ThrowingWeapon extends Weapon {
 
         } else if( enemy == null || !curUser.shoot(enemy, weapon) ) {
 
-            if (this instanceof Boomerangs || this instanceof Harpoons) {
+            if (returnsWhenThrown()) {
 
                 ((MissileSprite)curUser.sprite.parent.recycle( MissileSprite.class )).
                         reset(cell, curUser.pos, this instanceof Harpoons ? ItemSpriteSheet.HARPOON_RETURN : curItem.imageAlt(), null);
@@ -413,7 +418,7 @@ public abstract class ThrowingWeapon extends Weapon {
 
         } else if( Random.Float() > weapon.breakingRateWhenShot() ) {
 
-            if (this instanceof Chakrams || this instanceof Harpoons) {
+            if (returnsWhenThrown()) {
 
                 if( !(this instanceof Harpoons) || !enemy.isHeavy()) {
 

@@ -274,14 +274,14 @@ public class YetAnotherPixelDungeon extends Game {
         Preferences.INSTANCE.put( Preferences.KEY_SEARCH_BTN, value );
     }
 
-    public static void buttons( boolean value ) {
-        Preferences.INSTANCE.put( Preferences.KEY_BUTTONS, value );
-    }
-
-    public static boolean buttons() {
-        return true;
-//        return Preferences.INSTANCE.getBoolean(Preferences.KEY_BUTTONS, true);
-    }
+//    public static void buttons( boolean value ) {
+//        Preferences.INSTANCE.put( Preferences.KEY_BUTTONS, value );
+//    }
+//
+//    public static boolean buttons() {
+//        return true;
+////        return Preferences.INSTANCE.getBoolean(Preferences.KEY_BUTTONS, true);
+//    }
 
     public static int loadingTips() {
         return Preferences.INSTANCE.getInt( Preferences.KEY_LOADING_TIPS, 3 );

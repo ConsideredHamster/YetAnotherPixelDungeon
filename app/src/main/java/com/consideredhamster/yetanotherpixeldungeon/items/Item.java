@@ -642,6 +642,8 @@ public class Item implements Bundlable {
 
     public int priceModifier() { return 5; }
 
+    public float stealingDifficulty() { return 0.5f; }
+
 	public static Item virtual( Class<? extends Item> cl ) {
 		try {
 

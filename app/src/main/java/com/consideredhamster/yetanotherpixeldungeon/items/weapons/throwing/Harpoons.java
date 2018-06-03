@@ -45,6 +45,11 @@ public class Harpoons extends ThrowingWeaponHeavy {
 	}
 
     @Override
+    public boolean returnsWhenThrown() {
+        return true;
+    }
+
+    @Override
     public int image() {
         return ItemSpriteSheet.HARPOON;
     }

@@ -407,6 +407,9 @@ public abstract class Ring extends EquipableItem {
 
         return price;
 	}
+
+    @Override
+    public float stealingDifficulty() { return 0.75f; }
 	
 	protected RingBuff buff() {
 		return null;

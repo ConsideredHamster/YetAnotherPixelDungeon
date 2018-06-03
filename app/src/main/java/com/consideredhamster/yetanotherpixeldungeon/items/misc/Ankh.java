@@ -72,14 +72,14 @@ public class Ankh extends Item {
 
         Debuff.removeAll(hero);
 
-        uncurse( curUser, curUser.belongings.backpack.items.toArray( new Item[0] ) );
+        uncurse( hero, hero.belongings.backpack.items.toArray( new Item[0] ) );
 
-        uncurse( curUser,
-            curUser.belongings.weap1,
-            curUser.belongings.weap2,
-            curUser.belongings.armor,
-            curUser.belongings.ring1,
-            curUser.belongings.ring2
+        uncurse( hero,
+                hero.belongings.weap1,
+                hero.belongings.weap2,
+                hero.belongings.armor,
+                hero.belongings.ring1,
+                hero.belongings.ring2
         );
 
         hero.sprite.showStatus(CharSprite.POSITIVE, "resurrected!");

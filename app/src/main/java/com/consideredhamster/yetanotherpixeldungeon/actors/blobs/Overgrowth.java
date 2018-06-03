@@ -121,9 +121,9 @@ public class Overgrowth extends Blob {
                         Char ch = Actor.findChar(i);
                         if (ch != null && !ch.flying ) {
 
-                            if( ch.buff( Ensnared.class ) != null ){
-                                BuffActive.add( ch, Ensnared.class, TICK * 2 );
-                            } else if ( Random.Int(50) < growth[i] ) {
+                            if( ch.buff( Ensnared.class ) == null ){
+                                BuffActive.add( ch, Ensnared.class, TICK * 3 );
+                            } else {
                                 BuffActive.add( ch, Ensnared.class, TICK );
                             }
                         }

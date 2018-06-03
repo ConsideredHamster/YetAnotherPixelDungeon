@@ -22,6 +22,11 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -31,10 +36,11 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.BruteSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MissileSprite;
+import com.watabou.utils.Random;
 
 public class GnollBrute extends MobPrecise {
 
-//	private static final String TXT_ENRAGED = "%s becomes enraged!";
+	private static final String TXT_ENRAGED = "%s becomes enraged!";
 
     public GnollBrute() {
 
@@ -49,19 +55,6 @@ public class GnollBrute extends MobPrecise {
         resistances.put(Element.Body.class, Element.Resist.PARTIAL);
         resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
 	}
-
-//	private boolean enraged = false;
-	
-//	@Override
-//	public void restoreFromBundle( Bundle bundle ) {
-//		super.restoreFromBundle( bundle );
-//		enraged = HP < HT / 3;
-//	}
-	
-//	@Override
-//	public int damageRoll() {
-//		return super.damageRoll() * ( HT * 2 - HP ) / HT ;
-//	}
 
     @Override
     public int shieldAC() {
@@ -99,39 +92,27 @@ public class GnollBrute extends MobPrecise {
         super.onRangedAttack( cell );
     }
 	
-//	@Override
-//	public void damage( int dmg, Object src ) {
-//        super.damage(dmg, src);
-//
-//        if (buff(Regeneration.class) == null) {
-//            Buff.affect(this, Regeneration.class);
-//        }
+	@Override
+	public void damage( int dmg, Object src, Element type ) {
 
-//		if ( isAlive() && !enraged && HP < HT / 3 ) {
-//
-//			enraged = true;
-//			spend( TICK );
-//			if (Dungeon.visible[pos]) {
-//				GLog.w( TXT_ENRAGED, name );
-//				sprite.showStatus( CharSprite.NEGATIVE, "enraged" );
-//			}
-//		}
-//	}
+        super.damage( dmg, src, type );
 
-//    @Override
-//    public boolean act() {
+		if ( isAlive() && buff( Enraged.class ) == null && HP < HT / 2 ) {
 
-//        if( enraged && HP >= HT ) {
-//            enraged = false;
-//        }
+            BuffActive.add(this, Enraged.class, Random.Float( 5.0f, 10.0f ) );
+            spend( TICK );
 
-//        return super.act();
-//    }
-	
+            if (Dungeon.visible[pos]) {
+                GLog.w( TXT_ENRAGED, name );
+                sprite.showStatus( CharSprite.NEGATIVE, "enraged" );
+            }
+        }
+	}
+
 	@Override
 	public String description() {
 		return
-			"Brutes are the largest, strongest and toughest of all gnolls. They are a clumsy, " +
-            "but very ferocious fighters. Their blows grow stronger the closer they are to death.";
+			"Brutes are the largest, strongest and toughest of all gnolls. They are dumb, " +
+            "but very ferocious fighters. They can become temporarily enraged when injured enough.";
 	}
 }

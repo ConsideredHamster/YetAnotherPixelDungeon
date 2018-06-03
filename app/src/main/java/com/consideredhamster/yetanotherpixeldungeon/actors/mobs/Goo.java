@@ -141,12 +141,6 @@ public abstract class Goo extends MobEvasive {
 
                 Spawn clone = new Spawn();
 
-                Burning buff1 = buff( Burning.class );
-
-                if ( buff1 != null) {
-                    BuffActive.addFromDamage( clone, Burning.class, buff1.getDuration() );
-                }
-
                 clone.pos = Random.element( candidates );
                 clone.state = clone.HUNTING;
 
@@ -167,6 +161,12 @@ public abstract class Goo extends MobEvasive {
                 Dungeon.level.press(clone.pos, clone);
 
                 GameScene.add(clone, SPLIT_DELAY);
+
+                Burning buff1 = buff( Burning.class );
+
+                if ( buff1 != null ) {
+                    BuffActive.addFromDamage( clone, Burning.class, buff1.getDuration() );
+                }
 
                 Actor.addDelayed( new Pushing( clone, pos, clone.pos ), -1 );
             }
@@ -403,30 +403,30 @@ public abstract class Goo extends MobEvasive {
                 mother = mother();
             }
 
-            if ( phase && mother != null && mother != this && Level.adjacent( pos, mother.pos ) ) {
+            if ( phase && mother != null && mother != this && Level.adjacent( pos, mother.pos ) ){
 
                 Burning buff1 = buff( Burning.class );
 
-                if ( buff1 != null) {
+                if( buff1 != null ){
                     BuffActive.addFromDamage( mother, Burning.class, buff1.getDuration() );
                 }
 
                 int heal = Math.min( HP, mother.HT - mother.HP );
 
-                if( heal > 0 ) {
-                    mother.sprite.showStatus(CharSprite.POSITIVE, "%d", heal);
-                    mother.sprite.emitter().burst( Speck.factory( Speck.HEALING ), (int)Math.sqrt( heal ) );
+                if( heal > 0 ){
+                    mother.sprite.showStatus( CharSprite.POSITIVE, "%d", heal );
+                    mother.sprite.emitter().burst( Speck.factory( Speck.HEALING ), (int) Math.sqrt( heal ) );
                     mother.HP += heal;
                 }
 
-                Actor.addDelayed(new Pushing(this, pos, mother.pos), -1);
+                Actor.addDelayed( new Pushing( this, pos, mother.pos ), -1 );
 
-//                sprite.alpha(1);
-                sprite.parent.add(new AlphaTweener(sprite, 0.0f, 0.1f));
+                sprite.parent.add( new AlphaTweener( sprite, 0.0f, 0.1f ) );
 
-                sprite.showStatus(CharSprite.NEGATIVE, "absorbed");
-
-                GLog.n("An entranced spawn was absorbed by the Goo, restoring its health!");
+                if( Dungeon.visible[ pos ] ) {
+                    sprite.showStatus( CharSprite.NEGATIVE, "absorbed" );
+                    GLog.n( "An entranced spawn was absorbed by the Goo, restoring its health!" );
+                }
 
                 die( this );
 
@@ -435,7 +435,6 @@ public abstract class Goo extends MobEvasive {
             }
 
             if ( Level.water[pos] && HP < HT && buff( Frozen.class ) == null ) {
-//                sprite.showStatus(CharSprite.POSITIVE, "%d", heal);
                 sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
                 HP ++;
             }
@@ -444,8 +443,10 @@ public abstract class Goo extends MobEvasive {
                 phase = true;
                 sprite.idle();
 
-                sprite.showStatus(CharSprite.NEGATIVE, "entranced");
-                GLog.n("A spawn of Goo has fully recovered and became entranced!");
+                if( Dungeon.visible[ pos ] ){
+                    sprite.showStatus( CharSprite.NEGATIVE, "entranced" );
+                    GLog.n( "A spawn of Goo has fully recovered and became entranced!" );
+                }
 
                 spend( TICK );
                 return true;

@@ -25,7 +25,7 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 
 public class Enraged extends Bonus {
 
-    public static final int DURATION = 11;
+    public static final int DURATION = 10;
 
     @Override
     public String toString() {

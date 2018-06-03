@@ -131,6 +131,10 @@ public class Tengu extends MobRanged {
             return;
         }
 
+        if( buff( Enraged.class ) != null ) {
+            dmg /= 2;
+        }
+
         timeToJump++;
 
         super.damage( dmg, src, type );

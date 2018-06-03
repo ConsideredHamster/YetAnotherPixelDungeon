@@ -81,7 +81,7 @@ public abstract class MeleeWeapon extends Weapon {
             } else {
 
                 hero.buff( Satiety.class ).decrease( (float)str() / hero.STR() );
-                Buff.affect( hero, Guard.class, Actor.TICK * 1.01f );
+                Buff.affect( hero, Guard.class ).reset( 1 );
                 hero.spendAndNext( Actor.TICK );
 
             }
@@ -125,6 +125,9 @@ public abstract class MeleeWeapon extends Weapon {
         return super.penaltyBase(hero, str) + tier * 4;
 
     }
+
+    @Override
+    public float stealingDifficulty() { return 0.75f; }
 
 	@Override
 	public int price() {

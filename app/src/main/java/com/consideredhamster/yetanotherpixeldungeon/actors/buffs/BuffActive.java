@@ -25,6 +25,7 @@ import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -36,9 +37,6 @@ public abstract class BuffActive extends Buff {
     public String status() {
         return duration > 0 ? Integer.toString( duration ) : null;
     }
-
-    @Override
-    public String description() { return ""; }
 
     public Element buffType() {
         return null;
@@ -117,6 +115,7 @@ public abstract class BuffActive extends Buff {
             if( duration > 0 ) {
                  if( !newBuff || buff.attachTo( target ) ) {
                      buff.duration += duration;
+                     BuffIndicator.refreshHero();
                  }
              }
         }
