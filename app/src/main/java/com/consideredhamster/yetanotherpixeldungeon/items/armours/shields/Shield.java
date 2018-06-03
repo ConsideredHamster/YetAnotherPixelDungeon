@@ -78,7 +78,7 @@ public abstract class Shield extends Armour {
             }  else {
 
                 hero.buff( Satiety.class ).decrease( (float)str() / hero.STR() );
-                Buff.affect(hero, Guard.class, Actor.TICK );
+                Buff.affect(hero, Guard.class ).reset( 1 );
                 hero.spendAndNext( Actor.TICK );
 
             }
