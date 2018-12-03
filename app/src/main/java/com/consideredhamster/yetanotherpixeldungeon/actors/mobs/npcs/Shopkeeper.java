@@ -74,19 +74,19 @@ public class Shopkeeper extends NPC {
 
             {
                     "No touching!",
-                    "Don't touch items on sell, please.",
+                    "Don't touch items for sale, please.",
                     "Just look, don't touch.",
                     "You can just ask me instead of touching.",
                     "What was it that you put in your bag there?",
             },
             {
                     "Hey, put that back!",
-                    "Erm... Did you really tried to steal from me?",
+                    "Erm... Did you really try to steal from me?",
                     "Did I see you take something?",
                     "I saw you trying to steal this!",
             },
             {
-                    "Does your mother approves your stealing?",
+                    "Does your mother approve of you stealing?",
                     "Thief! Thief! I saw everything!",
                     "Do you feel lucky, punk?",
                     "Stop right there criminal scum!",
