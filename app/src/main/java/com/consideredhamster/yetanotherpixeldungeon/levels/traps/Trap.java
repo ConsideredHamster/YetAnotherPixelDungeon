@@ -20,14 +20,22 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
+import com.watabou.noosa.audio.Sample;
 
 public abstract class Trap {
 
-    private static final String TXT_TILE_IS_TRAPPED = "This tile is trapped!";
+    private static final String TXT_HIDDEN_PLATE_CLICKS = "A hidden pressure plate clicks!";
+    private static final String TXT_TRAPPED = "This tile is trapped!";
 
     private static final String TXT_R_U_SURE =
             "You are aware of a trap on this tile. Once you step on it, the trap would be " +
@@ -60,7 +68,7 @@ public abstract class Trap {
 
     public static void askForConfirmation( final Hero hero ) {
         GameScene.show(
-                new WndOptions( TXT_TILE_IS_TRAPPED, TXT_R_U_SURE, TXT_YES, TXT_NO ) {
+                new WndOptions( TXT_TRAPPED, TXT_R_U_SURE, TXT_YES, TXT_NO ) {
                     @Override
                     protected void onSelect( int index ) {
                         if (index == 0) {
@@ -73,8 +81,71 @@ public abstract class Trap {
         );
     }
 
-//    public static void heroPressed(){
-//        stepConfirmed = false;
-//    }
 
+    public static void trigger( int cell ) {
+
+        Char ch = Actor.findChar( cell  );
+
+        if (ch == Dungeon.hero) {
+            Dungeon.hero.interrupt();
+        }
+
+        if( Dungeon.visible[cell] ) {
+
+            if( ( Terrain.flags[ Dungeon.level.map[ cell ] ] & Terrain.TRAPPED ) != 0 ) {
+                GLog.i(TXT_HIDDEN_PLATE_CLICKS);
+            }
+
+            Sample.INSTANCE.play( Assets.SND_TRAP);
+        }
+
+
+        int trap = Dungeon.level.map[cell];
+        Level.set( cell, Terrain.INACTIVE_TRAP);
+        GameScene.updateMap( cell );
+
+        switch ( trap ) {
+
+            case Terrain.SECRET_TOXIC_TRAP:
+            case Terrain.TOXIC_TRAP:
+                ToxicTrap.trigger( cell, ch );
+                break;
+
+            case Terrain.SECRET_FIRE_TRAP:
+            case Terrain.FIRE_TRAP:
+                FireTrap.trigger( cell, ch );
+                break;
+
+            case Terrain.SECRET_BOULDER_TRAP:
+            case Terrain.BOULDER_TRAP:
+                BoulderTrap.trigger( cell, ch );
+                break;
+
+            case Terrain.SECRET_POISON_TRAP:
+            case Terrain.POISON_TRAP:
+                ConfusionTrap.trigger( cell, ch );
+                break;
+
+            case Terrain.SECRET_ALARM_TRAP:
+            case Terrain.ALARM_TRAP:
+                AlarmTrap.trigger( cell, ch );
+                break;
+
+            case Terrain.SECRET_LIGHTNING_TRAP:
+            case Terrain.LIGHTNING_TRAP:
+                LightningTrap.trigger( cell, ch );
+                break;
+
+            case Terrain.SECRET_BLADE_TRAP:
+            case Terrain.BLADE_TRAP:
+                BladeTrap.trigger( cell, ch );
+                break;
+
+            case Terrain.SECRET_SUMMONING_TRAP:
+            case Terrain.SUMMONING_TRAP:
+                SummoningTrap.trigger( cell, ch );
+                break;
+        }
+
+    }
 }

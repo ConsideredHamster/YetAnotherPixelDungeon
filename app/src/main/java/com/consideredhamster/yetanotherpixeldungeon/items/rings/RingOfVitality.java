@@ -23,6 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 
 import java.util.HashSet;
+import java.util.Locale;
 
 public class RingOfVitality extends Ring {
 	
@@ -43,20 +44,42 @@ public class RingOfVitality extends Ring {
 	
 	@Override
 	public String desc() {
-        return isTypeKnown() ?
-                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-                "increases the body's regenerative properties, augmenting effects of all sources " +
-                "of healing, and increasing your resistance to negative effects affecting your body." +
-                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
-            super.desc();
+
+        String mainEffect = "??";
+        String sideEffect = "??";
+
+        if( isIdentified() ){
+            mainEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) / 2 );
+            sideEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) );
+        }
+
+        StringBuilder desc = new StringBuilder(
+            "Donning this ring will increase regenerative properties of the wearer's body, " +
+            "strengthening effects of any sources of healing, and increasing his or her resistance " +
+            "to negative effects such as poison or withering."
+        );
+
+        desc.append( "\n\n" );
+
+        desc.append( super.desc() );
+
+        desc.append( " " );
+
+        desc.append(
+            "Wearing this ring will increase potence of all _healing effects by " + mainEffect + "%_ " +
+            "(including natural regeneration rate) and increase your _resistance to body effects " +
+            "by " + sideEffect + "%_."
+        );
+
+        return desc.toString();
 	}
 	
 	public class Vitality extends RingBuff {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "Warm feeling rushes down your veins, soothing the pain in your wounds." :
-                    "Feeling of discomfort fills your body, making you feel sick." ;
+                "Warm feeling rushes down your veins, soothing the pain in your wounds." :
+                "Feeling of discomfort fills your body, making you feel sick." ;
         }
 	}
 }

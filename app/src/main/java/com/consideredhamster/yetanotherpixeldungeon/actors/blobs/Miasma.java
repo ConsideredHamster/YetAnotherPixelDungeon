@@ -49,24 +49,22 @@ public class Miasma extends Blob {
 		for (int i=0; i < LENGTH; i++) {
 			if (cur[i] > 0 && (ch = Actor.findChar( i )) != null) {
 
-                if( !ch.isMagical() ) {
+                int effect = (int)Math.sqrt( ch.totalHealthValue() );
 
-                    int effect = (int)Math.sqrt( ch.totalHealthValue() );
+                Withered debuff = ch.buff( Withered.class );
 
-                    Withered debuff = ch.buff( Withered.class );
+                if( debuff != null ) {
+                    effect += debuff.getDuration();
+                }
 
-                    if( debuff != null ) {
-                        effect += debuff.getDuration();
-                    }
-
+                if( !ch.isMagical() ){
                     ch.damage( Random.Int( effect ) + 1, this, Element.BODY );
+                }
 
-                    if( ch.buff( Withered.class ) == null ){
-                        BuffActive.add( ch, Withered.class, TICK * 3 );
-                    } else {
-                        BuffActive.add( ch, Withered.class, TICK );
-                    }
-
+                if( ch.buff( Withered.class ) == null ){
+                    BuffActive.add( ch, Withered.class, TICK * 3 );
+                } else {
+                    BuffActive.add( ch, Withered.class, TICK );
                 }
 
                 if ( ch.buff( Burning.class ) != null) {

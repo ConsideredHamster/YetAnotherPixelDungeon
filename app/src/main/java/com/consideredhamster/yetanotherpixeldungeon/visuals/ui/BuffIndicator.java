@@ -37,11 +37,11 @@ import com.watabou.utils.SparseArray;
 
 public class BuffIndicator extends Component {
 
-	public static final int NONE	= -1;
+	public static final int NONE	    = -1;
 
     public static final int COMBO		= 0;
     public static final int GUARD		= 1;
-    public static final int FOCUSED = 2;
+    public static final int FOCUSED     = 2;
     public static final int EVADE		= 3;
 
     public static final int STARVATION	= 4;
@@ -54,7 +54,7 @@ public class BuffIndicator extends Component {
     public static final int LEVITATION	= 10;
     public static final int INVISIBLE	= 11;
 
-    public static final int BLESSED     = 12;
+    public static final int SHIELDED    = 12;
     public static final int SUNLIGHT    = 13;
     public static final int ENRAGED     = 14;
     public static final int IMMUNITY	= 15;
@@ -78,7 +78,16 @@ public class BuffIndicator extends Component {
     public static final int BLINDED 	= 28;
     public static final int ENSNARED	= 29;
     public static final int FROZEN		= 30;
-    public static final int POLYMORPH	= 31;
+    public static final int DOOMED      = 31;
+
+    public static final int RESIST_ELEC = 32;
+    public static final int RESIST_FIRE = 33;
+    public static final int RESIST_ACID = 34;
+    public static final int RESIST_COLD = 35;
+    public static final int RESIST_BODY = 36;
+    public static final int RESIST_MIND = 37;
+    public static final int RESIST_MAGI = 38;
+    public static final int RESIST_PHYS = 39;
 
 	public static final int SIZE	= 8;
 	

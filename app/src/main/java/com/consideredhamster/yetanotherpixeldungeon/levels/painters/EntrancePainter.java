@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.painters;
 
+import com.consideredhamster.yetanotherpixeldungeon.Badges;
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
@@ -30,11 +32,21 @@ public class EntrancePainter extends Painter {
 		
 		fill( level, room, Terrain.WALL );
 		fill( level, room, 1, Terrain.EMPTY );
-		
+
+        Room.Door.Type type = Room.Door.Type.REGULAR;
+
+        if( Dungeon.depth == 2 && !(
+            Badges.isUnlocked( Badges.Badge.BOSS_SLAIN_1 ) ||
+            Badges.isUnlocked( Badges.Badge.STRENGTH_ATTAINED_1 ) ||
+            Badges.isUnlocked( Badges.Badge.ITEMS_UPGRADED_1) )
+        ) {
+            type = Room.Door.Type.HIDDEN;
+        }
+
 		for (Room.Door door : room.connected.values()) {
-			door.set( Room.Door.Type.REGULAR );
+            door.set( type );
 		}
-		
+
 		level.entrance = room.random( 1 );
 		set( level, level.entrance, Terrain.ENTRANCE );
 	}

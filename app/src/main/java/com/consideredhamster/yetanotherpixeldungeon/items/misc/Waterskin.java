@@ -181,11 +181,9 @@ public class Waterskin extends Item {
 
     private void drink( Hero hero ) {
 
-        int healed = ( hero.HT - hero.HP ) * 2 / 3;
+        int healed = hero.HT - hero.HP;
 
-        healed = (int) ( healed * hero.ringBuffsHalved( RingOfVitality.Vitality.class ) );
-
-        hero.heal( healed );
+        hero.heal( Random.IntRange( healed / 2, healed * 2 / 3 ) );
 
         this.value--;
 
@@ -305,7 +303,7 @@ public class Waterskin extends Item {
 
                 int cell = Ballistica.trace[ 0 ];
 
-                if( Ballistica.distance > 1 ){
+                if( Ballistica.distance > 0 ){
                     cell = Ballistica.trace[ 1 ];
                 }
 

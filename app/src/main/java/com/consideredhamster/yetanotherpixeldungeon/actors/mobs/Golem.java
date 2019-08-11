@@ -33,22 +33,41 @@ public class Golem extends MobHealthy {
 
         super( 16 );
 
+        /*
+
+            base maxHP  = 41
+            armor class = 16
+
+            damage roll = 7-22
+
+            accuracy    = 20
+            dexterity   = 8
+
+            perception  = 80%
+            stealth     = 80%
+
+         */
+
 		name = "stone golem";
 		spriteClass = GolemSprite.class;
 
         dexterity /= 2;
 
-        resistances.put(Element.Flame.class, Element.Resist.PARTIAL);
-        resistances.put(Element.Frost.class, Element.Resist.PARTIAL);
-        resistances.put(Element.Shock.class, Element.Resist.PARTIAL);
-        resistances.put(Element.Energy.class, Element.Resist.PARTIAL);
-        resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
+        resistances.put( Element.Flame.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Frost.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Shock.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Energy.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
 
-        resistances.put(Element.Mind.class, Element.Resist.IMMUNE);
-        resistances.put(Element.Body.class, Element.Resist.IMMUNE);
+        resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Body.class, Element.Resist.IMMUNE );
+
+        resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Doom.class, Element.Resist.PARTIAL );
 
 	}
 
+    @Override
     public boolean isMagical() {
         return true;
     }
@@ -59,8 +78,8 @@ public class Golem extends MobHealthy {
     }
 	
 	@Override
-	public float attackDelay() {
-		return 1.5f;
+	public float attackSpeed() {
+		return 0.75f;
 	}
 
     @Override

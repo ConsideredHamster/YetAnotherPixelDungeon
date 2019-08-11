@@ -24,7 +24,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.utils.PointF;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 
 public class Chains extends Group {
 

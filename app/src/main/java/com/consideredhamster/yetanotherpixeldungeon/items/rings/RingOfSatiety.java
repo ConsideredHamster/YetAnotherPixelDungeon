@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
+import java.util.Locale;
+
 public class RingOfSatiety extends Ring {
 
 	{
@@ -34,20 +36,41 @@ public class RingOfSatiety extends Ring {
 	
 	@Override
 	public String desc() {
-        return isTypeKnown() ?
-                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-                "optimizes digestive mechanisms of your body, making it possible to go without food longer and " +
-                "increasing nutriety of consumed food." +
-                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
-            super.desc();
+
+        String mainEffect = "??";
+        String sideEffect = "??";
+
+        if( isIdentified() ){
+            mainEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) / 2 );
+            sideEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) / 3 );
+        }
+
+        StringBuilder desc = new StringBuilder(
+            "Rings of satiety optimize digestive mechanisms of wearer's body, making it possible " +
+            "to go without food longer and increasing nutriety of consumed meals, both helping in " +
+            "the times of hunger and helping to prolong times of excess."
+        );
+
+        desc.append( "\n\n" );
+
+        desc.append( super.desc() );
+
+        desc.append( " " );
+
+        desc.append(
+            "Wearing this ring will decrease the rate at which your _satiety drops by " + mainEffect +
+            "%_ and increasing _effectiveness of eating by " + sideEffect + "%_."
+        );
+
+        return desc.toString();
 	}
 	
 	public class Satiety extends RingBuff {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "You feel comfortable warmth in your stomach." :
-                    "You feel your hunger growing faster." ;
+                "You feel comfortable warmth in your stomach." :
+                "You feel your hunger growing faster." ;
         }
 	}
 }

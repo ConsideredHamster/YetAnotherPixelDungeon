@@ -42,6 +42,7 @@ public class PotionOfStrength extends Potion {
 
         hero.STR++;
         hero.strBonus++;
+        hero.magicPower++;
 
 		int hpBonus = 2 ;
 
@@ -53,13 +54,13 @@ public class PotionOfStrength extends Potion {
             hero.sprite.showStatus(CharSprite.POSITIVE, "%+dHP", restore);
         }
 
-        hero.sprite.showStatus( CharSprite.POSITIVE, "+1 str +%d hp", hpBonus );
+        hero.sprite.showStatus( CharSprite.POSITIVE, "+1 str, +1 mag, +%d hp", hpBonus );
 
         hero.sprite.emitter().burst(Speck.factory(Speck.MASTERY), 12);
 
         Buff.detach(hero, Withered.class);
 
-        GLog.p("Newfound strength surges through your body, boosting your physical capabilities." );
+        GLog.p("Newfound strength surges through your body and mind." );
 
         QuickSlot.refresh();
 
@@ -69,12 +70,17 @@ public class PotionOfStrength extends Potion {
 	@Override
 	public String desc() {
 		return
-			"This powerful liquid will course through your muscles, " +
-			"permanently increasing your physical stats and fully restoring your health.";
+			"This powerful liquid will course through your muscles, permanently increasing your " +
+            "physical and magical powers, as well as fully restoring your health.";
 	}
 	
 	@Override
 	public int price() {
-		return isTypeKnown() ? 75 * quantity : super.price();
+		return isTypeKnown() ? 150 * quantity : super.price();
 	}
+
+    @Override
+    public float brewingChance() {
+        return 0.30f;
+    }
 }

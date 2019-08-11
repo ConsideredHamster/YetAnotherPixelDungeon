@@ -42,13 +42,20 @@ public class ShadowParticle extends PixelParticle.Shrinking {
             ((ShadowParticle)emitter.recycle( ShadowParticle.class )).resetCurse( x, y );
         }
     };
-	
-	public static final Emitter.Factory UP = new Factory() {	
-		@Override
-		public void emit( Emitter emitter, int index, float x, float y ) {
-			((ShadowParticle)emitter.recycle( ShadowParticle.class )).resetUp( x, y );
-		}
-	};
+
+    public static final Emitter.Factory UP = new Factory() {
+        @Override
+        public void emit( Emitter emitter, int index, float x, float y ) {
+            ((ShadowParticle)emitter.recycle( ShadowParticle.class )).resetUp( x, y );
+        }
+    };
+
+    public static final Emitter.Factory BURST = new Factory() {
+        @Override
+        public void emit( Emitter emitter, int index, float x, float y ) {
+            ((ShadowParticle)emitter.recycle( ShadowParticle.class )).resetUp( x, y );
+        }
+    };
 	
 	public void reset( float x, float y ) {
 		revive();
@@ -72,17 +79,29 @@ public class ShadowParticle extends PixelParticle.Shrinking {
 		this.x = x - speed.x * lifespan;
 		this.y = y - speed.y * lifespan;
 	}
-	
-	public void resetUp( float x, float y ) {
-		revive();
-		
-		speed.set( Random.Float( -8, +8 ), Random.Float( -32, -48 ) );
-		this.x = x;
-		this.y = y;
-		
-		size = 6;
-		left = lifespan = 1f;
-	}
+
+    public void resetUp( float x, float y ) {
+        revive();
+
+        speed.set( Random.Float( -8, +8 ), Random.Float( -32, -48 ) );
+        this.x = x;
+        this.y = y;
+
+        size = 6;
+        left = lifespan = 1f;
+    }
+
+    public void resetBurst( float x, float y ) {
+        revive();
+
+        this.x = x;
+        this.y = y;
+
+        size = 4;
+        speed.polar( Random.Float( PointF.PI2 ), Random.Float( 16, 32 ) );
+
+        left = lifespan;
+    }
 	
 	@Override
 	public void update() {

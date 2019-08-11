@@ -33,14 +33,14 @@ public class Withered extends Debuff {
 
     @Override
     public String toString() {
-        return "Withered";
+        return "Weakened";
     }
 
     @Override
-    public String statusMessage() { return "withered"; }
+    public String statusMessage() { return "weakened"; }
 
     @Override
-    public String playerMessage() { return "You feel vulnerable!"; }
+    public String playerMessage() { return "You feel weakened!"; }
 
     @Override
     public int icon() {

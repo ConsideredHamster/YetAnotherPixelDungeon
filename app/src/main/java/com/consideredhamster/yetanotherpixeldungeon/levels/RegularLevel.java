@@ -84,7 +84,7 @@ public abstract class RegularLevel extends Level {
 		} while (distance < minDistance);
 		
 		roomEntrance.type = Type.ENTRANCE;
-		roomExit.type = Type.EXIT;
+        roomExit.type = Type.EXIT;
 		
 		HashSet<Room> connected = new HashSet<Room>();
 		connected.add( roomEntrance );
@@ -202,7 +202,7 @@ public abstract class RegularLevel extends Level {
 //						specials.remove( Type.WEAK_FLOOR );
 
 					} else if (Dungeon.depth % 6 == 2 && specials.contains( Type.LABORATORY )) {
-						
+
 						r.type = Type.LABORATORY;
 						
 					} else if (Dungeon.depth % 6 == 4 && specials.contains( Type.MAGIC_WELL )) {
@@ -568,78 +568,54 @@ public abstract class RegularLevel extends Level {
 
             Mob mob;
 
-            int pos = -1;
+            int pos = randomRespawnCell();
 
-            do {
-                pos = randomRespawnCell();
-            } while (pos == -1);
+            if( pos > -1 ){
 
-            if( feeling == Feeling.GRASS && map[pos] == Terrain.HIGH_GRASS && Random.Int( 4 ) == 0 ) {
-                mob = new Statue();
-                mob.state = mob.PASSIVE;
-            } else if( feeling == Feeling.WATER && map[pos] == Terrain.WATER && Random.Int( 3 ) == 0 ) {
-                mob = new Piranha();
-                mob.state = mob.SLEEPING;
-//            } else if( feeling == Feeling.TRAPS && Random.Int( 5 ) == 0 ) {
-//                mob = new Mimic();
-//                ((Mimic)mob).items.add(new Gold().random());
-//                ((Mimic)mob).items.add(new Gold().random());
-//                mob.state = mob.WANDERING;
-            } else if( feeling == Feeling.HAUNT && Random.Int( 5 ) == 0 ) {
+                if( feeling == Feeling.GRASS && map[ pos ] == Terrain.HIGH_GRASS && Random.Int( 4 ) == 0 ){
+                    mob = new Statue();
+                    mob.state = mob.PASSIVE;
+                } else if( feeling == Feeling.WATER && map[ pos ] == Terrain.WATER && Random.Int( 3 ) == 0 ){
+                    mob = new Piranha();
+                    mob.state = mob.SLEEPING;
+                } else if( feeling == Feeling.HAUNT && Random.Int( 5 ) == 0 ){
+                    mob = new Wraith();
+                    mob.state = mob.HUNTING;
+                } else {
+                    mob = Bestiary.mob( Dungeon.depth );
+                }
 
-                mob = new Wraith();
-                mob.state = mob.HUNTING;
+                mob.pos = pos;
 
-            } else {
+                mobs.add( mob );
 
-                mob = Bestiary.mob(Dungeon.depth);
-
+                Actor.occupyCell( mob );
             }
-
-            mob.pos = pos;
-
-			mobs.add( mob );
-
-			Actor.occupyCell( mob );
-		}
-
-
-	}
-	
-	@Override
-	public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
-		int count = 0;
-		int cell = -1;
-		
-		while (true) {
-			
-			if (++count > 10) {
-				return -1;
-			}
-			
-			Room room = randomRoom( Room.Type.STANDARD, 10 );
-			if (room == null) {
-				continue;
-			}
-			
-			cell = room.random();
-
-            // FIXME
-
-			if (
-                Actor.findChar( cell ) == null &&
-                distance(Dungeon.hero.pos, cell) > 8 &&
-                ( ignoreView || !Dungeon.visible[cell] ) &&
-                ( Level.mob_passable[cell] ||
-                ignoreTraps && Level.passable[cell] )
-            ) {
-
-				return cell;
-
-			}
-			
 		}
 	}
+
+    public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
+
+        ArrayList<Integer> cells = new ArrayList<>();
+
+        for (Room room : rooms) {
+            if( room.type == Type.STANDARD ){
+                for( Integer cell : room.cells() ){
+                    if( !solid[ cell ] && passable[ cell ] && Actor.findChar( cell ) == null ){
+                        cells.add( cell );
+                    }
+                }
+            }
+        }
+
+        if( !ignoreTraps )
+            cells = filterTrappedCells( cells );
+
+        if( !ignoreView )
+            cells = filterVisibleCells( cells );
+
+        return !cells.isEmpty() ? Random.element( cells ) : -1 ;
+    }
 	
 	@Override
 	public int randomDestination() {
@@ -727,7 +703,9 @@ public abstract class RegularLevel extends Level {
 		}
 
         for (int i=0; i < LENGTH; i++) {
-            if (map[i] == Terrain.HIGH_GRASS && heaps.get( i ) == null && Random.Int( 20 - chapter * 2 ) == 0 ) {
+
+            // chances are 5/7.5/10/12.5/15% to spawn a herb per high grass tile
+            if (map[i] == Terrain.HIGH_GRASS && heaps.get( i ) == null && Random.Int( 40 ) <= chapter ) {
                 drop( Generator.random( Generator.Category.HERB ), i, true ).type = Heap.Type.HEAP;
             }
         }

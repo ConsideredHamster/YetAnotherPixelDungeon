@@ -20,10 +20,17 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 
 public class Ensnared extends Debuff {
+
+    @Override
+    public Element buffType() {
+        return Element.ENSNARING;
+    }
 
     @Override
     public String toString() {
@@ -41,15 +48,15 @@ public class Ensnared extends Debuff {
         return BuffIndicator.ENSNARED;
     }
 
-//    @Override
-//    public void applyVisual() {
-//        target.sprite.addFromDamage( CharSprite.State.BURNING );
-//    }
-//
-//    @Override
-//    public void removeVisual() {
-//        target.sprite.remove( CharSprite.State.BURNING );
-//    }
+    @Override
+    public void applyVisual() {
+        target.sprite.add( CharSprite.State.ENSNARED );
+    }
+
+    @Override
+    public void removeVisual() {
+        target.sprite.remove( CharSprite.State.ENSNARED );
+    }
 
     @Override
     public String description() {
@@ -59,9 +66,18 @@ public class Ensnared extends Debuff {
     }
 
     @Override
+    public boolean attachOnLoad( Char target ) {
+        if (super.attachOnLoad( target )) {
+            target.rooted = true;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public boolean attachTo( Char target ) {
         if (super.attachTo( target )) {
-//		if (!target.flying && super.attachTo( target )) {
             target.rooted = true;
             return true;
         } else {

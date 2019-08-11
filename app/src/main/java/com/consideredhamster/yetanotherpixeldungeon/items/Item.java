@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
+import com.consideredhamster.yetanotherpixeldungeon.levels.features.Door;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
@@ -166,7 +168,36 @@ public class Item implements Bundlable {
 
         Item item = detach(curUser.belongings.backpack);
 
-		Heap heap = Dungeon.level.drop( item, cell );
+        Heap heap;
+
+        if( Level.solid[ cell ] ){
+
+            int wall = cell;
+
+            cell = Ballistica.trace[ Ballistica.distance - 1 ];
+
+            heap = Dungeon.level.drop( item, cell );
+
+            if (!heap.isEmpty()){
+                heap.sprite.drop( wall );
+            }
+
+            if (Dungeon.level.map[ wall ] == Terrain.DOOR_ILLUSORY ) {
+                Door.discover( wall );
+            }
+
+            if (Dungeon.level.map[ wall ] == Terrain.DOOR_CLOSED) {
+                Door.enter( wall );
+            }
+
+        } else {
+
+            heap = Dungeon.level.drop( item, cell );
+            if (!heap.isEmpty()) {
+                heap.sprite.drop(cell);
+            }
+
+        }
 
         for (int i=0; i < Level.NEIGHBOURS9.length; i++) {
             Char n = Actor.findChar( cell + Level.NEIGHBOURS9[i] );
@@ -175,9 +206,8 @@ public class Item implements Bundlable {
             }
         }
 
-		if (!heap.isEmpty()) {
-			heap.sprite.drop(cell);
-		}
+
+
 	}
 
     public boolean collect() {
@@ -392,8 +422,6 @@ public class Item implements Bundlable {
     }
 
 	public void use( int amount, boolean notify ) {
-
-
 
 		if (state > 0 && !( bonus >= 0 && (
             this instanceof Weapon && ((Weapon)this).enchantment instanceof Tempered && Weapon.Enchantment.procced(bonus) ||
@@ -713,32 +741,16 @@ public class Item implements Bundlable {
 	}
 
 	public void throwAt(final Hero user, int dst) {
-//		if( Dungeon.visible[dst] ) {
 
-//        if( curUser == null )
-            curUser = user;
-
+        curUser = user;
         curItem = this;
 
-
         if( curUser.buff( Vertigo.class ) != null ) {
-            dst += Level.NEIGHBOURS8[Random.Int( 8 )];
+            dst += Level.NEIGHBOURS8[ Random.Int( 8 ) ];
         }
 
         final int cell = Ballistica.cast( user.pos, dst, false, true );
 
-//        Char ch = Actor.findChar( cell );
-//
-//        if( ch != null ) {
-//
-//            if ( curUser.isCharmedBy( ch ) ) {
-//                GLog.i(TXT_TARGET_CHARMED);
-//                return;
-//            }
-//        }
-
-
-//            final int cell = dst;
         user.sprite.cast(cell);
         user.busy();
 
@@ -756,14 +768,13 @@ public class Item implements Bundlable {
         final float finalDelay = delay;
 
         ((MissileSprite) user.sprite.parent.recycle(MissileSprite.class)).
-                reset(user.pos, cell, this, new Callback() {
-                    @Override
-                    public void call() {
-                        onThrow(cell);
-                        user.spendAndNext(finalDelay);
-                }
-            });
-//        }
+            reset(user.pos, cell, this, new Callback() {
+                @Override
+                public void call() {
+                    onThrow(cell);
+                    user.spendAndNext(finalDelay);
+            }
+        });
 
         Invisibility.dispel();
 

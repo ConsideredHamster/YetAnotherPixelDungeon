@@ -28,8 +28,7 @@ import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public class PotionOfLevitation extends Potion {
 
-    public static final float DURATION	= 20f;
-    public static final float MODIFIER	= 1.0f;
+    public static final float DURATION	= 25f;
 
 	{
 		name = "Potion of Levitation";
@@ -38,7 +37,7 @@ public class PotionOfLevitation extends Potion {
 	
 	@Override
 	protected void apply( Hero hero ) {
-        BuffActive.add( hero, Levitation.class, DURATION + alchemySkill() * MODIFIER );
+        BuffActive.add( hero, Levitation.class, DURATION );
         setKnown();
     }
 	
@@ -52,6 +51,11 @@ public class PotionOfLevitation extends Potion {
 
     @Override
     public int price() {
-        return isTypeKnown() ? 40 * quantity : super.price();
+        return isTypeKnown() ? 80 * quantity : super.price();
+    }
+
+    @Override
+    public float brewingChance() {
+        return 0.55f;
     }
 }

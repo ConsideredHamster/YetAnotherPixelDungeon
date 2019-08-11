@@ -20,22 +20,19 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.sprites;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.AcidParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.BloodParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SnowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.WebParticle;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.Visual;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.tweeners.PosTweener;
 import com.watabou.noosa.tweeners.Tweener;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.EmoIcon;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.FloatingText;
@@ -47,7 +44,6 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Splash;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.TorchHalo;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
-import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfInvisibility;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
@@ -62,14 +58,15 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public static final int NEGATIVE	= 0xFF0000;
 	public static final int WARNING		= 0xFF8800;
 	public static final int NEUTRAL		= 0xFFFF00;
-	
+	public static final int BLACK		= 0x444444;
+
 	private static final float MOVE_INTERVAL	= 0.1f;
 	private static final float FLASH_INTERVAL	= 0.05f;	
 	
 	public enum State {
 
         // special effects
-        ILLUMINATED,UNHOLYARMOR,
+        ILLUMINATED, UNHOLYARMOR,
 
         // buffs
 		LEVITATING, MENDING, INVISIBLE, ENRAGED, PROTECTION,
@@ -84,7 +81,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
         VERTIGO, CHARMED,
 
         // special debuffs
-        CHILLED,
+        CHILLED, ENSNARED,
 
         // magical debuffs
         DISRUPTED, CONTROLLED, BANISHED,
@@ -100,8 +97,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected Animation search;
 	protected Animation pickup;
 	protected Animation cast;
-	protected Animation die;
-	
+    protected Animation spawn;
+    protected Animation die;
+
 	protected Callback animCallback;
 	
 	protected Tweener motion;
@@ -120,6 +118,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
     protected Emitter charmed;
 
     protected Emitter chilled;
+    protected Emitter ensnared;
 
     protected Emitter controlled;
 
@@ -205,10 +204,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		
 		turnTo( from , to );
 		
-//		if (visible && Level.water[from] && !ch.flying) {
-//			GameScene.ripple(from);
-//		}
-		
 		ch.onMotionComplete();
 	}
 	
@@ -234,9 +229,11 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		play( operate );
 	}
 
-    public void search() {
+	public void search() {
         play( search );
     }
+
+    public void spawn() { play( spawn ); }
 
     public void pickup( int cell ) {
         turnTo( ch.pos, cell );
@@ -430,6 +427,13 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                 }
                 break;
 
+            case ENSNARED:
+                if (ensnared == null){
+                    ensnared = emitter();
+                    ensnared.pour( WebParticle.FACTORY, 0.5f );
+                }
+                break;
+
             case CONTROLLED:
                 if (controlled == null){
                     controlled = emitter();
@@ -551,6 +555,13 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                 if (chilled != null) {
                     chilled.on = false;
                     chilled = null;
+                }
+                break;
+
+            case ENSNARED:
+                if (ensnared != null) {
+                    ensnared.on = false;
+                    ensnared = null;
                 }
                 break;
 
@@ -781,7 +792,11 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                 idle();
                 ch.onOperateComplete();
 
-            } if (anim == search) {
+            } else if (anim == search) {
+
+                idle();
+
+            } else if (anim == spawn) {
 
                 idle();
 

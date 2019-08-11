@@ -20,7 +20,10 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Disrupted;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
@@ -37,35 +40,34 @@ public class WandOfCharm extends WandUtility {
 
 	{
 		name = "Wand of Charm";
-        shortName = "Ch";
+        image = ItemSpriteSheet.WAND_DOMINATION;
 	}
+
+    @Override
+    public float effectiveness( int bonus ) {
+        return super.effectiveness( bonus ) * 0.95f;
+    }
 
 	@Override
 	protected void onZap( int cell ) {
 		Char ch = Actor.findChar( cell );
+
 		if (ch != null) {
 
-//            if( Char.hit( curUser, ch, true, true ) ) {
+            int damage = damageRoll();
 
-//                if (ch == Dungeon.hero) {
-//
-//                    BuffActive.add(ch, Vertigo.class, (float)curCharges );
-//                    ch.sprite.centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 5);
-//
-//                } else {
+            if( ch.isMagical() ){
 
-                    Charmed buff = BuffActive.add(ch, Charmed.class, (float)curCharges );
+                BuffActive.add( ch, Disrupted.class, damage );
+                ch.damage( damage / 2, curUser, Element.ENERGY );
 
-                    if( buff != null ) {
-                        buff.object = curUser.id();
-                        ch.sprite.centerEmitter().start( Speck.factory(Speck.HEART), 0.2f, 5 );
-                    }
-//                }
+            } else {
 
-//            } else {
-//                ch.sprite.showStatus( CharSprite.NEUTRAL, ch.defenseVerb() );
-//                Sample.INSTANCE.play(Assets.SND_MISS);
-//            }
+                BuffActive.add( ch, Charmed.class, damage );
+
+            }
+
+            ch.sprite.centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 5);
 
 		} else {
 			
@@ -82,7 +84,8 @@ public class WandOfCharm extends WandUtility {
 	@Override
 	public String desc() {
 		return
-			"The purple light from this wand will hypnotize the target, forcing it " +
-			"to violently protect you against other enemies for a while.";
+			"The purple light from this wand will hypnotize the target, forcing it to violently " +
+            "protect you against other enemies for a while. It cannot charm magical enemies, but " +
+            "will instead harm and disrupt their senses, causing them to be confused and vulnerable.";
 	}
 }

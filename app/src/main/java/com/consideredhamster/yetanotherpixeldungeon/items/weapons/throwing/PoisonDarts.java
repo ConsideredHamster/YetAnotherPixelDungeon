@@ -23,6 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 
 public class PoisonDarts extends ThrowingWeaponSpecial {
@@ -44,9 +45,9 @@ public class PoisonDarts extends ThrowingWeaponSpecial {
     @Override
     public void proc( Char attacker, Char defender, int damage ) {
 
-        super.proc(attacker, defender, damage);
+        super.proc( attacker, defender, damage );
 
-        BuffActive.addFromDamage(defender, Poisoned.class, defender.totalHealthValue() + damage);
+        BuffActive.addFromDamage( defender, Poisoned.class, damageRoll( (Hero) attacker ) * 3 );
 
     }
 	

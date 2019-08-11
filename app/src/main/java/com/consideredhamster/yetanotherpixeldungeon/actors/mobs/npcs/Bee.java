@@ -97,7 +97,7 @@ public class Bee extends NPC {
         }
     }
 
-    protected Char chooseEnemy() {
+    public Char chooseEnemy() {
 		
 		if (enemy == null || !enemy.isAlive()) {
 			HashSet<Mob> enemies = new HashSet<Mob>();

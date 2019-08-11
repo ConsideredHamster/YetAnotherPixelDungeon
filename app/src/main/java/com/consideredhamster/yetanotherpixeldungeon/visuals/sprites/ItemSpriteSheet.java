@@ -30,6 +30,8 @@ public class ItemSpriteSheet {
     public static final int ARMOR	            = 3;
     public static final int RING	            = 4;
 
+    public static final int POTION_UNKNOWN      = 5;
+
     // Heaps
 
     public static final int CHEST			    = 12;
@@ -103,7 +105,7 @@ public class ItemSpriteSheet {
     public static final int POTION_TURQUOISE	= 72;
     public static final int POTION_CRIMSON		= 73;
     public static final int POTION_AZURE		= 74;
-    public static final int POTION_JADE			= 75;
+    public static final int POTION_EMERALD		= 75;
     public static final int POTION_GOLDEN		= 76;
     public static final int POTION_MAGENTA		= 77;
     public static final int POTION_CHARCOAL		= 78;
@@ -130,18 +132,18 @@ public class ItemSpriteSheet {
 
 	// Wands
 
-	public static final int WAND_HOLLY			= 96;
-	public static final int WAND_YEW			= 97;
-	public static final int WAND_EBONY			= 98;
-	public static final int WAND_CHERRY			= 99;
-	public static final int WAND_TEAK			= 100;
-	public static final int WAND_ROWAN			= 101;
-	public static final int WAND_WILLOW			= 102;
-	public static final int WAND_MAHOGANY		= 103;
-	public static final int WAND_BAMBOO			= 104;
-	public static final int WAND_PURPLEHEART	= 105;
-	public static final int WAND_OAK			= 106;
-	public static final int WAND_BIRCH			= 107;
+	public static final int WAND_MAGICMISSILE   = 96;
+	public static final int WAND_DISINTEGRATION = 97;
+	public static final int WAND_SMITING        = 98;
+	public static final int WAND_LIGHTNING      = 99;
+	public static final int WAND_ACIDSPRAY      = 100;
+	public static final int WAND_FIREBRAND      = 101;
+	public static final int WAND_BLAST_WAVE = 102;
+	public static final int WAND_ICEBARRIER     = 103;
+	public static final int WAND_DOMINATION     = 104;
+	public static final int WAND_DAMNATION      = 105;
+	public static final int WAND_THORNVINE      = 106;
+	public static final int WAND_LIFEDRAIN      = 107;
 	
 	// Rings
 
@@ -163,11 +165,12 @@ public class ItemSpriteSheet {
     public static final int HERB_FIREBLOOM      = 120;
     public static final int HERB_ICECAP         = 121;
     public static final int HERB_SORROWMOSS	    = 122;
-    public static final int HERB_DREAMWEED      = 123;
+    public static final int HERB_DREAMFOIL      = 123;
     public static final int HERB_SUNGRASS	    = 124;
     public static final int HERB_EARTHROOT      = 125;
     public static final int HERB_WHIRLVINE      = 126;
-    public static final int HERB_WYRMFLOWER = 127;
+    public static final int HERB_WYRMFLOWER     = 127;
+    public static final int HERB_FEYLEAF        = 128;
 
     // Bags
 
@@ -184,8 +187,8 @@ public class ItemSpriteSheet {
     public static final int RATION		        = 145;
     public static final int OVERPRICED		    = 146;
 	public static final int MEAT	            = 147;
-    public static final int CARPACCIO           = 148;
-    public static final int STEAK    	        = 149;
+    public static final int STEWED_MEAT    	    = 148;
+    public static final int BURNED_MEAT    	    = 149;
 
     // Misc
 
@@ -216,5 +219,14 @@ public class ItemSpriteSheet {
     public static final int ANKH	            = 177;
     public static final int HARPOON_THROWN    	= 178;
     public static final int HARPOON_RETURN    	= 179;
+
+    // New additions, gotta move them later
+
+    public static final int POTION_CHARTREUSE  	= 192;
+    public static final int POTION_LAVENDER     = 193;
+    public static final int POTION_BORDEAUX     = 194;
+    public static final int POTION_JADE         = 195;
+    public static final int POTION_UNSTABLE    	= 196;
+    public static final int POTION_EMPTY    	= 197;
 
 }

@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.windows;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.watabou.noosa.BitmapTextMultiline;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
@@ -54,7 +55,7 @@ public class WndTradeItem extends Window {
     private static final String TXT_SOLD	= "You've sold your %s for %dg";
 
     private static final String TXT_STEAL	    = "Steal (%d%% chance)";
-    private static final String TXT_STOLEN	    = "You successfully steal %s!.";
+    private static final String TXT_STOLEN	    = "You successfully steal %s!";
     private static final String TXT_CAUGHT	    = "You fail to steal %s.";
 
 	private WndBag owner;
@@ -310,13 +311,13 @@ public class WndTradeItem extends Window {
             }
 
             GLog.i( TXT_STOLEN, item.name() );
-
+            Invisibility.dispel( hero );
             shopkeeper.onStealing();
 
         } else {
 
             GLog.w( TXT_CAUGHT, item.name() );
-
+            Invisibility.dispel( hero );
             shopkeeper.onCaught();
 
         }

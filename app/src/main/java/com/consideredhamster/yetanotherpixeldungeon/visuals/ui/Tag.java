@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.ui;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.ui.Button;
-import com.consideredhamster.yetanotherpixeldungeon.Chrome;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Chrome;
 
 public class Tag extends Button {
 

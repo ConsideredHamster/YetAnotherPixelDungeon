@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.sprites;
 
 import com.watabou.noosa.tweeners.PosTweener;
 import com.watabou.noosa.tweeners.Tweener;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;

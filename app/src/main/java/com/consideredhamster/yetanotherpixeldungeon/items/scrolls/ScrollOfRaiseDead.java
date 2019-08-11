@@ -20,9 +20,9 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Controlled;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Controlled;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
@@ -44,21 +44,15 @@ public class ScrollOfRaiseDead extends Scroll {
 	@Override
 	protected void doRead() {
 
-        ArrayList<Wraith> summoned = Wraith.spawnAround( curUser.magicSkill() / 3, curUser.pos, Random.IntRange( 3, 4 ) );
+        ArrayList<Wraith> summoned = Wraith.spawnAround( curUser.magicPower() / 3, curUser.pos, 1 );
 
+        for( Wraith w : summoned ){
 
-            for( Wraith w : summoned ){
+            float duration = Random.Int( 16, 20 ) * ( 110 + curUser.magicPower() ) / 100;
 
-                float duration = Random.Int( 16, 20 ) * ( 110 + curUser.magicSkill() ) / 100;
+            BuffActive.add( w, Controlled.class, duration );
 
-                Controlled buff = BuffActive.add( w, Controlled.class, duration );
-
-                if( buff != null ){
-                    buff.object = curUser.id();
-                }
-
-            }
-
+        }
 
         Sample.INSTANCE.play(Assets.SND_DEATH);
 
@@ -69,9 +63,8 @@ public class ScrollOfRaiseDead extends Scroll {
 	public String desc() {
 		return
                 "Malicious magics hidden within this scroll allow its reader to commune with unspeakable, " +
-                "giving him or her an ability to summon lost souls from the underworld, and even " +
-                "control them for a short period. However, these phantasms would happily tear their " +
-                "master to pieces once control over them is lost." +
+                "giving him or her an ability to summon a lost soul from the underworld. Be careful, " +
+                "as it will eventually turn on its master!" +
                 "\n\nDuration of controlling effect depends on magic skill of the reader.";
 	}
 

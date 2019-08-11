@@ -113,8 +113,11 @@ public abstract class BuffActive extends Buff {
             }
 
             if( duration > 0 ) {
+
+                buff.duration += duration;
+
                  if( !newBuff || buff.attachTo( target ) ) {
-                     buff.duration += duration;
+//                     buff.duration += duration;
                      BuffIndicator.refreshHero();
                  }
              }

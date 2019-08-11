@@ -56,7 +56,8 @@ public class MindVision extends Bonus {
     @Override
     public String description() {
         return "Woah, dude... Your mind feels completely open and connected to the minds of other " +
-                "creatures on the current floor.";
+                "creatures on the current floor. This makes it possible for you to see their positions, " +
+                "and increases your awareness.";
     }
 
 	@Override

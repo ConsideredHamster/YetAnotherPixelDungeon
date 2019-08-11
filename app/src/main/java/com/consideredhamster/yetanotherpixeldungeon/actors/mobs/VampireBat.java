@@ -31,21 +31,34 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 
 public class VampireBat extends MobEvasive {
 
-    public static boolean swarmer = true;
-
     public VampireBat() {
 
         super( 9 );
+
+        /*
+
+            base maxHP  = 17
+            armor class = 3
+
+            damage roll = 2-10
+
+            accuracy    = 17
+            dexterity   = 21
+
+            perception  = 100%
+            stealth     = 130%
+
+         */
 
         name = "vampire bat";
         spriteClass = BatSprite.class;
 
         flying = true;
 
-//		loot = new PotionOfHealing();
-//		lootChance = 0.125f;
-
         baseSpeed = 2f;
+
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Knockback.class, Element.Resist.VULNERABLE );
 	}
 
     @Override
@@ -68,27 +81,7 @@ public class VampireBat extends MobEvasive {
 
         if ( !blocked && isAlive() ) {
 
-            int healed = damage / 2;
-
-            float resist = Element.Resist.getResistance( enemy, Element.BODY );
-
-            if( !Element.Resist.checkIfDefault( resist ) ) {
-
-                if ( Element.Resist.checkIfNegated( resist ) ) {
-
-                    healed = 0;
-
-                } else if ( Element.Resist.checkIfPartial( resist ) ) {
-
-                    healed = healed / 2 + Random.Int( (int)healed % 2 + 1 );
-
-                } else if ( Element.Resist.checkIfAmplified( resist ) ) {
-
-                    healed *= 2;
-
-                }
-
-            }
+            int healed = Element.Resist.modifyValue( damage / 2, enemy, Element.BODY );
 
             if (healed > 0) {
 

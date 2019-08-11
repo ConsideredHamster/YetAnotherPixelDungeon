@@ -39,11 +39,28 @@ public class Thief extends MobPrecise {
 
         super( 2 );
 
+        /*
+
+            base maxHP  = 11
+            armor class = 3
+
+            damage roll = 2-5 (1-2)
+
+            accuracy    = 8
+            dexterity   = 6
+
+            perception  = 105%
+            stealth     = 105%
+
+         */
+
         name = "mugger";
         spriteClass = ThiefSprite.class;
 
         loot = Gold.class;
         lootChance = 0.25f;
+
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
 	}
 
     @Override
@@ -54,7 +71,7 @@ public class Thief extends MobPrecise {
     @Override
     protected boolean canAttack( Char enemy ) {
         return super.canAttack( enemy ) || HP >= HT && Level.distance( pos, enemy.pos ) <= 2 &&
-                Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos && !isCharmedBy( enemy );
+                Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos;
     }
 
     @Override
@@ -70,11 +87,11 @@ public class Thief extends MobPrecise {
         super.onRangedAttack( cell );
     }
 
-    @Override
-    public void die( Object cause, Element dmg ) {
-        Ghost.Quest.process( pos );
-        super.die( cause, dmg );
-    }
+//    @Override
+//    public void die( Object cause, Element dmg ) {
+//        Ghost.Quest.process( pos );
+//        super.die( cause, dmg );
+//    }
 
     @Override
     public String description(){

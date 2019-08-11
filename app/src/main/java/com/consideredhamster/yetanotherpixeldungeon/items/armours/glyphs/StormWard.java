@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.armours.glyphs;
 
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
@@ -73,15 +75,9 @@ public class StormWard extends Armour.Glyph {
     protected boolean proc_p( Char attacker, Char defender, int damage ) {
 
         if (Level.adjacent(attacker.pos, defender.pos)) {
-            points[0] = defender.pos;
-            nPoints = 1;
 
-            affected.clear();
-            affected.add(defender);
-
-            hit(attacker, Random.IntRange(damage / 4, damage / 3));
-
-            attacker.sprite.parent.add(new Lightning(points, nPoints, null));
+            attacker.damage( Random.IntRange(damage / 4, damage / 3), this, Element.SHOCK );
+            attacker.sprite.parent.add( new Lightning( attacker.pos, attacker.pos ) );
 
             return true;
         }
@@ -93,32 +89,8 @@ public class StormWard extends Armour.Glyph {
     protected boolean proc_n( Char attacker, Char defender, int damage ) {
 
         defender.damage(Random.IntRange(damage / 4, damage / 3), this, Element.SHOCK);
+        defender.sprite.parent.add( new Lightning( defender.pos, defender.pos ) );
 
         return true;
-    }
-
-    private void hit( Char ch, int damage ) {
-
-        if (damage < 1) {
-            return;
-        }
-
-        affected.add(ch);
-
-        ch.damage(damage, this, Element.SHOCK);
-
-        points[nPoints++] = ch.pos;
-
-        HashSet<Char> ns = new HashSet<Char>();
-        for (int i=0; i < Level.NEIGHBOURS8.length; i++) {
-            Char n = Actor.findChar( ch.pos + Level.NEIGHBOURS8[i] );
-            if (n != null && !affected.contains( n )) {
-                ns.add( n );
-            }
-        }
-
-        if (ns.size() > 0) {
-            hit( Random.element( ns ), Random.IntRange( damage / 2, damage ) );
-        }
     }
 }

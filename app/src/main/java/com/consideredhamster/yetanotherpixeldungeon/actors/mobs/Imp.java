@@ -41,7 +41,7 @@ import com.watabou.utils.Random;
 
 import java.util.HashSet;
 
-public class Imp extends MobRanged {
+public class Imp extends MobEvasive {
 
     public Item item;
 
@@ -54,6 +54,21 @@ public class Imp extends MobRanged {
 
         super( 17 );
 
+        /*
+
+            base maxHP  = 27
+            armor class = 5
+
+            damage roll = 4-16
+
+            accuracy    = 27
+            dexterity   = 35
+
+            perception  = 100%
+            stealth     = 150%
+
+         */
+
         name = "malicious imp";
         spriteClass = ImpSprite.class;
 
@@ -62,6 +77,9 @@ public class Imp extends MobRanged {
         item = null;
 
         resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
+
+        resistances.put( Element.Dispel.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Knockback.class, Element.Resist.VULNERABLE );
 
     }
 
@@ -91,22 +109,16 @@ public class Imp extends MobRanged {
     protected boolean getFurther( int target ) {
 
         if( enemySeen ) {
-            int newPos = -1;
 
-            for (int i = 0; i < 10; i++) {
-                newPos = Dungeon.level.randomRespawnCell( true, false );
-                if (newPos != -1) {
-                    break;
-                }
-            }
+            int newPos = Dungeon.level.randomRespawnCell( true, false );
 
             if (newPos != -1) {
 
-                Actor.freeCell(pos);
-
                 CellEmitter.get(pos).start(ElmoParticle.FACTORY, 0.03f, 2 + Level.distance(pos, newPos));
 
+                Actor.moveToCell( this, newPos );
                 pos = newPos;
+
                 sprite.place(pos);
                 sprite.visible = Dungeon.visible[pos];
 

@@ -29,8 +29,7 @@ import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public class PotionOfMindVision extends Potion {
 
-    public static final float DURATION	= 30f;
-    public static final float MODIFIER	= 1.0f;
+    public static final float DURATION	= 35f;
 
 	{
 		name = "Potion of Mind Vision";
@@ -39,7 +38,7 @@ public class PotionOfMindVision extends Potion {
 	
 	@Override
 	protected void apply( Hero hero ) {
-        BuffActive.add(hero, MindVision.class, DURATION + alchemySkill() * MODIFIER );
+        BuffActive.add(hero, MindVision.class, DURATION );
         Dungeon.observe();
 
         setKnown();
@@ -55,6 +54,11 @@ public class PotionOfMindVision extends Potion {
 
     @Override
     public int price() {
-        return isTypeKnown() ? 35 * quantity : super.price();
+        return isTypeKnown() ? 45 * quantity : super.price();
+    }
+
+    @Override
+    public float brewingChance() {
+        return 0.90f;
     }
 }

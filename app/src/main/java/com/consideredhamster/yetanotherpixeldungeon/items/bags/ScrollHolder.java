@@ -32,7 +32,7 @@ public class ScrollHolder extends Bag {
 		name = "scroll holder";
 		image = ItemSpriteSheet.HOLDER;
 		
-		size = 14;
+		size = 19;
         visible = false;
         unique = true;
 	}

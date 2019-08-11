@@ -30,6 +30,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Light;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
@@ -69,6 +70,7 @@ public class OilLantern extends Item {
 
     private static final String TXT_BURN_SELF = "You pour the oil from an oil flask on yourself and ignite it. Just... Why?";
     private static final String TXT_BURN_TILE = "You pour the oil from an oil flask on a nearby tile and ignite it.";
+    private static final String TXT_BURN_FAIL = "You try to ignite a nearby tile, but it doesn't catch fire.";
 
 	{
 		name = "oil lantern";
@@ -368,18 +370,23 @@ public class OilLantern extends Item {
 
                 int cell = Ballistica.trace[ 0 ];
 
-                if( Ballistica.distance > 1 ){
+                if( Ballistica.distance > 0 ){
                     cell = Ballistica.trace[ 1 ];
                 }
 
-                GameScene.add( Blob.seed( cell, 5, Fire.class ) );
+                if( Level.flammable[ cell ] || !Level.solid[ cell ] && !Level.chasm[ cell ] ){
+                    GameScene.add( Blob.seed( cell, 5, Fire.class ) );
+                }
+
                 ((OilLantern)curItem).flasks--;
                 Invisibility.dispel();
 
                 if( curUser.pos == cell ) {
                     GLog.i( TXT_BURN_SELF );
-                } else {
+                } else if( Level.flammable[ cell ] || !Level.solid[ cell ] && !Level.chasm[ cell ] ){
                     GLog.i( TXT_BURN_TILE );
+                } else {
+                    GLog.i( TXT_BURN_FAIL );
                 }
 
                 Sample.INSTANCE.play(Assets.SND_BURNING, 0.6f, 0.6f, 1.5f);

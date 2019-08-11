@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.effects;
 
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;

@@ -33,7 +33,7 @@ public class PotionSash extends Bag{
         name = "potion belt";
         image = ItemSpriteSheet.BELT;
 
-        size = 14;
+        size = 19;
         visible = false;
         unique = true;
     }

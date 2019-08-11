@@ -74,11 +74,6 @@ public class Blacksmith extends NPC {
 		spriteClass = BlacksmithSprite.class;
 	}
 
-    @Override
-    public boolean immovable() {
-        return true;
-    }
-	
 	@Override
 	protected boolean act() {
 		throwItem();		

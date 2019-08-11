@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Combo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
@@ -32,7 +33,7 @@ import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
@@ -83,13 +84,13 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
     @Override
     public int max( int bonus ) {
-        return tier * 4 + state * dmgMod() + 4
+        return tier * 4 + state * dmgMod() + 8
                 + ( enchantment instanceof Tempered || bonus >= 0 ? bonus * dmgMod() : 0 )
                 + ( enchantment instanceof Tempered && bonus >= 0 ? 1 + bonus : 0 ) ;
     }
 
     public int dmgMod() {
-        return tier + 1;
+        return tier + 2;
     }
 
     @Override
@@ -189,8 +190,7 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
                 curUser.spend( curUser.attackDelay() * 0.5f );
 
-                hero.buff( Satiety.class ).decrease( (float)str() / hero.STR() * 0.5f );
-
+                hero.buff( Satiety.class ).decrease( Satiety.POINT * str() / hero.STR() * 0.5f );
                 hero.busy();
 
             } else if (!isEquipped(hero)) {
@@ -292,7 +292,7 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
                                 }
                             });
 
-                    curUser.buff( Satiety.class ).decrease( (float)curWeap.str() / curUser.STR() );
+                    curUser.buff( Satiety.class ).decrease( Satiety.POINT * curWeap.str() / curUser.STR() );
                     curWeap.loaded = false;
                     curWeap.use( 2 );
 

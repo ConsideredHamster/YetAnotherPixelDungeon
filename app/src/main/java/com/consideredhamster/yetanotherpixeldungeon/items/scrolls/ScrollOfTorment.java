@@ -20,16 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
-import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
@@ -60,10 +57,10 @@ public class ScrollOfTorment extends Scroll {
 
                 new Flare( 6, 32 ).color( SpellSprite.COLOUR_DARK, true ).show(mob.sprite, 2f);
 
-                int dmg = 10 + curUser.magicSkill();
+                int dmg = 10 + curUser.magicPower();
 
                 mob.damage( mob.currentHealthValue() * dmg / 100, curUser, Element.MIND );
-                BuffActive.add( mob, Tormented.class, dmg );
+                BuffActive.addFromDamage( mob, Tormented.class, dmg );
 
 				affected = mob;
                 count++;
@@ -71,7 +68,7 @@ public class ScrollOfTorment extends Scroll {
             }
 		}
 
-        int dmg = Math.min( curUser.HP - 1, curUser.HP * ( 190 - curUser.magicSkill() ) / 400 );
+        int dmg = Math.min( curUser.HP - 1, curUser.HP * ( 190 - curUser.magicPower() ) / 400 );
 
         curUser.damage( dmg, curUser, Element.MIND );
 

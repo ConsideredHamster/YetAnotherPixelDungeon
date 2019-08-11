@@ -24,122 +24,184 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLES20;
 
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
+import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
 public class Lightning extends Group {
 
-	private static final float DURATION = 0.3f;
-	
+    // How long the effect lasts
+	private static final float DURATION = 0.4f;
+
+    // How much segments will arc
+	private static final float BENDING = 1.0f;
+
+    // we will need this one later
+    private static final double A = 180 / Math.PI;
+
 	private float life;
-	
-	private int length;
-	private float[] cx;
-	private float[] cy;
-	
-	private Image[] arcsS;
-	private Image[] arcsE;
-	
 	private Callback callback;
-	
-	public Lightning( int[] cells, int length, Callback callback ) {
-		
-		super();
-		
-		this.callback = callback;
-		
-		Image proto = Effects.get( Effects.Type.LIGHTNING );
-		float ox = 0;
-		float oy = proto.height / 2;
-		
-		this.length = length;
-		cx = new float[length];
-		cy = new float[length];
-		
-		for (int i=0; i < length; i++) {
-			int c = cells[i];
-			cx[i] = (c % Level.WIDTH + 0.5f) * DungeonTilemap.SIZE;
-			cy[i] = (c / Level.WIDTH + 0.5f) * DungeonTilemap.SIZE;
-		}
-		
-		arcsS = new Image[length - 1];
-		arcsE = new Image[length - 1];
-		for (int i=0; i < length - 1; i++) {
-			
-			Image arc = arcsS[i] = new Image( proto );
-			
-			arc.x = cx[i] - arc.origin.x;
-			arc.y = cy[i] - arc.origin.y;
-			arc.origin.set( ox, oy );
-			add( arc );
-			
-			arc = arcsE[i] = new Image( proto );
-			arc.origin.set( ox, oy );
-			add( arc );
-		}
-		
-		life = DURATION;
-		
-		Sample.INSTANCE.play( Assets.SND_LIGHTNING );
-	}
-	
-	private static final double A = 180 / Math.PI;
+    private Segment[] segments1;
+    private Segment[] segments2;
+
+    // Yes, this version of lightning effect does not supports chaining.
+    // I considered coding the forking logic in this class, but decided to keep it simple.
+
+	public Lightning( int source, int target, Callback callback ) {
+
+        super();
+
+        life = DURATION;
+        this.callback = callback;
+
+        int cx1 = source % Level.WIDTH;
+        int cy1 = source / Level.WIDTH;
+
+        int cx2 = target % Level.WIDTH;
+        int cy2 = target / Level.WIDTH;
+
+        // We still need to get exact points between which we would draw our segments
+        PointF sourceP = new PointF( ( cx1 + 0.5f ) * DungeonTilemap.SIZE, ( cy1 + 0.5f ) * DungeonTilemap.SIZE );
+        PointF targetP = new PointF( ( cx2 + 0.5f ) * DungeonTilemap.SIZE, ( cy2 + 0.5f ) * DungeonTilemap.SIZE );
+
+        // Amount of segments now depends on the distance between source and target cells
+        int length = Math.max( Math.abs( cx1 - cx2 ), Math.abs( cy1 - cy2 ) ) + 1;
+        segments1 = new Segment[ length ];
+        segments2 = new Segment[ length ];
+
+        // Segment are built between equidistant points and then added to the scene
+        for( int number = 0 ; number < length ; number++ ) {
+
+            float sourceX = sourceP.x + ( targetP.x - sourceP.x ) * number / length;
+            float sourceY = sourceP.y + ( targetP.y - sourceP.y ) * number / length;
+
+            float targetX = sourceP.x + ( targetP.x - sourceP.x ) * ( number + 1 ) / length;
+            float targetY = sourceP.y + ( targetP.y - sourceP.y ) * ( number + 1 ) / length;
+
+            Segment segment1 = new Segment( sourceX, sourceY, targetX, targetY );
+            segments1[ number ] = segment1;
+            add( segment1 );
+
+            Segment segment2 = new Segment( sourceX, sourceY, targetX, targetY );
+            segments2[ number ] = segment2;
+            add( segment2 );
+        }
+
+        // Play the corresponding sound
+        Sample.INSTANCE.play( Assets.SND_LIGHTNING );
+
+        update();
+    }
+
+    public Lightning( int source, int target ) {
+        this( source, target, null );
+    }
 	
 	@Override
 	public void update() {
+
 		super.update();
-		
+
 		if ((life -= Game.elapsed) < 0) {
-			
+
+            // If timer has run out, snuff out the effect and call the callback
+
 			killAndErase();
-			if (callback != null) {
-				callback.call();
-			}
-			
+
+            if( callback != null ) {
+                callback.call();
+            }
+
 		} else {
-			
-			float alpha = life / DURATION;
-			
-			for (int i=0; i < length - 1; i++) {
-				
-				float sx = cx[i];
-				float sy = cy[i];
-				float ex = cx[i+1];
-				float ey = cy[i+1];
-				
-				float x2 = (sx + ex) / 2 + Random.Float( -4, +4 );
-				float y2 = (sy + ey) / 2 + Random.Float( -4, +4 );
-				
-				float dx = x2 - sx;
-				float dy = y2 - sy;
-				Image arc = arcsS[i];
-				arc.am = alpha;
-				arc.angle = (float)(Math.atan2( dy, dx ) * A);
-				arc.scale.x = (float)Math.sqrt( dx * dx + dy * dy ) / arc.width;
-				
-				dx = ex - x2;
-				dy = ey - y2;
-				arc = arcsE[i];
-				arc.am = alpha;
-				arc.angle = (float)(Math.atan2( dy, dx ) * A);
-				arc.scale.x = (float)Math.sqrt( dx * dx + dy * dy ) / arc.width;
-				arc.x = x2 - arc.origin.x;
-				arc.y = y2 - arc.origin.x;
+
+            // Otherwise we are gonna walk through each segment and adjust it
+            for( int i = 0 ; i < segments1.length ; i++ ) {
+
+                Segment segment1 = segments1[i];
+                Segment segment2 = segments2[i];
+
+                // If this is not the first segment, then set its starting point to the target
+                // point of the previous segment. There always should be more than one segment.
+                if( i > 0 ){
+                    segment1.x = segments1[ i - 1 ].target.x;
+                    segment1.y = segments1[ i - 1 ].target.y;
+
+                    segment2.x = segments2[ i - 1 ].target.x;
+                    segment2.y = segments2[ i - 1 ].target.y;
+                }
+
+                // If this is not the last segment, then modify its target point by a random value.
+                // This effect stacks, so longer duration can lead to some funny looking arcs
+                if( i < segments1.length - 1 ){
+                    segment1.target.x += Random.Float( -BENDING, +BENDING );
+                    segment1.target.y += Random.Float( -BENDING, +BENDING );
+
+                    segment2.target.x += Random.Float( -BENDING, +BENDING );
+                    segment2.target.y += Random.Float( -BENDING, +BENDING );
+                }
+
+                // Calculate delta value between those starting and target points
+                float dx1 = segment1.target.x - segment1.x;
+                float dy1 = segment1.target.y - segment1.y;
+
+                float dx2 = segment2.target.x - segment2.x;
+                float dy2 = segment2.target.y - segment2.y;
+
+                // Adjust angle and length of our segment depending on delta value
+                segment1.angle = (float)(Math.atan2( dy1, dx1 ) * A);
+                segment1.scale.x = (float)Math.sqrt( dx1 * dx1 + dy1 * dy1 ) / segment1.width;
+
+                segment2.angle = (float)(Math.atan2( dy2, dx2 ) * A);
+                segment2.scale.x = (float)Math.sqrt( dx2 * dx2 + dy2 * dy2 ) / segment2.width;
+
+                // Adjust transparency so the effect would slowly fade out
+                segment1.am = life / DURATION;
+                segment2.am = segment1.am * 1.0f;
+
+                // Sometimes flip the segment vertically to make our lightning look more zappy
+                if( Random.Int( 5 ) == 0 ){
+                    segment1.scale.y *= -1;
+                }
+
+                if( Random.Int( 5 ) == 0 ){
+                    segment2.scale.y *= -1;
+                }
+
 			}
 		}
 	}
-	
+
+    // Do some stuff I don't really understand.
 	@Override
 	public void draw() {
 		GLES20.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE );
 		super.draw();
 		GLES20.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );
 	}
+
+	// Here are our pet Segment class which was made just for the sake of some convenience.
+    private static class Segment extends Image {
+
+        public PointF target;
+
+        private Segment( float sourceX, float sourceY, float targetX, float targetY ) {
+
+            super( Effects.get( Effects.Type.LIGHTNING ) );
+
+            target = new PointF( targetX, targetY );
+
+            origin.set( 0, height / 2 );
+
+            x = sourceX;
+            y = sourceY;
+
+        }
+    }
 }

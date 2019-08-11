@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
+import java.util.Locale;
+
 public class RingOfDurability extends Ring {
 
 	{
@@ -34,21 +36,40 @@ public class RingOfDurability extends Ring {
 	
 	@Override
 	public String desc() {
-        return isTypeKnown() ?
-            ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-                "decreases rate at which everything around it degrades with use. It will make your " +
-                "wands, weapons, shields and armour last longer, make your ammunition break less often and " +
-                "even allow you to use your repair tools more effectively." +
-                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
-            super.desc();
+
+        String mainEffect = "??";
+        String sideEffect = "??";
+
+        if( isIdentified() ){
+            mainEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) );
+            sideEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) / 2 );
+        }
+
+        StringBuilder desc = new StringBuilder(
+            "Rings of Durability are valued by men of crafts and warfare alike, due to their ability " +
+            "to make tools of their trade to serve longer and be repaired with greater ease."
+        );
+
+        desc.append( "\n\n" );
+
+        desc.append( super.desc() );
+
+        desc.append( " " );
+
+        desc.append(
+            "Wearing this ring will increase overall _durability of your items by " + mainEffect + "%_ " +
+            "and give _" + sideEffect + "% chance to repair your items for free_."
+        );
+
+        return desc.toString();
 	}
 	
 	public class Durability extends RingBuff {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "You feel how some kind of protective aura surrounds your equipment." :
-                    "You feel how some kind of disruptive aura surrounds your equipment." ;
+                "You feel how some kind of protective aura surrounds your equipment." :
+                "You feel how some kind of disruptive aura surrounds your equipment." ;
         }
 	}
 }

@@ -23,6 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.food;
 import java.util.ArrayList;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.SungrassHerb;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
@@ -36,12 +37,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.CarrionSwarm;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
-public class Food extends Item {
-
-    private static final String TXT_STUFFED		= "You are overfed... Can't eat anymore.";
+public abstract class Food extends Item {
 
     private static final String TXT_NOT_THAT_HUNGRY = "Don't waste your food!";
 
@@ -52,16 +50,15 @@ public class Food extends Item {
     private static final String TXT_YES			= "Yes, I know what I'm doing";
     private static final String TXT_NO			= "No, I changed my mind";
 	
-	public static final String AC_EAT	= "EAT";
+	public static final String AC_EAT	        = "EAT";
 
-	public float time = 3f;
-	public float energy = Satiety.MAXIMUM * 0.75f;
-	public String message = "That food tasted very good!";
+	public float time;
+	public float energy;
+	public String message;
 
 	{
 		stackable = true;
-		name = "ration of food";
-		image = ItemSpriteSheet.RATION;
+        time = 3f;
 	}
 
     @Override
@@ -83,32 +80,24 @@ public class Food extends Item {
 
             final Satiety hunger = hero.buff(Satiety.class);
 
-            if( hero.buff( Poisoned.class ) == null ){
+            if( hero.buff( Poisoned.class ) == null || this instanceof SungrassHerb || this instanceof SungrassHerb.SavoryMeat ){
 
-//                if( hunger != null && !hunger.isOverfed() ){
+                if( hunger.energy() + energy > Satiety.MAXIMUM ){
 
-                    if( hunger.energy() + energy > Satiety.MAXIMUM ){
-
-                        GameScene.show(
-                                new WndOptions( TXT_NOT_THAT_HUNGRY, TXT_R_U_SURE, TXT_YES, TXT_NO ) {
-                                    @Override
-                                    protected void onSelect( int index ){
-                                        if( index == 0 ){
-                                            consume( hunger, hero );
-                                        }
+                    GameScene.show(
+                            new WndOptions( TXT_NOT_THAT_HUNGRY, TXT_R_U_SURE, TXT_YES, TXT_NO ) {
+                                @Override
+                                protected void onSelect( int index ){
+                                    if( index == 0 ){
+                                        consume( hunger, hero );
                                     }
                                 }
-                        );
+                            }
+                    );
 
-                    } else {
-                        consume( hunger, hero );
-                    }
-
-//                } else {
-//
-//                    GLog.i( TXT_STUFFED );
-//
-//                }
+                } else {
+                    consume( hunger, hero );
+                }
 
             } else {
 
@@ -125,8 +114,8 @@ public class Food extends Item {
 
     private void consume( Satiety hunger, Hero hero ) {
 
-        hunger.increase(energy);
-        detach(hero.belongings.backpack);
+        hunger.increase( energy );
+        detach( hero.belongings.backpack );
         onConsume( hero );
 
         hero.sprite.operate( hero.pos );
@@ -146,20 +135,16 @@ public class Food extends Item {
         Badges.validateFoodEaten();
         updateQuickslot();
     }
-	
-	@Override
-	public String desc() {
-		return 
-			"Nothing fancy here: dried meat, " +
-			"some biscuits - things like that.";
-	}
-	
-	@Override
-	public int price() {
-		return 30 * quantity;
-	}
 
     public void onConsume( Hero hero ) {
         GLog.i( message );
     }
+
+    @Override
+    public String info() {
+        return desc() + "\n\n" +
+            "Eating this piece of food will take _" + (int)time + "_ turns and " +
+            "restore _" + (int)( energy / 10 ) + "%_ of your satiety.";
+    }
+
 }

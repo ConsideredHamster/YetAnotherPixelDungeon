@@ -26,11 +26,13 @@ import java.util.HashSet;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Lightning;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfLightning;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite;
 
@@ -63,7 +65,7 @@ public class Shocking extends Weapon.Enchantment {
 
     @Override
     protected String desc_p() {
-        return "shock your enemies on hit and increase damage dealt by wands of Lightning";
+        return "shock your enemies on hit";
     }
 
     @Override
@@ -74,15 +76,8 @@ public class Shocking extends Weapon.Enchantment {
     @Override
     protected boolean proc_p( Char attacker, Char defender, int damage ) {
 
-        points[0] = attacker.pos;
-        nPoints = 1;
-
-        affected.clear();
-        affected.add(attacker);
-
-        hit( defender, Random.IntRange(damage / 3, damage / 2) );
-
-        attacker.sprite.parent.add(new Lightning(points, nPoints, null));
+        defender.damage( Random.IntRange(damage / 3, damage / 2), this, Element.SHOCK );
+        defender.sprite.parent.add( new Lightning( defender.pos, defender.pos ) );
 
         return true;
     }
@@ -91,31 +86,8 @@ public class Shocking extends Weapon.Enchantment {
     protected boolean proc_n( Char attacker, Char defender, int damage ) {
 
         attacker.damage(damage, this, Element.SHOCK);
+        attacker.sprite.parent.add( new Lightning( attacker.pos, attacker.pos ) );
 
         return true;
-    }
-
-    private void hit( Char ch, int damage ) {
-
-        if (damage < 1) {
-            return;
-        }
-
-        affected.add(ch);
-        ch.damage(damage, this, Element.SHOCK);
-
-        points[nPoints++] = ch.pos;
-
-        HashSet<Char> ns = new HashSet<Char>();
-        for (int i=0; i < Level.NEIGHBOURS8.length; i++) {
-            Char n = Actor.findChar( ch.pos + Level.NEIGHBOURS8[i] );
-            if (n != null && !affected.contains( n )) {
-                ns.add( n );
-            }
-        }
-
-        if (ns.size() > 0) {
-            hit(  Random.element( ns ), Random.IntRange( damage / 2, damage ) );
-        }
     }
 }

@@ -31,7 +31,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.TouchArea;
-import com.consideredhamster.yetanotherpixeldungeon.Chrome;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Chrome;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.ShadowBox;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.PixelScene;
 import com.watabou.utils.Signal;

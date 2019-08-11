@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
+import java.util.Locale;
+
 public class RingOfShadows extends Ring {
 
 	{
@@ -34,19 +36,41 @@ public class RingOfShadows extends Ring {
 	
 	@Override
 	public String desc() {
-        return isTypeKnown() ?
-               ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-               "makes it harder for enemies to notice you when you are wearing it and increases damage dealt to unaware opponents." +
-               ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
-            super.desc();
+
+        String mainEffect = "??";
+        String sideEffect = "??";
+
+        if( isIdentified() ){
+            mainEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) / 3 );
+            sideEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) );
+        }
+
+        StringBuilder desc = new StringBuilder(
+            "The curious enchantment on this ring controls the shadows around its wearer, helping " +
+            "him or her to blend with their surroundings. Such rings are indispensable for those " +
+            "whose job revolves around espionage or assassinations."
+        );
+
+        desc.append( "\n\n" );
+
+        desc.append( super.desc() );
+
+        desc.append( " " );
+
+        desc.append(
+            "Wearing this ring will increase your _stealth by " + mainEffect + "%_ and increasing " +
+            "_sneak attack damage by " + sideEffect + "%_."
+        );
+
+        return desc.toString();
 	}
 	public class Shadows extends RingBuff {
 
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "Suddenly, shadows thicken around you, obfuscating your presence." :
-                    "Suddenly, shadows bend around you, highlighting your presence." ;
+                "Suddenly, shadows thicken around you, obfuscating your presence." :
+                "Suddenly, shadows bend around you, highlighting your presence." ;
         }
 	}
 }

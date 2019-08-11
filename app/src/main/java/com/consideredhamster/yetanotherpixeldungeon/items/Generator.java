@@ -37,9 +37,10 @@ import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.KiteSh
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.RoundShield;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.TowerShield;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.OverpricedRation;
-import com.consideredhamster.yetanotherpixeldungeon.items.herbs.DreamweedHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.RationSmall;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.DreamfoilHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.EarthrootHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.FeyleafHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.WhirlvineHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.FirebloomHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.Herb;
@@ -76,8 +77,8 @@ public class Generator {
 
         WEAPON	( 60,	Weapon.class ),
         ARMOR	( 35,	Armour.class ),
-        WAND	( 3,	Wand.class ),
-        RING	( 2,	Ring.class ),
+        RING	( 3,	Ring.class ),
+        WAND	( 2,	Wand.class ),
 
         POTION	( 40,	Potion.class ),
         SCROLL	( 30,	Scroll.class ),
@@ -167,18 +168,18 @@ public class Generator {
 
         Category.WAND.probs = null;
         Category.WAND.classes = new Class<?>[]{
-                WandOfPhasing.class,
-                WandOfFreezing.class,
-                WandOfFirebolt.class,
-                WandOfHarm.class,
-                WandOfBlink.class,
+                WandOfSmiting.class,
+                WandOfIceBarrier.class,
+                WandOfFirebrand.class,
+                WandOfAcidSpray.class,
+                WandOfLifeDrain.class,
                 WandOfLightning.class,
                 WandOfCharm.class,
-                WandOfEntanglement.class,
-                WandOfFlock.class,
+                WandOfThornvines.class,
+                WandOfDamnation.class,
                 WandOfMagicMissile.class,
                 WandOfDisintegration.class,
-                WandOfAvalanche.class,
+                WandOfBlastWave.class,
         };
 
         Category.RING.probs = null;
@@ -189,12 +190,12 @@ public class Generator {
                 RingOfAwareness.class,
                 RingOfVitality.class,
                 RingOfSatiety.class,
-                RingOfConcentration.class,
+                RingOfMysticism.class,
                 RingOfProtection.class,
                 RingOfFortune.class,
                 RingOfKnowledge.class,
                 RingOfDurability.class,
-                RingOfSorcery.class,
+                RingOfWillpower.class,
         };
 
         Category.SCROLL.probs = new float[]{ 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 3, 2 };
@@ -218,25 +219,40 @@ public class Generator {
                 ScrollOfEnchantment.class,      //150
         };
 
-        Category.POTION.probs = new float[]{ 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 3, 2 };
+        // total sum of probabilities is 1000
+        Category.POTION.probs = new float[]{
+                100, 95, 90, 85, 80, 75, 70,
+                65, 60, 55, 50, 45, 40, 35,
+                10, 10, 15, 20
+        };
+
         Category.POTION.classes = new Class<?>[]{
                 PotionOfMending.class,
                 PotionOfLiquidFlame.class,
 
                 PotionOfMindVision.class,
-                PotionOfFrigidVapours.class,
-
-                PotionOfLevitation.class,
-                PotionOfCorrosiveGas.class,
-
-                PotionOfInvisibility.class,
-                PotionOfOvergrowth.class,
-
                 PotionOfBlessing.class,
+
+                PotionOfConfusionGas.class,
+                PotionOfToxicGas.class,
+
+                PotionOfFrigidVapours.class,
+                PotionOfInvisibility.class,
+
+                PotionOfWebbing.class,
+                PotionOfLevitation.class,
+
+                PotionOfCausticOoze.class,
+                PotionOfShield.class,
+
                 PotionOfThunderstorm.class,
+                PotionOfRage.class,
 
                 PotionOfStrength.class,
                 PotionOfWisdom.class,
+
+                UnstablePotion.class,
+                EmptyBottle.class,
         };
 
         Category.THROWING.probs = null;
@@ -265,7 +281,7 @@ public class Generator {
             Explosives.Gunpowder.class,
             Explosives.BombStick.class,
 
-            OverpricedRation.class,
+            RationSmall.class,
             OilLantern.OilFlask.class,
 
             Whetstone.class,
@@ -276,15 +292,16 @@ public class Generator {
             Ankh.class,
         };
 
-        Category.HERB.probs = new float[]{ 7, 7, 7, 7, 7, 7, 7, 1 };
+        Category.HERB.probs = new float[]{ 4, 4, 3, 3, 3, 3, 2, 2, 1 };
         Category.HERB.classes = new Class<?>[]{
             FirebloomHerb.class,
             IcecapHerb.class,
             SorrowmossHerb.class,
-            DreamweedHerb.class,
+            DreamfoilHerb.class,
             SungrassHerb.class,
             WhirlvineHerb.class,
             EarthrootHerb.class,
+            FeyleafHerb.class,
             WyrmflowerHerb.class,
         };
 
@@ -356,6 +373,12 @@ public class Generator {
                         return randomWeapon();
                     case THROWING:
                         return randomThrowing();
+                    case WAND:
+                        return randomWand();
+                    case RING:
+                        return randomRing();
+                    case HERB:
+                        return randomHerb();
                     default:
 
                 }
@@ -520,5 +543,72 @@ public class Generator {
         }
 
         return w;
+    }
+
+    // upgrade level depends on the current chapter, first chapter 100% offers unpgraded ring/wand
+    // really gotta fix that when I will get to implementing the Endless difficulty
+    private static float[][] chances = {
+            { 0, 0, 0, 1, 0, 0, 0 },
+            { 0, 0, 1, 3, 1, 0, 0 },
+            { 0, 1, 2, 6, 3, 1, 0 },
+            { 1, 2, 3, 10, 6, 3, 1 },
+            { 3, 6, 10, 15, 10, 6, 3 },
+    };
+
+    private static Wand randomWand() throws Exception {
+        Category cat = Category.WAND;
+        int chapter = Dungeon.chapter();
+
+        Wand w = (Wand)Random.element( cat.classes ).newInstance();
+
+        // durability state goes 0-1/0-2/1-2/1-3/2-3 depending on the chapter
+        w.state = Random.IntRange( ( chapter - 1 ) / 2, chapter / 2 + 1 );
+        w.bonus = Random.chances( chances[ chapter - 1 ] ) - 3;
+
+        w.fix();
+        w.recharge();
+
+        return w;
+    }
+
+    private static Ring randomRing() throws Exception {
+
+        Category cat = Category.RING;
+        int chapter = Dungeon.chapter();
+
+        Ring r = (Ring)Random.element( cat.classes ).newInstance();
+        r.bonus = Random.chances( chances[ chapter - 1 ] ) - 3;
+
+        return r;
+    }
+
+
+    // limits chances to obtain more expensive herbs in early chapters, basically like this:
+
+    // in the 1st chapter, we have 75% chance to get one of the cheapest herbs
+    // in the 2nd chapter, we have 50% chance to get one of the elemental herbs
+    // in the 3rd chapter, we have 25% chance to get either Earthroot or Feyleaf
+    // if that probability doesn't "proc", then spawn a completely random herb
+
+    // starting from the 4th chapter, all bets are off and drops become honest
+    // wyrmflower still gets decreased chances to spawn, though, see Category.HERB.probs
+    // maybe should make a less... "layered" system someday, but it should work for now
+
+    public static Class<?>[][] herbs = new Class<?>[][]{
+            { SungrassHerb.class, DreamfoilHerb.class },
+            { FirebloomHerb.class, IcecapHerb.class, SorrowmossHerb.class, WhirlvineHerb.class },
+            { EarthrootHerb.class, FeyleafHerb.class },
+    };
+
+    private static Herb randomHerb() throws Exception {
+
+        Category cat = Category.HERB;
+        int chapter = Dungeon.chapter();
+
+        if( chapter > 3 || Random.Int( 4 ) < chapter ) {
+            return (Herb)cat.classes[Random.chances( cat.probs ) ].newInstance();
+        } else {
+            return (Herb)Random.element( herbs[ chapter - 1 ] ).newInstance();
+        }
     }
 }

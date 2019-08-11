@@ -20,7 +20,10 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons;
 
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfSorcery;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfMysticism;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.MeleeWeaponLightOH;
+import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 import com.watabou.utils.GameMath;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -81,6 +84,29 @@ public abstract class Weapon extends EquipableItem {
 //        actions.add( isEquipped( hero ) ? AC_UNEQUIP : AC_EQUIP );
 //        return actions;
 //    }
+
+    public void doEquipCarefully( Hero hero ) {
+
+
+        if(!(this instanceof MeleeWeaponLightOH) && hero.belongings.weap2!=null && this.incompatibleWith(hero.belongings.weap2) ) {
+
+            final Hero heroFinal = hero;
+
+            GameScene.show(
+                    new WndOptions( TXT_ITEM_IS_INCOMPATIBLE, TXT_R_U_SURE_INCOMPATIBLE, TXT_YES, TXT_NO ) {
+
+                        @Override
+                        protected void onSelect(int index) {
+                            if (index == 0) {
+                                Weapon.super.doEquipCarefully( heroFinal );
+                            }
+                        }
+                    }
+            );
+
+        }else
+            super.doEquipCarefully( hero );
+    }
 
     @Override
     public boolean isEquipped( Hero hero ) {
@@ -396,9 +422,8 @@ public abstract class Weapon extends EquipableItem {
 
         public static boolean procced( int bonus ) {
 
-            return Random.Float() < 0.125f * ( 1 + Math.abs( bonus ) )
-                    * ( bonus >= 0 ? Dungeon.hero.ringBuffs( RingOfSorcery.Sorcery.class ) : 1.0f )
-                    ;
+            return Random.Float() < ( 0.1f + 0.1f * ( 1 + Math.abs( bonus ) )* ( bonus >= 0 ?
+                Dungeon.hero.ringBuffs( RingOfMysticism.Mysticism.class ) : 1.0f ) );
 
         }
 

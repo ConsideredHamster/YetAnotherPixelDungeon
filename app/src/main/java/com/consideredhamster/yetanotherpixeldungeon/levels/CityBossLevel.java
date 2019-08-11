@@ -40,14 +40,16 @@ import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class CityBossLevel extends Level {
 	
 	{
 		color1 = 0x4b6636;
 		color2 = 0xf2f2f2;
-
-//        viewDistance = 5;
 	}
+
+
 	
 	private static final int TOP			= 2;
 	private static final int HALL_WIDTH		= 11;
@@ -62,32 +64,23 @@ public class CityBossLevel extends Level {
     private static final int FOUNTAIN	= (TOP + HALL_HEIGHT - 3 ) * WIDTH + CENTER;
 
 	private static final int[] WELLS =
-            {
-                THRONE + WIDTH * 3 + 3,
-                THRONE + WIDTH * 3 - 3,
+    {
+        THRONE + WIDTH * 3 + 3,
+        THRONE + WIDTH * 3 - 3,
 
-                THRONE + WIDTH * 6 + 4,
-                THRONE + WIDTH * 6 - 4,
+        THRONE + WIDTH * 6 + 4,
+        THRONE + WIDTH * 6 - 4,
 
-                THRONE + WIDTH * 9 + 3,
-                THRONE + WIDTH * 9 - 3,
-            };
+        THRONE + WIDTH * 9 + 3,
+        THRONE + WIDTH * 9 - 3,
+    };
 
-    private static final int[] STATUES =
-            {
-                    THRONE - WIDTH + 4,
-                    THRONE - WIDTH - 4,
+    private static final int BOSS_ISHIDDEN = 0;
+    private static final int BOSS_APPEARED = 1;
+    private static final int BOSS_DEFEATED = 2;
 
-                    THRONE + WIDTH * 3 + 4,
-                    THRONE + WIDTH * 3 - 4,
-
-                    THRONE + WIDTH * 9 + 4,
-                    THRONE + WIDTH * 9 - 4,
-            };
-
+    private int progress = 0;
 	private int arenaDoor;
-	private boolean enteredArena = false;
-	private boolean keyDropped = false;
 	
 	@Override
 	public String tilesTex() {
@@ -97,26 +90,6 @@ public class CityBossLevel extends Level {
 	@Override
 	public String waterTex() {
 		return Assets.WATER_CITY;
-	}
-	
-	private static final String DOOR	= "door";
-	private static final String ENTERED	= "entered";
-	private static final String DROPPED	= "dropped";
-	
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle( bundle );
-		bundle.put( DOOR, arenaDoor );
-		bundle.put( ENTERED, enteredArena );
-		bundle.put( DROPPED, keyDropped );
-	}
-	
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle(bundle);
-		arenaDoor = bundle.getInt( DOOR );
-		enteredArena = bundle.getBoolean( ENTERED );
-		keyDropped = bundle.getBoolean( DROPPED );
 	}
 	
 	@Override
@@ -291,26 +264,19 @@ public class CityBossLevel extends Level {
 			drop( item, pos ).type = Heap.Type.BONES;
 		}
 	}
-	
-	@Override
-    public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
 
-        int cell;
+    @Override
+    public ArrayList<Integer> getPassableCellsList() {
 
-        if( !enteredArena ) {
-            do {
-                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-            } while (outsideEntranceRoom(cell) );
-        } else if( !keyDropped ) {
-            do {
-                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-            } while (!outsideEntranceRoom(cell) );
-        } else {
+        ArrayList<Integer> result = new ArrayList<>();
 
-            cell = super.randomRespawnCell( ignoreTraps, ignoreView );
+        for( Integer cell : super.getPassableCellsList() ){
+            if( progress != BOSS_ISHIDDEN && outsideEntranceRoom( cell ) || progress != BOSS_APPEARED && !outsideEntranceRoom( cell ) ){
+                result.add( cell );
+            }
         }
 
-        return cell;
+        return result;
     }
 	
 	@Override
@@ -318,9 +284,9 @@ public class CityBossLevel extends Level {
 		
 		super.press(cell, hero);
 
-		if (!enteredArena && outsideEntranceRoom(cell) && hero == Dungeon.hero) {
+		if ( progress == BOSS_ISHIDDEN && outsideEntranceRoom(cell) && hero == Dungeon.hero ) {
 
-			enteredArena = true;
+            progress = BOSS_APPEARED;
 			
 			Mob boss = Bestiary.mob( Dungeon.depth );
 			boss.state = boss.HUNTING;
@@ -346,9 +312,9 @@ public class CityBossLevel extends Level {
 	@Override
 	public Heap drop( Item item, int cell ) {
 		
-		if (!keyDropped && item instanceof SkeletonKey) {
-			
-			keyDropped = true;
+		if ( progress == BOSS_APPEARED && item instanceof SkeletonKey ) {
+
+            progress = BOSS_DEFEATED;
 			
 			set( arenaDoor, Terrain.DOOR_CLOSED);
 			GameScene.updateMap( arenaDoor );
@@ -363,11 +329,6 @@ public class CityBossLevel extends Level {
 	private boolean outsideEntranceRoom(int cell) {
 		return cell / WIDTH < arenaDoor / WIDTH;
 	}
-
-    @Override
-    public boolean noTeleport() {
-        return enteredArena && !keyDropped;
-    }
 
     @Override
     public String tileName( int tile ) {
@@ -385,7 +346,25 @@ public class CityBossLevel extends Level {
         CityLevel.addVisuals(this, scene);
     }
 
+    @Override
     public String currentTrack() {
-        return enteredArena && !keyDropped ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
-    };
+        return progress == BOSS_APPEARED ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
+    }
+
+    private static final String DOOR	    = "door";
+    private static final String PROGRESS    = "progress";
+
+    @Override
+    public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle( bundle );
+        bundle.put( DOOR, arenaDoor );
+        bundle.put( PROGRESS, progress );
+    }
+
+    @Override
+    public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle(bundle);
+        arenaDoor = bundle.getInt( DOOR );
+        progress = bundle.getInt( PROGRESS );
+    }
 }

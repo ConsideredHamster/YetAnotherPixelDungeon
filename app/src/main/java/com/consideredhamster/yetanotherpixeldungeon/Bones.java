@@ -133,9 +133,9 @@ public class Bones {
 					((Ring)item).syncGem();
 				}
 
-                if (item instanceof Wand) {
-                    ((Wand)item).syncWood();
-                }
+//                if (item instanceof Wand) {
+//                    ((Wand)item).syncWood();
+//                }
 				
 				return item;
 			} else {

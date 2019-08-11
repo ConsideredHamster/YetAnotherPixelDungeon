@@ -20,22 +20,14 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
+import java.util.Locale;
+
 public class RingOfAwareness extends Ring {
 
 	{
 		name = "Ring of Awareness";
         shortName = "Aw";
 	}
-	
-//	@Override
-//	public boolean doEquip( Hero hero ) {
-//		if (super.doEquip( hero )) {
-//			Dungeon.hero.search( false );
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
 	
 	@Override
 	protected RingBuff buff( ) {
@@ -44,20 +36,41 @@ public class RingOfAwareness extends Ring {
 	
 	@Override
 	public String desc() {
-        return isTypeKnown() ?
-                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-                "boosts your alertness when worn, improving your perception and increasing bonus damage " +
-                "inflicted by your counterattacks. Useful for those who prefer defensive approach." +
-                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
-            super.desc();
+
+        String mainEffect = "??";
+        String sideEffect = "??";
+
+        if( isIdentified() ){
+            mainEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) / 3 );
+            sideEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) );
+        }
+
+        StringBuilder desc = new StringBuilder(
+            "These rings improve wearer's perception, making him or her to be more aware " +
+            "of different threats as well as allowing for a much deadlier counterattacks."
+        );
+
+        desc.append( "\n\n" );
+
+        desc.append( super.desc() );
+
+        desc.append( " " );
+
+        desc.append(
+            "Wearing this ring will increase your _perception by " + mainEffect + "%_ " +
+            "and _bonus damage from counter attacks by " + sideEffect + "%_."
+        );
+
+        return desc.toString();
+
 	}
 	
 	public class Awareness extends RingBuff {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "You feel that your alertness is improved." :
-                    "You feel that your alertness is dimmed." ;
+                "You feel that your alertness is improved." :
+                "You feel that your alertness is dimmed." ;
         }
 	}
 }

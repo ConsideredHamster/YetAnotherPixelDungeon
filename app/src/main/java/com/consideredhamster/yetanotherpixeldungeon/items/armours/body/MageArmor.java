@@ -42,7 +42,7 @@ public class MageArmor extends BodyArmorCloth {
     @Override
     public String desc() {
         return "Combination of intricate magicks and rare materials sewn into fabric of this robe " +
-                "allow it to ease your ability to concentrate, basically increasing your willpower.";
+                "allow it to increasing your attunement with mystical energies.";
     }
 
 //    public MageArmor() {

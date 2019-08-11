@@ -22,6 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
@@ -43,14 +45,29 @@ public class DwarfWarlock extends MobRanged {
 
         super( 15 );
 
+        /*
+
+            base maxHP  = 30
+            armor class = 8
+
+            damage roll = 7-14
+
+            accuracy    = 35
+            dexterity   = 20
+
+            perception  = 140%
+            stealth     = 100%
+
+         */
+
 		name = "dwarf warlock";
 		spriteClass = WarlockSprite.class;
 		
 		loot = Gold.class;
 		lootChance = 0.25f;
 
-        resistances.put(Element.Body.class, Element.Resist.PARTIAL);
-        resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
+        resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
 
 	}
 
@@ -89,19 +106,13 @@ public class DwarfWarlock extends MobRanged {
 
 	@Override
 	protected boolean canAttack( Char enemy ) {
-        return !isCharmedBy( enemy ) && ( Level.adjacent( pos, enemy.pos )
-            || Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos );
+        return super.canAttack( enemy ) || Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos;
 	}
 
     @Override
     protected void onRangedAttack( int cell ) {
 
-        int[] points = new int[2];
-
-        points[0] = pos;
-        points[1] = cell;
-
-        sprite.parent.add( new Lightning( points, 2, null ) );
+        sprite.parent.add( new Lightning( pos, cell ) );
 
         onCastComplete();
 
@@ -112,17 +123,17 @@ public class DwarfWarlock extends MobRanged {
     @Override
 	public boolean cast( Char enemy ) {
 
-        if ( hit( this, enemy, false, true ) ) {
+//        if ( hit( this, enemy, false, true ) ) {
 
-				enemy.damage(damageRoll(), this, Element.SHOCK);
+            enemy.damage( damageRoll() + damageRoll(), this, Element.SHOCK);
 
-                return true;
+            return true;
 
-			} else {
-                enemy.missed();
-			}
-
-        return false;
+//        } else {
+//            enemy.missed();
+//        }
+//
+//        return false;
 	}
 	
 //	public void onZapComplete() {

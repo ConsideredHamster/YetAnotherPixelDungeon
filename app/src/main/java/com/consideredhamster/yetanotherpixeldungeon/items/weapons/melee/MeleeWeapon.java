@@ -80,7 +80,7 @@ public abstract class MeleeWeapon extends Weapon {
 
             } else {
 
-                hero.buff( Satiety.class ).decrease( (float)str() / hero.STR() );
+                hero.buff( Satiety.class ).decrease( Satiety.POINT * str() / hero.STR() );
                 Buff.affect( hero, Guard.class ).reset( 1 );
                 hero.spendAndNext( Actor.TICK );
 
@@ -175,20 +175,5 @@ public abstract class MeleeWeapon extends Weapon {
     public boolean isCursedKnown() {
         return known >= CURSED_KNOWN;
     }
-
-//	@Override
-//	public Item random() {
-//
-//        bonus = Random.NormalIntRange( -3, +3 );
-//
-//		if (Random.Int( 7 + bonus ) == 0) {
-//			enchant();
-//		}
-//
-//        randomize_state();
-//
-//		return this;
-//	}
-
 
 }

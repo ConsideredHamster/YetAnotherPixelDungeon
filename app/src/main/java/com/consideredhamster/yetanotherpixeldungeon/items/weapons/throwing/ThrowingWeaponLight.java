@@ -48,13 +48,11 @@ public abstract class ThrowingWeaponLight extends ThrowingWeapon {
 
     @Override
     public int baseAmount() {
-        return 10 - tier * 2;
+        return 9 - tier;
     }
 
     @Override
     public int price() {
-
-        return quantity * tier * 15;
-
+        return quantity * tier * 10;
     }
 }

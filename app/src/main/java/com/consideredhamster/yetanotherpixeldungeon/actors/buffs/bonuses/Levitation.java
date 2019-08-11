@@ -57,7 +57,7 @@ public class Levitation extends Bonus {
     @Override
     public String description() {
         return "The whole body feels like it is lighter than air! While levitating, traps and " +
-                "terrain effects do not affect you, and your movement speed is increased by half.";
+            "terrain effects do not affect you, and your movement speed and dexterity are increased.";
     }
 	
 	@Override

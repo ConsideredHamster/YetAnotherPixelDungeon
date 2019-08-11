@@ -241,44 +241,6 @@ public class Belongings implements Iterable<Item> {
 //            ring2.activate( owner );
 //		}
 //	}
-	
-	public int charge( boolean full ) {
-		
-		int count = 0;
-		
-		for (Item item : this) {
-			if (item instanceof Wand) {
-				Wand wand = (Wand)item;
-				if (wand.curCharges < wand.maxCharges()) {
-					wand.curCharges = full ? wand.maxCharges() : wand.curCharges + 1;
-					count++;
-					
-					wand.updateQuickslot();
-				}
-			}
-		}
-		
-		return count;
-	}
-	
-	public int discharge() {
-		
-		int count = 0;
-		
-		for (Item item : this) {
-			if (item instanceof Wand) {
-				Wand wand = (Wand)item;
-				if (wand.curCharges > 0) {
-					wand.curCharges--;
-					count++;
-					
-					wand.updateQuickslot();
-				}
-			}
-		}
-		
-		return count;
-	}
 
 	@Override
 	public Iterator<Item> iterator() {

@@ -34,7 +34,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.quest.DwarfToken;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAccuracy;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfConcentration;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfMysticism;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEvasion;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfFortune;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAwareness;
@@ -43,7 +43,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfProtection
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfSatiety;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfSorcery;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfWillpower;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
@@ -123,11 +123,6 @@ public class AmbitiousImp extends NPC {
 	@Override
     public boolean add( Buff buff ) {
         return false;
-    }
-
-    @Override
-    public boolean immovable() {
-        return true;
     }
 	
 	@Override
@@ -236,13 +231,15 @@ public class AmbitiousImp extends NPC {
 		}
 		
 		public static void spawn( Level level, Room room ) {
-//			if (!spawned && Dungeon.depth == 1) {
+
 			if (!spawned && Dungeon.depth > 19 && Random.Int( 24 - Dungeon.depth ) == 0) {
 
 				AmbitiousImp npc = new AmbitiousImp();
+
 				do {
 					npc.pos = level.randomRespawnCell();
 				} while (npc.pos == -1 || level.heaps.get( npc.pos ) != null);
+
 				level.mobs.add(npc);
 				Actor.occupyCell( npc );
 				
@@ -258,7 +255,7 @@ public class AmbitiousImp extends NPC {
                 } else if( Dungeon.hero.heroClass == HeroClass.BRIGAND ) {
                     reward = random == 2 ? new RingOfFortune() : random == 1 ? new RingOfShadows() : new RingOfEvasion();
                 } else if( Dungeon.hero.heroClass == HeroClass.SCHOLAR ) {
-                    reward = random == 2 ? new RingOfKnowledge() : random == 1 ? new RingOfConcentration() : new RingOfSorcery();
+                    reward = random == 2 ? new RingOfKnowledge() : random == 1 ? new RingOfMysticism() : new RingOfWillpower();
                 } else if( Dungeon.hero.heroClass == HeroClass.ACOLYTE ) {
                     reward = random == 2 ? new RingOfDurability() : random == 1 ? new RingOfAwareness() : new RingOfAccuracy();
                 }

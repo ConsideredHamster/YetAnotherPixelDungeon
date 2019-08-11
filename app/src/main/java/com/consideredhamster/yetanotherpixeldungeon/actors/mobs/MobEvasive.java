@@ -37,20 +37,8 @@ public abstract class MobEvasive extends Mob {
         HT = 2 + tier * 2 + exp;
         armorClass = tier;
 
-        minDamage = tier - 1;
+        minDamage = tier;
         maxDamage = tier * 3 + 1;
-
-//        if( Dungeon.difficulty < Difficulties.NORMAL ) {
-//            maxDamage -= tier;
-//        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
-//            minDamage += tier;
-//        }
-
-        // old values
-        // 0-6     1-8     2-11    3-13    4-16
-
-        // new values
-        // 0-4     1-7     2-10    3-13    4-16
 
         accuracy = 2 + tier * 2 + exp;
         dexterity = 3 + tier * 3 + exp;

@@ -20,7 +20,6 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
@@ -28,10 +27,6 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Blessing;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
@@ -57,13 +52,9 @@ public class PotionOfBlessing extends Potion {
 	{
 		name = "Potion of Blessing";
         shortName = "Bl";
+        harmful = true;
 	}
 
-    @Override
-    protected void apply( Hero hero ) {
-        BuffActive.add(hero, Blessing.class, DURATION + alchemySkill() * MODIFIER );
-        setKnown();
-    }
 
     @Override
     public void shatter( int cell ) {
@@ -124,11 +115,9 @@ public class PotionOfBlessing extends Potion {
     @Override
 	public String desc() {
 		return
-			"This potion is imbued with great positive energy. Consuming it will temporarily " +
-            "create a kind of force field around you, giving you both improved physical protection " +
-            "and resistance to most sources of magical damage.\n\n"+
-            "Shattering it will bathe everything near the point of impact in a cleansing light, " +
-            "removing curses and harming creatures of purely magical origin.";
+			"This potion is imbued with great disruptive energy. Shattering it will bathe " +
+            "everything near the point of impact in a cleansing light, removing curses and " +
+            "harming creatures of purely magical origin.";
 	}
 
     public static boolean uncurse( int pos, Item... items ) {
@@ -175,4 +164,9 @@ public class PotionOfBlessing extends Potion {
 	public int price() {
 		return isTypeKnown() ? 50 * quantity : super.price();
 	}
+
+    @Override
+    public float brewingChance() {
+        return 0.85f;
+    }
 }

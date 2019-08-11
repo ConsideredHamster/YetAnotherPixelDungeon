@@ -20,7 +20,9 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.misc;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.ToxicGas;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
@@ -30,12 +32,11 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.ConfusionGas;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Explosion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Pushing;
+import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
@@ -160,7 +161,7 @@ public abstract class Explosives extends Item {
 
         Blob[] blobs = {
                 Dungeon.level.blobs.get( Fire.class ),
-                Dungeon.level.blobs.get( CorrosiveGas.class ),
+                Dungeon.level.blobs.get( ToxicGas.class ),
                 Dungeon.level.blobs.get( ConfusionGas.class ),
         };
 
@@ -174,7 +175,6 @@ public abstract class Explosives extends Item {
         }
 
         boolean terrainAffected = false;
-//        ArrayList<Char> charsAffected = new ArrayList<>();
 
         for (int c = 0; c < Level.LENGTH; c++ ) {
 
@@ -200,46 +200,6 @@ public abstract class Explosives extends Item {
             }
         }
 
-//        for (int r = radius; r > 0 ; r-- ) {
-//            if( !charsAffected.isEmpty() ) {
-//                for (Char ch : charsAffected) {
-//                    if (PathFinder.distance[ch.pos] == r) {
-//
-//                        int newPos = Ballistica.cast(cell, ch.pos, true, false);
-//
-//                        newPos = Ballistica.cast(ch.pos, newPos, false, true);
-//
-//                        if (Ballistica.distance > 0) {
-//
-//                            int maxdistance = (!ch.isHeavy() ? radius - r : 0) + 1;
-//
-//                            newPos = Ballistica.trace[Math.min(maxdistance, Ballistica.distance - 1)];
-//
-//                            if (Actor.findChar(newPos) != null && Ballistica.distance > 2) {
-//                                newPos = Ballistica.trace[Math.min(maxdistance, Ballistica.distance - 2)];
-//                            }
-//                        }
-//
-//                        if (!Level.solid[newPos] && Actor.findChar(newPos) == null) {
-//
-//                            Actor.addDelayed(new Pushing(ch, ch.pos, newPos), -1);
-//
-//                            Actor.freeCell(ch.pos);
-//                            ch.pos = newPos;
-//                            Actor.occupyCell(ch);
-//
-////                            if (ch instanceof Mob) {
-////                                Dungeon.level.mobPress((Mob) ch);
-////                            } else {
-//                            Dungeon.level.press(newPos, ch);
-////                            }
-//
-//                        }
-//                    }
-//                }
-//            }
-//        }
-
         for (int n : Level.NEIGHBOURS9) {
 
             int c = cell + n;
@@ -252,21 +212,10 @@ public abstract class Explosives extends Item {
 
             Char ch = Actor.findChar(c);
 
-            if( ch != null && !ch.immovable() ) {
+            if( ch != null ) {
 
-                int newPos = ch.pos + n;
+                Pushing.knockback( ch, cell, radius, damage );
 
-                if (!Level.solid[newPos] && Actor.findChar(newPos) == null) {
-
-                    Actor.addDelayed(new Pushing(ch, ch.pos, newPos), -1);
-
-                    Actor.freeCell(ch.pos);
-                    ch.pos = newPos;
-                    Actor.occupyCell(ch);
-
-                    Dungeon.level.press(newPos, ch);
-
-                }
             }
         }
 
@@ -443,6 +392,10 @@ public abstract class Explosives extends Item {
 
                     int strength = bomb.price();
 
+                    if( Level.solid[ cell ] ) {
+                        cell = Ballistica.trace[ Ballistica.distance - 1 ];
+                    }
+
                     explode(cell, bomb.damage(strength), bomb.radius(strength), curUser);
 
                 }
@@ -508,6 +461,11 @@ public abstract class Explosives extends Item {
 
         @Override
         protected void onThrow( int cell ) {
+
+            if( Level.solid[ cell ] ) {
+                cell = Ballistica.trace[ Ballistica.distance - 1 ];
+            }
+
             if (Level.chasm[cell]) {
                 super.onThrow( cell );
             } else {

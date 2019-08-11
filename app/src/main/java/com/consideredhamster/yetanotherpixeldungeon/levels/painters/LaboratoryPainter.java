@@ -25,6 +25,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Alchemy;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.keys.IronKey;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.EmptyBottle;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.Potion;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
@@ -62,17 +63,25 @@ public class LaboratoryPainter extends Painter {
 		Alchemy alchemy = new Alchemy();
 		alchemy.seed( pot.x + Level.WIDTH * pot.y, 1 );
 		level.blobs.put( Alchemy.class, alchemy );
+
+
+        int pos;
+        do {
+            pos = room.random();
+        } while ( level.map[pos] != Terrain.PEDESTAL );
+
+        level.drop(new EmptyBottle(), pos, true );
 		
 		int n = 1 + Random.Int( ( Dungeon.chapter() + 1 ) / 2 );
 		for (int i=0; i < n; i++) {
-			int pos;
+
 			do {
 				pos = room.random();
 			} while ( level.map[pos] != Terrain.PEDESTAL );
 
             level.drop( i == 0 ? prize( level ) : Generator.random( Generator.Category.POTION ), pos, true );
 		}
-		
+
 		entrance.set( Room.Door.Type.LOCKED );
 		level.addItemToSpawn( new IronKey() );
 	}

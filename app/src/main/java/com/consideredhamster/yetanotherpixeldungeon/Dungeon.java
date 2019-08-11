@@ -29,6 +29,7 @@ import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Blinded;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Recharging;
 import com.consideredhamster.yetanotherpixeldungeon.levels.painters.ShopPainter;
 import com.watabou.noosa.Game;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
@@ -83,14 +84,15 @@ public class Dungeon {
 	public static int potionOfExperience;
 	public static int scrollsOfUpgrade;
 	public static int scrollsOfEnchantment;
+
 	public static int ankhs;
-//	public static int vials;
 	public static int wands;
 	public static int rings;
     public static int ammos;
+
+    public static int bottles;
+    public static int scrolls;
     public static int torches;
-//	public static boolean dewVial;		// true if the dew vial can be spawned
-	public static int transmutation;	// depth number for a well of transmutation
 	
 	public static int challenges;
 	public static int difficulty;
@@ -137,14 +139,15 @@ public class Dungeon {
 		potionOfExperience = 0;
 		scrollsOfUpgrade = 0;
 		scrollsOfEnchantment = 0;
+
 		ankhs = 0;
-//		vials = 0;
 		wands = 0;
 		rings = 0;
 		ammos = 0;
+
+		bottles = 0;
+		scrolls = 0;
 		torches = 0;
-//		dewVial = true;
-//		transmutation = Random.IntRange( 6, 14 );
 		
 		chapters = new HashSet<Integer>();
 		
@@ -162,8 +165,9 @@ public class Dungeon {
 		QuickSlot.quickslotValue_3 = null;
 
 		hero = new Hero();
-        Buff.affect( hero, Satiety.class ).setValue( Satiety.MAXIMUM );
 
+        Buff.affect( hero, Satiety.class ).setValue( Satiety.MAXIMUM );
+        Buff.affect( hero, Recharging.class );
 
 		Badges.reset();
 		
@@ -324,9 +328,6 @@ public class Dungeon {
 		
 		hero.pos = pos != -1 ? pos : level.exit;
 		
-//		Light light = hero.buff( Light.class );
-//		hero.viewDistance = light == null ? bonus.viewDistance : Math.max( Light.DISTANCE, bonus.viewDistance );
-		
 		observe();
 	}
 	
@@ -386,7 +387,19 @@ public class Dungeon {
     public static boolean ammosNeeded() {
         int[] quota = {1, 0, 5, 1, 11, 2, 17, 3, 23, 4, 29, 5};
 
-        return chance( quota, ammos);
+        return chance( quota, ammos );
+    }
+
+    public static boolean bottlesNeeded() {
+        int[] quota = {1, 0, 5, 1, 11, 2, 17, 3, 23, 4, 29, 5};
+
+        return chance( quota, bottles );
+    }
+
+    public static boolean scrollsNeeded() {
+        int[] quota = {1, 0, 5, 1, 11, 2, 17, 3, 23, 4, 29, 5};
+
+        return chance( quota, scrolls );
     }
 
     public static boolean torchesNeeded() {
@@ -437,6 +450,8 @@ public class Dungeon {
 	private static final String WANDS		= "wands";
 	private static final String RINGS		= "rings";
 	private static final String AMMOS		= "ammos";
+	private static final String BOTTLES		= "bottles";
+	private static final String SCROLLS		= "scrolls";
 	private static final String TORCHES		= "torches";
 	private static final String WT			= "transmutation";
 	private static final String CHAPTERS	= "chapters";
@@ -488,13 +503,14 @@ public class Dungeon {
 			bundle.put( POE, potionOfExperience );
 			bundle.put( SOU, scrollsOfUpgrade );
 			bundle.put( SOE, scrollsOfEnchantment );
-//			bundle.put( DV, dewVial );
-			bundle.put( WT, transmutation );
+
 			bundle.put( ANKHS, ankhs );
-//			bundle.put( VIALS, vials );
 			bundle.put( WANDS, wands );
 			bundle.put( RINGS, rings );
-			bundle.put( AMMOS, ammos);
+			bundle.put( AMMOS, ammos );
+
+			bundle.put( BOTTLES, bottles );
+			bundle.put( SCROLLS, scrolls );
 			bundle.put( TORCHES, torches );
 
 			int count = 0;
@@ -602,14 +618,15 @@ public class Dungeon {
 		potionOfExperience = bundle.getInt( POE );
 		scrollsOfUpgrade = bundle.getInt( SOU );
 		scrollsOfEnchantment = bundle.getInt( SOE );
-//		dewVial = bundle.getBoolean( DV );
-		transmutation = bundle.getInt( WT );
+
 		ankhs = bundle.getInt( ANKHS );
-//		vials = bundle.getInt( VIALS );
 		wands = bundle.getInt( WANDS );
 		rings = bundle.getInt( RINGS );
 		ammos = bundle.getInt( AMMOS );
-		torches = bundle.getInt(TORCHES);
+
+		bottles = bundle.getInt( BOTTLES );
+		scrolls = bundle.getInt( SCROLLS );
+		torches = bundle.getInt( TORCHES );
 
 		if (fullLoad) {
 			chapters = new HashSet<Integer>();

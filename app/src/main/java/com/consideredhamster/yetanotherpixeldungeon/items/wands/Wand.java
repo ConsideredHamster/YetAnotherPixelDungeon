@@ -23,10 +23,9 @@ package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Shocked;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Quarterstaff;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.TagAttack;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
@@ -34,7 +33,6 @@ import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
@@ -43,9 +41,7 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile
 import com.consideredhamster.yetanotherpixeldungeon.items.EquipableItem;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.ItemStatusHandler;
-import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfKnowledge;
-import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Quarterstaff;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.CellSelector;
@@ -56,77 +52,78 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.QuickSlot;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
+import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 
 public abstract class Wand extends EquipableItem {
 
-	private static final int USAGES_TO_KNOW	= 10;
+	private static final int USAGES_TO_KNOW	= 5;
 	
 	public static final String AC_ZAP	= "ZAP";
 	
-	private static final String TXT_WOOD	= "This thin %s wand is warm to the touch. Who knows what it will do when used?";
+//	private static final String TXT_WOOD	= "This thin %s wand is warm to the touch. Who knows what it will do when used?";
 //	private static final String TXT_DAMAGE	= "When this wand is used as a melee weapon, its average damage is %d points per hit.";
 //	private static final String TXT_WEAPON	= "You can use this wand as a melee weapon.";
 			
 	private static final String TXT_FIZZLES		= "fizzle";
 	private static final String TXT_SQUEEZE		= "You squeeze another charge from your wand";
-	private static final String TXT_MISCAST		= "The wand miscasts!";
+//	private static final String TXT_MISCAST		= "The wand miscasts!";
 	private static final String TXT_SELF_TARGET	= "You can't target yourself";
-	private static final String TXT_TARGET_CHARMED	= "You can't bring yourself to harm someone so... charming.";
+//	private static final String TXT_TARGET_CHARMED	= "You can't bring yourself to harm someone so... charming.";
 
 	private static final String TXT_IDENTIFY	= "You are now familiar enough with your %s.";
 	private static final String TXT_UNEQUIPPED	= "You can't use unequipped wands.";
 
 	private static final float TIME_TO_ZAP	= 1f;
 
-	public int curCharges = maxCharges();
-	
-	protected Charger charger;
-	
-//	private boolean curChargeKnown = false;
+	protected float curCharges = maxCharges();
 	
 	private int usagesToKnow = Random.IntRange(USAGES_TO_KNOW, USAGES_TO_KNOW * 2);
 
 	protected boolean hitChars = true;
-	
+	protected boolean goThrough = true;
+
 	private static final Class<?>[] wands = {
-		WandOfMagicMissile.class,
-		WandOfPhasing.class,
-		WandOfFreezing.class,
-		WandOfFirebolt.class, 
-		WandOfHarm.class,
-		WandOfEntanglement.class,
-		WandOfBlink.class,
-		WandOfLightning.class,
-		WandOfCharm.class,
-//		WandOfTelekinesis.class,
-		WandOfFlock.class,
-		WandOfDisintegration.class,
-		WandOfAvalanche.class
+		    WandOfMagicMissile.class,
+            WandOfDisintegration.class,
+            WandOfSmiting.class,
+            WandOfLightning.class,
+            WandOfAcidSpray.class,
+            WandOfFirebrand.class,
+            WandOfBlastWave.class,
+            WandOfThornvines.class,
+            WandOfIceBarrier.class,
+            WandOfCharm.class,
+            WandOfLifeDrain.class,
+            WandOfDamnation.class,
 	};
-	private static final String[] woods = 
+
+	// not really needed after the wands update, but I guess can stay here until moving to the Evan's engine
+	private static final String[] woods =
 		{"holly", "yew", "ebony", "cherry", "teak", "rowan", "willow", "mahogany", "bamboo", "purpleheart", "oak", "birch"};
+
 	private static final Integer[] images = {
-		ItemSpriteSheet.WAND_HOLLY, 
-		ItemSpriteSheet.WAND_YEW, 
-		ItemSpriteSheet.WAND_EBONY, 
-		ItemSpriteSheet.WAND_CHERRY, 
-		ItemSpriteSheet.WAND_TEAK, 
-		ItemSpriteSheet.WAND_ROWAN, 
-		ItemSpriteSheet.WAND_WILLOW, 
-		ItemSpriteSheet.WAND_MAHOGANY, 
-		ItemSpriteSheet.WAND_BAMBOO, 
-		ItemSpriteSheet.WAND_PURPLEHEART, 
-		ItemSpriteSheet.WAND_OAK, 
-		ItemSpriteSheet.WAND_BIRCH};
+            ItemSpriteSheet.WAND_MAGICMISSILE,
+            ItemSpriteSheet.WAND_DISINTEGRATION,
+            ItemSpriteSheet.WAND_SMITING,
+            ItemSpriteSheet.WAND_LIGHTNING,
+            ItemSpriteSheet.WAND_ACIDSPRAY,
+            ItemSpriteSheet.WAND_FIREBRAND,
+            ItemSpriteSheet.WAND_BLAST_WAVE,
+            ItemSpriteSheet.WAND_THORNVINE,
+            ItemSpriteSheet.WAND_ICEBARRIER,
+            ItemSpriteSheet.WAND_DOMINATION,
+            ItemSpriteSheet.WAND_LIFEDRAIN,
+            ItemSpriteSheet.WAND_DAMNATION,
+	};
 	
 	private static ItemStatusHandler<Wand> handler;
 
-	private String wood;
+    public boolean dud = false;
 
-	{
-        shortName = "??";
-	}
+    public static boolean allKnown() {
+        return handler.known().size() == wands.length;
+    }
 
     @Override
     public String equipAction() {
@@ -146,7 +143,7 @@ public abstract class Wand extends EquipableItem {
 	public static void save( Bundle bundle ) {
 		handler.save( bundle );
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static void restore( Bundle bundle ) {
 		handler = new ItemStatusHandler<Wand>( (Class<? extends Wand>[])wands, woods, images, bundle );
@@ -154,14 +151,14 @@ public abstract class Wand extends EquipableItem {
 	
 	public Wand() {
 		super();
-        syncWood();
-        shortName = "??";
+//        syncWood();
+//        shortName = "??";
 	}
 
-    public void syncWood() {
-        image	= handler.image( this );
-        wood	= handler.label( this );
-    }
+//    public void syncWood() {
+//        image	= handler.image( this );
+//        wood	= handler.label( this );
+//    }
 
     @Override
     public boolean doEquip( Hero hero ) {
@@ -229,20 +226,7 @@ public abstract class Wand extends EquipableItem {
     public boolean isEquipped( Hero hero ) {
         return hero.belongings.weap2 == this;
     }
-	
-//	@Override
-//	public ArrayList<String> actions( Hero hero ) {
-//		ArrayList<String> actions = super.actions( hero );
-//        actions.add(AC_ZAP);
-//
-//		return actions;
-//	}
-	
-	@Override
-	public void activate( Char ch ) {
-//        stopCharging();
-		charge(ch);
-	}
+
 	
 	@Override
 	public void execute( Hero hero, String action ) {
@@ -264,134 +248,55 @@ public abstract class Wand extends EquipableItem {
 	}
 	
 	protected abstract void onZap( int cell );
-	
-	@Override
-	public boolean collect( Bag container ) {
-		if (super.collect(container)) {
-			if (container.owner != null) {
-				charge(container.owner);
-			}
-			return true;
-		} else {
-			return false;
-		}
-	};
-	
-	public void charge( Char owner ) {
-		if (charger == null) {
-			(charger = new Charger()).attachTo(owner);
-		}
-	}
-	
-	@Override
-	public void onDetach() {
-		stopCharging();
-	}
-	
-	public void stopCharging() {
-		if (charger != null) {
-			charger.detach();
-			charger = null;
-		}
+
+	public void charge( float modifier ) {
+        if( curCharges < maxCharges() ){
+            curCharges += modifier * rechargeRate();
+        } else {
+            curCharges = maxCharges();
+        }
 	}
 
-    public int min() {
-        return 0;
+    public abstract int damageRoll();
+
+    public void addCharges( int value ) {
+        curCharges = GameMath.gate( 0, (int)curCharges + value, maxCharges() );
+        updateQuickslot();
     }
 
-    public int max() {
-        return 0;
+    public void setCharges( int value ) {
+        curCharges = GameMath.gate( 0, value, maxCharges() );
+        updateQuickslot();
     }
 
-    public int damageRoll() {
-        float dmg = Random.NormalIntRange( min(), max() ) * effectiveness();
-
-        if( curUser != null && curUser.buff( Withered.class ) != null )
-            dmg *= 0.5f;
-
-        if( curUser != null && curUser.buff( Charmed.class ) != null )
-            dmg *= 0.5f;
-
-        return (int)dmg;
+    public int getCharges() {
+        return (int)curCharges;
     }
 
+    public abstract int maxCharges( int bonus );
     public int maxCharges() {
-        return bonus > 0 ? 2 + bonus : 2 ;
-    }
+        return maxCharges( bonus );
+    };
 
-    public int maxDurability() {
-        return 50;
-    }
-
+    protected abstract float rechargeRate( int bonus );
     protected float rechargeRate() {
-        return 30f;
-    }
+        return rechargeRate( bonus );
+    };
 
+    protected abstract float miscastChance( int bonus );
     protected float miscastChance() {
+        return miscastChance( bonus );
+    };
 
-        float chance = 0.125f - state * 0.025f;
-
-        if( charger != null && charger.target instanceof Hero ) {
-
-            Hero hero = (Hero) charger.target;
-
-            chance /= hero.willpower();
-
-            if( hero.buffs( Shocked.class ) != null )
-                chance *= 2.0f;
-
-            if( hero.belongings.weap1 instanceof Quarterstaff )
-                chance *= 0.5f;
-        }
-
-        return chance;
-
-    }
-
+    protected abstract float squeezeChance( int bonus );
     protected float squeezeChance() {
+        return squeezeChance( bonus );
+    };
 
-        float chance = 0.05f + state * 0.025f;
+	protected abstract float effectiveness( int bonus );
+    protected float effectiveness() { return effectiveness( bonus ); };
 
-        if( charger != null && charger.target instanceof Hero ) {
-
-            Hero hero = (Hero) charger.target;
-
-            chance *= hero.willpower();
-
-            if( hero.buffs( Shocked.class ) != null )
-                chance *= 0.5f;
-
-            if( hero.belongings.weap1 instanceof Quarterstaff ) {
-                chance *= 2.0f;
-            }
-        }
-
-        return chance;
-    }
-
-	
-	public float effectiveness() {
-
-        float power = 0.25f + state * 0.125f + Math.max( 0, bonus ) * 0.125f ;
-
-        if (charger != null) {
-
-            Hero hero = (Hero)charger.target;
-
-            if(
-                hero.belongings.weap1 != null &&
-                hero.belongings.weap1.bonus >= 0 &&
-                hero.belongings.weap1.enchantment != null &&
-                hero.belongings.weap1.enchantment.wandBonus() == getClass()
-            ) {
-                power *= 1.125f + (hero.belongings.weap1.bonus >= 0 ? hero.belongings.weap1.bonus * 0.125f : 0.0f);
-            }
-		}
-
-        return power;
-	}
-
-
+    protected abstract String wandInfo();
 
 	@Override
 	public Item identify() {
@@ -401,10 +306,10 @@ public abstract class Wand extends EquipableItem {
         setKnown();
 
 		updateQuickslot();
-		
+
 		return this;
 	}
-	
+
 	@Override
 	public String toString() {
 		
@@ -418,21 +323,21 @@ public abstract class Wand extends EquipableItem {
 		return sb.toString();
 	}
 
-    @Override
-    public String name() {
-        return name( isTypeKnown() );
-    }
-
-    public String name( boolean isTypeKnown ) {
-        return isTypeKnown ? super.name() : wood + " wand";
-    }
+//    @Override
+//    public String name() {
+//        return name( isTypeKnown() );
+//    }
+//
+//    public String name( boolean isTypeKnown ) {
+//        return isTypeKnown ? super.name() : wood + " wand";
+//    }
 	
-	@Override
-	public String info() {
-		StringBuilder info = new StringBuilder( isTypeKnown() ? desc() : String.format( TXT_WOOD, wood ) );
-
-		return info.toString();
-	}
+//	@Override
+//	public String info() {
+//		StringBuilder info = new StringBuilder( isTypeKnown() ? desc() : String.format( TXT_WOOD, wood ) );
+//
+//		return info.toString();
+//	}
 
     @Override
     public boolean isUpgradeable() {
@@ -466,11 +371,15 @@ public abstract class Wand extends EquipableItem {
 
         Badges.validateAllWandsIdentified();
     }
+
+    public static HashSet<Class<? extends Wand>> getKnown() {
+        return handler.known();
+    }
 	
 	@Override
 	public String status() {
 		if (isIdentified()) {
-			return curCharges + "/" + maxCharges();
+			return getCharges() + "/" + maxCharges();
 		} else {
 			return null;
 		}
@@ -503,38 +412,19 @@ public abstract class Wand extends EquipableItem {
 
         return this;
     }
-	
-//	protected void updateLevel() {
-//		maxCharges = Math.min( initialCharges() + state, 5 );
-//		curCharges = Math.min( curCharges + 1, maxCharges() );
-		
-//		calculateDamage();
-//	}
-	
-//	private void calculateDamage() {
-//		int appearance = 1 + bonus / 3;
-//		MIN = appearance;
-//		MAX = (appearance * appearance - appearance + 10) / 2 + bonus;
-//	}
-	
+
 	protected void fx( int cell, Callback callback ) {
 		MagicMissile.blueLight( curUser.sprite.parent, curUser.pos, cell, callback );
 		Sample.INSTANCE.play(Assets.SND_ZAP);
 	}
 
-    protected void spendCharges() {
+    protected abstract void spendCharges();
 
-        if( curCharges > 0 ) curCharges--;
-
-        if( charger != null ) charger.delay();
-
-    }
-
-	protected void wandUsed() {
+	protected void wandUsed( boolean identify ) {
 
         spendCharges();
 
-		if (!isIdentified() ) {
+		if ( identify && !isIdentified() ) {
 
             float effect = curUser.ringBuffs(RingOfKnowledge.Knowledge.class);
 
@@ -549,99 +439,15 @@ public abstract class Wand extends EquipableItem {
 
         updateQuickslot();
 
-		curUser.spendAndNext(TIME_TO_ZAP);
+		curUser.spendAndNext( TIME_TO_ZAP );
 	}
 
-    @Override
-    public Item random() {
 
-        Float rand = Random.Float();
-
-        int n = 0;
-
-        if ( rand < Dungeon.depth * 0.03f ) {
-            n++;
-            if ( rand < Dungeon.depth * 0.02f ) {
-                n++;
-                if ( rand < Dungeon.depth * 0.01f ) {
-                    n++;
-                }
-            }
-        }
-
-        if( n > 0 ) {
-            if ( Random.Int( Dungeon.chapter() * 10 + 1 ) < Random.Int( n * 10 + 1 ) ) {
-                curse(n);
-            } else {
-                upgrade(n);
-            }
-        }
-
-        randomize_state();
-
-        curCharges = maxCharges();
-
-        return this;
-    }
-
-//    @Override
-//    public void randomize_state() {
-//        super.randomize_state();
-//
-//        curCharges = maxCharges();
-//    }
-	
-	public static boolean allKnown() {
-		return handler.known().size() == wands.length;
-	}
-
-    public static HashSet<Class<? extends Wand>> getKnown() {
-        return handler.known();
-    }
-
-    @Override
-    public float stealingDifficulty() { return 0.75f; }
-
-	@Override
-	public int price() {
-
-        int price = 30 + state * 15;
-
-        if ( isIdentified() ) {
-            price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
-        } else if( isCursedKnown() && bonus >= 0 ) {
-            price -= price / 4;
-        } else {
-            price /= 2;
-        }
-
-        return price;
-	}
-	
-	private static final String UNFAMILIRIARITY		= "unfamiliarity";
-	private static final String CUR_CHARGES			= "curCharges";
-	
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle(bundle);
-		bundle.put( UNFAMILIRIARITY, usagesToKnow );
-		bundle.put( CUR_CHARGES, curCharges );
-	}
-	
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle( bundle );
-		if ((usagesToKnow = bundle.getInt( UNFAMILIRIARITY )) == 0) {
-			usagesToKnow = USAGES_TO_KNOW;
-		}
-		curCharges = bundle.getInt( CUR_CHARGES );
-	}
-	
 	protected static CellSelector.Listener zapper = new  CellSelector.Listener() {
-		
+
 		@Override
 		public void onSelect( Integer target ) {
-			
+
 			if (target != null) {
 
                 if (target == curUser.pos) {
@@ -655,37 +461,33 @@ public abstract class Wand extends EquipableItem {
                     target += Level.NEIGHBOURS8[Random.Int(8)];
                 }
 
-                final int cell = Ballistica.cast(curUser.pos, target, false, curWand.hitChars);
+                final int cell = Ballistica.cast( curUser.pos, target, curWand.goThrough, curWand.hitChars );
 
                 Char ch = Actor.findChar(cell);
 
                 if (ch != null && curUser != ch && Dungeon.visible[cell]) {
 
-//                    if (curUser.isCharmedBy(ch)) {
-//                        GLog.i(TXT_TARGET_CHARMED);
-//                        return;
-//                    }
-
                     QuickSlot.target(curItem, ch);
                     TagAttack.target((Mob) ch);
+
                 }
 
-                curUser.sprite.cast(cell);
+                curUser.busy();
 
-//                curUser.sprite.cast(cell,
-//                        new Callback() {
-//                    @Override
-//                    public void call() {
+                curUser.sprite.cast(cell,
+                        new Callback() {
+                    @Override
+                    public void call() {
 
-                        curUser.busy();
-
-                        if (curWand.curCharges > 0 && Random.Float() > curWand.miscastChance() ||
-                                curWand.curCharges == 0 && Random.Float() < curWand.squeezeChance()) {
+                        if ( curWand.getCharges() > 0
+                            && ( curWand.isIdentified() || Random.Float() > curWand.miscastChance() )
+                            || curWand.getCharges() == 0 && Random.Float() < curWand.squeezeChance()
+                        ) {
 
                             if (curWand.curCharges == 0) {
 
                                 curWand.use(3);
-                                curUser.buff( Satiety.class ).decrease( 2.0f );
+                                curUser.buff( Satiety.class ).decrease( Satiety.POINT * 2.0f );
 
                                 if (curWand.isIdentified()) {
                                     GLog.w(TXT_SQUEEZE);
@@ -693,82 +495,116 @@ public abstract class Wand extends EquipableItem {
 
                             } else {
 
-                                curWand.use(curWand instanceof WandUtility ? curWand.curCharges : 2);
-                                curUser.buff( Satiety.class ).decrease( 1.0f );
+                                curWand.use(curWand instanceof WandUtility ? (int)curWand.curCharges : 2);
+                                curUser.buff( Satiety.class ).decrease( Satiety.POINT * 1.0f );
 
                             }
 
                             curWand.fx(cell, new Callback() {
                                 @Override
                                 public void call() {
-                                curWand.onZap(cell);
-                                curWand.wandUsed();
+                                    curWand.onZap(cell);
+                                    curWand.wandUsed( true );
                                 }
                             });
 
-
-
                         } else {
 
-                            if (curWand.curCharges > 0 && curWand.isIdentified()) {
-                                GLog.w(TXT_MISCAST);
-                                curWand.spendCharges();
-                            }
-
-                            curUser.spendAndNext(TIME_TO_ZAP);
-
                             curUser.sprite.showStatus(CharSprite.WARNING, TXT_FIZZLES);
+                            curWand.wandUsed( false );
 
-                            curUser.buff( Satiety.class ).decrease( 1.0f );
-
-                            if (!(curWand instanceof WandUtility))
-                                curWand.use(1);
-
-                            curWand.updateQuickslot();
                         }
-//                    }
-//                });
-
+                    }
+                });
 
                 Invisibility.dispel();
-
                 curWand.setKnown();
+
             }
 		}
-		
+
 		@Override
 		public String prompt() {
 			return "Choose direction to zap";
 		}
 	};
 
-    protected class Charger extends Buff {
+    @Override
+    public int maxDurability() {
+        return 50;
+    }
 
-        @Override
-        public boolean attachTo( Char target ) {
-            super.attachTo( target );
-            delay();
+    @Override
+    public float stealingDifficulty() { return 0.75f; }
 
-            return true;
+    @Override
+    public int price() {
+
+        int price = 40 + state * 20;
+
+        if ( isIdentified() ) {
+            price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
+        } else if( isCursedKnown() && bonus >= 0 ) {
+            price -= price / 4;
+        } else {
+            price /= 2;
         }
 
-        @Override
-        public boolean act() {
+        return price;
+    }
 
-            if (curCharges < maxCharges() && target.buff( Withered.class ) == null ) {
-                curCharges++;
-                updateQuickslot();
+    @Override
+    public String info() {
+
+        final String p = "\n\n";
+
+        StringBuilder info = new StringBuilder( desc() );
+        info.append( p );
+
+        if( !dud ){
+
+            info.append( wandInfo() );
+            info.append( p );
+
+            if( isEquipped( Dungeon.hero ) ){
+                info.append( "You hold this wand at the ready." );
+            } else if( Dungeon.hero.belongings.backpack.items.contains( this ) ){
+                info.append( "This wand is in your backpack." );
+            } else {
+                info.append( "This wand lies on the dungeon's floor." );
             }
 
-            delay();
+            if( bonus < 0 && isCursedKnown() ){
 
-            return true;
+                info.append( " " );
+
+                if( isEquipped( Dungeon.hero ) ){
+                    info.append( "Malevolent magic prevents you from releasing it." );
+                } else {
+                    info.append( "You can feel a malevolent magic lurking within it." );
+                }
+            }
         }
 
-        protected void delay() {
+        return info.toString();
+    }
 
-            postpone( rechargeRate() / (float)Math.pow( ( (Hero)target ).willpower(), 2 ) );
+    private static final String UNFAMILIRIARITY		= "unfamiliarity";
+    private static final String CUR_CHARGES			= "curCharges";
 
+    @Override
+    public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle(bundle);
+        bundle.put( UNFAMILIRIARITY, usagesToKnow );
+        bundle.put( CUR_CHARGES, curCharges );
+    }
+
+    @Override
+    public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle( bundle );
+        if ((usagesToKnow = bundle.getInt( UNFAMILIRIARITY )) == 0) {
+            usagesToKnow = USAGES_TO_KNOW;
         }
+        curCharges = bundle.getFloat( CUR_CHARGES );
     }
 }

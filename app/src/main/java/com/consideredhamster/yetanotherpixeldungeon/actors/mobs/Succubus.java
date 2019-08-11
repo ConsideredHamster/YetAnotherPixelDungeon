@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfPhaseWarp;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
@@ -31,10 +32,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.MagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfBlink;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfLifeDrain;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SuccubusSprite;
 
 public class Succubus extends MobPrecise {
@@ -47,6 +47,21 @@ public class Succubus extends MobPrecise {
 
         super( 18 );
 
+        /*
+
+            base maxHP  = 43
+            armor class = 5
+
+            damage roll = 6-21
+
+            accuracy    = 36
+            dexterity   = 30
+
+            perception  = 125%
+            stealth     = 125%
+
+         */
+
         name = "succubus";
         spriteClass = SuccubusSprite.class;
 
@@ -54,6 +69,7 @@ public class Succubus extends MobPrecise {
 
         resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
         resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
+        resistances.put( Element.Dispel.class, Element.Resist.PARTIAL );
 
 	}
 
@@ -66,7 +82,7 @@ public class Succubus extends MobPrecise {
     protected boolean canAttack( Char enemy ) {
         return ( super.canAttack( enemy ) ||
             Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos
-            && !enemy.isCharmedBy( this ) ) && !isCharmedBy( enemy );
+            && enemy.buff( Charmed.class) != null );
     }
 
     @Override
@@ -92,10 +108,10 @@ public class Succubus extends MobPrecise {
 
         if ( hit( this, enemy, true, true ) ) {
 
-            Charmed buff = BuffActive.add( enemy, Charmed.class, damageRoll() );
+            Charmed buff = BuffActive.addFromDamage( enemy, Charmed.class, damageRoll() );
 
             if( buff != null ) {
-                buff.object = this.id();
+//                buff.object = this.id();
                 enemy.sprite.centerEmitter().start( Speck.factory(Speck.HEART), 0.2f, 5 );
             }
 
@@ -113,29 +129,9 @@ public class Succubus extends MobPrecise {
 
         if ( !blocked && isAlive() ) {
 
-            int healed = damage / 2;
+            int healed = Element.Resist.modifyValue( damage / 2, enemy, Element.BODY );
 
-            float resist = Element.Resist.getResistance( enemy, Element.BODY );
-
-            if( !Element.Resist.checkIfDefault( resist ) ) {
-
-                if ( Element.Resist.checkIfNegated( resist ) ) {
-
-                    healed = 0;
-
-                } else if ( Element.Resist.checkIfPartial( resist ) ) {
-
-                    healed = healed / 2 + Random.Int( (int)healed % 2 + 1 );
-
-                } else if ( Element.Resist.checkIfAmplified( resist ) ) {
-
-                    healed *= 2;
-
-                }
-
-            }
-
-            if (healed > 0) {
+            if ( healed > 0 ) {
 
                 heal( healed );
 
@@ -156,7 +152,7 @@ public class Succubus extends MobPrecise {
 	@Override
 	protected boolean getCloser( int target ) {
 		if (delay <= 0 && enemySeen && enemy != null && Level.fieldOfView[target]
-            && Level.distance( pos, target ) > 1 && enemy.isCharmedBy( this )
+            && Level.distance( pos, target ) > 1 && enemy.buff( Charmed.class ) != null
             && Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos ) {
 
 			blink( target );
@@ -176,10 +172,10 @@ public class Succubus extends MobPrecise {
 		int cell = Ballistica.cast( pos, target, false, true );
 		
 		if (Actor.findChar( cell ) != null && Ballistica.distance > 1) {
-			cell = Ballistica.trace[Ballistica.distance - 2];
+			cell = Ballistica.trace[Ballistica.distance - 1];
 		}
-		
-		WandOfBlink.appear( this, cell );
+
+        ScrollOfPhaseWarp.appear( this, cell );
 		
 		delay = BLINK_DELAY;
 	}

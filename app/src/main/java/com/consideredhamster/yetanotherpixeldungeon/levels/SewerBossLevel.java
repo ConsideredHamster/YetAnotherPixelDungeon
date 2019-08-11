@@ -69,8 +69,14 @@ public class SewerBossLevel extends Level {
     private static final int DOOR1 = (TOP + CHAMBER_HEIGHT) * WIDTH + LEFT ;
     private static final int DOOR2 = (TOP + CHAMBER_HEIGHT) * WIDTH + LEFT + ARENA_WIDTH - 1;
 
-    private boolean bossAppeared = false;
-    private boolean bossDefeated = false;
+    private int progress = 0;
+
+    private static final int BOSS_ISHIDDEN = 0;
+    private static final int BOSS_APPEARED = 1;
+    private static final int BOSS_DEFEATED = 2;
+
+
+//    private boolean bossDefeated = false;
 
 	@Override
 	public String tilesTex() {
@@ -81,23 +87,6 @@ public class SewerBossLevel extends Level {
 	public String waterTex() {
 		return Assets.WATER_SEWERS;
 	}
-
-    private static final String APPEARED	= "bossAppeared";
-    private static final String DEFEATED	= "bossDefeated";
-
-    @Override
-    public void storeInBundle( Bundle bundle ) {
-        super.storeInBundle(bundle);
-        bundle.put( APPEARED, bossAppeared);
-        bundle.put( DEFEATED, bossDefeated);
-    }
-
-    @Override
-    public void restoreFromBundle( Bundle bundle ) {
-        super.restoreFromBundle(bundle);
-        bossAppeared = bundle.getBoolean( APPEARED );
-        bossDefeated = bundle.getBoolean( DEFEATED );
-    }
 
     @Override
     protected boolean build() {
@@ -187,25 +176,29 @@ public class SewerBossLevel extends Level {
     }
 
     @Override
-    public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
+    public ArrayList<Integer> getPassableCellsList() {
 
-        int cell;
+        ArrayList<Integer> result = new ArrayList<>();
 
-        if( !bossAppeared ) {
-            do {
-                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-            } while ( !beforeArena(cell) );
-        } else if( !bossDefeated ) {
-            do {
-                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-            } while ( !insideArena(cell) );
-        } else {
-            do {
-                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-            } while ( outOfArena(cell) );
+        for( Integer cell : super.getPassableCellsList() ){
+            if( progress != BOSS_ISHIDDEN && insideArena( cell ) || progress != BOSS_APPEARED && beforeArena( cell ) ){
+                result.add( cell );
+            }
         }
 
-        return cell;
+        return result;
+    }
+
+    private boolean insideArena(int cell) {
+        return !beforeArena(cell) && !outOfArena(cell);
+    }
+
+    private boolean beforeArena(int cell) {
+        return cell / WIDTH < TOP + CHAMBER_HEIGHT;
+    }
+
+    private boolean outOfArena(int cell) {
+        return cell / WIDTH >= TOP + CHAMBER_HEIGHT + ARENA_HEIGHT;
     }
 
     @Override
@@ -213,17 +206,17 @@ public class SewerBossLevel extends Level {
 
         super.press(cell, hero);
 
-        if (!bossAppeared && cell == CENTER ) {
+        if ( progress == BOSS_ISHIDDEN && cell == CENTER ) {
 
             Heap chest = Dungeon.level.heaps.get( cell );
 
             if( chest.type != Heap.Type.LOCKED_CHEST ) {
 
-                AlarmTrap.trigger(cell);
+                AlarmTrap.trigger( cell, null );
                 set(cell, Terrain.INACTIVE_TRAP);
                 GameScene.updateMap(cell);
 
-                bossAppeared = true;
+                progress = BOSS_APPEARED;
 
                 Mob boss = Bestiary.mob(Dungeon.depth);
                 GLog.i("The chest was trapped! Security system locks the doors!");
@@ -254,9 +247,9 @@ public class SewerBossLevel extends Level {
 
         // FIXME
 
-        if (bossAppeared && !bossDefeated && item instanceof Gold) {
+        if ( progress == BOSS_APPEARED && item instanceof Gold ) {
 
-            bossDefeated = true;
+            progress = BOSS_DEFEATED;
 
             Music.INSTANCE.play( currentTrack(), true );
 
@@ -266,23 +259,6 @@ public class SewerBossLevel extends Level {
         }
 
         return super.drop( item, cell );
-    }
-
-    private boolean insideArena(int cell) {
-        return !beforeArena(cell) && !outOfArena(cell);
-    }
-
-    private boolean beforeArena(int cell) {
-        return cell / WIDTH < TOP + CHAMBER_HEIGHT;
-    }
-
-    private boolean outOfArena(int cell) {
-        return cell / WIDTH >= TOP + CHAMBER_HEIGHT + ARENA_HEIGHT;
-    }
-
-    @Override
-    public boolean noTeleport() {
-        return bossAppeared && !bossDefeated;
     }
 
     public int getRandomSpawnPoint() {
@@ -341,7 +317,22 @@ public class SewerBossLevel extends Level {
         return 0;
     }
 
+    @Override
     public String currentTrack() {
-        return bossAppeared && !bossDefeated ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
-    };
+        return progress == BOSS_APPEARED ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
+    }
+
+    private static final String PROGRESS	= "progress";
+
+    @Override
+    public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle(bundle);
+        bundle.put( PROGRESS, progress );
+    }
+
+    @Override
+    public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle(bundle);
+        progress = bundle.getInt( PROGRESS );
+    }
 }

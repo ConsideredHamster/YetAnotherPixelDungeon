@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
+import java.util.Locale;
+
 public class RingOfAccuracy extends Ring {
 
 	{
@@ -34,20 +36,41 @@ public class RingOfAccuracy extends Ring {
 	
 	@Override
 	public String desc() {
-		return isTypeKnown() ?
-                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-                "improves your combat skills when worn, increasing your chance to hit the enemy with melee or ranged weapons and " +
-                "increasing bonus damage from series of combo attacks." +
-                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
-			super.desc();
-	}
+
+        String mainEffect = "??";
+        String sideEffect = "??";
+
+        if( isIdentified() ){
+            mainEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) / 2 );
+            sideEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) );
+        }
+
+        StringBuilder desc = new StringBuilder(
+            "It is said that such rings were imbued with spirits of long-forgotten hunters and " +
+            "warriors, which allows them to grant the wearer greater skill with all manners of " +
+            "melee and ranged weapons."
+        );
+
+        desc.append( "\n\n" );
+
+        desc.append( super.desc() );
+
+        desc.append( " " );
+
+        desc.append(
+            "Wearing this ring will increase your _accuracy by " + mainEffect + "%_ " +
+            "and _bonus damage from combo attacks by " + sideEffect + "%_."
+        );
+
+        return desc.toString();
+    }
 	
 	public class Accuracy extends RingBuff {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "You feel that your fighting prowess is enhanced." :
-                    "You feel that your fighting prowess is dulled." ;
+                "You feel that your fighting prowess is enhanced." :
+                "You feel that your fighting prowess is dulled." ;
         }
 	}
 }

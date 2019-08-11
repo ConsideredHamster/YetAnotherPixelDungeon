@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
+import java.util.Locale;
+
 public class RingOfFortune extends Ring {
 
 	{
@@ -34,19 +36,39 @@ public class RingOfFortune extends Ring {
 	
 	@Override
 	public String desc() {
-        return isTypeKnown() ?
-                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-                "blesses its wearer with greater luck, increasing amount of loot dropped from enemies when equipped." +
-                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
-            super.desc();
+
+        String mainEffect = "??";
+
+        if( isIdentified() ){
+            mainEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) );
+        }
+
+        StringBuilder desc = new StringBuilder(
+            "First impression is that this ring affects nothing at all, but when using it for an " +
+            "extended amount of time you may find your wealth to be increased substantially due to " +
+            "being blessing with greater luck."
+        );
+
+        desc.append( "\n\n" );
+
+        desc.append( super.desc() );
+
+        desc.append( " " );
+
+        desc.append(
+            "Wearing this ring will increase _amount of gold_ spawned and _amount of loot_ " +
+            "dropped by defeated enemies _by " + mainEffect + "%_."
+        );
+
+        return desc.toString();
 	}
 	
 	public class Fortune extends RingBuff {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "You don't feel anything special on equipping this ring. Is that good?" :
-                    "You don't feel anything special on equipping this ring. Is that bad?" ;
+                "You don't feel anything special on equipping this ring. Is that good?" :
+                "You don't feel anything special on equipping this ring. Is that bad?" ;
         }
 	}
 }

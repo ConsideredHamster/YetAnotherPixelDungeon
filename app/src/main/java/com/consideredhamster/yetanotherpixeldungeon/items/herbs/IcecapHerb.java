@@ -20,44 +20,87 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Charmed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.ColdResistance;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatStewed;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfConfusionGas;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfFrigidVapours;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfInvisibility;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
-import com.watabou.utils.Random;
 
 public class IcecapHerb extends Herb {
+
+    private static final ItemSprite.Glowing BLUE = new ItemSprite.Glowing( 0x2244FF );
+
     {
         name = "Icecap herb";
         image = ItemSpriteSheet.HERB_ICECAP;
 
-        alchemyClass = PotionOfFrigidVapours.class;
+        cooking = MintyMeat.class;
         message = "That herb tasted fresh like mint.";
+
+        mainPotion = PotionOfFrigidVapours.class;
+
+        subPotions.add( PotionOfConfusionGas.class );
+        subPotions.add( PotionOfInvisibility.class );
+    }
+
+    private static void onConsume( Hero hero, float duration ) {
+
+        BuffActive.add( hero, ColdResistance.class, duration );
+        Debuff.remove( hero, Frozen.class );
+
     }
 
     @Override
     public void onConsume( Hero hero ) {
-
-        int maxDuration = (int)( Satiety.MAXIMUM - hero.buff( Satiety.class ).energy() ) / 250 + 1;
-
-        Frozen debuff = Debuff.add( hero, Frozen.class, (float)Random.Int( maxDuration ) );
-
-        if( debuff != null ) debuff.delay( time );
-
         super.onConsume( hero );
+        onConsume( hero, DURATION_HERB );
+    }
+
+    @Override
+    public int price() {
+        return 15 * quantity;
     }
 
     @Override
     public String desc() {
-        return "Icecap herbs feel cold to touch and have some numbing capabilities. They are also " +
-                "used to brew potions of Frigid Vapours.";
+        return "Icecap herbs feel cold to touch and have some numbing capabilities. Northern " +
+                "tribes sometimes use Icecap herbs as a food to keep themselves from frigid " +
+                "climate of their lands." +
+                "\n\n" +
+                "These herbs are used to brew potions of _Frigid Vapours_, _Invisibility_ and _Confusion Gas_. " +
+                "Consuming them will remove _chilling_ and grant a short buff to your _cold_ resistance.";
+    }
+
+    public static class MintyMeat extends MeatStewed {
+
+        {
+            name = "minty meat";
+            spiceGlow = BLUE;
+            message = "That meat tasted fresh like mint.";
+        }
+
+        @Override
+        public void onConsume( Hero hero ) {
+            super.onConsume( hero );
+            IcecapHerb.onConsume( hero, DURATION_MEAT );
+        }
+
+        @Override
+        public String desc() {
+            return "This meat was stewed in a pot with an _Icecap_ herb. It smells somewhat minty. " +
+                    "Consuming it will remove _chilling_ and grant a long buff to your _cold_ resistance.";
+        }
+
+        @Override
+        public int price() {
+            return 30 * quantity;
+        }
     }
 }
 

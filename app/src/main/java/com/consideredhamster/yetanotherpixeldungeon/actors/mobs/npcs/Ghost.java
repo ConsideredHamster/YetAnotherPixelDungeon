@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
+import com.consideredhamster.yetanotherpixeldungeon.levels.PrisonLevel;
+import com.consideredhamster.yetanotherpixeldungeon.levels.RegularLevel;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
@@ -81,21 +83,19 @@ public class Ghost extends NPC {
 	}
 
     private void flee() {
-        int newPos = -1;
-        for (int i=0; i < 10; i++) {
-            newPos = Dungeon.level.randomRespawnCell();
-            if (newPos != -1) {
-                break;
-            }
-        }
+
+        int newPos = Dungeon.level.randomRespawnCell( true, false );
+
         if (newPos != -1) {
 
-            Actor.freeCell( pos );
-
             CellEmitter.get( pos ).start( Speck.factory( Speck.LIGHT ), 0.2f, 3 );
+
+            Actor.moveToCell( this, newPos );
             pos = newPos;
-            sprite.place( pos );
+
+            sprite.place(pos);
             sprite.visible = Dungeon.visible[pos];
+
         }
     }
 	
@@ -114,11 +114,6 @@ public class Ghost extends NPC {
     public boolean isMagical() {
         return true;
     }
-
-    @Override
-    public boolean immovable() {
-        return true;
-    }
 	
 	@Override
 	public float moveSpeed() {
@@ -126,7 +121,7 @@ public class Ghost extends NPC {
 	}
 	
 	@Override
-	protected Char chooseEnemy() {
+	public Char chooseEnemy() {
 		return null;
 	}
 	
@@ -280,37 +275,42 @@ public class Ghost extends NPC {
 			}
 		}
 		
-		public static void spawn( SewerLevel level ) {
-			if (!spawned && Dungeon.depth > 1 && Random.Int( 6 - Dungeon.depth ) == 0 ) {
-				
+		public static void spawn( RegularLevel level ) {
+			if (!spawned && Dungeon.depth > 7 && Random.Int( 12 - Dungeon.depth ) == 0 ) {
+
 				Ghost ghost = new Ghost();
-				do {
-					ghost.pos = level.randomRespawnCell();
-				} while (ghost.pos == -1 );
-				level.mobs.add( ghost );
-				Actor.occupyCell( ghost );
-				
-				spawned = true;
-				alternative = false;
-				if (!alternative) {
-					left2kill = 8;
-				}
-				
-				completed = false;
-				given = false;
-				processed = false;
-				depth = Dungeon.depth;
+                ghost.pos = level.randomRespawnCell();
 
-                do {
-                    weapon = (Weapon) Generator.random(Generator.Category.WEAPON);
-                } while (weapon instanceof ThrowingWeapon || weapon.lootChapter() < 2 || weapon.bonus < 0);
+				if ( ghost.pos > -1 ){
 
-                do {
-                    armor = (Armour)Generator.random( Generator.Category.ARMOR );
-                } while (armor instanceof BodyArmorCloth || armor.lootChapter() < 2 || armor.bonus < 0 );
+                    level.mobs.add( ghost );
+                    Actor.occupyCell( ghost );
 
-				weapon.identify().repair();
-                armor.identify().repair();
+                    spawned = true;
+                    alternative = false;
+                    if( !alternative ){
+                        left2kill = 8;
+                    }
+
+                    completed = false;
+                    given = false;
+                    processed = false;
+                    depth = Dungeon.depth;
+
+                    do{
+                        weapon = (Weapon) Generator.random( Generator.Category.WEAPON );
+                    }
+                    while( weapon instanceof ThrowingWeapon || weapon.lootChapter() < 2 || weapon.bonus < 1 );
+
+                    do{
+                        armor = (Armour) Generator.random( Generator.Category.ARMOR );
+                    }
+                    while( armor instanceof BodyArmorCloth || armor.lootChapter() < 2 || armor.bonus < 1 );
+
+                    weapon.identify().repair();
+                    armor.identify().repair();
+
+                }
 			}
 		}
 

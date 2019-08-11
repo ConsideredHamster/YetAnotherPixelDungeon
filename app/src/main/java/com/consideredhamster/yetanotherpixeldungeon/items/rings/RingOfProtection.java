@@ -21,7 +21,9 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
 import java.util.HashSet;
+import java.util.Locale;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 
 public class RingOfProtection extends Ring {
@@ -38,13 +40,34 @@ public class RingOfProtection extends Ring {
 	
 	@Override
 	public String desc() {
-        return isTypeKnown() ?
-            ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-            "greatly boosts your survivability by allowing you to occasionally resist different " +
-            "elemental threats such as fire, frost, electricity, acid, energy or withering. It " +
-            "also increases your armor class by amount depending on your physical strength." +
-            ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
-        super.desc();
+
+        String mainEffect = "??";
+        String sideEffect = "??";
+
+        if( isIdentified() ){
+            mainEffect = String.format( Locale.getDefault(), "%.0f", Dungeon.hero.STR * Ring.effect( bonus ) );
+            sideEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) );
+        }
+
+        StringBuilder desc = new StringBuilder(
+            "This ring makes the wearer's own body to become sturdier, effectively channeling his " +
+            "or her physical strength into additional armor. It also greatly increases resistances " +
+            "to various magical and elemental threats."
+        );
+
+        desc.append( "\n\n" );
+
+        desc.append( super.desc() );
+
+        desc.append( " " );
+
+        desc.append(
+            "Wearing this ring will increase your _armor class by " + mainEffect + "_ and " +
+            "increase your _resistance_ to fire, cold, shock, acid and energy by " +
+            "_" + sideEffect + "%_."
+        );
+
+        return desc.toString();
 	}
 
     public static final HashSet<Class<? extends Element>> RESISTS = new HashSet<>();
@@ -61,16 +84,12 @@ public class RingOfProtection extends Ring {
     }
 	
 	public class Protection extends RingBuff {
-		
-//		public float durationFactor() {
-//			return 1.0f / target.ringBuffs(Protection.class);
-//		}
 
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "You feel more protected." :
-                    "You feel more vulnerable." ;
+                "You feel more protected." :
+                "You feel more vulnerable." ;
         }
 	}
 }

@@ -23,8 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatRaw;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CrabSprite;
 
 public class SewerCrab extends MobHealthy {
@@ -33,11 +32,29 @@ public class SewerCrab extends MobHealthy {
 
         super( 4 );
 
-		name = "sewer crab";
-		spriteClass = CrabSprite.class;
+        /*
+
+            base maxHP  = 14
+            armor class = 4
+
+            damage roll = 4-7
+
+            accuracy    = 5
+            dexterity   = 4
+
+            perception  = 95%
+            stealth     = 95%
+
+         */
+
+        name = "sewer crab";
+        spriteClass = CrabSprite.class;
 		
-		loot = new MysteryMeat();
+		loot = new MeatRaw();
 		lootChance = 0.25f;
+
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
 
 	}
 
@@ -46,11 +63,11 @@ public class SewerCrab extends MobHealthy {
         return state == HUNTING || state == FLEEING ? super.moveSpeed() * 2.0f: super.moveSpeed() ;
     }
 	
-	@Override
-	public void die( Object cause, Element dmg ) {
-		Ghost.Quest.process( pos );
-		super.die( cause, dmg );
-	}
+//	@Override
+//	public void die( Object cause, Element dmg ) {
+//		Ghost.Quest.process( pos );
+//		super.die( cause, dmg );
+//	}
 	
 	@Override
 	public String description() {

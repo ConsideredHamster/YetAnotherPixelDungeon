@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.ui;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.ui.Component;
-import com.consideredhamster.yetanotherpixeldungeon.Chrome;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Chrome;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.PixelScene;
 
 public class Toast extends Component {

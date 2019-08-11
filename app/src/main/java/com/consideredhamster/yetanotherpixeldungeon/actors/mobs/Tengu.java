@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
@@ -70,6 +71,8 @@ public class Tengu extends MobRanged {
 
         resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
         resistances.put(Element.Body.class, Element.Resist.PARTIAL);
+
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
     }
 
     @Override
@@ -161,7 +164,7 @@ public class Tengu extends MobRanged {
             BuffActive.add(this, Enraged.class, breaks * Random.Float(2.5f, 5.0f));
 
             if (Dungeon.visible[pos]) {
-                sprite.showStatus( CharSprite.NEGATIVE, "enraged!" );
+//                sprite.showStatus( CharSprite.NEGATIVE, "enraged!" );
                 GLog.n( "Tengu is enraged!" );
             }
 
@@ -181,48 +184,49 @@ public class Tengu extends MobRanged {
 	
 	private void jump() {
 
-            timeToJump = 0;
+        timeToJump = 0;
 
-            for( int i = 0 ; i < 4 ; i++ ){
-                int trapPos;
-                do{
-                    trapPos = Random.Int( Level.LENGTH );
-                }
-                while( !Level.fieldOfView[ trapPos ] || !Level.passable[ trapPos ] || Actor.findChar( trapPos ) != null );
+        for( int i = 0 ; i < 4 ; i++ ){
+            int trapPos;
+            do{
+                trapPos = Random.Int( Level.LENGTH );
+            }
+            while( !Level.fieldOfView[ trapPos ] || !Level.passable[ trapPos ] || Actor.findChar( trapPos ) != null );
 
-                if( Dungeon.level.map[ trapPos ] == Terrain.INACTIVE_TRAP ){
-                    Level.set( trapPos, Terrain.BLADE_TRAP );
-                    GameScene.updateMap( trapPos );
-                    ScrollOfClairvoyance.discover( trapPos );
-                }
+            if( Dungeon.level.map[ trapPos ] == Terrain.INACTIVE_TRAP ){
+                Level.set( trapPos, Terrain.BLADE_TRAP );
+                GameScene.updateMap( trapPos );
+                ScrollOfClairvoyance.discover( trapPos );
+            }
+        }
+
+        ArrayList<Integer> cells = new ArrayList<>();
+
+        for( Integer cell : Dungeon.level.filterTrappedCells( Dungeon.level.getPassableCellsList() ) ){
+
+            if( pos != cell && !Level.adjacent( pos, cell ) && Level.fieldOfView[ cell ] ) {
+                cells.add( cell );
             }
 
+        }
 
-            int newPos;
+		int newPos = !cells.isEmpty() ? Random.element( cells ) : pos ;
 
+        sprite.move( pos, newPos );
+        move( newPos );
 
-            do{
-                newPos = Dungeon.level.randomRespawnCell( false, true );
-            } while( Level.adjacent( pos, newPos ) ||
-                    ( enemy != null && Level.adjacent( newPos, enemy.pos ) ) );
+        if( Dungeon.visible[ newPos ] ){
+            CellEmitter.get( newPos ).burst( Speck.factory( Speck.WOOL ), 6 );
+            Sample.INSTANCE.play( Assets.SND_PUFF );
+        }
 
-
-		
-		sprite.move( pos, newPos );
-		move( newPos );
-		
-		if (Dungeon.visible[newPos]) {
-			CellEmitter.get( newPos ).burst( Speck.factory( Speck.WOOL ), 6 );
-			Sample.INSTANCE.play( Assets.SND_PUFF );
-		}
-		
 		spend( 1 / moveSpeed() );
 	}
 	
 	@Override
 	public void notice() {
 		super.notice();
-        if( enemySeen ) {
+        if( enemySeen && HP == HT && breaks == 0 ) {
             yell( "Gotcha, " + Dungeon.hero.heroClass.title() + "!" );
         }
 	}
@@ -237,32 +241,14 @@ public class Tengu extends MobRanged {
     @Override
     public void die( Object cause, Element dmg ) {
 
-//		Badges.Badge badgeToCheck = null;
-//		switch (Dungeon.hero.heroClass) {
-//		case WARRIOR:
-//			badgeToCheck = Badge.MASTERY_WARRIOR;
-//			break;
-//		case SCHOLAR:
-//			badgeToCheck = Badge.MASTERY_SCHOLAR;
-//			break;
-//		case BRIGAND:
-//			badgeToCheck = Badge.MASTERY_BRIGAND;
-//			break;
-//		case ACOLYTE:
-//			badgeToCheck = Badge.MASTERY_ACOLYTE;
-//			break;
-//		}
-//		if (!Badges.isUnlocked( badgeToCheck )) {
-//			Dungeon.bonus.drop( new TomeOfMastery(), pos ).sprite.drop();
-//		}
+        yell( "Free at last..." );
 
-        GameScene.bossSlain();
-        Dungeon.level.drop( new SkeletonKey(), pos ).sprite.drop();
         super.die( cause, dmg );
 
+        GameScene.bossSlain();
         Badges.validateBossSlain();
+        Dungeon.level.drop( new SkeletonKey(), pos ).sprite.drop();
 
-        yell( "Free at last..." );
     }
 	
 	@Override

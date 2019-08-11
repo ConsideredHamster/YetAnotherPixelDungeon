@@ -20,11 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.ui;
 
-import com.consideredhamster.yetanotherpixeldungeon.Chrome;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
-import com.consideredhamster.yetanotherpixeldungeon.items.misc.Waterskin;
 
 public class TagOilLantern extends Tag {
 

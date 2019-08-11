@@ -21,12 +21,14 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Pushing;
+import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.watabou.utils.Callback;
 
 public class Harpoons extends ThrowingWeaponHeavy {
 
@@ -60,36 +62,32 @@ public class Harpoons extends ThrowingWeaponHeavy {
     }
 
     @Override
-    public void proc(Char attacker, Char defender, int damage ) {
+    public void proc(Char attacker, final Char defender, int damage ) {
+
         super.proc(attacker, defender, damage);
 
         if( !Level.adjacent( attacker.pos, defender.pos ) ) {
 
-            if( attacker.STR() >= defender.STR() && !defender.immovable() ) {
+            int distance = damage * 6 / defender.totalHealthValue() + 1;
 
-                int distance = Math.max( 0, attacker.STR() - defender.STR() + 1 );
+            distance = Element.Resist.modifyValue( distance, defender, Element.KNOCKBACK );
 
-                int newPos = Ballistica.trace[Math.max( 1, Ballistica.distance - distance - 1 )];
+            if( distance > 0 ) {
 
-                Actor.addDelayed(new Pushing(defender, defender.pos, newPos), -1);
+                final int newPos = Ballistica.trace[Math.max( 1, Ballistica.distance - distance )];
 
-                defender.pos = newPos;
-
-                Dungeon.level.press( newPos, defender );
-
-                defender.delay( 1f );
+                Pushing.move( defender, newPos, new Callback() {
+                    @Override
+                    public void call(){
+                        Actor.moveToCell( defender, newPos );
+                        Dungeon.level.press( newPos, defender );
+                        defender.delay( 1f );
+                    }
+                } );
 
             } else {
 
-                int distance = Math.max(0, defender.STR() - attacker.STR());
-
-                int newPos = Ballistica.trace[Math.min( Ballistica.distance - 2, distance )];
-
-                Actor.addDelayed(new Pushing(attacker, attacker.pos, newPos), -1);
-
-                attacker.pos = newPos;
-
-                Dungeon.level.press( newPos, attacker );
+                super.onThrow( defender.pos );
 
             }
         }
@@ -98,6 +96,8 @@ public class Harpoons extends ThrowingWeaponHeavy {
 	@Override
 	public String desc() {
 		return 
-			"Harpoons can be used to pull your targets towards you - or to pull you towards your doom, depending on your target.";
+			"Most of the harpoon's weight is due to the chain which is attached to it. Those rare " +
+            "throwing weapons that can be used to pull your some targets towards you. If target is " +
+            "too heavy to be pulled, harpoon will drop on the ground instead.";
 	}
 }

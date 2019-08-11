@@ -47,7 +47,7 @@ public class ScrollOfDarkness extends Scroll {
         curUser.sprite.centerEmitter().start( Speck.factory( Speck.DARKNESS ), 0.3f, 5 );
         Sample.INSTANCE.play( Assets.SND_GHOST );
 
-        GameScene.add( Blob.seed( curUser.pos, 1000 * ( 110 + curUser.magicSkill() ) / 100, Darkness.class ) );
+        GameScene.add( Blob.seed( curUser.pos, 1000 * ( 110 + curUser.magicPower() ) / 100, Darkness.class ) );
 
         GLog.i( TXT_MESSAGE );
 

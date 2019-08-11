@@ -41,8 +41,25 @@ public class GnollHunter extends MobRanged {
 
         super( 3 );
 
+        /*
+
+            base maxHP  = 9/12/15
+            armor class = 2/4/6
+
+            damage roll = 2-5/4-8/6-11
+
+            accuracy    = 11/15/19
+            dexterity   = 5/6/7
+
+            perception  = 110%/120%/130%
+            stealth     = 100%/100%/100%
+
+         */
+
 		name = "gnoll hunter";
 		spriteClass = GnollSprite.class;
+
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
 
         switch( Dungeon.chapter() ) {
             case 1:
@@ -63,26 +80,13 @@ public class GnollHunter extends MobRanged {
                 break;
         }
 
-        lootChance = 0.25f;
-
 
 	}
 
     @Override
     protected boolean canAttack( Char enemy ) {
-        return super.canAttack( enemy ) || Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos && !isCharmedBy( enemy );
+        return super.canAttack( enemy ) || Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos;
     }
-
-//    @Override
-//    public int attackProc( Char enemy, int damage ) {
-//
-//        if ( distance(enemy) > 1 && Random.Int( enemy.HT ) < damage ) {
-//            Buff.affect( enemy, Poison.class ).set(Random.IntRange( damage / 2 , damage ));
-//            enemy.sprite.burst( 0x00AAAA, 5 );
-//        }
-//
-//        return damage;
-//    }
 
     @Override
     protected void onRangedAttack( int cell ) {
@@ -97,22 +101,6 @@ public class GnollHunter extends MobRanged {
         super.onRangedAttack( cell );
     }
 
-//    @Override
-//    public void damage( int dmg, Object src, Element type ) {
-//        super.damage(dmg, src, type);
-//
-//        if ( isAlive() && src != null && HP >= HT / 2 && HP + dmg < HT / 2 ) {
-//
-//            state = FLEEING;
-//
-//            if (Dungeon.visible[pos]) {
-//                sprite.showStatus(CharSprite.NEGATIVE, "fleeing");
-////                spend( TICK );
-//            }
-//
-//        }
-//    }
-	
 	@Override
 	public void die( Object cause, Element dmg ) {
 		Ghost.Quest.process( pos );
@@ -121,9 +109,6 @@ public class GnollHunter extends MobRanged {
 	
 	@Override
 	public String description() {
-//		return
-//			"Gnolls are hyena-like humanoids. They dwell in sewers and dungeons, venturing up to raid the surface from time to time. " +
-//			"Gnoll hunters are regular members of their pack, they are not as strong as brutes and not as intelligent as shamans.";
 
         return "Gnolls are hyena-like humanoids. "
 

@@ -35,9 +35,7 @@ public class BladeTrap extends Trap {
 
     public static BladeTrap TRAP = new BladeTrap();
 
-	public static void trigger( int pos ) {
-
-        Char ch = Actor.findChar( pos );
+	public static void trigger( int pos, Char ch ) {
 
 		if (ch != null) {
 

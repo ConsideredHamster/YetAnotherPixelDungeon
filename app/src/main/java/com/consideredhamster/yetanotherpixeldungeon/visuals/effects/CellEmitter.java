@@ -21,7 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.visuals.effects;
 
 import com.watabou.noosa.particles.Emitter;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.watabou.utils.PointF;
 
@@ -50,16 +50,28 @@ public class CellEmitter {
 		
 		return emitter;
 	}
-	
-	public static Emitter bottom( int cell ) {
-		
-		PointF p = DungeonTilemap.tileToWorld( cell );
-		
-		Emitter emitter = GameScene.emitter();
+
+    public static Emitter bottom( int cell ) {
+
+        PointF p = DungeonTilemap.tileToWorld( cell );
+
+        Emitter emitter = GameScene.emitter();
 
         if( emitter != null)
-		    emitter.pos( p.x, p.y + DungeonTilemap.SIZE, DungeonTilemap.SIZE, 0 );
-		
-		return emitter;
-	}
+            emitter.pos( p.x, p.y + DungeonTilemap.SIZE / 2, DungeonTilemap.SIZE, DungeonTilemap.SIZE / 2 );
+
+        return emitter;
+    }
+
+    public static Emitter top( int cell ) {
+
+        PointF p = DungeonTilemap.tileToWorld( cell );
+
+        Emitter emitter = GameScene.emitter();
+
+        if( emitter != null)
+            emitter.pos( p.x, p.y, DungeonTilemap.SIZE, DungeonTilemap.SIZE / 4 );
+
+        return emitter;
+    }
 }

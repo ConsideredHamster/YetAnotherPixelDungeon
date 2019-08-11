@@ -58,6 +58,14 @@ public class Statue extends MobPrecise {
         resistances.put( Element.Body.class, Element.Resist.IMMUNE );
         resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
 
+        resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Doom.class, Element.Resist.PARTIAL );
+
+    }
+
+    @Override
+    public boolean isMagical() {
+        return true;
     }
 	
 	@Override

@@ -20,12 +20,12 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.painters;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.food.RationMedium;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.Food;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
@@ -65,7 +65,7 @@ public class BarricadedPainter extends Painter {
 	
 	private static Item prize( Level level ) {
 
-		Item prize = level.itemToSpawnAsPrize( Food.class );
+		Item prize = level.itemToSpawnAsPrize( RationMedium.class );
 
         if (prize != null) {
             return prize;

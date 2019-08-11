@@ -24,6 +24,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Guard;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
+import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 import com.watabou.utils.GameMath;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
@@ -77,7 +79,7 @@ public abstract class Shield extends Armour {
 
             }  else {
 
-                hero.buff( Satiety.class ).decrease( (float)str() / hero.STR() );
+                hero.buff( Satiety.class ).decrease( Satiety.POINT * str() / hero.STR() );
                 Buff.affect(hero, Guard.class ).reset( 1 );
                 hero.spendAndNext( Actor.TICK );
 
@@ -88,6 +90,29 @@ public abstract class Shield extends Armour {
             super.execute( hero, action );
 
         }
+    }
+
+    public void doEquipCarefully( Hero hero ) {
+
+
+        if( hero.belongings.weap1!=null && this.incompatibleWith(hero.belongings.weap1) ) {
+
+            final Hero heroFinal = hero;
+
+            GameScene.show(
+                    new WndOptions( TXT_ITEM_IS_INCOMPATIBLE, TXT_R_U_SURE_INCOMPATIBLE, TXT_YES, TXT_NO ) {
+
+                        @Override
+                        protected void onSelect(int index) {
+                            if (index == 0) {
+                                Shield.super.doEquipCarefully( heroFinal );
+                            }
+                        }
+                    }
+            );
+
+        }else
+            super.doEquipCarefully( hero );
     }
 	
 	@Override

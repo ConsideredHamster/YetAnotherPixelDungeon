@@ -34,7 +34,7 @@ public class Featherfall extends Armour.Glyph {
 
     @Override
     public Class<? extends Element> resistance() {
-        return Element.Falling.class;
+        return Element.Physical.Falling.class;
     }
 
     @Override

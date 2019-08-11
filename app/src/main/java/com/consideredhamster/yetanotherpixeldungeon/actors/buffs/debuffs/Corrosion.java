@@ -20,7 +20,11 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.CausticOoze;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.Hazard;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
@@ -87,6 +91,16 @@ public class Corrosion extends Debuff {
         }
 
         return super.act();
+    }
+
+    @Override
+    public void detach() {
+
+        if( !target.isAlive() && duration > 0 ) {
+            CausticOoze.spawn( target.pos, duration );
+        }
+
+        super.detach();
     }
 
 }

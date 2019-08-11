@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
@@ -43,8 +44,25 @@ public class GnollShaman extends MobRanged {
 
         super( 8 );
 
+        /*
+
+            base maxHP  = 17
+            armor class = 4
+
+            damage roll = 4-8
+
+            accuracy    = 20
+            dexterity   = 11
+
+            perception  = 120%
+            stealth     = 100%
+
+         */
+
 		name = "gnoll shaman";
 		spriteClass = ShamanSprite.class;
+
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
 
 	}
 
@@ -83,8 +101,7 @@ public class GnollShaman extends MobRanged {
 
     @Override
     protected boolean canAttack( Char enemy ) {
-        return !isCharmedBy( enemy ) && ( Level.adjacent( pos, enemy.pos )
-            || Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos );
+        return super.canAttack( enemy ) || Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos;
     }
 
     @Override
@@ -122,57 +139,18 @@ public class GnollShaman extends MobRanged {
     }
 
     @Override
+    public void die( Object cause, Element dmg ) {
+        Ghost.Quest.process( pos );
+        super.die( cause, dmg );
+    }
+
+    @Override
     public String description() {
         return
                 "The most intelligent gnolls can master shamanistic magic. Gnoll shamans prefer " +
                         "battle spells to compensate for lack of might, not hesitating to use them " +
                         "on those who question their status in a tribe.";
     }
-
-//    @Override
-//    public void call() {
-//        next();
-//    }
-
-//	@Override
-//	protected boolean doAttack( Char enemy ) {
-//
-//		if (Level.distance( pos, enemy.pos ) <= 1) {
-//
-//			return super.doAttack( enemy );
-//
-//		} else {
-//
-//			boolean visible = Level.fieldOfView[pos] || Level.fieldOfView[enemy.pos];
-//			if (visible) {
-//				sprite.cast(enemy.pos);
-//			}
-//
-//			spend( TIME_TO_ZAP );
-//
-//			if ( hit( this, enemy, false, true ) ) {
-//
-//				enemy.damage(damageRoll(), this, DamageType.SHOCK);
-
-//				if (enemy == Dungeon.hero) {
-//
-//					Camera.main.shake( 2, 0.3f );
-					
-//					if (!enemy.isAlive()) {
-//						Dungeon.fail( Utils.format( ResultDescriptions.MOB,
-//							Utils.indefinite( name ), Dungeon.depth ) );
-//						GLog.n( TXT_LIGHTNING_KILLED, name );
-//					}
-//				}
-//			} else {
-//				enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
-//			}
-//
-//			return !visible;
-//		}
-//	}
-
-
 
     @Override
     public void storeInBundle( Bundle bundle ) {

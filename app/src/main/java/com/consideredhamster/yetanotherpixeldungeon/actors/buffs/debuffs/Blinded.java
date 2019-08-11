@@ -29,11 +29,6 @@ public class Blinded extends Debuff {
     public final static String TXT_CANNOT_READ = "Reading? You can barely see your hands.";
 
     @Override
-    public Element buffType() {
-        return Element.MIND;
-    }
-
-    @Override
     public String toString() {
         return "Blinded";
     }

@@ -20,14 +20,11 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
-import java.util.HashSet;
-
-import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatRaw;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
@@ -46,14 +43,32 @@ public class EvilEye extends MobRanged {
 
         super( 11 );
 
+        /*
+
+            base maxHP  = 23
+            armor class = 6
+
+            damage roll = 5-11
+
+            accuracy    = 27
+            dexterity   = 15
+
+            perception  = 130%
+            stealth     = 100%
+
+         */
+
 		name = "evil eye";
 		spriteClass = EyeSprite.class;
 		
 		flying = true;
-        loot = new MysteryMeat();
+        loot = new MeatRaw();
         lootChance = 0.35f;
 
         resistances.put(Element.Energy.class, Element.Resist.PARTIAL);
+
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Knockback.class, Element.Resist.VULNERABLE );
 
 	}
 
@@ -68,7 +83,7 @@ public class EvilEye extends MobRanged {
 
     @Override
     protected boolean canAttack( Char enemy ) {
-        return ( HP < HT || !Level.adjacent( pos, enemy.pos ) ) && !isCharmedBy( enemy ) &&
+        return ( HP < HT || !Level.adjacent( pos, enemy.pos ) ) &&
                 Ballistica.cast( pos, enemy.pos, false, false ) == enemy.pos;
     }
 
@@ -77,7 +92,7 @@ public class EvilEye extends MobRanged {
 
         Sample.INSTANCE.play(Assets.SND_RAY);
 
-        sprite.parent.add( new DeathRay( sprite.center(), DungeonTilemap.tileCenterToWorld( cell ) ) );
+        sprite.parent.add( new DeathRay( pos, cell ) );
 
         onCastComplete();
 
@@ -90,7 +105,7 @@ public class EvilEye extends MobRanged {
 
         boolean terrainAffected = false;
 
-        for (int i=1; i < Ballistica.distance ; i++) {
+        for (int i=1; i <= Ballistica.distance ; i++) {
 
             int pos = Ballistica.trace[i];
 
@@ -110,16 +125,11 @@ public class EvilEye extends MobRanged {
 
             }
 
-//            Heap heap = Dungeon.level.heaps.get( pos );
-//            if (heap != null) {
-//                heap.disintegrate( true );
-//            }
-
             Char ch = Actor.findChar( pos );
 
             if (ch != null) {
 
-                if (hit(this, ch, false, true)) {
+//                if (hit(this, ch, false, true)) {
 
                     ch.damage( absorb( damageRoll(), enemy.armorClass(), true ), this, Element.ENERGY );
 
@@ -128,14 +138,9 @@ public class EvilEye extends MobRanged {
                         CellEmitter.center(pos).burst(PurpleParticle.BURST, Random.IntRange(1, 2));
                     }
 
-
-//                    if (!ch.isAlive() && ch == Dungeon.hero) {
-//                        Dungeon.fail(Utils.format(ResultDescriptions.MOB, Utils.indefinite(name), Dungeon.depth));
-//                        GLog.n(TXT_DEATHGAZE_KILLED, name);
-//                    }
-                } else {
-                    enemy.missed();
-                }
+//                } else {
+//                    enemy.missed();
+//                }
             }
         }
 
@@ -145,100 +150,6 @@ public class EvilEye extends MobRanged {
 
         return true;
     }
-
-//	@Override
-//	public float attackSpeed() {
-//		return 1f;
-//	}
-	
-//	@Override
-//	protected boolean doAttack( Char enemy ) {
-//
-//		spend( attackDelay() );
-//
-//		boolean rayVisible = false;
-//
-//		for (int i=0; i < Ballistica.distance; i++) {
-//			if (Dungeon.visible[Ballistica.trace[i]]) {
-//				rayVisible = true;
-//                hitCell = Ballistica.trace[i];
-//			}
-//		}
-//
-//		if (rayVisible) {
-//			sprite.attack( hitCell );
-//			return false;
-//		} else {
-//			attack( enemy );
-//			return true;
-//		}
-//	}
-	
-//	@Override
-//	public boolean attack( Char enemy ) {
-//
-//        boolean terrainAffected = false;
-//
-//		for (int i=1; i < Ballistica.distance ; i++) {
-//
-//			int pos = Ballistica.trace[i];
-//
-//            int terr = Dungeon.level.map[pos];
-//            if (terr == Terrain.DOOR_CLOSED ) {
-//
-//                Level.set(pos, Terrain.EMBERS);
-//                GameScene.updateMap(pos);
-//                terrainAffected = true;
-//
-//            } else if (terr == Terrain.HIGH_GRASS) {
-//
-//                Level.set( pos, Terrain.GRASS );
-//                GameScene.updateMap( pos );
-//                terrainAffected = true;
-//
-//            }
-//
-////            Heap heap = Dungeon.level.heaps.get( pos );
-////            if (heap != null) {
-////                heap.disintegrate( true );
-////            }
-//
-//			Char ch = Actor.findChar( pos );
-//
-//			if (ch != null) {
-//
-//                if (hit(this, ch, false, true)) {
-//                    ch.damage(damageRoll(), this, DamageType.ENERGY);
-//
-//                    if (Dungeon.visible[pos]) {
-//                        ch.sprite.flash();
-//                        CellEmitter.center(pos).burst(PurpleParticle.BURST, Random.IntRange(1, 2));
-//                    }
-//
-////                    if (!ch.isAlive() && ch == Dungeon.hero) {
-////                        Dungeon.fail(Utils.format(ResultDescriptions.MOB, Utils.indefinite(name), Dungeon.depth));
-////                        GLog.n(TXT_DEATHGAZE_KILLED, name);
-////                    }
-//                } else {
-//                    ch.sprite.showStatus(CharSprite.NEUTRAL, ch.defenseVerb());
-//                }
-//            }
-//		}
-//
-//        if (terrainAffected) {
-//            Dungeon.observe();
-//        }
-//
-//		return true;
-//	}
-
-//    @Override
-//    public void add( Buff buff ) {
-//        if (buff instanceof Blindness) {
-//            damage( Random.NormalIntRange( HT / 2 , HT ), null, null );
-//        }
-//        super.add( buff );
-//    }
 	
 	@Override
 	public String description() {

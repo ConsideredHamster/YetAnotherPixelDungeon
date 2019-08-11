@@ -33,7 +33,7 @@ public class ExitPainter extends Painter {
 		fill( level, room, 1, Terrain.EMPTY );
 
         for (Room.Door door : room.connected.values()) {
-            door.set( Dungeon.depth != 2 ? Room.Door.Type.REGULAR : Room.Door.Type.HIDDEN );
+            door.set( Room.Door.Type.REGULAR );
         }
 		
 		level.exit = room.random( 1 );

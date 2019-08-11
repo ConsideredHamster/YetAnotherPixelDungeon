@@ -21,10 +21,10 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
@@ -43,11 +43,10 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.UnholyA
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.LifeDrain;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Pushing;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.DrainLife;
+import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.keys.SkeletonKey;
 import com.consideredhamster.yetanotherpixeldungeon.levels.CityBossLevel;
@@ -132,7 +131,6 @@ public class DwarvenKing extends MobPrecise {
     //FIXME
 
     private static final BoneExplosion EXPLOSION  = new BoneExplosion();
-    private static final KnockBack KNOCKBACK  = new KnockBack();
 
     public static class BoneExplosion {}
     public static class KnockBack {}
@@ -153,9 +151,12 @@ public class DwarvenKing extends MobPrecise {
         lootChance = 4f;
 
         resistances.put(Element.Body.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Doom.class, Element.Resist.PARTIAL);
         resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
 
-        resistances.put(Element.Mind.class, Element.Resist.IMMUNE);
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
     }
 
     public int breaks = 0;
@@ -320,26 +321,7 @@ public class DwarvenKing extends MobPrecise {
     @Override
     public void damage( int dmg, Object src, Element type ) {
 
-        UnholyArmor buff = buff(UnholyArmor.class);
-
-        if (buff != null) {
-//            if( src instanceof Char ) {
-
-                Char ch = Dungeon.hero;
-
-                ch.sprite.showStatus(CharSprite.NEGATIVE, "reflected");
-                ch.damage( dmg, null, Element.MIND );
-
-//                if( Level.adjacent( pos, ch.pos) ) {
-//                    knockBack(ch, dmg);
-//                }
-
-//                new Flare( 6, 16 ).color( SpellSprite.COLOUR_DARK, true).show( ch.sprite, 2f );
-//            }
-
-            dmg = dmg / 4 + Random.Int( 1 + dmg % 4 );
-
-        } else if( buff( Enraged.class ) != null ) {
+        if( buff( Enraged.class ) != null ) {
 
             dmg = dmg / 2 + Random.Int( 1 + dmg % 2 );
 
@@ -348,13 +330,27 @@ public class DwarvenKing extends MobPrecise {
         super.damage(dmg, src, type);
     }
 
+    @Override
+    public HashMap<Class<? extends Element>, Float> resistances() {
+
+        HashMap<Class<? extends Element>, Float> result=new HashMap<>();;
+        result.putAll( super.resistances());
+
+        if( buff( UnholyArmor.class ) != null ){
+            for( Class<? extends Element> type : UnholyArmor.RESISTS ) {
+                result.put( type, Element.Resist.IMMUNE );
+            }
+        }
+
+        return result;
+    }
+
 
     @Override
     public int attackProc( Char enemy, int damage, boolean blocked ) {
 
-        if ( enemy != null && !enemy.immovable() && buff( Enraged.class ) != null ) {
-            Camera.main.shake(1, 0.1f);
-            damage = knockBack( enemy, damage);
+        if ( enemy != null && buff( Enraged.class ) != null ) {
+            Pushing.knockback( enemy, pos, 1, damage );
         }
 
         return damage;
@@ -392,7 +388,6 @@ public class DwarvenKing extends MobPrecise {
         Camera.main.shake(3, 0.5f);
         new Flare( 6, 48 ).color( SpellSprite.COLOUR_DARK, true).show( sprite, 3f );
 
-//		Dungeon.bonus.drop( new ArmorKit(), pos ).sprite.drop();
         Dungeon.level.drop( new SkeletonKey(), pos ).sprite.drop();
 
         for (Mob mob : (Iterable<Mob>) Dungeon.level.mobs.clone()) {
@@ -407,10 +402,11 @@ public class DwarvenKing extends MobPrecise {
             blob.remove();
         }
 
+        super.die( cause, dmg );
+
         Badges.validateBossSlain();
         GameScene.bossSlain();
 
-        super.die( cause, dmg );
 
 	}
 	
@@ -426,10 +422,10 @@ public class DwarvenKing extends MobPrecise {
 	@Override
 	public String description() {
 		return
-			"The last king of dwarves was known for his deep understanding of processes of life and death. " +
-			"He has persuaded members of his court to participate in a ritual, that should have granted them " +
-			"eternal youthfulness. In the end he was the only one, who got it - and an army of undead " +
-			"as a bonus.";
+			"The last king of dwarves was known for a deep understanding of the processes of life " +
+            "and death. He had persuaded the members of his court to participate in a ritual that " +
+            "should have granted them eternal youth. In the end, he was the only one who got it, " +
+            "with an army of undead as a bonus.";
 	}
 
 //    @Override
@@ -454,13 +450,9 @@ public class DwarvenKing extends MobPrecise {
 			name = "undead dwarf";
 			spriteClass = UndeadSprite.class;
 
-//            minDamage += tier;
-//            maxDamage += tier;
-
             minDamage /= 2;
             maxDamage /= 2;
 
-//            dexterity /= 2;
             armorClass /= 2;
 
             resistances.put(Element.Unholy.class, Element.Resist.PARTIAL);
@@ -516,7 +508,7 @@ public class DwarvenKing extends MobPrecise {
 
                 if (king.sprite.visible) {
 
-                    sprite.parent.add( new LifeDrain( pos, king.pos, null ) );
+                    sprite.parent.add( new DrainLife( pos, king.pos, null ) );
 
                     king.sprite.emitter().burst(Speck.factory(Speck.HEALING), 1);
 
@@ -569,20 +561,20 @@ public class DwarvenKing extends MobPrecise {
 		public void
         die( Object cause, Element dmg ) {
 
-            if( buff( Enraged.class ) != null && king != null && king.isAlive() && cause != king ) {
-                for (int n : Level.NEIGHBOURS8) {
-
-                    int p = pos + n;
-
-                    Char ch = findChar(p);
-
-                    if (ch != null && ch.isAlive()) {
-                        ch.damage(Char.absorb(damageRoll(), ch.armorClass() / 2), EXPLOSION, Element.PHYSICAL);
-                    }
-                }
-
-                sprite.emitter().burst( FlameParticle.FACTORY, 10 );
-            }
+//            if( buff( Enraged.class ) != null && king != null && king.isAlive() && cause != king ) {
+//                for (int n : Level.NEIGHBOURS8) {
+//
+//                    int p = pos + n;
+//
+//                    Char ch = findChar(p);
+//
+//                    if (ch != null && ch.isAlive()) {
+//                        ch.damage(Char.absorb(damageRoll(), ch.armorClass() / 2), EXPLOSION, Element.PHYSICAL);
+//                    }
+//                }
+//
+//                sprite.emitter().burst( FlameParticle.FACTORY, 10 );
+//            }
 
             if( well > 0 && king != null) {
                 GameScene.add( Blob.seed( well, spawnDelay( king.breaks ), Spawner.class ) );
@@ -665,7 +657,7 @@ public class DwarvenKing extends MobPrecise {
                 healthRestored += Random.IntRange( mob.HP / 3, mob.HP / 2 );
 
                 if (sprite.visible || mob.sprite.visible) {
-                    sprite.parent.add( new LifeDrain( mob.pos, pos, null ) );
+                    sprite.parent.add( new DrainLife( mob.pos, pos, null ) );
                     new Flare( 6, 16 ).color( SpellSprite.COLOUR_DARK, true).show( mob.sprite, 2f );
                 }
 
@@ -707,46 +699,6 @@ public class DwarvenKing extends MobPrecise {
             wells.remove(w);
 
         }
-    }
-
-    private int knockBack( Char enemy, int damage ) {
-
-        int newPos = enemy.pos + enemy.pos - pos;
-
-        int bonus = damageRoll() / 2;
-
-        if ( Level.solid[newPos] ) {
-
-            damage += bonus;
-            BuffActive.add( enemy, Vertigo.class, damage );
-
-        } else {
-
-            Char ch = Actor.findChar(newPos);
-
-            if( ch != null ) {
-
-                BuffActive.add( enemy, Vertigo.class, damage );
-                ch.damage( Char.absorb( bonus, ch.armorClass() ), this, Element.PHYSICAL );
-//                enemy.damage( Char.absorb( bonus, enemy.armorClass() ), this, Element.PHYSICAL );
-
-
-            }
-
-            if( ch == null || !ch.isAlive() ) {
-
-                Actor.addDelayed(new Pushing(enemy, enemy.pos, newPos), -1);
-
-                Actor.freeCell(enemy.pos);
-                enemy.pos = newPos;
-                Actor.occupyCell(enemy);
-
-                Dungeon.level.press(newPos, enemy);
-
-            }
-        }
-
-        return damage;
     }
 
     private static boolean spawnSkeleton( int pos ) {

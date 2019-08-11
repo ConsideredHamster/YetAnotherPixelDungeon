@@ -39,6 +39,8 @@ import com.watabou.noosa.audio.Music;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class HallsBossLevel extends Level {
 	
 	{
@@ -52,10 +54,13 @@ public class HallsBossLevel extends Level {
 	private static final int ROOM_RIGHT		= WIDTH / 2 + 1;
 	private static final int ROOM_TOP		= HEIGHT / 2 - 1;
 	private static final int ROOM_BOTTOM	= HEIGHT / 2 + 1;
-	
+
+    private static final int BOSS_ISHIDDEN = 0;
+    private static final int BOSS_APPEARED = 1;
+    private static final int BOSS_DEFEATED = 2;
+
+    private int progress = 0;
 	private int stairs = -1;
-	private boolean enteredArena = false;
-	private boolean keyDropped = false;
 	
 	@Override
 	public String tilesTex() {
@@ -65,26 +70,6 @@ public class HallsBossLevel extends Level {
 	@Override
 	public String waterTex() {
 		return Assets.WATER_HALLS;
-	}
-	
-	private static final String STAIRS	= "stairs";
-	private static final String ENTERED	= "entered";
-	private static final String DROPPED	= "dropped";
-	
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle( bundle );
-		bundle.put( STAIRS, stairs );
-		bundle.put( ENTERED, enteredArena );
-		bundle.put( DROPPED, keyDropped );
-	}
-	
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle(bundle);
-		stairs = bundle.getInt( STAIRS );
-		enteredArena = bundle.getBoolean( ENTERED );
-		keyDropped = bundle.getBoolean( DROPPED );
 	}
 	
 	@Override
@@ -158,23 +143,19 @@ public class HallsBossLevel extends Level {
 			drop( item, pos ).type = Heap.Type.BONES;
 		}
 	}
-	
-	@Override
-    public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
 
-        int cell;
+    @Override
+    public ArrayList<Integer> getPassableCellsList() {
 
-        if( !enteredArena ) {
-            do {
-                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-            } while ( !outsideEntranceRoom(cell) );
-        } else {
+        ArrayList<Integer> result = new ArrayList<>();
 
-            cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-
+        for( Integer cell : super.getPassableCellsList() ){
+            if( progress != BOSS_ISHIDDEN && outsideEntranceRoom( cell ) || progress != BOSS_APPEARED && !outsideEntranceRoom( cell ) ){
+                result.add( cell );
+            }
         }
 
-        return cell;
+        return result;
     }
 	
 	@Override
@@ -182,9 +163,9 @@ public class HallsBossLevel extends Level {
 		
 		super.press( cell, hero );
 		
-		if (!enteredArena && hero == Dungeon.hero && cell != entrance) {
-			
-			enteredArena = true;
+		if (progress == BOSS_ISHIDDEN && hero == Dungeon.hero && cell != entrance) {
+
+            progress = BOSS_APPEARED;
 			
 			for (int i=ROOM_LEFT-1; i <= ROOM_RIGHT + 1; i++) {
 				doMagic( (ROOM_TOP - 1) * WIDTH + i );
@@ -226,8 +207,9 @@ public class HallsBossLevel extends Level {
 	@Override
 	public Heap drop( Item item, int cell ) {
 		
-		if (!keyDropped && item instanceof SkeletonKey) {
-			keyDropped = true;
+		if (progress == BOSS_APPEARED && item instanceof SkeletonKey) {
+
+            progress = BOSS_DEFEATED;
 			
 			entrance = stairs;
 			set( entrance, Terrain.ENTRANCE );
@@ -246,11 +228,6 @@ public class HallsBossLevel extends Level {
     }
 
     @Override
-    public boolean noTeleport() {
-        return enteredArena && !keyDropped;
-    }
-
-    @Override
     public String tileName( int tile ) {
         return HallsLevel.tileNames(tile);
     }
@@ -266,6 +243,23 @@ public class HallsBossLevel extends Level {
 	}
 
     public String currentTrack() {
-        return enteredArena && !keyDropped ? Assets.TRACK_FINAL_LOOP : super.currentTrack();
-    };
+        return progress == BOSS_APPEARED ? Assets.TRACK_FINAL_LOOP : super.currentTrack();
+    }
+
+    private static final String STAIRS	    = "stairs";
+    private static final String PROGRESS    = "progress";
+
+    @Override
+    public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle( bundle );
+        bundle.put( STAIRS, stairs );
+        bundle.put( PROGRESS, progress );
+    }
+
+    @Override
+    public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle(bundle);
+        stairs = bundle.getInt( STAIRS );
+        progress = bundle.getInt( PROGRESS );
+    }
 }

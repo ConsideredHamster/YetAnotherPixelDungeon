@@ -41,8 +41,8 @@ public class ShaftParticle extends PixelParticle {
 	public ShaftParticle() {
 		super();
         color(0xFFF799);
-		lifespan = 1.5f;
-		speed.set( 0, -8 );
+		lifespan = 0.5f;
+		speed.set( 0, -16 );
 	}
 	
 	private float offs;
@@ -63,7 +63,7 @@ public class ShaftParticle extends PixelParticle {
 		
 		float p = left / lifespan;
 		am = p < 0.5f ? p : 1 - p;
-		scale.x = (1 - p) * 4;
+		scale.x = (1 - p) * 3;
 		scale.y = 16 + (1 - p) * 16;
 	}
 }

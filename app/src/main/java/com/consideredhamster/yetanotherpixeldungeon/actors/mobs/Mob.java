@@ -32,6 +32,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.NPC;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAwareness;
 import com.watabou.utils.Callback;
@@ -66,6 +67,7 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.HealthIndicator;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 public abstract class Mob extends Char {
@@ -108,6 +110,7 @@ public abstract class Mob extends Char {
     protected static final float TIME_TO_WAKE_UP = 1f;
 
     public boolean hostile = true;
+    public boolean friendly = false;
     public boolean special = false;
     public boolean noticed = false;
 
@@ -152,7 +155,7 @@ public abstract class Mob extends Char {
     @Override
     public int dexterity() {
 
-        if( !enemySeen || stunned ){
+        if( !enemySeen || morphed ){
             return 0;
         }
 
@@ -177,7 +180,7 @@ public abstract class Mob extends Char {
     }
 
     @Override
-    public int magicSkill() {
+    public int magicPower() {
 
         return accuracy() * 2;
 
@@ -191,7 +194,7 @@ public abstract class Mob extends Char {
     }
 
     public float guardChance() {
-        return enemySeen && !stunned? super.guardChance() : 0.0f;
+        return enemySeen && !morphed ? super.guardChance() : 0.0f;
     }
 
     @Override
@@ -232,6 +235,7 @@ public abstract class Mob extends Char {
         return state != WANDERING ? super.moveSpeed() : super.moveSpeed() * 0.75f;
     }
 
+    @Override
     public int viewDistance() {
         return ( state != SLEEPING ? super.viewDistance() : super.viewDistance() / 2 ) ;
     };
@@ -313,8 +317,8 @@ public abstract class Mob extends Char {
             recentlyNoticed = false;
 
         }
-		
-		if (stunned) {
+
+		if ( morphed ) {
 			spend( TICK );
 			return true;
 		}
@@ -343,27 +347,51 @@ public abstract class Mob extends Char {
 		return act;
 	}
 	
+	public void resetEnemy() {
+        enemy = null;
+    }
+
 	protected Char chooseEnemy() {
 
-        if( isCharmed() > 0 && !Bestiary.isBoss( this ) ) {
+        if( enemy == null || !enemy.isAlive() ){
 
-			if (enemy == Dungeon.hero || enemy == null) {
-				
-				HashSet<Mob> enemies = new HashSet<Mob>();
-				for (Mob mob:Dungeon.level.mobs) {
-					if (mob != this && Level.fieldOfView[mob.pos] && mob.hostile && mob.isCharmed() == 0 ) {
-						enemies.add( mob );
-					}
-				}
+            enemy = null;
+            HashSet<Char> candidates = new HashSet<>();
 
-				if (enemies.size() > 0) {
-					return Random.element( enemies );
-				}
-				
-			}
-		}
+            if( friendly ){
 
-		return enemy != null && enemy.isAlive() ? enemy : Dungeon.hero;
+                for( Mob mob : Dungeon.level.mobs ){
+                    if( mob != this && Level.fieldOfView[ mob.pos ] && mob.hostile && !mob.friendly ){
+                        candidates.add( mob );
+                    }
+                }
+
+            } else {
+
+                candidates.add( Dungeon.hero );
+
+                for( Mob mob : Dungeon.level.mobs ){
+                    if( mob != this && Level.fieldOfView[ mob.pos ] && mob.friendly ){
+                        candidates.add( mob );
+                    }
+                }
+            }
+
+            if( candidates.size() > 0 ){
+                for( Char ch : candidates ){
+                    if( enemy == null || ch == Dungeon.hero || Level.distance( pos, ch.pos ) < Level.distance( pos, enemy.pos ) ){
+                        if( Level.adjacent( pos, ch.pos ) || Dungeon.findPath( this, pos, ch.pos,
+                            flying ? Level.passable : Level.mob_passable, Level.fieldOfView ) > -1 ){
+
+                            enemy = ch;
+
+                        }
+                    }
+                }
+            }
+        }
+
+		return enemy;
 	}
 	
 	protected boolean moveSprite( int from, int to ) {
@@ -405,7 +433,7 @@ public abstract class Mob extends Char {
 	}
 	
 	protected boolean canAttack( Char enemy ) {
-		return Level.adjacent( pos, enemy.pos ) && ( !isCharmedBy( enemy ) || Bestiary.isBoss( this ) );
+		return Level.adjacent( pos, enemy.pos );
 	}
 
     protected int nextStepTo( Char enemy ) {
@@ -451,11 +479,15 @@ public abstract class Mob extends Char {
             } else {
                 Invisibility.dispel( ch );
                 beckon(step);
+                spend( TICK );
             }
 //			return true;
 //		} else {
 //			return false;
-		}
+		} else {
+            resetEnemy();
+            chooseEnemy();
+        }
         return false;
     }
 	
@@ -502,7 +534,8 @@ public abstract class Mob extends Char {
     public boolean isRanged() {
         return enemy != null && Level.distance( pos, enemy.pos ) > 1;
     }
-	
+
+
 	protected boolean doAttack( Char enemy ) {
 
         final int enemyPos = enemy.pos;
@@ -589,7 +622,7 @@ public abstract class Mob extends Char {
                 Wound.hit(this);
             }
 
-            damage = (int) (damage);
+            damage = (int)(damage * hero.ringBuffs( RingOfShadows.Shadows.class ) );
 
             if (sprite != null) {
                 sprite.showStatus(CharSprite.DEFAULT, TXT_AMBUSH);
@@ -621,7 +654,7 @@ public abstract class Mob extends Char {
 
         HealthIndicator.instance.target( this );
 
-        if ( !isScared() ) {
+        if ( buff( Tormented.class ) == null && buff( Banished.class ) == null ) {
             if (src != null && state == FLEEING || state == WANDERING || state == SLEEPING) {
                 notice();
                 state = HUNTING;
@@ -756,10 +789,9 @@ public abstract class Mob extends Char {
     public void inspect( int cell ) {
 
         if ( state == SLEEPING || state == WANDERING ) {
-
             state = WANDERING;
-            target = cell;
-
+            if (!Level.chasm[cell] )
+                target = cell;
         }
     }
 	
@@ -935,7 +967,7 @@ public abstract class Mob extends Char {
 		
 		@Override
 		public String status() {
-			return enemySeen ? "attacking you" : "hunting";
+			return enemySeen ? "attacking" : "hunting";
 		}
 	}
 	
@@ -964,11 +996,11 @@ public abstract class Mob extends Char {
 
             if (target != -1 && getFurther( target )) {
 
-                if (!enemySeen && !detected(enemy) ) {
+                if ( !enemySeen && ( enemy == null || !enemy.isAlive() || !detected( enemy ) ) ) {
 
                     target = Dungeon.level.randomDestination();
-
                     state = WANDERING;
+
                 }
 
                 spend( TICK / moveSpeed() );

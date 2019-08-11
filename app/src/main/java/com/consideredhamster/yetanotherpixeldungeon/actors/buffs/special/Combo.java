@@ -47,7 +47,9 @@ public class Combo extends BuffReactive {
     public String description() {
         return "Every consecutive attack increases your damage slightly. Performing any actions " +
                 "except attacking again will reset this counter, though.";
-    }@Override
+    }
+
+    @Override
     public boolean attachTo( Char target ) {
 
         Buff.detach( target, Guard.class);
@@ -65,16 +67,6 @@ public class Combo extends BuffReactive {
         if ( target.sprite.visible && count >= 3 ) {
             target.sprite.showStatus( CharSprite.DEFAULT, TXT_COMBO, count );
         }
-
-//        if( target instanceof Hero && ((Hero) target).rangedWeapon instanceof RangedWeaponFlintlock ) {
-//
-//            postpone( target.attackDelay() * 3 / 2  );
-//
-//        } else {
-//
-//            postpone( target.attackDelay() * 1.01f );
-//
-//        }
 	}
 
     public float modifier() {

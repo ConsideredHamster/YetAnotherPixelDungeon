@@ -30,8 +30,7 @@ import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 
 public class PotionOfThunderstorm extends Potion {
 
-    public static final int BASE_VAL	= 200;
-    public static final int MODIFIER	= 20;
+    public static final int BASE_VAL	= 300;
 
 	{
 		name = "Potion of Thunderstorm";
@@ -42,7 +41,7 @@ public class PotionOfThunderstorm extends Potion {
 	@Override
 	public void shatter( int cell ) {
 
-        Blob blob = Blob.seed( cell, BASE_VAL + MODIFIER * alchemySkill(), Thunderstorm.class );
+        Blob blob = Blob.seed( cell, BASE_VAL, Thunderstorm.class );
 
         GameScene.add( blob );
 
@@ -56,13 +55,7 @@ public class PotionOfThunderstorm extends Potion {
             }
         }
 
-		if (Dungeon.visible[cell]) {
-
-            setKnown();
-            splash(cell);
-            Sample.INSTANCE.play(Assets.SND_SHATTER);
-
-        }
+        super.shatter( cell );
 	}
 	
 	@Override
@@ -76,6 +69,11 @@ public class PotionOfThunderstorm extends Potion {
 	
 	@Override
 	public int price() {
-		return isTypeKnown() ? 50 * quantity : super.price();
+		return isTypeKnown() ? 95 * quantity : super.price();
 	}
+
+    @Override
+    public float brewingChance() {
+        return 0.40f;
+    }
 }

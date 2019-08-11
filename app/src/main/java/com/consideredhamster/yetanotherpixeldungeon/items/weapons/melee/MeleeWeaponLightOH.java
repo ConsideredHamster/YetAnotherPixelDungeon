@@ -35,7 +35,8 @@ public abstract class MeleeWeaponLightOH extends MeleeWeapon {
     private static final String TXT_EQUIP_TITLE = "Equipping secondary weapon";
     private static final String TXT_EQUIP_MESSAGE =
             "Because this is a light one-handed weapon, you can equip it as your off-hand weapon. " +
-                    "Do you want to equip it as a main weapon or as an off-hand weapon?";
+            "It will require additional strength to be properly wielded, and may decrease your " +
+            "combat proficiency. Do you want to equip it as a main weapon or as an off-hand weapon?";
 
     private static final String TXT_EQUIP_PRIMARY = "main hand";
     private static final String TXT_EQUIP_SECONDARY = "offhand";

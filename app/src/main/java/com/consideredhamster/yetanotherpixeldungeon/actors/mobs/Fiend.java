@@ -48,22 +48,34 @@ public class Fiend extends MobRanged {
 
         super( 19 );
 
+        /*
+
+            base maxHP  = 37
+            armor class = 10
+
+            damage roll = 9-17
+
+            accuracy    = 43
+            dexterity   = 25
+
+            perception  = 150%
+            stealth     = 100%
+
+         */
+
 		name = "fiend";
 		spriteClass = FiendSprite.class;
 
-        resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
-        resistances.put(Element.Body.class, Element.Resist.PARTIAL);
+//        resistances.put( Element.Mind.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Body.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Doom.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Dispel.class, Element.Resist.PARTIAL );
 
 	}
 
     @Override
     public boolean isMagical() {
         return true;
-    }
-
-    @Override
-    public int damageRoll() {
-        return super.damageRoll() / 2 ;
     }
 
     @Override
@@ -106,7 +118,7 @@ public class Fiend extends MobRanged {
     public int attackProc( Char enemy, int damage, boolean blocked ) {
 
         if( !blocked && Random.Int( 10 ) < tier ) {
-            BuffActive.addFromDamage( enemy, Tormented.class, damage );
+            BuffActive.addFromDamage( enemy, Tormented.class, damageRoll() * 2 );
         }
 
         return damage;
@@ -114,8 +126,7 @@ public class Fiend extends MobRanged {
 
     @Override
     protected boolean canAttack( Char enemy ) {
-        return !isCharmedBy( enemy ) && ( Level.adjacent( pos, enemy.pos )
-            || Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos );
+        return super.canAttack( enemy ) || Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos;
     }
 
     @Override

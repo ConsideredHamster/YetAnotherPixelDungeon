@@ -39,18 +39,18 @@ public class LightningTrap extends Trap {
 	
 	// 00x66CCEE
 	
-	public static void trigger( int cell ) {
+	public static void trigger( int pos, Char ch ) {
 
-        Level.set( cell, Terrain.INACTIVE_TRAP );
+        Level.set( pos, Terrain.INACTIVE_TRAP );
 
-        boolean visible = false;
-        boolean cross = Random.Int( 2 ) == 0;
+        int[] tiles = Random.Int( 2 ) == 0 ? Level.NEIGHBOURS5 : Level.NEIGHBOURSX ;
 
-        int[] tiles = cross ? Level.NEIGHBOURS5 : Level.NEIGHBOURSX ;
+        Emitter emitter = CellEmitter.center( pos );
+        emitter.burst( SparkParticle.FACTORY, Random.Int( 4, 6 ) );
 
         for( int n : tiles ) {
 
-            Char ch = Actor.findChar( cell + n );
+            ch = Actor.findChar( pos + n );
 
             if (ch != null) {
 
@@ -62,39 +62,9 @@ public class LightningTrap extends Trap {
 
             }
 
-            visible = visible || Dungeon.visible[ cell ];
-
-        }
-
-        if( visible ) {
-
-            Emitter emitter = CellEmitter.center( cell );
-
-            int[] points1 = new int[2];
-            int[] points2 = new int[2];
-
-            if( cross ) {
-
-                points1[0] = cell - Level.WIDTH;
-                points1[1] = cell + Level.WIDTH;
-
-                points2[0] = cell - 1;
-                points2[1] = cell + 1;
-
-            } else {
-
-                points1[0] = cell - Level.WIDTH - 1;
-                points1[1] = cell + Level.WIDTH + 1;
-
-                points2[0] = cell - Level.WIDTH + 1;
-                points2[1] = cell + Level.WIDTH - 1;
-
+            if( Dungeon.visible[ pos ] ) {
+                emitter.parent.add( new Lightning( pos, pos + n ) );
             }
-
-            emitter.parent.add( new Lightning( points1, 2, null ) );
-            emitter.parent.add( new Lightning( points2, 2, null ) );
-
-            emitter.burst( SparkParticle.FACTORY, Random.Int( 4, 6 ) );
 
         }
 	}

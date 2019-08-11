@@ -53,6 +53,21 @@ public class Elemental extends MobPrecise {
 
         super( 14 );
 
+        /*
+
+            base maxHP  = 35
+            armor class = 0
+
+            damage roll = 5-17 (2-8)
+
+            accuracy    = 29
+            dexterity   = 24
+
+            perception  = 120%
+            stealth     = 105%
+
+         */
+
         name = "fire elemental";
         spriteClass = ElementalSprite.class;
 
@@ -66,8 +81,11 @@ public class Elemental extends MobPrecise {
 
         resistances.put( Element.Frost.class, Element.Resist.VULNERABLE );
 
+        resistances.put( Element.Knockback.class, Element.Resist.VULNERABLE );
+
     }
 
+    @Override
     public boolean isMagical() {
         return true;
     }
@@ -85,7 +103,7 @@ public class Elemental extends MobPrecise {
     @Override
     protected boolean canAttack( Char enemy ) {
         return super.canAttack( enemy ) || HP >= HT && Level.distance( pos, enemy.pos ) <= 2 &&
-                Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos && !isCharmedBy( enemy );
+                Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos;
     }
 
     @Override
@@ -126,15 +144,7 @@ public class Elemental extends MobPrecise {
 
         if ( type == Element.FLAME ) {
 
-            if (HP < HT) {
-                int reg = Math.min( dmg / 2, HT - HP );
-
-                if (reg > 0) {
-                    HP += reg;
-                    sprite.showStatus(CharSprite.POSITIVE, Integer.toString(reg));
-                    sprite.emitter().burst(Speck.factory(Speck.HEALING), (int) Math.sqrt(reg));
-                }
-            }
+            heal( dmg / 2 );
 
         } else {
 
@@ -145,22 +155,18 @@ public class Elemental extends MobPrecise {
 	
 	@Override
 	public boolean add( Buff buff ) {
-		if (buff instanceof Burning) {
-			if (HP < HT) {
-                int reg = Math.max( 1, (HT - HP) / 5 );
 
-                if (reg > 0) {
-                    HP += reg;
-                    sprite.showStatus(CharSprite.POSITIVE, Integer.toString(reg));
-                    sprite.emitter().burst( Speck.factory( Speck.HEALING ), (int)Math.sqrt( reg ) );
-                }
-			}
+		if ( buff instanceof Burning ) {
+
+            heal( ( (Burning) buff ).getDuration() );
 
             return false;
 
-		} else if (buff instanceof Frozen) {
+		} else if ( buff instanceof Frozen ) {
 
-            damage( Random.NormalIntRange( HT / 2 , HT ), null, null );
+            int dmg = (int)Math.sqrt( totalHealthValue() / 2 ) * ( (Frozen) buff ).getDuration();
+
+            damage( dmg, null, Element.FROST );
 
             if(Dungeon.visible[pos] ) {
                 GLog.w( TXT_FROZEN );
@@ -168,9 +174,9 @@ public class Elemental extends MobPrecise {
 
             return false;
 
-        } else if (buff instanceof Ensnared) {
+        } else if ( buff instanceof Ensnared ) {
 
-            GameScene.add(Blob.seed(pos, 1, Fire.class));
+            GameScene.add( Blob.seed( pos, 1, Fire.class ) );
 
             if(Dungeon.visible[pos] ) {
                 GLog.w( TXT_ENSNARED );

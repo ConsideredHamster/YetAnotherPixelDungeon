@@ -20,15 +20,12 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
-import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Banished;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.UnholyArmor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
@@ -73,20 +70,15 @@ public class ScrollOfBanishment extends Scroll {
         for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
             if (Level.fieldOfView[mob.pos] ) {
 
-                //FIXME
-
-                if( mob.isMagical() || mob.buff( UnholyArmor.class ) != null ) {
-
+                if( mob.isMagical() ) {
                     new Flare(6, 24).color(SpellSprite.COLOUR_HOLY, true).show(mob.sprite, 2f);
+                    BuffActive.addFromDamage( mob, Tormented.class, (10 + curUser.magicPower()) );
+                    affected = true;
+                }
 
+                if( mob.buff( UnholyArmor.class ) != null ) {
+                    new Flare(6, 24).color(SpellSprite.COLOUR_HOLY, true).show(mob.sprite, 2f);
                     Buff.detach( mob, UnholyArmor.class );
-
-                    if( mob.isMagical() ) {
-
-                        BuffActive.add( mob, Banished.class, (float)(10 + curUser.magicSkill()) );
-
-                    }
-
                     affected = true;
                 }
             }

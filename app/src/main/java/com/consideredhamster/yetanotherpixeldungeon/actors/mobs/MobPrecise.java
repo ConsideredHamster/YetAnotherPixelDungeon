@@ -36,20 +36,8 @@ public abstract class MobPrecise extends Mob {
         HT = 5 + tier * 4 + exp;
         armorClass = tier * 3;
 
-        minDamage = tier + 1;
+        minDamage = tier + 2;
         maxDamage = tier * 4 + 1;
-
-//        if( Dungeon.difficulty < Difficulties.NORMAL ) {
-//            maxDamage -= tier;
-//        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
-//            minDamage += tier;
-//        }
-
-        // old values
-        // 2-8     3-11    4-15    5-18    6-22
-
-        // new values
-        // 2-5     3-9     4-13    5-17    6-21
 
         accuracy = 3 + tier * 3 + exp;
         dexterity = 2 + tier * 2 + exp;

@@ -158,7 +158,7 @@ public class Chasm {
 
             Heap heap = Dungeon.level.heaps.get(hero.pos);
             if (heap != null) {
-                heap.shatter( "Your weight" );
+                heap.shatter();
             }
 
             int dmg;

@@ -38,10 +38,8 @@ public class WndWandmaker extends Window {
 	private static final String TXT_MESSAGE	= 
 		"Oh, I see you have succeeded! I do hope it hasn't troubled you too much. " +
 		"As I promised, you can choose one of my high quality wands.";
-	private static final String TXT_BATTLE		= "Battle wand";
-	private static final String TXT_NON_BATTLE	= "Utility wand";
 	
-	private static final String TXT_FARAWELL	= "Good luck in your quest, %s!";
+	private static final String TXT_FAREWELL = "Good luck in your quest, %s!";
 	
 	private static final int WIDTH		= 120;
 	private static final int BTN_HEIGHT	= 20;
@@ -63,7 +61,7 @@ public class WndWandmaker extends Window {
 		message.y = titlebar.bottom() + GAP;
 		add( message );
 		
-		RedButton btnBattle = new RedButton( Wandmaker.Quest.wand1.name( true) ) {
+		RedButton btnBattle = new RedButton( Wandmaker.Quest.wand1.name() ) {
 			@Override
 			protected void onClick() {
 				selectReward( wandmaker, item, Wandmaker.Quest.wand1 );
@@ -72,7 +70,7 @@ public class WndWandmaker extends Window {
 		btnBattle.setRect( 0, message.y + message.height() + GAP, WIDTH, BTN_HEIGHT );
 		add( btnBattle );
 		
-		RedButton btnNonBattle = new RedButton( Wandmaker.Quest.wand2.name( true ) ) {
+		RedButton btnNonBattle = new RedButton( Wandmaker.Quest.wand2.name() ) {
 			@Override
 			protected void onClick() {
 				selectReward( wandmaker, item, Wandmaker.Quest.wand2 );
@@ -97,7 +95,7 @@ public class WndWandmaker extends Window {
 			Dungeon.level.drop( reward, wandmaker.pos ).sprite.drop();
 		}
 		
-		wandmaker.yell( Utils.format( TXT_FARAWELL, Dungeon.hero.className() ) );
+		wandmaker.yell( Utils.format( TXT_FAREWELL, Dungeon.hero.className() ) );
 		wandmaker.destroy();
 		
 		wandmaker.sprite.die();

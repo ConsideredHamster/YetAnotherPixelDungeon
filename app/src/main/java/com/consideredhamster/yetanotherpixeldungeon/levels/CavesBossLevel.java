@@ -42,6 +42,8 @@ import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class CavesBossLevel extends Level {
 	
 	{
@@ -55,10 +57,13 @@ public class CavesBossLevel extends Level {
 	private static final int ROOM_RIGHT		= WIDTH / 2 + 2;
 	private static final int ROOM_TOP		= HEIGHT / 2 - 2;
 	private static final int ROOM_BOTTOM	= HEIGHT / 2 + 2;
-	
-	private int arenaDoor;
-	private boolean enteredArena = false;
-	private boolean keyDropped = false;
+
+    private static final int BOSS_ISHIDDEN = 0;
+    private static final int BOSS_APPEARED = 1;
+    private static final int BOSS_DEFEATED = 2;
+
+    private int progress = 0;
+    private int arenaDoor;
 	
 	@Override
 	public String tilesTex() {
@@ -68,26 +73,6 @@ public class CavesBossLevel extends Level {
 	@Override
 	public String waterTex() {
 		return Assets.WATER_CAVES;
-	}
-	
-	private static final String DOOR	= "door";
-	private static final String ENTERED	= "entered";
-	private static final String DROPPED	= "dropped";
-	
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle(bundle);
-		bundle.put( DOOR, arenaDoor );
-		bundle.put( ENTERED, enteredArena );
-		bundle.put( DROPPED, keyDropped );
-	}
-	
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle(bundle);
-		arenaDoor = bundle.getInt( DOOR );
-		enteredArena = bundle.getBoolean( ENTERED );
-		keyDropped = bundle.getBoolean( DROPPED );
 	}
 	
 	@Override
@@ -211,31 +196,19 @@ public class CavesBossLevel extends Level {
 			drop( item, pos ).type = Heap.Type.BONES;
 		}
 	}
-	
-	@Override
-    public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
 
-        int cell;
+    @Override
+    public ArrayList<Integer> getPassableCellsList() {
 
-        if( !enteredArena ) {
+        ArrayList<Integer> result = new ArrayList<>();
 
-            do {
-                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-            } while ( outsideEntranceRoom(cell) );
-
-        } else if( !keyDropped ) {
-
-            do {
-                cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-            } while ( !outsideEntranceRoom(cell) );
-
-        } else {
-
-            cell = super.randomRespawnCell( ignoreTraps, ignoreView );
-
+        for( Integer cell : super.getPassableCellsList() ){
+            if( progress != BOSS_ISHIDDEN && outsideEntranceRoom( cell ) || progress != BOSS_APPEARED && !outsideEntranceRoom( cell ) ){
+                result.add( cell );
+            }
         }
 
-        return cell;
+        return result;
     }
 	
 	@Override
@@ -243,9 +216,9 @@ public class CavesBossLevel extends Level {
 		
 		super.press( cell, hero );
 		
-		if (!enteredArena && outsideEntranceRoom(cell) && hero == Dungeon.hero) {
-			
-			enteredArena = true;
+		if ( progress == BOSS_ISHIDDEN && outsideEntranceRoom(cell) && hero == Dungeon.hero) {
+
+            progress = BOSS_APPEARED;
 			
 			Mob boss = Bestiary.mob( Dungeon.depth );
 			boss.state = boss.HUNTING;
@@ -268,13 +241,19 @@ public class CavesBossLevel extends Level {
             Music.INSTANCE.play( currentTrack(), true );
 		}
 	}
+
+    private boolean outsideEntranceRoom(int cell) {
+        int cx = cell % WIDTH;
+        int cy = cell / WIDTH;
+        return cx < ROOM_LEFT - 1 || cx > ROOM_RIGHT + 1 || cy < ROOM_TOP - 1 || cy > ROOM_BOTTOM + 1;
+    }
 	
 	@Override
 	public Heap drop( Item item, int cell ) {
 		
-		if (!keyDropped && item instanceof SkeletonKey) {
-			
-			keyDropped = true;
+		if ( progress == BOSS_APPEARED && item instanceof SkeletonKey) {
+
+            progress = BOSS_DEFEATED;
 			
 			CellEmitter.get( arenaDoor ).start(Speck.factory(Speck.ROCK), 0.07f, 10);
 			
@@ -288,16 +267,7 @@ public class CavesBossLevel extends Level {
 		return super.drop( item, cell );
 	}
 	
-	private boolean outsideEntranceRoom(int cell) {
-		int cx = cell % WIDTH;
-		int cy = cell / WIDTH;
-		return cx < ROOM_LEFT - 1 || cx > ROOM_RIGHT + 1 || cy < ROOM_TOP - 1 || cy > ROOM_BOTTOM + 1;
-	}
 
-    @Override
-    public boolean noTeleport() {
-        return enteredArena && !keyDropped;
-    }
 
     @Override
     public String tileName( int tile ) {
@@ -314,7 +284,25 @@ public class CavesBossLevel extends Level {
 		CavesLevel.addVisuals( this, scene );
 	}
 
+    @Override
     public String currentTrack() {
-        return enteredArena && !keyDropped ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
-    };
+        return progress == BOSS_APPEARED ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
+    }
+
+    private static final String DOOR	    = "door";
+    private static final String PROGRESS	= "progress";
+
+    @Override
+    public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle(bundle);
+        bundle.put( DOOR, arenaDoor );
+        bundle.put( PROGRESS, progress );
+    }
+
+    @Override
+    public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle(bundle);
+        arenaDoor = bundle.getInt( DOOR );
+        progress = bundle.getInt( PROGRESS );
+    }
 }

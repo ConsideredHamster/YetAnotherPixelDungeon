@@ -22,44 +22,33 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
 import java.util.ArrayList;
 
-import com.watabou.noosa.audio.Sample;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Journal;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
-import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.items.bags.Bag;
-import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfStrength;
 import com.consideredhamster.yetanotherpixeldungeon.items.quest.CorpseDust;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfCharm;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfAvalanche;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfBlink;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfBlastWave;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfLifeDrain;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfDisintegration;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfFirebolt;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfFlock;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfFirebrand;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfDamnation;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfLightning;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfHarm;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfAcidSpray;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfMagicMissile;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfPhasing;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfEntanglement;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfFreezing;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfSmiting;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfThornvines;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfIceBarrier;
 import com.consideredhamster.yetanotherpixeldungeon.levels.PrisonLevel;
+import com.consideredhamster.yetanotherpixeldungeon.levels.RegularLevel;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
-import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.Plant;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.WandmakerSprite;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndQuest;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndWandmaker;
@@ -96,11 +85,6 @@ public class Wandmaker extends NPC {
 		throwItem();
 		return super.act();
 	}
-
-    @Override
-    public boolean immovable() {
-        return true;
-    }
 	
 	@Override
     public void damage( int dmg, Object src, Element type ) {
@@ -122,9 +106,7 @@ public class Wandmaker extends NPC {
 		sprite.turnTo( pos, Dungeon.hero.pos );
 		if (Quest.given) {
 			
-			Item item = Quest.alternative ?
-				Dungeon.hero.belongings.getItem( CorpseDust.class ) :
-				Dungeon.hero.belongings.getItem( Rotberry.Seed.class );
+			Item item = Dungeon.hero.belongings.getItem( CorpseDust.class );
 			if (item != null) {
 				GameScene.show( new WndWandmaker( this, item ) );
 			} else {
@@ -219,8 +201,8 @@ public class Wandmaker extends NPC {
 			}
 		}
 		
-		public static void spawn( PrisonLevel level, Room room ) {
-			if (!spawned && Dungeon.depth > 7 && Random.Int( 12 - Dungeon.depth ) == 0) {
+		public static void spawn( RegularLevel level, Room room ) {
+			if (!spawned && Dungeon.depth > 1 && Random.Int( 6 - Dungeon.depth ) == 0) {
 
 				Wandmaker npc = new Wandmaker();
 				do {
@@ -236,49 +218,51 @@ public class Wandmaker extends NPC {
 
 				given = false;
 				
-				switch (Random.Int( 5 )) {
+				switch (Random.Int( 6 )) {
 				case 0:
-					wand1 = new WandOfAvalanche();
+                    wand1 = new WandOfMagicMissile();
 					break;
 				case 1:
 					wand1 = new WandOfDisintegration();
 					break;
 				case 2:
-					wand1 = new WandOfFirebolt();
+                    wand1 = new WandOfSmiting();
 					break;
 				case 3:
-					wand1 = new WandOfLightning();
+                    wand1 = new WandOfAcidSpray();
 					break;
 				case 4:
-					wand1 = new WandOfHarm();
+                    wand1 = new WandOfLightning();
 					break;
                 case 5:
-                    wand1 = new WandOfMagicMissile();
+                    wand1 = new WandOfFirebrand();
                     break;
 				}
-				wand1.random().repair().uncurse(3).upgrade().fix();
+				wand1.uncurse(3).repair().fix();
+                wand1.recharge();
 				
-				switch (Random.Int( 5 )) {
+				switch (Random.Int( 6 )) {
 				case 0:
-					wand2 = new WandOfCharm();
+                    wand2 = new WandOfIceBarrier();
 					break;
 				case 1:
-					wand2 = new WandOfBlink();
+                    wand2 = new WandOfBlastWave();
 					break;
 				case 2:
-					wand2 = new WandOfEntanglement();
+					wand2 = new WandOfThornvines();
 					break;
 				case 3:
-					wand2 = new WandOfFreezing();
+                    wand2 = new WandOfCharm();
 					break;
 				case 4:
-					wand2 = new WandOfPhasing();
+                    wand2 = new WandOfLifeDrain();
 					break;
                 case 5:
-                    wand2 = new WandOfFlock();
+                    wand2 = new WandOfDamnation();
                     break;
 				}
-				wand2.random().repair().uncurse(3).upgrade().fix();
+				wand2.uncurse(3).repair().fix();
+                wand2.recharge();
 			}
 		}
 		
@@ -311,7 +295,7 @@ public class Wandmaker extends NPC {
 				while (Dungeon.level.heaps.get( shrubPos ) != null) {
 					shrubPos = Dungeon.level.randomRespawnCell();
 				}
-				Dungeon.level.plant(new Rotberry.Seed(), shrubPos);
+//				Dungeon.level.plant(new Rotberry.Seed(), shrubPos);
 				
 			}
 		}
@@ -330,65 +314,65 @@ public class Wandmaker extends NPC {
         }
 	}
 	
-	public static class Rotberry extends Plant {
-
-		private static final String TXT_DESC =
-			"Berries of this shrub taste like sweet, sweet death.";
-
-		{
-			image = 7;
-			plantName = "Rotberry";
-		}
-
-		@Override
-		public void activate( Char ch ) {
-			super.activate( ch );
-
-			GameScene.add( Blob.seed( pos, 100, CorrosiveGas.class ) );
-
-			Dungeon.level.drop( new Seed(), pos ).sprite.drop();
-		}
-
-		@Override
-		public String desc() {
-			return TXT_DESC;
-		}
-
-		public static class Seed extends Plant.Seed {
-			{
-				plantName = "Rotberry";
-
-				name = "seed of " + plantName;
-//				image = ItemSpriteSheet.HERB_ROTBERRY;
-
-				plantClass = Rotberry.class;
-				alchemyClass = PotionOfStrength.class;
-			}
-
-			@Override
-			public boolean collect( Bag container ) {
-				if (super.collect( container )) {
-
-					if (Dungeon.level != null) {
-						for (Mob mob : Dungeon.level.mobs) {
-							mob.beckon( Dungeon.hero.pos );
-						}
-
-						GLog.w( "The seed emits a roar that echoes throughout the dungeon!" );
-						CellEmitter.center( Dungeon.hero.pos ).start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
-						Sample.INSTANCE.play( Assets.SND_CHALLENGE );
-					}
-
-					return true;
-				} else {
-					return false;
-				}
-			}
-
-			@Override
-			public String desc() {
-				return TXT_DESC;
-			}
-		}
-	}
+//	public static class Rotberry extends Hazard {
+//
+//		private static final String TXT_DESC =
+//			"Berries of this shrub taste like sweet, sweet death.";
+//
+//		{
+//			image = 7;
+//			plantName = "Rotberry";
+//		}
+//
+//		@Override
+//		public void activate( Char ch ) {
+//			super.activate( ch );
+//
+//			GameScene.add( Blob.seed( pos, 100, CorrosiveGas.class ) );
+//
+////			Dungeon.level.drop( new Seed(), pos ).sprite.drop();
+//		}
+//
+//		@Override
+//		public String desc() {
+//			return TXT_DESC;
+//		}
+//
+////		public static class Seed extends Hazard.Seed {
+////			{
+////				plantName = "Rotberry";
+////
+////				name = "seed of " + plantName;
+//////				image = ItemSpriteSheet.HERB_ROTBERRY;
+////
+////				plantClass = Rotberry.class;
+////				alchemyClass = PotionOfStrength.class;
+////			}
+////
+////			@Override
+////			public boolean collect( Bag container ) {
+////				if (super.collect( container )) {
+////
+////					if (Dungeon.level != null) {
+////						for (Mob mob : Dungeon.level.mobs) {
+////							mob.beckon( Dungeon.hero.pos );
+////						}
+////
+////						GLog.w( "The seed emits a roar that echoes throughout the dungeon!" );
+////						CellEmitter.center( Dungeon.hero.pos ).start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
+////						Sample.INSTANCE.play( Assets.SND_CHALLENGE );
+////					}
+////
+////					return true;
+////				} else {
+////					return false;
+////				}
+////			}
+////
+////			@Override
+////			public String desc() {
+////				return TXT_DESC;
+////			}
+////		}
+//	}
 }

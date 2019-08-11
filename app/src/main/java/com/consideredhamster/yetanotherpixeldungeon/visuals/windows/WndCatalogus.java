@@ -299,32 +299,37 @@ public class WndCatalogus extends WndTabbed {
             }
         }
     }
-	
+
 	private static class ListItem extends Component {
-		
+
 		private Item item;
 //		private boolean identified;
-		
+
 		private ItemSprite sprite;
 		private BitmapText label;
-		
-		public ListItem( Class<? extends Item> cl ) {
-			super();
-			
-			try {
-				item = cl.newInstance();
+
+        public ListItem( Class<? extends Item> cl ) {
+            super();
+
+            try {
+                item = cl.newInstance();
+
+                if( item instanceof Wand) {
+                    ((Wand)item).dud = true;
+                }
+
 //				if (identified = item.isIdentified()) {
-					sprite.view( item.image(), null );
-					label.text( item.name() );
+                sprite.view( item.image(), null );
+                label.text( item.name() );
 //				} else {
 //					sprite.view( 127, null );
 //					label.text( item.trueName() );
 //					label.hardlight( 0xCCCCCC );
 //				}
-			} catch (Exception e) {
-				// Do nothing
-			}
-		}
+            } catch (Exception e) {
+                // Do nothing
+            }
+        }
 		
 		@Override
 		protected void createChildren() {

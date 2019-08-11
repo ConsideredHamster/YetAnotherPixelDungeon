@@ -535,11 +535,11 @@ public class Badges {
 
         if ( Dungeon.difficulty > Difficulties.EASY && Dungeon.hero != null && Dungeon.hero.isAlive() &&
 			!local.contains( Badge.ALL_WANDS_IDENTIFIED ) && Wand.allKnown()) {
-			
+
 			Badge badge = Badge.ALL_WANDS_IDENTIFIED;
 			local.add( badge );
 			displayBadge( badge );
-			
+
 			validateAllItemsIdentified();
 		}
 	}

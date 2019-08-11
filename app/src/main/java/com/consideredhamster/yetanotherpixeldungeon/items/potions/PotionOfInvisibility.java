@@ -20,15 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.potions;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 
 public class PotionOfInvisibility extends Potion {
 
-    public static final float DURATION	= 10f;
-    public static final float MODIFIER	= 1.0f;
+    public static final float DURATION	= 15f;
 
 	{
 		name = "Potion of Invisibility";
@@ -37,7 +35,7 @@ public class PotionOfInvisibility extends Potion {
 	
 	@Override
 	protected void apply( Hero hero ) {
-        BuffActive.add( hero, Invisibility.class, DURATION + alchemySkill() * MODIFIER );
+        BuffActive.add( hero, Invisibility.class, DURATION );
         setKnown();
     }
 	
@@ -52,7 +50,12 @@ public class PotionOfInvisibility extends Potion {
 
     @Override
     public int price() {
-        return isTypeKnown() ? 45 * quantity : super.price();
+        return isTypeKnown() ? 70 * quantity : super.price();
+    }
+
+    @Override
+    public float brewingChance() {
+        return 0.65f;
     }
 
 }

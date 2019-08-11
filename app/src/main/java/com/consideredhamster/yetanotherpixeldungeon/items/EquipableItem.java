@@ -62,8 +62,21 @@ public abstract class EquipableItem extends Item {
             "You are aware that this item is cursed. Once equipped, it would be impossible to " +
             "remove until the curse is removed. Are you really sure you want to equip it?";
 
-    private static final String TXT_YES			= "Yes, I know what I'm doing";
-    private static final String TXT_NO			= "No, I changed my mind";
+    private static final String TXT_ITEM_IS_HEAVY = "This item is heavy!";
+
+    private static final String TXT_R_U_SURE_HEAVY =
+            "This item seems to be heavier than your current Strength. Once equipped, it may " +
+            "severely decrease your combat proficiency. Are you really sure you want to equip it?";
+
+    protected static final String TXT_ITEM_IS_INCOMPATIBLE = "This item is incompatible!";
+
+    protected static final String TXT_R_U_SURE_INCOMPATIBLE =
+            "You are aware that this item is not compatible with your current gear, and will " +
+            "require additional strength to be properly wielded. Once equipped, it may decrease " +
+            "your combat proficiency. Are you really sure you want to equip it?";
+
+    protected static final String TXT_YES			= "Yes, I know what I'm doing";
+    protected static final String TXT_NO			= "No, I changed my mind";
 
     @Override
 	public ArrayList<String> actions( Hero hero ) {
@@ -171,7 +184,7 @@ public abstract class EquipableItem extends Item {
 
         }
 
-        if( Random.Float() < chance * hero.willpower() ) {
+        if( Random.Float() < chance * hero.attunement() ) {
 
             item.identify(CURSED_KNOWN);
             GLog.w( TXT_DETECT_CURSED, item.name() );
@@ -200,6 +213,7 @@ public abstract class EquipableItem extends Item {
 
     public void doEquipCarefully( Hero hero ) {
 
+
         if( bonus < 0 && isCursedKnown() ) {
 
             final Hero heroFinal = hero;
@@ -216,7 +230,20 @@ public abstract class EquipableItem extends Item {
                 }
             );
 
-        } else {
+        } else  if (this.str( this.isIdentified() ? bonus : 0 )>hero.STR()){
+            final Hero heroFinal = hero;
+            GameScene.show(
+                    new WndOptions( TXT_ITEM_IS_HEAVY, TXT_R_U_SURE_HEAVY, TXT_YES, TXT_NO ) {
+
+                        @Override
+                        protected void onSelect(int index) {
+                            if (index == 0) {
+                                doEquip( heroFinal );
+                            }
+                        }
+                    }
+            );
+        }else {
 
             doEquip( hero );
 

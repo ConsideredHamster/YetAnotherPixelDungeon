@@ -71,12 +71,16 @@ public class Wraith extends MobRanged {
 
         flying = true;
 
+        resistances.put( Element.Doom.class, Element.Resist.PARTIAL );
         resistances.put( Element.Frost.class, Element.Resist.PARTIAL );
         resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
         resistances.put( Element.Physical.class, Element.Resist.PARTIAL );
 
         resistances.put( Element.Body.class, Element.Resist.IMMUNE );
         resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
+
+        resistances.put( Element.Dispel.class, Element.Resist.VULNERABLE );
+        resistances.put( Element.Knockback.class, Element.Resist.VULNERABLE );
     }
 
     @Override
@@ -96,15 +100,15 @@ public class Wraith extends MobRanged {
 
     private void blink() {
 
-        int newPos = pos;
+        ArrayList<Integer> cells = new ArrayList<>();
 
-        do {
+        for( Integer cell : Dungeon.level.getPassableCellsList() ){
+            if( pos != cell && Level.fieldOfView[ cell ] ) {
+                cells.add( cell );
+            }
+        }
 
-            newPos = Random.Int( Level.LENGTH );
-
-        } while ( Level.solid[newPos] || !Level.fieldOfView[newPos] ||
-                 Actor.findChar(newPos) != null && pos != newPos ||
-                Ballistica.cast(pos, newPos, false, false) != newPos );
+        int newPos = !cells.isEmpty() ? Random.element( cells ) : pos ;
 
         if (Dungeon.visible[pos]) {
             CellEmitter.get(pos).start( ShadowParticle.UP, 0.01f, Random.IntRange(5, 10) );
@@ -148,7 +152,7 @@ public class Wraith extends MobRanged {
 
     @Override
     protected boolean canAttack( Char enemy ) {
-        return Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos && !isCharmedBy( enemy );
+        return Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos;
     }
 
     @Override
@@ -183,6 +187,7 @@ public class Wraith extends MobRanged {
         return true;
     }
 
+    @Override
     protected boolean doAttack( Char enemy ) {
 
         if ( !rooted && Random.Float() < BLINK_CHANCE ) {
@@ -217,27 +222,7 @@ public class Wraith extends MobRanged {
 
         if ( distance( enemy ) <= 1 && isAlive() ) {
 
-            int healed = damage / 2;
-
-            float resist = Element.Resist.getResistance( enemy, Element.BODY );
-
-            if( !Element.Resist.checkIfDefault( resist ) ) {
-
-                if ( Element.Resist.checkIfNegated( resist ) ) {
-
-                    healed = 0;
-
-                } else if ( Element.Resist.checkIfPartial( resist ) ) {
-
-                    healed = healed / 2 + Random.Int( (int)healed % 2 + 1 );
-
-                } else if ( Element.Resist.checkIfAmplified( resist ) ) {
-
-                    healed *= 2;
-
-                }
-
-            }
+            int healed = Element.Resist.modifyValue( damage / 2, enemy, Element.BODY );
 
             if (healed > 0) {
 

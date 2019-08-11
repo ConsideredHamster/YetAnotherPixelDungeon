@@ -21,6 +21,9 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 import com.watabou.utils.Bundle;
@@ -64,20 +67,52 @@ public class Controlled extends Debuff {
                 "somehow do, then it is just the same as Charmed, but for magical creatures.";
     }
 
-    public int object = 0;
-
-    private static final String OBJECT	= "object";
-
     @Override
-    public void storeInBundle( Bundle bundle ) {
-        super.storeInBundle( bundle );
-        bundle.put( OBJECT, object );
+    public boolean attachOnLoad( Char target ) {
+        if (super.attachOnLoad( target )) {
 
+            if( target instanceof Mob ) {
+                Mob mob =(Mob)target;
+                if( mob.hostile && !Bestiary.isBoss( mob ) ) {
+                    mob.friendly = true;
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public void restoreFromBundle( Bundle bundle ) {
-        super.restoreFromBundle(bundle);
-        object = bundle.getInt( OBJECT );
+    public boolean attachTo( Char target ) {
+        if (super.attachTo( target )) {
+
+            if( target instanceof Mob ) {
+                Mob mob =(Mob)target;
+                if( mob.hostile && !Bestiary.isBoss( mob ) ) {
+                    mob.friendly = true;
+                    mob.resetEnemy();
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void detach() {
+
+        if( target instanceof Mob ) {
+            Mob mob =(Mob)target;
+            if( mob.hostile && !Bestiary.isBoss( mob ) ) {
+                mob.friendly = false;
+                mob.resetEnemy();
+            }
+        }
+
+        super.detach();
     }
 }

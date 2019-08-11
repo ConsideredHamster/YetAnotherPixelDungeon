@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.scenes;
 
 import com.watabou.input.Touchscreen.Touch;
 import com.watabou.noosa.TouchArea;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PointF;

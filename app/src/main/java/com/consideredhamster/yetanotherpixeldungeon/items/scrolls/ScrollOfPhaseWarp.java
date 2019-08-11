@@ -20,12 +20,17 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfBlink;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfLifeDrain;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public class ScrollOfPhaseWarp extends Scroll {
@@ -60,7 +65,7 @@ public class ScrollOfPhaseWarp extends Scroll {
 
         } else {
 
-//            float chance = 0.5f / curUser.willpower();
+//            float chance = 0.5f / curUser.attunement();
 //
 //            if( chance > Random.Float() ) {
 //
@@ -69,7 +74,7 @@ public class ScrollOfPhaseWarp extends Scroll {
 //
 //            }
 
-            WandOfBlink.appear(curUser, pos);
+            ScrollOfPhaseWarp.appear(curUser, pos);
             Dungeon.level.press(pos, curUser);
 
             BuffActive.add(curUser, Vertigo.class, Random.Float(5f, 10f) );
@@ -79,6 +84,22 @@ public class ScrollOfPhaseWarp extends Scroll {
 
         super.doRead();
 	}
+
+    public static void appear( Char ch, int pos ) {
+
+        ch.sprite.interruptMotion();
+
+        ch.move( pos );
+        ch.sprite.place( pos );
+
+        if (ch.invisible == 0) {
+            ch.sprite.alpha( 0 );
+            ch.sprite.parent.add( new AlphaTweener( ch.sprite, 1, 0.4f ) );
+        }
+
+        ch.sprite.emitter().start( Speck.factory( Speck.LIGHT ), 0.2f, 3 );
+        Sample.INSTANCE.play( Assets.SND_TELEPORT );
+    }
 
     @Override
 	public String desc() {

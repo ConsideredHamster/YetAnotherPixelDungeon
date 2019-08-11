@@ -36,86 +36,197 @@ public class WndChangelog extends Window {
 	private static final int WIDTH_L	= 160;
 	private static final int HEIGHT_L	= 128;
 
-	private static final String TXT_TITLE	= "CHANGELOG";
+	private static final String TXT_TITLE	= "YAPD v0.3.2: Arcane Art & Crafts!";
 
     private static final String TXT_DESCR =
 
-            "Hello everyone! Sorry for this update taking so long, especially given how prone to " +
-            "crashes the previous version was. But now at least the nastiest crashes should've been fixed.\n" +
-            "\n" +
-            "Also, I took some time and implemented a feature which I wanted to implement long ago - the ability " +
-            "to steal items from shops. Every character class can do it, but it requires high enough stealth " +
-            "to be at least somewhat reliable, so obviously Brigand is a natural shoplifter. Be careful though, " +
-            "as even successful stealing still causes shopkeeper to grow suspicious - it is just a small " +
-            "private shop, after all.\n" +
-            "\n" +
-            "Another feature worth of a special mention is that pouring water from waterskins now allows to grow " +
-            "grass and herbs for you (instead of flooding tiles). Maybe this feature would sounds awfully " +
-            "familiar to those who played SproutedPD, but I can assure you that this similarity was not " +
-            "intentional in any way. The longer any mod is updated, the more likely it is that some feature in it will " +
-            "happen to be similar to a feature from some other mod.\n" +
-            "\n" +
-            "Okay, I guess it is all for now. Here is a detailed changelog for you, and stay tuned for " +
-            "the upcoming updates. Good hunting!\n" +
-            "\n" +
-            "_GENERAL_\n" +
-            "" +
-            "\n" +
-            "- added ability to steal items from shops\n" +
-            "\n" +
-            "- shopkeepers do not leave any items behind when fleeing anymore\n" +
-            "\n" +
-            "- boomerangs and chakrams now always return when thrown (just like harpoons)\n" +
-            "\n" +
-            "- sleeping in water doesn't affects health regeneration rate anymore\n" +
-            "\n" +
-            "- slightly adjusted various debuff durations\n" +
-            "\n" +
-            "_MOBS & BOSSES_\n" +
-            "\n" +
-            "- gnoll brutes now become enraged on being hit while having less than 50% health\n" +
-            "\n" +
-            "- DM-300 now becomes slightly faster after every enrage (up to 95%)\n" +
-            "\n" +
-            "- DM-300 now receives halved damage when enraged\n" +
-            "\n" +
-            "- Tengu now receives halved damage when enraged\n" +
-            "\n" +
-            "_HERBS & WATERSKINS_\n" +
-            "\n" +
-            "- brought back the Earthroot herb\n" +
-            "\n" +
-            "- changed the sprite of the Whirlvine herb\n" +
-            "\n" +
-            "- added a rare Wyrmflower herb which can be used to brew potions of Strength\n" +
-            "\n" +
-            "- pouring water from waterskins does not flood the targeted tile anymore\n" +
-            "\n" +
-            "- pouring water from waterskin now turns ember tiles into grass tiles\n" +
-            "\n" +
-            "- pouring water from waterskin now turns grass tiles into high grass tiles\n" +
-            "\n" +
-            "- pouring water from waterskin now grows random herbs on a high grass tiles\n" +
-            "\n" +
-            "_BUGS & ISSUES_\n" +
-            "\n" +
-            "- fixed game crashing when attacking burning Goo or its spawns\n" +
-            "\n" +
-            "- fixed game crashing sometimes when Ankh tries to resurrect you\n" +
-            "\n" +
-            "- fixed game crashing when player character is killed by a trap\n" +
-            "\n" +
-            "- fixed Levitation visual effect glitch when using potion of Levitation to fall down\n" +
-            "\n" +
-            "- fixed Ensnared duration from webs and regrowth clouds\n" +
-            "\n" +
-            "- fixed guard lasting for a more than a single turn\n" +
-            "\n" +
-            "- fixed some descriptions in the tutorial\n" +
-            "\n" +
-            "- fixed some typos and grammar mistakes\n" +
-            "\n" +
-            "- fixed some other minor issues";
+        "Hello! I bet you didn't expect to receive an update after waiting for so long, but here it is! " +
+        "I know, this update was in the works for far too long, but the work never really stopped... " +
+        "Just got delayed often. I hope that next updates would not take as long as this one.\n" +
+        "\n" +
+        "Anyway, the main theme of this update is about wands and alchemy. Basically _all wands " +
+        "were redesigned_ and rebalanced from scratch, and now should allow much more wand builds " +
+        "for the more zap-happy players. There are also some _new potions_, and the _alchemy system " +
+        "was reworked_ - now it allows brewing any kind of potions (if correct herbs are used), " +
+        "and also allows you to _cook pieces of raw meat_ with herbs to provide resistance buffs.\n" +
+        "\n" +
+        "A _bunch of bugs was fixed_ as well, and there were quite a lot of _balance tweaks_ and " +
+        "_interface improvements_. The game should be more accessible and comfortable to play now. " +
+        "Most changes are listed below. Hope you will enjoy this update, and good luck!\n" +
+        "\n" +
+        "_GENERAL_\n" +
+        "\n" +
+        "- \"magic skill\" stat was renamed into \"magic power\" and now affects wand's damage/effect\n" +
+        "\n" +
+        "- \"willpower\" was renamed into \"attunement\" and now affects recharge rate not as much\n" +
+        "\n" +
+        "- potions of Strength now increase your magic power in addition to its previous effects\n" +
+        "\n" +
+        "- Scholar now receives bonus magic power only on every 3rd level up\n" +
+        "\n" +
+        "- Acolyte now receives bonus magic power only on every 6th level up\n" +
+        "\n" +
+        "- Warrior and Brigand do not get additional magic power on level ups at all\n" +
+        "\n" +
+        "- increased starting health for all character classes from by 5 points\n" +
+        "\n" +
+        "- regeneration rate now depends on the max health amount only\n" +
+        "\n" +
+        "- nerfed waterskins and oil lantern\n" +
+        "\n" +
+        "- Acolyte now starts with three empty bottles instead of a potion of Overgrowth\n" +
+        "\n" +
+        "_WANDS & RINGS_\n" +
+        "\n" +
+        "- wand damage, recharge rate, and number of charges were significantly rebalanced\n" +
+        "\n" +
+        "- combat wands now are Magic Missile, Disintegration, Smiting, Lightning, Acid Spray and Firebrand\n" +
+        "\n" +
+        "- utility wands now are Ice Barrier, Thornvines, Force Blast, Charm, Life Drain and Damnation\n" +
+        "\n" +
+        "- wands will never miss their target anymore (except Magic Missile)\n" +
+        "\n" +
+        "- \"utility\" wands can miscast/squeeze charges, just like combat wands\n" +
+        "\n" +
+        "- only unidentified and/or cursed wands will ever miscast now\n" +
+        "\n" +
+        "- changed curse chances for wands/rings to be dependent on chapter rather than floor number\n" +
+        "\n" +
+        "- wands and rings now have much more detailed descriptions\n" +
+        "\n" +
+        "_ALCHEMY & POTIONS_\n" +
+        "\n" +
+        "- brewing potions now requires an empty potion bottle and two specific herbs\n" +
+        "\n" +
+        "- empty bottles can be found in shops, laboratories, and among the loot\n" +
+        "\n" +
+        "- using incorrect herbs will give you unstable potion which is, well, unstable\n" +
+        "\n" +
+        "- added potions of Rage, Toxic Gas, and Confusion Gas\n" +
+        "\n" +
+        "- Potion of Overgrowth was replaced with Potion of Webbing\n" +
+        "\n" +
+        "- Potion of Blessing was divided into Potion of Shield and Potion of Blessing\n" +
+        "\n" +
+        "- Potion of Corrosive Gas was replaced with Potion of Caustic Ooze\n" +
+        "\n" +
+        "- Potion of Caustic Ooze creates temporary acid puddles on the floor\n" +
+        "\n" +
+        "- rain created by potions of Thunderstorm now can refill wells in its area of effect\n" +
+        "\n" +
+        "_HERBS & FOOD_\n" +
+        "\n" +
+        "- raw meat cannot be cooked by burning or freezing it, but is completely safe to eat\n" +
+        "\n" +
+        "- burning raw meat will turn it into burned meat, which is a worse version of raw meat\n" +
+        "\n" +
+        "- you can, however, cook raw meat in alchemy pots, making it more nutritional\n" +
+        "\n" +
+        "- it can also be cooked with herbs to provide a much longer resistance buff when eaten\n" +
+        "\n" +
+        "- herbs now require only one turn to be eaten (was three turns before)\n" +
+        "\n" +
+        "- herbs now remove debuffs and apply short resistance buffs when eaten\n" +
+        "\n" +
+        "- spawn rates of different herbs now depends on the current chapter\n" +
+        "\n" +
+        "- implemented Feyleaf herb, which increases magical resistance when eaten\n" +
+        "\n" +
+        "- Dreamweed was renamed into Dreamfoil and had its sprite changed slightly\n" +
+        "\n" +
+        "- herbs and other types of food now have much more detailed descriptions\n" +
+        "\n" +
+        "_EQUIPMENT_\n" +
+        "\n" +
+        "- quarterstaffs now increase your magic power by 10-25% depending on their upgrade level\n" +
+        "\n" +
+        "- rebalanced prices and quantities of ammunition and throwing weapons\n" +
+        "\n" +
+        "- missile and flintlock weapons got their damage increased\n" +
+        "\n" +
+        "- light throwing weapons can now inflict bonus damage on sneak attacks\n" +
+        "\n" +
+        "- debuffs from special throwing weapons now ignore target's armor\n" +
+        "\n" +
+        "- javelins and tomahawks can now knock their targets back on hit\n" +
+        "\n" +
+        "- chakrams can now be used to hit several enemies at once\n" +
+        "\n" +
+        "- harpoons were reworked and will be more reliable now\n" +
+        "\n" +
+        "- throwing items at secret doors now also reveals them\n" +
+        "\n" +
+        "- weapon enchantments do not provide bonus damage for certain wands anymore\n" +
+        "\n" +
+        "- added a confirmation pop-up when equipping items which are too heavy for you\n" +
+        "\n" +
+        "_BUFFS & DEBUFFS_\n" +
+        "\n" +
+        "- the Enraged buff now has decreased effect, but lasts longer\n" +
+        "\n" +
+        "- Mind Vision now increases Perception by 25%\n" +
+        "\n" +
+        "- Levitation now increases Dexterity by 25%\n" +
+        "\n" +
+        "- Invisibility now increases Stealth by 25%\n" +
+        "\n" +
+        "- Invisibility is now dispelled on stealing\n" +
+        "\n" +
+        "- Corrosion now causes its target to spawn an acid puddle on death\n" +
+        "\n" +
+        "- Vertigo now prevents you from receiving \"Focused\" buff from skipping turns\n" +
+        "\n" +
+        "- being Poisoned now decreases attack speed only by 25% (instead of 50%)\n" +
+        "\n" +
+        "- electricity damage does not inflict Electrified debuff on its targets anymore\n" +
+        "\n" +
+        "- electricity damage now just gets increased by 50% if the target is standing in the water\n" +
+        "\n" +
+        "_MOBS_\n" +
+        "\n" +
+        "- slightly buffed minimum damage for most of the mobs mobs\n" +
+        "\n" +
+        "- Goo was tweaked to make its fight easier for new players and less annoying for veterans\n" +
+        "\n" +
+        "- King of Dwarves was tweaked to make his fight to be less confusing/unfair for everyone\n" +
+        "\n" +
+        "- carrion eaters, giant spiders and cave scorpions are now vulnerable to mind debuffs\n" +
+        "\n" +
+        "- warlocks and evil eyes will not miss anymore (same as the corresponding wands)\n" +
+        "\n" +
+        "- carrion eaters are not resistant to body and acid anymore\n" +
+        "\n" +
+        "- updated giant spider sprites, and now they only spawn webs on death\n" +
+        "\n" +
+        "- cave scorpions now spawn acid puddle instead of corrosive gas on death\n" +
+        "\n" +
+        "- dwarf monks aren't resistant to mind effects anymore\n" +
+        "\n" +
+        "- dwarf warlocks now deal more damage with their ranged attacks\n" +
+        "\n" +
+        "- charmed mobs should be a bit more independent now\n" +
+        "\n" +
+        "- hitting charmed/controlled mobs doesn't remove the effect from them\n" +
+        "\n" +
+        "_DUNGEON_\n" +
+        "\n" +
+        "- moved old wandmaker NPC to the Sewers, and sad ghost NPC to the Prison\n" +
+        "\n" +
+        "- decreased amount of water in the bonus well rooms (only guaranteed wells are on the 4th floor of a chapter)\n" +
+        "\n" +
+        "- poison dart traps were changed into confusion gas traps\n" +
+        "\n" +
+        "- toxic gas trap now releases toxic gas instead of corrosive gas\n" +
+        "\n" +
+        "- trapped vaults now can be filled with summoning traps\n" +
+        "\n" +
+        "- made item piles on the already visited tiles visible through the fog of war\n" +
+        "\n" +
+        "- small changes to the layout of the second boss floor nd imp's shop floor\n" +
+        "\n" +
+        "- secret doors on the 2nd floor are now guaranteed only if you have not unlocked at " +
+        "least one of the strength, upgrade or boss badges yet\n"
+        ;
 
 	private BitmapText txtTitle;
 	private ScrollPane list;

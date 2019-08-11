@@ -69,7 +69,8 @@ public class Invisibility extends Bonus {
     @Override
     public String description() {
         return "Your body is almost transparent, so enemies are less likely to notice you (but they " +
-                "still can try to find you). Attacking or being bumped into will dispel this effect.";
+                "still can try to find you) and stealing from shops becomes easier. Attacking, " +
+                "stealing or being bumped into will dispel this effect.";
     }
 
 	@Override

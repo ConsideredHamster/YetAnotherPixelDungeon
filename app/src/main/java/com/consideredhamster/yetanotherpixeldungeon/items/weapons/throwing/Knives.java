@@ -37,12 +37,17 @@ public class Knives extends ThrowingWeaponLight {
         super( 1 );
 		quantity = number;
 	}
+
+    @Override
+    public boolean canBackstab() {
+        return true;
+    }
 	
 	@Override
 	public String desc() {
 		return 
-			"These simple metal blades are weighted to fly true and " +
-			"sting their prey with a flick of the wrist.";
+			"These simple metal blades are weighted to fly true and sting their prey " +
+            "with a flick of the wrist, dealing increased damage on sneak attacks.";
 	}
 	
 

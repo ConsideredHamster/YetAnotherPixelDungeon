@@ -20,13 +20,14 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.watabou.utils.ColorMath;
@@ -109,7 +110,7 @@ public class SewerLevel extends RegularLevel {
 	protected void createMobs() {
 		super.createMobs();
 
-		Ghost.Quest.spawn(this);
+        Wandmaker.Quest.spawn( this, roomEntrance );
 
 	}
 	

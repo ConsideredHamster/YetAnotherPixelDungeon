@@ -29,8 +29,22 @@ public class Blackguard extends MobHealthy {
 
         super( 20 );
 
-		name = "blackguard";
-		spriteClass = BlackguardSprite.class;
+        /*
+            base maxHP  = 50
+            armor class = 20
+
+            damage roll = 8-27
+
+            accuracy    = 23
+            dexterity   = 20
+
+            perception  = 75%
+            stealth     = 75%
+
+         */
+
+        name = "blackguard";
+        spriteClass = BlackguardSprite.class;
 
         resistances.put( Element.Flame.class, Element.Resist.PARTIAL );
         resistances.put( Element.Acid.class, Element.Resist.PARTIAL );
@@ -38,10 +52,12 @@ public class Blackguard extends MobHealthy {
 
         resistances.put( Element.Energy.class, Element.Resist.PARTIAL );
         resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
-        resistances.put( Element.Dispel.class, Element.Resist.PARTIAL );
 
         resistances.put( Element.Body.class, Element.Resist.IMMUNE );
-        resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Mind.class, Element.Resist.PARTIAL );
+
+        resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Doom.class, Element.Resist.PARTIAL );
 
 	}
 

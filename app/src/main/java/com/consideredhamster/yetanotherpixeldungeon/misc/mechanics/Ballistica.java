@@ -22,16 +22,30 @@ package com.consideredhamster.yetanotherpixeldungeon.misc.mechanics;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
-public class Ballistica {
+public final class Ballistica {
 
 	public static int[] trace = new int[Math.max( Level.WIDTH, Level.HEIGHT )];
 	public static int distance;
 
-    public static int[] trace_tmp = new int[Math.max( Level.WIDTH, Level.HEIGHT )];
-    public static int distance_tmp;
+    private static int stepA;
+    private static int stepB;
+    private static int dA;
+    private static int dB;
+
+    private static boolean hit;
 
     public static int cast( int from, int to, boolean goThrough, boolean hitChars ) {
+
+//        GLog.i( "from=" + from);
+//        GLog.i( "to=" + to);
+
+        if( from == to ){
+            distance = 0;
+            trace[0] = from;
+            return to;
+        }
 
         int w = Level.WIDTH;
 
@@ -49,11 +63,6 @@ public class Ballistica {
         dx = Math.abs( dx );
         dy = Math.abs( dy );
 
-        int stepA;
-        int stepB;
-        int dA;
-        int dB;
-
         if (dx > dy) {
 
             stepA = stepX;
@@ -70,195 +79,86 @@ public class Ballistica {
 
         }
 
-        if( !goThrough ) {
+        int cell = Ballistica.calc( from, to, hitChars, goThrough, dA / 2 );
 
-            int cell = Ballistica.calc(from, to, hitChars, stepA, stepB, dA, dB, dA / 2);
+        if ( !hit ) {
 
-            distance = distance_tmp;
-            trace = trace_tmp.clone();
+            for (int err = 0; err <= dA; err++) {
 
-            if (cell != to) {
+                int calc = Ballistica.calc( from, to, hitChars, goThrough, err );
 
-                for (int err = 0; err <= dA; err++) {
-                    int calc = Ballistica.calc(from, to, hitChars, stepA, stepB, dA, dB, err);
-                    if (calc == to) {
-                        cell = calc;
-                        distance = distance_tmp;
-                        trace = trace_tmp.clone();
-                    }
+                if ( hit ) {
+                    return calc;
                 }
             }
 
-            return cell;
-
-        } else {
-
-            boolean hit = Ballistica.calcThrough(from, to, hitChars, stepA, stepB, dA, dB, dA / 2);
-
-            distance = distance_tmp;
-            trace = trace_tmp.clone();
-
-            if ( !hit ) {
-                for (int err = 0; err <= dA; err++) {
-                    if (Ballistica.calcThrough(from, to, hitChars, stepA, stepB, dA, dB, err)) {
-                        distance = distance_tmp;
-                        trace = trace_tmp.clone();
-                    }
-                }
+            // to avoid distance being calculated incorrectly when throwing behind a wall
+            // not the best way to do it, gotta fix that sometimes later (I hope)
+            if( !hit ) {
+                return Ballistica.calc( from, to, hitChars, goThrough, dA / 2 );
             }
-
-            return trace[ distance ];
         }
+
+        return cell;
+
     }
 
-    public static int calc( int from, int to, boolean hitChars,
-                            int stepA, int stepB, int dA, int dB, int err ) {
+    private static int calc( int from, int to, boolean hitChars, boolean goThrough, int err ) {
 
-        distance_tmp = 1;
-        trace_tmp[0] = from;
+        hit = false;
+        distance = 0;
+        trace[0] = from;
 
         int cell = from;
 
-        while (cell != to) {
+        while ( !hit || goThrough ) {
 
             cell += stepA;
 
             err += dB;
-            if (err >= dA) {
+
+            if ( err >= dA ) {
                 err = err - dA;
                 cell = cell + stepB;
             }
 
-            trace_tmp[distance_tmp++] = cell;
-
-            if (!Level.passable[cell] && !Level.illusory[cell] && !Level.avoid[cell]) {
-                return trace_tmp[--distance_tmp - 1];
+            if ( cell == to ) {
+                hit = true;
             }
 
-            if (Level.solid[cell] || (hitChars && Actor.findChar( cell ) != null)) {
-//                break;
-                return cell;
+            distance++;
+            trace[ distance ] = cell;
+//            trace[ distance + 1 ] = 0;
+
+            if ( Level.solid[ cell ] || ( hitChars && Actor.findChar( cell ) != null ) ) {
+                return trace[ distance ];
             }
+
+            /*// basically if current cell is not a wall
+            if ( Level.passable[ cell ] || Level.illusory[ cell ] || Level.avoid[ cell ] ) {
+
+                distance++;
+                trace[ distance ] = cell;
+                trace[ distance + 1 ] = 0;
+
+                // doors are also solid yet do not count as walls
+                if ( Level.solid[ cell ] || ( hitChars && Actor.findChar( cell ) != null ) ) {
+                    return trace[ distance ];
+                }
+
+            } else {
+
+                // we need to keep the next cell for beam reflection logic
+                trace[ distance + 1 ] = cell;
+                return trace[ distance ];
+
+            } */
         }
 
-//        trace_tmp[distance_tmp++] = cell;
+        // we need to reset the next cell for beam reflection logic
+//        trace[ distance + 1 ] = 0;
 
         return to;
     }
 
-    public static boolean calcThrough( int from, int to, boolean hitChars,
-                            int stepA, int stepB, int dA, int dB, int err ) {
-
-        distance_tmp = 1;
-        trace_tmp[0] = from;
-
-        int cell = from;
-        boolean hit = false;
-
-        while (distance_tmp <= 8) {
-
-            cell += stepA;
-
-            err += dB;
-            if (err >= dA) {
-                err = err - dA;
-                cell = cell + stepB;
-            }
-
-            trace_tmp[distance_tmp++] = cell;
-
-            if (cell == to) {
-                hit = true;
-            }
-
-            if (!Level.passable[cell] && !Level.illusory[cell] && !Level.avoid[cell]) {
-//                return trace_tmp[--distance_tmp - 1];
-                distance_tmp --;
-                break;
-            }
-
-            if (Level.solid[cell] || (hitChars && Actor.findChar( cell ) != null)) {
-//                return cell;
-                break;
-            }
-        }
-
-        distance_tmp --;
-
-//        trace_tmp[distance_tmp++] = cell;
-
-        return hit;
-    }
-
-//    public static int cast( int from, int to, boolean goThrough, boolean hitChars ) {
-//
-//        int w = Level.WIDTH;
-//
-//        int x0 = from % w;
-//        int x1 = to % w;
-//        int y0 = from / w;
-//        int y1 = to / w;
-//
-//        int dx = x1 - x0;
-//        int dy = y1 - y0;
-//
-//        int stepX = dx >
-// 0 ? +1 : -1;
-//        int stepY = dy > 0 ? +1 : -1;
-//
-//        dx = Math.abs( dx );
-//        dy = Math.abs( dy );
-//
-//        int stepA;
-//        int stepB;
-//        int dA;
-//        int dB;
-//
-//        if (dx > dy) {
-//
-//            stepA = stepX;
-//            stepB = stepY * w;
-//            dA = dx;
-//            dB = dy;
-//
-//        } else {
-//
-//            stepA = stepY * w;
-//            stepB = stepX;
-//            dA = dy;
-//            dB = dx;
-//
-//        }
-//
-//        distance = 1;
-//        trace[0] = from;
-//
-//        int cell = from;
-//
-//        int err = dA / 2;
-//        while (cell != to || goThrough) {
-//
-//            cell += stepA;
-//
-//            err += dB;
-//            if (err >= dA) {
-//                err = err - dA;
-//                cell = cell + stepB;
-//            }
-//
-//            trace[distance++] = cell;
-//
-//            if (!Level.passable[cell] && !Level.avoid[cell]) {
-//                return trace[--distance - 1];
-//            }
-//
-//            if (Level.losBlockHigh[cell] || (hitChars && Actor.findChar( cell ) != null)) {
-//                return cell;
-//            }
-//        }
-//
-//        trace[distance++] = cell;
-//
-//        return to;
-//    }
 }

@@ -29,7 +29,7 @@ import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
@@ -66,6 +66,7 @@ public class ItemSprite extends MovieClip {
 	}
 	
 	public ItemSprite( int image, Glowing glowing ) {
+
 		super( Assets.ITEMS );
 		
 		if (film == null) {
@@ -158,7 +159,7 @@ public class ItemSprite extends MovieClip {
 	public void update() {
 		super.update();
 
-		visible = (heap == null || Dungeon.visible[heap.pos] || Dungeon.level.mapped[heap.pos]);
+		visible = (heap == null || Dungeon.level.visited[heap.pos] || Dungeon.level.mapped[heap.pos]);
 		
 		if (dropInterval > 0 && (dropInterval -= Game.elapsed) <= 0) {
 			

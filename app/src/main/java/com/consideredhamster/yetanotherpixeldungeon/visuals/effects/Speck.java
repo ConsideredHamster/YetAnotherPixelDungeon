@@ -27,6 +27,7 @@ import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.TextureFilm;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.watabou.utils.PointF;
@@ -55,6 +56,8 @@ public class Speck extends Image {
 	public static final int TORMENT		= 17;
 	public static final int BANISH		= 18;
 	public static final int SPARKS		= 19;
+    public static final int ICESHARD  	= 20;
+    public static final int BLAST     	= 21;
 
 	public static final int DISCOVER	= 101;
 	public static final int EVOKE		= 102;
@@ -70,6 +73,10 @@ public class Speck extends Image {
     public static final int RAISE_DEAD	= 112;
     public static final int POISON  	= 113;
     public static final int VERTIGO  	= 114;
+    public static final int HOLY      	= 115;
+    public static final int BLAST_FIRE  = 116;
+    public static final int BLAST_ACID  = 117;
+    public static final int CAUSTIC     = 118;
 
 	private static final int SIZE = 8;
 
@@ -97,34 +104,40 @@ public class Speck extends Image {
 		
 		this.type = type;
 		switch (type) {
-		case DISCOVER:
-			frame( film.get( LIGHT ) );
-			break;
-		case EVOKE:
-		case MASTERY:
-		case KIT:
-		case FORGE:
-		case VERTIGO:
-			frame( film.get( STAR ) );
-			break;
-		case RATTLE:
-		case RAISE_DEAD:
-			frame( film.get( BONE ) );
-			break;
-		case JET:
-		case TOXIC:
-		case DARKNESS:
-        case DUST:
-            frame( film.get( STEAM ) );
-            break;
-        case POISON:
-            frame( film.get( BUBBLE ) );
-            break;
-        case CONFUSION:
-            frame( film.get( CHANGE ) );
-            break;
-		default:
-			frame( film.get( type ) );
+            case DISCOVER:
+            case HOLY:
+                frame( film.get( LIGHT ) );
+                break;
+            case EVOKE:
+            case MASTERY:
+            case KIT:
+            case FORGE:
+            case VERTIGO:
+                frame( film.get( STAR ) );
+                break;
+            case RATTLE:
+            case RAISE_DEAD:
+                frame( film.get( BONE ) );
+                break;
+            case JET:
+            case TOXIC:
+            case DARKNESS:
+            case DUST:
+            case CAUSTIC:
+                frame( film.get( STEAM ) );
+                break;
+            case POISON:
+                frame( film.get( BUBBLE ) );
+                break;
+            case CONFUSION:
+                frame( film.get( CHANGE ) );
+                break;
+            case BLAST_FIRE:
+            case BLAST_ACID:
+                frame( film.get( BLAST ) );
+                break;
+            default:
+                frame( film.get( type ) );
 		}
 		
 		this.x = x - origin.x;
@@ -194,6 +207,8 @@ public class Speck extends Image {
                 lifespan = 0.5f;
                 break;
 
+            case HOLY:
+                hardlight( SpellSprite.COLOUR_HOLY );
             case LIGHT:
                 angle = Random.Float(360);
                 angularSpeed = 90;
@@ -222,9 +237,9 @@ public class Speck extends Image {
 
             case BONE:
                 lifespan = 0.2f;
-
-                acc.set(0, 128);
-                angle = Random.Float(360);
+                speed.polar( Random.Float( 2 * 3.1415926f ), 24 / lifespan );
+                acc.set( 0, 128 );
+                angle = Random.Float( 360 );
                 angularSpeed = 360;
                 break;
 
@@ -303,6 +318,7 @@ public class Speck extends Image {
                 lifespan = 1f;
                 break;
 
+
             case JET:
 //                speed.y = +32;
 //                acc.y = -64;
@@ -339,6 +355,13 @@ public class Speck extends Image {
                 lifespan = 0.5f;
                 break;
 
+            case CAUSTIC:
+                hardlight(0x00BD00);
+                angularSpeed = Random.Float(-20, +20);
+                angle = Random.Float(360);
+                lifespan = Random.Float(1f, 3f);
+                break;
+
             case COIN:
                 speed.polar(-PointF.PI * Random.Float(0.3f, 0.7f), Random.Float(48, 96));
                 acc.y = 256;
@@ -346,15 +369,39 @@ public class Speck extends Image {
                 break;
 
             case CONTROL:
+                hardlight(0xFF00FF);
+                angularSpeed = 0;
+                angle = Random.Float(360);
+                lifespan = Random.Float(1f, 2f);
+                break;
+
+            case SPARKS:
+            case COBWEB:
                 angularSpeed = 0;
                 angle = Random.Float(360);
                 lifespan = Random.Float(1f, 3f);
                 break;
 
-            case COBWEB:
-                angularSpeed = 0;
-                angle = Random.Float(360);
-                lifespan = Random.Float(1f, 3f);
+            case ICESHARD:
+                lifespan = 0.2f;
+                speed.polar( Random.Float( 2 * 3.1415926f ), 16 / lifespan );
+                acc.set( 0, 128 );
+                angle = Random.Float( 360 );
+                angularSpeed = 360;
+                break;
+
+            case BLAST_FIRE:
+                hardlight( 0xFF8833 );
+                lifespan = Random.Float( 0.1f, 0.3f );
+                break;
+
+            case BLAST_ACID:
+                hardlight( 0x00c500 );
+                lifespan = Random.Float( 0.1f, 0.3f );
+                break;
+
+            case BLAST:
+                lifespan = Random.Float( 0.1f, 0.3f );
                 break;
         }
 		
@@ -377,111 +424,123 @@ public class Speck extends Image {
 			
 			switch (type) {
 				
-			case STAR:
-			case FORGE:
-				scale.set( 1 - p );
-				am = p < 0.2f ? p * 5f : (1 - p) * 1.25f;
-				break;
-				
-			case KIT:		
-			case MASTERY:
-				am = 1 - p * p;
-				break;
-				
-			case EVOKE:	
-				
-			case HEALING:
-				am = p < 0.5f ? 1 : 2 - p * 2;
-				break;
-				
-			case LIGHT:
-				am = scale.set( p < 0.2f ? p * 5f : (1 - p) * 1.25f ).x;
-				break;
-				
-			case DISCOVER:
-				am = 1 - p;
-				scale.set( (p < 0.5f ? p : 1 - p) * 2 );
-				break;
-				
-			case QUESTION:
-				scale.set( (float)(Math.sqrt( p < 0.5f ? p : 1 - p ) * 3) );
-				break;
-				
-			case UP:
-				scale.set( (float)(Math.sqrt( p < 0.5f ? p : 1 - p ) * 2) );
-				break;
-				
-			case SCREAM:
-				am = (float)Math.sqrt( (p < 0.5f ? p : 1 - p) * 2f );
-				scale.set( p * 7 );
-				break;
-				
-			case BONE:
-			case RATTLE:
-				am = p < 0.9f ? 1 : (1 - p) * 10;
-				break;
-				
-			case ROCK:
-				am = p < 0.2f ? p * 5 : 1 ;
-				break;
-				
-			case NOTE:
-				am = 1 - p * p;
-				break;
-				
-			case WOOL:
-				scale.set( 1 - p );
-				break;
-				
-			case CHANGE:
-				am = (float)(float)Math.sqrt( (p < 0.5f ? p : 1 - p) * 2);
-				scale.y = (1 + p) * 0.5f;
-				scale.x = scale.y * (float)Math.cos( left * 15 );
-				break;
+                case STAR:
+                case FORGE:
+                    scale.set( 1 - p );
+                    am = p < 0.2f ? p * 5f : (1 - p) * 1.25f;
+                    break;
 
-            case VERTIGO:
-                scale.set( 1 - p );
-                am = 1 - p * p;
-                break;
-				
-			case HEART:
-				scale.set( 1 - p );
-				am = 1 - p * p;
-				break;
-				
-			case BUBBLE:
-				am = p < 0.2f ? p * 5 : 1;
-				break;
-				
-			case STEAM:
-			case TOXIC:
-			case DARKNESS:
-			case CONFUSION:
-			case DUST:
-				am = p < 0.5f ? p : 1 - p;
-				scale.set( 1 + p * 2 );
-				break;
+                case KIT:
+                case MASTERY:
+                    am = 1 - p * p;
+                    break;
 
-            case CONTROL:
-                scale.set( 1 - p );
-                am = 1 - p * p;
-                break;
+                case EVOKE:
 
-            case COBWEB:
-                am = p < 0.5f ? p : 1 - p;
-                scale.set( 1 + p );
-                break;
-				
-			case JET:
-				am = (p < 0.5f ? p : 1 - p) * 2;
-				scale.set( p * 1.5f );
-				break;
-				
-			case COIN:
-				scale.x = (float)Math.cos( left * 5 );
-				rm = gm = bm = (Math.abs( scale.x ) + 1) * 0.5f;
-				am = p < 0.9f ? 1 : (1 - p) * 10;
-				break;
+                case HEALING:
+                    am = p < 0.5f ? 1 : 2 - p * 2;
+                    break;
+
+                case HOLY:
+                case LIGHT:
+                    am = scale.set( p < 0.2f ? p * 5f : (1 - p) * 1.25f ).x;
+                    break;
+
+                case DISCOVER:
+                    am = 1 - p;
+                    scale.set( (p < 0.5f ? p : 1 - p) * 2 );
+                    break;
+
+                case QUESTION:
+                    scale.set( (float)(Math.sqrt( p < 0.5f ? p : 1 - p ) * 3) );
+                    break;
+
+                case UP:
+                    scale.set( (float)(Math.sqrt( p < 0.5f ? p : 1 - p ) * 2) );
+                    break;
+
+                case SCREAM:
+                    am = (float)Math.sqrt( (p < 0.5f ? p : 1 - p) * 2f );
+                    scale.set( p * 7 );
+                    break;
+
+                case BONE:
+                case RATTLE:
+                case ICESHARD:
+                    am = p < 0.9f ? 1 : (1 - p) * 10;
+                    break;
+
+                case ROCK:
+                    am = p < 0.2f ? p * 5 : 1 ;
+                    break;
+
+                case NOTE:
+                    am = 1 - p * p;
+                    break;
+
+                case WOOL:
+                    scale.set( 1 - p );
+                    break;
+
+                case CHANGE:
+                    am = (float)(float)Math.sqrt( (p < 0.5f ? p : 1 - p) * 2);
+                    scale.y = (1 + p) * 0.5f;
+                    scale.x = scale.y * (float)Math.cos( left * 15 );
+                    break;
+
+                case VERTIGO:
+                    scale.set( 1 - p );
+                    am = 1 - p * p;
+                    break;
+
+                case HEART:
+                    scale.set( 1 - p );
+                    am = 1 - p * p;
+                    break;
+
+                case BUBBLE:
+                    am = p < 0.2f ? p * 5 : 1;
+                    break;
+
+                case STEAM:
+                case TOXIC:
+                case DARKNESS:
+                case CONFUSION:
+                case DUST:
+                case CAUSTIC:
+                    am = p < 0.5f ? p : 1 - p;
+                    scale.set( 1 + p * 2 );
+                    break;
+
+                case CONTROL:
+                    scale.set( 1 - p );
+                    am = 1 - p * p;
+                    break;
+
+
+                case SPARKS:
+                case COBWEB:
+                    am = p < 0.5f ? p : 1 - p;
+                    scale.set( 1 + p );
+                    break;
+
+                case JET:
+                    am = (p < 0.5f ? p : 1 - p) * 2;
+                    scale.set( p * 1.5f );
+                    break;
+
+                case COIN:
+                    scale.x = (float)Math.cos( left * 5 );
+                    rm = gm = bm = (Math.abs( scale.x ) + 1) * 0.5f;
+                    am = p < 0.9f ? 1 : (1 - p) * 10;
+                    break;
+
+                case BLAST:
+                case BLAST_FIRE:
+                case BLAST_ACID:
+                    scale.set( p * 2f );
+                    am = 1 - p;
+                    break;
 			}
 		}
 	}

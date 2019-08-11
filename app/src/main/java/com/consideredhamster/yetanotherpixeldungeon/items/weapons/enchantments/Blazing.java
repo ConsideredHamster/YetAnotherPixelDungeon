@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfFirebolt;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfFirebrand;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
 import com.watabou.utils.Random;
@@ -37,7 +37,7 @@ public class Blazing extends Weapon.Enchantment {
 
     @Override
     public Class<? extends Wand> wandBonus() {
-        return WandOfFirebolt.class;
+        return WandOfFirebrand.class;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Blazing extends Weapon.Enchantment {
 
     @Override
     protected String desc_p() {
-        return "burn your enemies on hit and increase damage dealt by wands of Firebolt";
+        return "burn your enemies on hit";
     }
 
     @Override

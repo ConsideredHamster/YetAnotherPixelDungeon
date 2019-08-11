@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
@@ -32,8 +34,8 @@ public class AlarmTrap extends Trap {
 
 	// 0xDD3333
 	
-	public static void trigger( int pos ) {
-		
+	public static void trigger( int pos, Char ch ) {
+
 		for (Mob mob : Dungeon.level.mobs) {
 			if (mob.pos != pos) {
 				mob.beckon( pos );

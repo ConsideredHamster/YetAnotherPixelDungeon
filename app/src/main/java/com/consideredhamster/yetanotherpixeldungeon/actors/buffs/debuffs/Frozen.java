@@ -22,14 +22,8 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
-import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Light;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.FrozenCarpaccio;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
@@ -109,19 +103,19 @@ public class Frozen extends Debuff {
 
             }
 
-            if (target instanceof Hero) {
-                Hero hero = (Hero)target;
-                Item item = hero.belongings.randomUnequipped();
-                if (item instanceof MysteryMeat) {
-
-                    item.detach( hero.belongings.backpack );
-
-                    FrozenCarpaccio carpaccio = new FrozenCarpaccio();
-                    if (!carpaccio.collect( hero.belongings.backpack )) {
-                        Dungeon.level.drop( carpaccio, target.pos ).sprite.drop();
-                    }
-                }
-            }
+//            if (target instanceof Hero) {
+//                Hero hero = (Hero)target;
+//                Item item = hero.belongings.randomUnequipped();
+//                if (item instanceof RawMeat ) {
+//
+//                    item.detach( hero.belongings.backpack );
+//
+//                    FrozenCarpaccio carpaccio = new FrozenCarpaccio();
+//                    if (!carpaccio.collect( hero.belongings.backpack )) {
+//                        Dungeon.level.drop( carpaccio, target.pos ).sprite.drop();
+//                    }
+//                }
+//            }
 
             return true;
         } else {

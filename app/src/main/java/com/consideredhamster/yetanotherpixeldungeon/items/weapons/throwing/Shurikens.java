@@ -37,11 +37,16 @@ public class Shurikens extends ThrowingWeaponLight {
         super( 2 );
 		quantity = number;
 	}
+
+    @Override
+    public boolean canBackstab() {
+        return true;
+    }
 	
 	@Override
 	public String desc() {
 		return 
 			"Star-shaped pieces of metal with razor-sharp blades do significant damage " +
-			"when they hit a target.";
+			"when they hit unaware targets.";
 	}
 }

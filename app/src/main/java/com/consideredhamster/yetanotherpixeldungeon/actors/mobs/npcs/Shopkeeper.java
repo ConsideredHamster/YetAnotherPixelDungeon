@@ -21,7 +21,8 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Journal;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Rejuvenation;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -81,7 +82,7 @@ public class Shopkeeper extends NPC {
             },
             {
                     "Hey, put that back!",
-                    "Erm... Did you really tried to steal from me?",
+                    "Erm... Did you really try to steal from me?",
                     "Did I see you take something?",
                     "I saw you trying to steal this!",
             },
@@ -104,8 +105,6 @@ public class Shopkeeper extends NPC {
 
             {
                     "Huh?",
-                    "Like what you see?",
-                    "Examining my assortment?",
                     "Hmmm...",
                     "Weird.",
             },
@@ -115,8 +114,8 @@ public class Shopkeeper extends NPC {
                     "That's strange.",
             },
             {
-                    "Why do you act so suspiciously?",
-                    "I can swear I had more items before you entered.",
+                    "All of that is very suspicious.",
+                    "I can swear I had more items before.",
                     "Snooping as usual, I see.",
             },
             {
@@ -165,7 +164,7 @@ public class Shopkeeper extends NPC {
 
 	@Override
     public boolean add( Buff buff ) {
-        if( !( buff instanceof Rejuvenation ) ) {
+        if( buff instanceof Debuff ) {
             onAssault();
         }
 
@@ -253,11 +252,6 @@ public class Shopkeeper extends NPC {
 		Journal.remove( Journal.Feature.SHOP );
 		CellEmitter.get( pos ).burst(Speck.factory(Speck.WOOL), 10);
 	}
-
-    @Override
-    public boolean immovable() {
-        return true;
-    }
 	
 	@Override
 	public boolean reset() {

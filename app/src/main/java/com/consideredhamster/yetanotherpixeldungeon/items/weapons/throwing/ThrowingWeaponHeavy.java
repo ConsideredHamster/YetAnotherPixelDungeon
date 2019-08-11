@@ -55,7 +55,7 @@ public abstract class ThrowingWeaponHeavy extends ThrowingWeapon {
 
     @Override
     public int baseAmount() {
-        return 9 - tier * 2;
+        return 7 - tier;
     }
 
     @Override
@@ -66,7 +66,7 @@ public abstract class ThrowingWeaponHeavy extends ThrowingWeapon {
     @Override
     public int price() {
 
-        return quantity * tier * 20;
+        return quantity * tier * 15;
 
     }
 }

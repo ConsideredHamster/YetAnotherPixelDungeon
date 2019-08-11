@@ -21,17 +21,18 @@
 package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.ToxicGas;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 
 public class ToxicTrap extends Trap {
 
 	// 0x40CC55
 	
-	public static void trigger( int pos ) {
+	public static void trigger( int pos, Char ch ) {
 		
-		GameScene.add( Blob.seed( pos, 300 + 10 * Dungeon.depth, CorrosiveGas.class ) );
+		GameScene.add( Blob.seed( pos, 300 + 10 * Dungeon.depth, ToxicGas.class ) );
 		
 	}
 }

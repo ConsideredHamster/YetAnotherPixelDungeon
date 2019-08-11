@@ -23,7 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.ui;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Image;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.watabou.utils.PointF;
 
 public class Compass extends Image {

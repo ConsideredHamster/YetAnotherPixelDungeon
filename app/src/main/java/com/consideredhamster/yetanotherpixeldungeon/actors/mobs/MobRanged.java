@@ -37,20 +37,8 @@ public abstract class MobRanged extends Mob {
         HT = 3 + tier * 3 + exp;
         armorClass = tier * 2;
 
-        minDamage = tier * 2;
+        minDamage = tier + 1;
         maxDamage = tier * 3 + 3;
-
-//        if( Dungeon.difficulty < Difficulties.NORMAL ) {
-//            maxDamage -= tier;
-//        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
-//            minDamage += tier;
-//        }
-
-        // old values
-        // 1-7     2-10    3-13    4-16    5-19
-
-        // new values
-        // 2-6     4-9     6-12    8-15    10-18
 
         accuracy = 4 + tier * 4 + exp;
         dexterity = 1 + tier + exp;
@@ -87,13 +75,6 @@ public abstract class MobRanged extends Mob {
 
         HP = HT;
     }
-
-//    @Override
-//    public int accuracy( Char enemy ) {
-//        return Level.distance( pos, enemy.pos ) > 1 ?
-//                (int)Math.round( (float)accuracy / Math.sqrt( Math.max( 0, Level.distance( pos, enemy.pos ) - 1 ) ) ) :
-//                accuracy / 2 ;
-//    }
 
     @Override
     public float awareness(){

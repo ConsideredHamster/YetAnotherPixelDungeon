@@ -189,8 +189,8 @@ public class StatusPane extends Component {
 		layoutTags( bottom );
 
 //        if( YetAnotherPixelDungeon.buttons() ){
-            btnWaterskin.setPos( 0, height );
-            btnOilLantern.setPos( 0, btnWaterskin.bottom() + 3 );
+            btnWaterskin.setPos( 0, height + 2 );
+            btnOilLantern.setPos( 0, btnWaterskin.bottom() + 2 );
 //        } else {
 //            btnWaterskin.setPos( width - btnWaterskin.width(), height + 10 );
 //            btnOilLantern.setPos( width - btnOilLantern.width(), btnWaterskin.bottom() + 3 );

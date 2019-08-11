@@ -114,7 +114,7 @@ public class Pickaxe extends Item {
 							Satiety hunger = hero.buff( Satiety.class );
 							if (hunger != null && !hunger.isStarving()) {
 								hunger.decrease( Satiety.POINT * 50 );
-								BuffIndicator.refreshHero();
+//								BuffIndicator.refreshHero();
 							}
 							
 							hero.onOperateComplete();

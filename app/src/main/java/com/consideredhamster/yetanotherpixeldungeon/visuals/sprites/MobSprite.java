@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.sprites;
 
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.tweeners.ScaleTweener;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
@@ -51,21 +51,6 @@ public class MobSprite extends CharSprite {
 		super.update();
 	}
 
-//    @Override
-//    public void attack( int cell ) {
-//        if (!Level.adjacent(cell, ch.pos)) {
-//
-//            cellToAttack = cell;
-//            turnTo( ch.pos , cellToAttack );
-//            play(cast);
-//
-//        } else {
-//
-//            super.attack(cell);
-//
-//        }
-//    }
-	
 	@Override
 	public void onComplete( Animation anim ) {
 		

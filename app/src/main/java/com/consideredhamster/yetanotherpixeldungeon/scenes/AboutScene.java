@@ -35,127 +35,76 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Archs;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.ExitButton;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Icons;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Window;
+import com.watabou.utils.PointF;
 
 public class AboutScene extends PixelScene {
 
-    private static final String CAP_WATA =
-            "Original Pixel Dungeon";
-
-    private static final String TXT_WATA =
-            "Code & graphics: Watabou\n" +
-            "Music: Cube_Code\n\n" +
-            "These guys are awesome!\n\n" +
-            "Watabou's official website:";
-
-    private static final String LNK_WATA =
-            "pixeldungeon.watabou.ru";
-
-    private static final String CAP_YAPD =
+    private static final String TITLE =
             "Yet Another Pixel Dungeon";
 
-    private static final String TXT_YAPD =
-            "Author: ConsideredHamster\n" +
-            "Editor: Inevielle\n" +
-            "Artist: PavelProvotorov\n" +
-            "Music: Jivvy\n\n" +
-            "Special thanks to: Evan (ShPD)";
+    private static final String TXT_PART1 =
+            "Mod author:\n" +
+            "\u007F ConsideredHamster\n" +
+            "\n" +
+            "Additional code:\n" +
+            "\u007F RavenWolf\n" +
+            "\n" +
+            "Additional music:\n" +
+            "\u007F Jivvy\n" +
+            "\n" +
+            "Main editor:\n" +
+            "\u007F Inevielle"
+            ;
 
-    private static final String LNK_YAPD =
-            "consideredhamster@gmail.com";
+    private static final String TXT_PART2 =
 
+            "Additional sprites:\n" +
+            "\n" +
+            "\u007F ConsideredHamster\n" +
+            "\u007F Bgnu-Thun\n" +
+            "\u007F PavelProvotorov\n" +
+            "\u007F JleHuBbluKoT\n" +
+            "\u007F RavenWolf\n" +
+            "\n" +
+            "Original game made by:\n" +
+            "\u007F Watabou & Cube_Code"
+        ;
 
-	
 	@Override
 	public void create() {
 		super.create();
 
         boolean landscape = YetAnotherPixelDungeon.landscape();
 
-        BitmapTextMultiline text1 = createMultiline(TXT_WATA, landscape ? 8 : 6 );
-        text1.maxWidth = Math.min( Camera.main.width, 120 );
-        text1.measure();
-        text1.x = align(landscape ? (Camera.main.width / 2 - text1.width()) / 2 : (Camera.main.width - text1.width()) / 2);
-        text1.y = align( landscape ? (Camera.main.height - text1.height()) / 2 : (Camera.main.height / 2 - text1.height()) / 2 ) + 8;
-        add(text1);
-
-        BitmapTextMultiline title1 = createMultiline(CAP_WATA, landscape ? 8 : 6 );
-        title1.maxWidth = Math.min(Camera.main.width, 120);
-        title1.hardlight(Window.TITLE_COLOR);
-        title1.measure();
-        title1.x = align(landscape ? (Camera.main.width / 2 - title1.width()) / 2 : (Camera.main.width - title1.width()) / 2);
-        title1.y = text1.y - title1.height;
-        add(title1);
-
-        Image wata = Icons.WATA.get();
-        wata.x = align( landscape ? (Camera.main.width / 2 - wata.width()) / 2 : (Camera.main.width - wata.width()) / 2);
-        wata.y = title1.y - wata.height - 8;
-        add( wata );
-
-        new Flare( 7, 64 ).color( 0x112233, true ).show( wata, 0 ).angularSpeed = +20;
-
-		BitmapTextMultiline text2 = createMultiline(TXT_YAPD, landscape ? 8 : 6);
-		text2.maxWidth = Math.min(Camera.main.width, 120);
-		text2.measure();
-        text2.x = align( landscape ? (Camera.main.width / 2 - text2.width()) / 2 + Camera.main.width / 2 : (Camera.main.width - text2.width()) / 2);
-        text2.y = align( landscape ? (Camera.main.height - text2.height()) / 2 : (Camera.main.height / 2 - text2.height()) / 2 + Camera.main.height / 2 ) + 8;
-		add(text2);
-
-        BitmapTextMultiline title2 = createMultiline(CAP_YAPD, landscape ? 8 : 6 );
-        title2.maxWidth = Math.min(Camera.main.width, 120);
-        title2.hardlight(Window.TITLE_COLOR);
-        title2.measure();
-        title2.x = align( landscape ? (Camera.main.width / 2 - title2.width()) / 2 + Camera.main.width / 2 : (Camera.main.width - title2.width()) / 2);
-        title2.y = text2.y - title2.height;
-
-        add(title2);
-
         Image yapd = Icons.YAPD.get();
-//        yapd.x = text2.x + (text2.width - yapd.width) / 2;
-        yapd.x = align( landscape ? (Camera.main.width / 2 - yapd.width()) / 2 + Camera.main.width / 2 : (Camera.main.width - yapd.width()) / 2);
-        yapd.y = title2.y - yapd.height - 8;
+        yapd.scale = new PointF( 1.5f, 1.5f );
+        yapd.x = align( ( Camera.main.width - yapd.width()) / 2 );
+        yapd.y = align( (Camera.main.height / 3 - yapd.height()) / 2 );
         add( yapd );
 
         new Flare( 7, 64 ).color( 0x332211, true ).show( yapd, 0 ).angularSpeed = +20;
-		
-		BitmapTextMultiline link1 = createMultiline(LNK_WATA, landscape? 8 : 6 );
-		link1.maxWidth = Math.min( Camera.main.width, 120 );
-		link1.measure();
-		link1.hardlight(Window.TITLE_COLOR);
-		add( link1 );
 
-		link1.x = text1.x;
-		link1.y = text1.y + text1.height() + 8;
+        BitmapTextMultiline title1 = createMultiline( TITLE, landscape ? 10 : 8 );
+        title1.maxWidth = Math.min(Camera.main.width, 120);
+        title1.hardlight(Window.TITLE_COLOR);
+        title1.measure();
+        title1.x = align( ( Camera.main.width - title1.width() ) / 2 );
+        title1.y = align( landscape ? ( ( Camera.main.height / 3 - title1.height() ) / 2 ) : ((Camera.main.height / 3 - title1.height()) / 2 ) );
+        add(title1);
 
-		TouchArea hotArea1 = new TouchArea( link1 ) {
-			@Override
-			protected void onClick( Touch touch ) {
-				Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( "http://" + LNK_WATA ) );
-				Game.instance.startActivity( intent );
-			}
-		};
-		add( hotArea1 );
+        BitmapTextMultiline text1 = createMultiline( TXT_PART1, landscape ? 8 : 6 );
+        text1.measure();
+        text1.width = Math.min( Camera.main.width, landscape ? 120 : 200 );
+        text1.x = align( landscape ? (Camera.main.width / 2 - text1.width()) / 2 : (Camera.main.width - text1.width()) / 2 );
+        text1.y = align( landscape ? (Camera.main.height - text1.height()) / 2 : Camera.main.height * 2 / 7 );
+        add(text1);
 
-        BitmapTextMultiline link2 = createMultiline(LNK_YAPD, landscape? 8 : 6 );
-        link2.maxWidth = Math.min( Camera.main.width, 120 );
-        link2.measure();
-        link2.hardlight(Window.TITLE_COLOR);
-        add( link2 );
-
-        link2.x = text2.x;
-        link2.y = text2.y + text2.height() + 8;
-
-        TouchArea hotArea2 = new TouchArea( link2 ) {
-            @Override
-            protected void onClick( Touch touch ) {
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:"
-                    + LNK_YAPD + "?subject=" + "YetAnotherPD" + "&body=" + "" )
-                );
-
-                Game.instance.startActivity(intent);
-            }
-        };
-        add( hotArea2 );
+        BitmapTextMultiline text2 = createMultiline( TXT_PART2, landscape ? 8 : 6 );
+        text2.measure();
+        text2.width = Math.min( Camera.main.width, landscape ? 120 : 200 );
+        text2.x = align( landscape ? (text1.x + Camera.main.width / 2) : (Camera.main.width - text2.width()) / 2 );
+        text2.y = align( landscape ? (Camera.main.height - text2.height()) / 2 : (text1.y + text1.height() + 8 ) );
+        add(text2);
 
 		Archs archs = new Archs();
 		archs.setSize( Camera.main.width, Camera.main.height );

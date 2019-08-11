@@ -150,7 +150,7 @@ public abstract class Bestiary {
 			break;
 
 		case 19:
-			chances = new float[]{ 200, 1 };
+			chances = new float[]{ 2, 1 };
 			classes = new Class<?>[]{ DwarfMonk.class, Elemental.class };
 			break;
 		case 20:

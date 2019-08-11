@@ -60,16 +60,16 @@ public class HeroSprite extends CharSprite {
 	public void updateArmor() {
 
 		TextureFilm film = new TextureFilm( tiers(), ((Hero)ch).appearance(), FRAME_WIDTH, FRAME_HEIGHT );
-		
+
 		idle = new Animation( 1, true );
 		idle.frames( film, 0, 0, 0, 1, 0, 0, 1, 1 );
-		
+
 		run = new Animation( RUN_FRAMERATE, true );
 		run.frames( film, 2, 3, 4, 5, 6, 7 );
-		
+
 		die = new Animation( 20, false );
 		die.frames( film, 8, 9, 10, 11, 12, 11 );
-		
+
 		attack = new Animation( 15, false );
 		attack.frames( film, 13, 14, 15, 0 );
 
@@ -77,7 +77,7 @@ public class HeroSprite extends CharSprite {
         shoot.frames( film, 15, 15, 14, 14, 13, 0 );
 
 		cast = attack.clone();
-		
+
 		operate = new Animation( 8, false );
 		operate.frames( film, 16, 17, 16, 17 );
 
@@ -86,7 +86,7 @@ public class HeroSprite extends CharSprite {
 
         search = new Animation( 2, false );
         search.frames( film, 0, 1, 0, 1  );
-		
+
 		fly = new Animation( 1, true );
 		fly.frames( film, 18 );
 	}

@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
@@ -35,8 +36,8 @@ public abstract class NPC extends Mob {
 		hostile = false;
 		state = PASSIVE;
 
-//        chanceToCalmDown = 0.0f;
-//        chanceToFallAsleep = 0.0f;
+        resistances.put( Element.Knockback.class, Element.Resist.IMMUNE );
+
 	}
 	
 	protected void throwItem() {

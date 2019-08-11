@@ -24,7 +24,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfAvalanche;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfIceBarrier;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
 
@@ -37,7 +37,7 @@ public class Freezing extends Weapon.Enchantment {
 
     @Override
     public Class<? extends Wand> wandBonus() {
-        return WandOfAvalanche.class;
+        return WandOfIceBarrier.class;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Freezing extends Weapon.Enchantment {
 
     @Override
     protected String desc_p() {
-        return "freeze your enemies on hit and increase recharge rate of wands of Freezing";
+        return "freeze your enemies on hit";
     }
 
     @Override

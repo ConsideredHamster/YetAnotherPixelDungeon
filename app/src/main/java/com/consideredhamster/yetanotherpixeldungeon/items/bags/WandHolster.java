@@ -32,7 +32,7 @@ public class WandHolster extends Bag {
 		name = "wand holster";
 		image = ItemSpriteSheet.HOLSTER;
 		
-		size = 14;
+		size = 19;
         visible = false;
         unique = true;
 	}
@@ -47,26 +47,26 @@ public class WandHolster extends Bag {
         return Icons.WAND_HOLSTER;
     }
 	
-	@Override
-	public boolean collect( Bag container ) {
-		if (super.collect( container )) {
-			if (owner != null) {
-				for (Item item : items) {
-					((Wand)item).charge( owner );
-				}
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	@Override
-	public void onDetach( ) {
-		for (Item item : items) {
-			((Wand)item).stopCharging();
-		}
-	}
+//	@Override
+//	public boolean collect( Bag container ) {
+//		if (super.collect( container )) {
+//			if (owner != null) {
+//				for (Item item : items) {
+//					((Wand)item).charge( owner );
+//				}
+//			}
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
+//
+//	@Override
+//	public void onDetach( ) {
+//		for (Item item : items) {
+//			((Wand)item).stopCharging();
+//		}
+//	}
 	
 	@Override
 	public int price() {

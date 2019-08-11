@@ -86,8 +86,9 @@ public class Satiety extends Buff {
 			
 			Hero hero = (Hero)target;
 
-            float modifier = REGENERATION_RATE * hero.HT *
-                ( 1.0f + ( hero.lvl - 1 ) * 0.1f + hero.strBonus * 0.1f );
+            float modifier = REGENERATION_RATE * hero.HT
+//                * ( 1.0f + ( hero.lvl - 1 ) * 0.1f + hero.strBonus * 0.1f )
+                ;
 
 			if ( remaining <= STARVING ) {
 
@@ -103,7 +104,7 @@ public class Satiety extends Buff {
 
             } else {
 
-                modifier *= target.ringBuffs(RingOfVitality.Vitality.class);
+                modifier *= target.ringBuffsHalved(RingOfVitality.Vitality.class);
 
                 if( hero.restoreHealth && !Level.water[target.pos] ) {
                     modifier *= 3.0f;
@@ -130,10 +131,9 @@ public class Satiety extends Buff {
                     if( target.HP == target.HT && ( (Hero) target ).restoreHealth ){
 
                         ( (Hero) target ).interrupt(
-//                                Level.water[ target.pos ] ?
-//                                "You don't feel well. Better not sleep in the water next time." :
-                                "You feel well rested."
-//                                , !Level.water[ target.pos ]
+                            Level.water[ target.pos ] ?
+                            "You don't feel well. Better not sleep in the water next time." :
+                            "You feel well rested.", !Level.water[ target.pos ]
                         );
 
                     }
@@ -144,12 +144,26 @@ public class Satiety extends Buff {
 
             } else if( surplus <= -1.0f ) {
 
-                GameScene.flash(0x110000);
+                if( hero.HP < hero.HT / 5 ){
+                    GameScene.flash( 0x330000 );
+                } else if( hero.HP < hero.HT / 4 ){
+                    GameScene.flash( 0x220000 );
+                } else if( hero.HP < hero.HT / 3 ){
+                    GameScene.flash( 0x110000 );
+                }
 
-                hero.HP = Math.max( 0, hero.HP + (int)surplus );
+                // let's be nice here and give the player one last chance to eat something
+                if( hero.HP > 1 && ( hero.HP + (int) surplus <= 1 ) ){
+                    hero.HP = 1;
+                    hero.interrupt();
+                    GLog.n( "You're about to die from starvation!" );
+                } else {
+                    hero.HP = Math.max( 0, hero.HP + (int) surplus );
+                }
+
                 surplus = surplus % 1.0f;
 
-                if( !target.isAlive() ) {
+                if( !target.isAlive() ){
 
                     target.die( this, null );
 

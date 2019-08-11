@@ -20,11 +20,12 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.particles.Emitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Halo;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
@@ -73,8 +74,8 @@ public class PrisonLevel extends RegularLevel {
 	@Override
 	protected void createMobs() {
 		super.createMobs();
-		
-		Wandmaker.Quest.spawn( this, roomEntrance );
+
+        Ghost.Quest.spawn(this);
 	}
 	
 	@Override

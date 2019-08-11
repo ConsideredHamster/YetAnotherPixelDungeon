@@ -20,11 +20,12 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfAcidSpray;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfAvalanche;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfBlastWave;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
 
@@ -37,7 +38,7 @@ public class Caustic extends Weapon.Enchantment {
 
     @Override
     public Class<? extends Wand> wandBonus() {
-        return WandOfAvalanche.class;
+        return WandOfAcidSpray.class;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class Caustic extends Weapon.Enchantment {
 
     @Override
     protected String desc_p() {
-        return "cover your enemies in caustic ooze on hit and increase damage dealt by wands of Avalanche";
+        return "cover your enemies in caustic ooze on hit";
     }
 
     @Override

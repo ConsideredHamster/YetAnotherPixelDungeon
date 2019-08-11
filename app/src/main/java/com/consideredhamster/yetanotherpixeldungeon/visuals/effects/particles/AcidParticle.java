@@ -23,6 +23,9 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.Emitter.Factory;
 import com.watabou.noosa.particles.PixelParticle;
+import com.watabou.utils.ColorMath;
+import com.watabou.utils.PointF;
+import com.watabou.utils.Random;
 
 public class AcidParticle extends PixelParticle.Shrinking {
 
@@ -33,10 +36,17 @@ public class AcidParticle extends PixelParticle.Shrinking {
 		}
 	};
 
+    public static final Emitter.Factory BURST = new Factory() {
+        @Override
+        public void emit( Emitter emitter, int index, float x, float y ) {
+            ((AcidParticle)emitter.recycle( AcidParticle.class )).resetBurst( x, y );
+        }
+    };
+
 	public AcidParticle() {
 		super();
 		
-		color( 0x006600 );
+		color( 0x00c500 );
 		lifespan = 0.8f;
 		
 		acc.set( 0, +40 );
@@ -47,17 +57,31 @@ public class AcidParticle extends PixelParticle.Shrinking {
 		
 		this.x = x;
 		this.y = y;
-		
-		left = lifespan;
-		
-		size = 4;
-		speed.set( 0 );
-	}
+
+        size = 3;
+        speed.set( 0 );
+
+        left = lifespan;
+    }
+
+
+    public void resetBurst( float x, float y ) {
+        revive();
+
+        this.x = x;
+        this.y = y;
+
+        size = 3;
+        speed.polar( Random.Float( PointF.PI2 ), Random.Float( 16, 32 ) );
+
+        left = lifespan;
+    }
 	
 	@Override
 	public void update() {
 		super.update();
 		float p = left / lifespan;
 		am = p > 0.6f ? (1 - p) * 2.5f : 1;
+        color( ColorMath.interpolate( 0x00c500, 0x006600, am ) );
 	}
 }

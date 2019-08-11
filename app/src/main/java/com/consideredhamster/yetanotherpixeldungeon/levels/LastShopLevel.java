@@ -20,8 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.WellWater;
 import com.watabou.noosa.Scene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Bones;
@@ -30,6 +35,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room.Type;
 import com.watabou.utils.Graph;
+import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
 public class LastShopLevel extends RegularLevel {
@@ -38,6 +44,10 @@ public class LastShopLevel extends RegularLevel {
 		color1 = 0x4b6636;
 		color2 = 0xf2f2f2;
 	}
+
+//	private static final Room.Type[] treasuries = {
+//        Type.ARMORY, Type.LABORATORY, Type.LIBRARY, Type.TREASURY, Type.MAGIC_WELL, Type.GARDEN
+//    };
 
 	@Override
 	public String tilesTex() {
@@ -57,6 +67,7 @@ public class LastShopLevel extends RegularLevel {
 		int distance;
 		int retry = 0;
 		int minDistance = (int)Math.sqrt( rooms.size() );
+
 		do {
 			int innerRetry = 0;
 			do {
@@ -84,7 +95,7 @@ public class LastShopLevel extends RegularLevel {
 		} while (distance < minDistance);
 		
 		roomEntrance.type = Type.ENTRANCE;
-		roomExit.type = Type.EXIT;
+		roomExit.type = Type.BOSS_EXIT;
 		
 		Graph.buildDistanceMap( rooms, roomExit );
 		List<Room> path = Graph.buildPath( rooms, roomEntrance, roomExit );
@@ -99,8 +110,8 @@ public class LastShopLevel extends RegularLevel {
 			room.connect( next );
 			room = next;
 		}
-		
-		Room roomShop = null;
+
+        Room roomShop = null;
 		int shopSquare = 0;
 		for (Room r : rooms) {
 			if (r.type == Type.NULL && r.connected.size() > 0) {
@@ -112,21 +123,41 @@ public class LastShopLevel extends RegularLevel {
 			}
 		}
 		
-		if (roomShop == null || shopSquare < 30) {
+		if ( roomShop == null || roomShop.width() < 7 || roomShop.height() < 7 ) {
 			return false;
 		} else {
 			roomShop.type = Room.Type.SHOP;
-//			roomShop.type = AmbitiousImp.Quest.isCompleted() ? Room.Type.SHOP : Room.Type.STANDARD;
 		}
-		
+
+//        HashMap<Room, Room> candidates = new HashMap<>(  );
+//
+//        for( Room p : path ) {
+//            for( Room r : p.neighbours ) {
+//                if( r.type == Type.NULL && r.connected.size() == 0 && r.width() > 3 && r.height() > 3 ) {
+//                    candidates.put( r, p );
+//                }
+//            }
+//        }
+//
+//		if( candidates.size() < treasuries.length )
+//		    return false;
+//
+//        for( Room.Type t : treasuries ){
+//            Map.Entry<Room, Room> e = Random.element( candidates.entrySet() );
+//            Room r = e.getKey();
+//            r.type = t;
+//            r.connect( e.getValue() );
+//        }
+
 		paint();
+
+        Room n = (Room)roomExit.connected.keySet().toArray()[0];
+        if ( roomExit.connected.get( n ) == null || roomExit.connected.get( n ).y == roomExit.top ) {
+            return false;
+        }
 		
 		paintWater();
 		paintGrass();
-
-//        if (AmbitiousImp.Quest.isCompleted()) {
-//            placeSign();
-//        }
 
 		return true;
 	}

@@ -27,7 +27,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Shocked
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SparkParticle;
@@ -40,6 +42,10 @@ public abstract class Element {
     public abstract int proc( Char target, int damage );
 
     public static final Physical PHYSICAL = new Physical();
+    public static final Physical.Falling FALLING = new Physical.Falling();
+
+    public static final Knockback KNOCKBACK = new Knockback();
+    public static final Ensnaring ENSNARING = new Ensnaring();
 
     public static final Flame FLAME = new Flame();
     public static final Flame.Periodic FLAME_PERIODIC = new Flame.Periodic();
@@ -52,21 +58,14 @@ public abstract class Element {
 
     public static final Mind MIND = new Mind();
     public static final Body BODY = new Body();
+    public static final Dispel DISPEL = new Dispel();
 
     public static final Frost FROST = new Frost();
-
-    public static final Dispel DISPEL = new Dispel();
     public static final Energy ENERGY = new Energy();
+
     public static final Unholy UNHOLY = new Unholy();
-    public static final Falling FALLING = new Falling();
+    public static final Doom DOOM = new Doom();
 
-    public static class Physical extends Element {
-
-        @Override
-        public int proc( Char target, int damage ) {
-            return damage;
-        }
-    }
 
     public static class Flame extends Element {
 
@@ -78,7 +77,7 @@ public abstract class Element {
             }
 
             if( Random.Float() < 0.5f ){
-                BuffActive.addFromDamage( target, Burning.class, damage );
+                BuffActive.addFromDamage( target, Burning.class, damage * 2 );
             }
 
             return damage;
@@ -99,23 +98,27 @@ public abstract class Element {
         @Override
         public int proc( Char target, int damage ) {
 
-            Shocked buff = target.buff( Shocked.class );
-
-            if( buff != null ){
-
-                buff.discharge();
-
-            } else {
-
-                if( Random.Float() < 0.25f ){
-                    BuffActive.addFromDamage( target, Shocked.class, damage * 2 );
-                }
-
-//                if (target.sprite.visible) {
-//                    target.sprite.centerEmitter().burst( SparkParticle.FACTORY, (int)Math.sqrt( damage ) + 1 );
-//                }
-
+            if( !target.flying && Level.water[ target.pos ] ){
+                damage += ( damage / 2 + Random.Int( damage % 2 + 1 ) );
             }
+
+//            Shocked buff = target.buff( Shocked.class );
+//
+//            if( buff != null ){
+//
+//                buff.discharge();
+//
+//            } else {
+//
+//                if( Random.Float() < 0.25f ){
+//                    BuffActive.addFromDamage( target, Shocked.class, damage * 2 );
+//                }
+//
+////                if (target.sprite.visible) {
+////                    target.sprite.centerEmitter().burst( SparkParticle.FACTORY, (int)Math.sqrt( damage ) + 1 );
+////                }
+//
+//            }
 
             return damage;
         }
@@ -140,7 +143,7 @@ public abstract class Element {
             }
 
             if( Random.Float() < 0.75f ){
-                BuffActive.addFromDamage( target, Corrosion.class, damage * 3 );
+                BuffActive.addFromDamage( target, Corrosion.class, damage * 2 );
             }
 
             return damage;
@@ -228,17 +231,47 @@ public abstract class Element {
         }
     }
 
-    public static class Falling extends Element {
+    public static class Doom extends Element {
 
         @Override
         public int proc( Char target, int damage ) {
 
-//            if( damage < target.HP ) {
-                BuffActive.addFromDamage( target, Crippled.class, damage );
-//            }
-
             return damage;
 
+        }
+    }
+
+
+    public static class Physical extends Element {
+
+        @Override
+        public int proc( Char target, int damage ){
+            return damage;
+        }
+
+        public static class Falling extends Physical {
+            @Override
+            public int proc( Char target, int damage ){
+                BuffActive.addFromDamage( target, Crippled.class, damage );
+                return damage;
+            }
+        }
+    }
+
+    public static class Knockback extends Element {
+        @Override
+        public int proc( Char target, int damage ){
+            // not actually needed, because knockback deals physical damage
+            // maybe make some separate class from Element for such effects?
+            return damage;
+        }
+    }
+
+    public static class Ensnaring extends Element {
+        @Override
+        public int proc( Char target, int damage ){
+            // yeah, I guess I really should add a separate class for cases like these
+            return damage;
         }
     }
 
@@ -248,6 +281,31 @@ public abstract class Element {
         public static final float DEFAULT = 0.0f;
         public static final float PARTIAL = 0.5f;
         public static final float IMMUNE = 1.0f;
+
+        public static int modifyValue( int value, Char target, Element type ) {
+
+            float resist = Element.Resist.getResistance( target, type );
+
+            if( !Element.Resist.checkIfDefault( resist ) ) {
+
+                if ( Element.Resist.checkIfNegated( resist ) ) {
+
+                    value = 0;
+
+                } else if ( Element.Resist.checkIfPartial( resist ) ) {
+
+                    value = value / 2 + Random.Int( value % 2 + 1 );
+
+                } else if ( Element.Resist.checkIfAmplified( resist ) ) {
+
+                    value = value * 3 / 2 + Random.Int( value % 2 + 1 );
+
+                }
+
+            }
+
+            return value;
+        }
 
         public static float getResistance( Char target, Element type ) {
 

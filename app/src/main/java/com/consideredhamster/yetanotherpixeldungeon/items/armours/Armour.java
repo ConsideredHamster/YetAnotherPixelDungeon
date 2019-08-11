@@ -20,7 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.armours;
 
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfSorcery;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfMysticism;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -268,9 +268,8 @@ public abstract class Armour extends EquipableItem {
 
         public static boolean procced( int bonus ) {
 
-            return Random.Float() < 0.125f * ( 1 + Math.abs( bonus ) )
-                    * ( bonus >= 0 ? Dungeon.hero.ringBuffs( RingOfSorcery.Sorcery.class ) : 1.0f )
-                    ;
+            return Random.Float() < ( 0.1f + 0.1f * ( 1 + Math.abs( bonus ) )* ( bonus >= 0 ?
+                Dungeon.hero.ringBuffs( RingOfMysticism.Mysticism.class ) : 1.0f ) );
 
         }
 

@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.Food;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatStewed;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Dewdrop;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
@@ -42,10 +44,8 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Splash;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.BlastParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ElmoParticle;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.ChargrilledMeat;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.FrozenCarpaccio;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatBurned;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatRaw;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.Herb;
 import com.consideredhamster.yetanotherpixeldungeon.items.keys.Key;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.Potion;
@@ -60,9 +60,11 @@ import com.watabou.utils.Random;
 public class Heap implements Bundlable {
 
 	private static final String TXT_MIMIC = "This is a mimic!";
-	private static final String TXT_BURNED = "Fire burns a %s lying on the floor!";
-	private static final String TXT_BROKEN_SUCCESS = "%s destroys %s!";
-	private static final String TXT_BROKEN_PARTIAL = "%s damages %s!";
+	private static final String TXT_BURNED = "Fire burns %s lying on the floor!";
+
+	private static final String TXT_BLOWNUP = "%s is destroyed!";
+	private static final String TXT_DAMAGED = "%s is damaged!";
+	private static final String TXT_SHATTER = "%s is shattered!";
 
 	private static final String TXT_KNOWN_BY_BREWING = "You now know that this is %s!";
 
@@ -274,17 +276,23 @@ public class Heap implements Bundlable {
             boolean burnt = false;
 
             if (item instanceof Scroll) {
+
                 items.remove( item );
                 burnt = true;
+
             } else if (item instanceof Herb) {
+
                 items.remove( item );
                 burnt = true;
-//            } else if (item instanceof Dewdrop) {
-//				items.remove(item);
-//				evaporated = true;
-			} else if (item instanceof MysteryMeat ) {
-				replace( item, ChargrilledMeat.cook( (MysteryMeat)item ) );
+
+			} else if ( item instanceof MeatRaw || item instanceof MeatStewed ) {
+
+                MeatBurned result = new MeatBurned();
+                result.quantity = item.quantity();
+
+				replace( item, result );
 				burnt = true;
+
 			}
 
             if( burnt && Dungeon.visible[ pos ] ) {
@@ -327,24 +335,24 @@ public class Heap implements Bundlable {
 			return;
 		}
 		
-		boolean frozen = false;
-		for (Item item : items.toArray( new Item[0] )) {
-			if (item instanceof MysteryMeat) {
-				replace(item, FrozenCarpaccio.cook((MysteryMeat) item));
-				frozen = true;
-			}
-		}
-		
-		if (frozen) {
-			if (isEmpty()) {
-				destroy();
-			} else if (sprite != null) {
-				sprite.view( image(), glowing() );
-			}	
-		}
+//		boolean frozen = false;
+//		for (Item item : items.toArray( new Item[0] )) {
+//			if (item instanceof RawMeat ) {
+//				replace(item, FrozenCarpaccio.cook((RawMeat) item));
+//				frozen = true;
+//			}
+//		}
+//
+//		if (frozen) {
+//			if (isEmpty()) {
+//				destroy();
+//			} else if (sprite != null) {
+//				sprite.view( image(), glowing() );
+//			}
+//		}
 	}
 	
-	public boolean shatter( String source ) {
+	public boolean shatter() {
 
         if (type != Type.HEAP) {
             return false;
@@ -365,7 +373,7 @@ public class Heap implements Bundlable {
                 }
 
                 if( Dungeon.visible[ pos ] ) {
-                    GLog.w( TXT_BROKEN_SUCCESS, source, item.name() );
+                    GLog.w( TXT_SHATTER, item.name() );
                 }
 
                 return true;
@@ -375,7 +383,7 @@ public class Heap implements Bundlable {
         return false;
     }
 
-    public boolean blast( String source ) {
+    public boolean blast() {
 
         if (type != Type.HEAP) {
 
@@ -422,7 +430,7 @@ public class Heap implements Bundlable {
                 }
 
                 if( Dungeon.visible[ pos ] ) {
-                    GLog.w( success ? TXT_BROKEN_SUCCESS : TXT_BROKEN_PARTIAL, source, item.name() );
+                    GLog.w( success ? TXT_BLOWNUP : TXT_DAMAGED, item.name() );
                     blastFX(pos);
                 }
             }
@@ -438,70 +446,70 @@ public class Heap implements Bundlable {
         return true;
     }
 
-	public Item brew() {
-
-		CellEmitter.get( pos ).burst( Speck.factory( Speck.BUBBLE ), 3 );
-		Splash.at( pos, 0xFFFFFF, 3 );
-
-        ArrayList<Class<? extends Potion>> variants = new ArrayList<>();
-        HashSet<Class<? extends Potion>> known = Potion.getKnown();
-
-		float chances[] = new float[items.size()];
-		int count = 0;
-
-		int index = 0;
-		for (Item item : items) {
-			if (item instanceof Herb) {
-				count += item.quantity;
-				chances[index++] = item.quantity;
-
-                Herb herb = ((Herb)item);
-
-                if( herb.alchemyClass != null && !known.contains( herb.alchemyClass ) ) {
-                    variants.add( herb.alchemyClass );
-                }
-
-			} else {
-				count = 0;
-				break;
-			}
-		}
-
-		if (count >= HERBS_TO_POTION) {
-
-			CellEmitter.get( pos ).burst( Speck.factory( Speck.WOOL ), 6 );
-			Sample.INSTANCE.play( Assets.SND_PUFF );
-
-			Herb proto = (Herb)items.get( Random.chances( chances ) );
-			Class<? extends Potion> itemClass = proto.alchemyClass;
-
-			destroy();
-
-			Statistics.potionsCooked++;
-			Badges.validatePotionsCooked();
-
-			if (itemClass == null) {
-				return Generator.random( Generator.Category.POTION );
-			} else {
-				try {
-
-                    Potion result = itemClass.newInstance();
-
-                    if( variants.size() == 1 && itemClass == variants.get(0)) {
-                        result.setKnown();
-                        GLog.i( TXT_KNOWN_BY_BREWING, result.name() );
-                    }
-
-					return result;
-				} catch (Exception e) {
-					return null;
-				}
-			}
-
-		} else {
-			return null;
-		}
-	}
+//	public Item brew() {
+//
+//		CellEmitter.get( pos ).burst( Speck.factory( Speck.BUBBLE ), 3 );
+//		Splash.at( pos, 0xFFFFFF, 3 );
+//
+//        ArrayList<Class<? extends Potion>> variants = new ArrayList<>();
+//        HashSet<Class<? extends Potion>> known = Potion.getKnown();
+//
+//		float chances[] = new float[items.size()];
+//		int count = 0;
+//
+//		int index = 0;
+//		for (Item item : items) {
+//			if (item instanceof Herb) {
+//				count += item.quantity;
+//				chances[index++] = item.quantity;
+//
+//                Herb herb = ((Herb)item);
+//
+//                if( herb.alchemyClass != null && !known.contains( herb.alchemyClass ) ) {
+//                    variants.add( herb.alchemyClass );
+//                }
+//
+//			} else {
+//				count = 0;
+//				break;
+//			}
+//		}
+//
+//		if (count >= HERBS_TO_POTION) {
+//
+//			CellEmitter.get( pos ).burst( Speck.factory( Speck.WOOL ), 6 );
+//			Sample.INSTANCE.play( Assets.SND_PUFF );
+//
+//			Herb proto = (Herb)items.get( Random.chances( chances ) );
+//			Class<? extends Potion> itemClass = proto.alchemyClass;
+//
+//			destroy();
+//
+//			Statistics.potionsCooked++;
+//			Badges.validatePotionsCooked();
+//
+//			if (itemClass == null) {
+//				return Generator.random( Generator.Category.POTION );
+//			} else {
+//				try {
+//
+//                    Potion result = itemClass.newInstance();
+//
+//                    if( variants.size() == 1 && itemClass == variants.get(0)) {
+//                        result.setKnown();
+//                        GLog.i( TXT_KNOWN_BY_BREWING, result.name() );
+//                    }
+//
+//					return result;
+//				} catch (Exception e) {
+//					return null;
+//				}
+//			}
+//
+//		} else {
+//			return null;
+//		}
+//	}
 	
 	public static void burnFX( int pos ) {
 		CellEmitter.get( pos ).burst( ElmoParticle.FACTORY, 6 );

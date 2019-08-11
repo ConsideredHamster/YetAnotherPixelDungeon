@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
@@ -33,11 +34,10 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Miasma;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Pushing;
+import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
@@ -47,6 +47,7 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.features.Door;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.GooSprite;
+import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
@@ -67,12 +68,15 @@ public abstract class Goo extends MobEvasive {
         armorClass = 0;
 
         resistances.put(Element.Acid.class, Element.Resist.PARTIAL);
+        resistances.put(Element.Flame.class, Element.Resist.PARTIAL);
 
         resistances.put(Element.Mind.class, Element.Resist.IMMUNE);
         resistances.put(Element.Body.class, Element.Resist.IMMUNE);
 
+
     }
 
+    @Override
     public boolean isMagical() {
         return true;
     }
@@ -86,6 +90,19 @@ public abstract class Goo extends MobEvasive {
 
         return null;
     }
+
+//    @Override
+//    public HashMap<Class<? extends Element>, Float> resistances() {
+//
+//        HashMap<Class<? extends Element>, Float> result=new HashMap<>();;
+//        result.putAll( super.resistances());
+//
+//        if( buff( Frozen.class ) != null ){
+//            result.put( Element.Physical.class, Element.Resist.VULNERABLE );
+//        }
+//
+//        return result;
+//    }
 
     private static final String PHASE	= "phase";
 
@@ -113,15 +130,6 @@ public abstract class Goo extends MobEvasive {
             return;
         }
 
-        if (
-                type == Element.ENERGY || type == Element.SHOCK
-                || type == null && buff( Frozen.class ) != null
-        ) {
-
-            dmg += Random.IntRange( 0, dmg );
-
-        }
-
         if( buff( Enraged.class ) != null ) {
 
             dmg /= 2;
@@ -139,12 +147,12 @@ public abstract class Goo extends MobEvasive {
 
             if (candidates.size() > 0) {
 
-                Spawn clone = new Spawn();
+                final Spawn clone = new Spawn();
 
-                clone.pos = Random.element( candidates );
-                clone.state = clone.HUNTING;
-
+                clone.pos = pos;
                 clone.HT = dmg;
+
+                clone.state = clone.HUNTING;
 
                 if( Dungeon.difficulty == Difficulties.NORMAL ) {
                     clone.HP = Random.NormalIntRange( 1, clone.HT / 2 );
@@ -154,21 +162,21 @@ public abstract class Goo extends MobEvasive {
                     clone.HP = 1;
                 }
 
-                if (Dungeon.level.map[clone.pos] == Terrain.DOOR_CLOSED) {
-                    Door.enter(clone.pos);
-                }
+                GameScene.add( clone, SPLIT_DELAY );
 
-                Dungeon.level.press(clone.pos, clone);
-
-                GameScene.add(clone, SPLIT_DELAY);
+                Pushing.move( clone, Random.element( candidates ), new Callback() {
+                    @Override
+                    public void call(){
+                        Actor.occupyCell( clone );
+                        Dungeon.level.press(clone.pos, clone);
+                    }
+                } );
 
                 Burning buff1 = buff( Burning.class );
 
                 if ( buff1 != null ) {
                     BuffActive.addFromDamage( clone, Burning.class, buff1.getDuration() );
                 }
-
-                Actor.addDelayed( new Pushing( clone, pos, clone.pos ), -1 );
             }
         }
 
@@ -196,6 +204,8 @@ public abstract class Goo extends MobEvasive {
             lootChance = 4f;
 
             dexterity /= 2;
+
+            resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
 
         }
 
@@ -239,7 +249,7 @@ public abstract class Goo extends MobEvasive {
 
             if( phase ) {
 
-                GameScene.add( Blob.seed(pos, 100, Miasma.class) );
+                GameScene.add( Blob.seed(pos, 150 + breaks * 50, Miasma.class) );
 
                 if( buff( Enraged.class ) == null ) {
 
@@ -299,10 +309,15 @@ public abstract class Goo extends MobEvasive {
                     }
 
                     sprite.idle();
+                    spend( PUMP_UP_DELAY );
 
-                    spend(PUMP_UP_DELAY);
-                    return true;
+                } else {
+
+                    spend( TICK );
+
                 }
+
+                return true;
 
             } else if( state != SLEEPING && 3 - breaks > 4 * HP / HT ) {
 
@@ -312,7 +327,7 @@ public abstract class Goo extends MobEvasive {
 
                 GameScene.add(Blob.seed(pos, 100, Miasma.class));
 
-                BuffActive.add(this, Enraged.class, breaks * Random.Float( 5.0f, 10.0f ) );
+                BuffActive.add(this, Enraged.class, breaks * Random.Float( 5.0f, 6.0f ) );
 
                 for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
                     if (mob instanceof Spawn) {
@@ -322,15 +337,13 @@ public abstract class Goo extends MobEvasive {
                 }
 
                 if (Dungeon.visible[pos]) {
-                    sprite.showStatus( CharSprite.NEGATIVE, "enraged!" );
-                    GLog.n("Goo is enraged!");
+//                    sprite.showStatus( CharSprite.NEGATIVE, "enraged!" );
+                    GLog.n("Goo starts releasing deadly miasma!");
                 }
-
-//                Camera.main.shake( 2 + breaks, 0.3f );
 
                 sprite.idle();
 
-                spend( PUMP_UP_DELAY );
+                spend( TICK );
                 return true;
             }
 
@@ -339,6 +352,8 @@ public abstract class Goo extends MobEvasive {
 
         @Override
         public void die( Object cause, Element dmg ) {
+
+            yell( "glurp... glurp..." );
 
             super.die(cause, dmg);
 
@@ -359,8 +374,6 @@ public abstract class Goo extends MobEvasive {
             if (blob != null) {
                 blob.remove();
             }
-
-            yell( "glurp... glurp..." );
         }
 
         @Override
@@ -405,27 +418,30 @@ public abstract class Goo extends MobEvasive {
 
             if ( phase && mother != null && mother != this && Level.adjacent( pos, mother.pos ) ){
 
-                Burning buff1 = buff( Burning.class );
+                Pushing.move( this, mother.pos, new Callback() {
+                    @Override
+                    public void call(){
+                        Burning buff1 = buff( Burning.class );
 
-                if( buff1 != null ){
-                    BuffActive.addFromDamage( mother, Burning.class, buff1.getDuration() );
-                }
+                        if( buff1 != null ){
+                            BuffActive.addFromDamage( mother, Burning.class, buff1.getDuration() );
+                        }
 
-                int heal = Math.min( HP, mother.HT - mother.HP );
+                        int heal = Math.min( HP, mother.HT - mother.HP );
 
-                if( heal > 0 ){
-                    mother.sprite.showStatus( CharSprite.POSITIVE, "%d", heal );
-                    mother.sprite.emitter().burst( Speck.factory( Speck.HEALING ), (int) Math.sqrt( heal ) );
-                    mother.HP += heal;
-                }
-
-                Actor.addDelayed( new Pushing( this, pos, mother.pos ), -1 );
+                        if( heal > 0 ){
+                            mother.sprite.showStatus( CharSprite.POSITIVE, "%d", heal );
+                            mother.sprite.emitter().burst( Speck.factory( Speck.HEALING ), (int) Math.sqrt( heal ) );
+                            mother.HP += heal;
+                        }
+                    }
+                } );
 
                 sprite.parent.add( new AlphaTweener( sprite, 0.0f, 0.1f ) );
 
                 if( Dungeon.visible[ pos ] ) {
-                    sprite.showStatus( CharSprite.NEGATIVE, "absorbed" );
-                    GLog.n( "An entranced spawn was absorbed by the Goo, restoring its health!" );
+                    mother.sprite.showStatus( CharSprite.NEGATIVE, "absorbed" );
+                    GLog.n( "Goo absorbs entranced spawn, healing itself!" );
                 }
 
                 die( this );
@@ -445,7 +461,7 @@ public abstract class Goo extends MobEvasive {
 
                 if( Dungeon.visible[ pos ] ){
                     sprite.showStatus( CharSprite.NEGATIVE, "entranced" );
-                    GLog.n( "A spawn of Goo has fully recovered and became entranced!" );
+                    GLog.n( "A spawn of Goo became entranced - do not let them stand in the water!" );
                 }
 
                 spend( TICK );

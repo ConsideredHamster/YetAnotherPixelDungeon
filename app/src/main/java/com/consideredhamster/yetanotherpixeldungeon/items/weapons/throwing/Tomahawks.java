@@ -20,7 +20,10 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.watabou.utils.Random;
 
 public class Tomahawks extends ThrowingWeaponHeavy {
 
@@ -37,11 +40,22 @@ public class Tomahawks extends ThrowingWeaponHeavy {
         super( 2 );
 		quantity = number;
 	}
+
+    @Override
+    public void proc( Char attacker, final Char defender, int damage ) {
+
+        super.proc(attacker, defender, damage);
+
+        if( damage > Random.Int( defender.totalHealthValue() ) ){
+            Pushing.knockback( defender, attacker.pos, 1, 0 );
+        }
+
+    }
 	
 	@Override
 	public String desc() {
 		return 
-			"This throwing axe is not that heavy, but it still " +
-			"requires significant strength to be used effectively.";
+			"These throwing axes are so heavy that on a successful throw they not only inflict " +
+            "grievous wounds, but also push the target back for a short distance.";
 	}
 }

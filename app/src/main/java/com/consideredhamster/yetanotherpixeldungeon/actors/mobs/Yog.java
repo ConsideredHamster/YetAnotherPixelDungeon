@@ -23,9 +23,9 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.CausticOoze;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Bundle;
@@ -69,9 +69,11 @@ public class Yog extends Mob {
 		
 		state = PASSIVE;
 
+        resistances.put( Element.Body.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Dispel.class, Element.Resist.PARTIAL );
+
         resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
-        resistances.put( Element.Body.class, Element.Resist.IMMUNE );
-        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Knockback.class, Element.Resist.IMMUNE );
 
 	}
 
@@ -90,11 +92,6 @@ public class Yog extends Mob {
 
     @Override
     protected float healthValueModifier() { return 0.25f; }
-
-    @Override
-    public boolean immovable(){
-        return true;
-    }
 	
 	public Yog() {
 		super();
@@ -158,21 +155,21 @@ public class Yog extends Mob {
 			}
 		}
 		
-		GameScene.bossSlain();
-		Dungeon.level.drop( new SkeletonKey(), pos ).sprite.drop();
-		super.die( cause, dmg );
-		
-		yell( "..." );
+        yell( "..." );
+        super.die( cause, dmg );
+        GameScene.bossSlain();
+        Dungeon.level.drop( new SkeletonKey(), pos ).sprite.drop();
+
 	}
 	
-//	@Override
-//	public void notice() {
-//		super.notice();
-//
-//        if( enemySeen ) {
-//            yell( "Greetings, mortal. Are you ready to die?" );
-//        }
-//	}
+	@Override
+	public void notice() {
+		super.notice();
+
+        if( enemySeen ) {
+            yell( "Greetings, mortal. Are you ready to die?" );
+        }
+	}
 	
 	@Override
 	public String description() {
@@ -183,14 +180,15 @@ public class Yog extends Mob {
     @Override
     public HashMap<Class<? extends Element>, Float> resistances() {
 
-        HashMap<Class<? extends Element>, Float> result = super.resistances();
+        HashMap<Class<? extends Element>, Float> result=new HashMap<>();;
+        result.putAll( super.resistances());
 
         if( buff( RespawnBurning.class ) == null ){
-            resistances.put( Element.Flame.class, Element.Resist.IMMUNE );
+            result.put( Element.Flame.class, Element.Resist.IMMUNE );
         }
 
         if( buff( RespawnRotting.class ) == null ){
-            resistances.put( Element.Acid.class, Element.Resist.IMMUNE );
+            result.put( Element.Acid.class, Element.Resist.IMMUNE );
         }
 
         return result;
@@ -208,12 +206,20 @@ public class Yog extends Mob {
 			
 			state = WANDERING;
 
-            resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
+            resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
             resistances.put( Element.Dispel.class, Element.Resist.PARTIAL );
 
+            resistances.put( Element.Body.class, Element.Resist.PARTIAL );
+            resistances.put( Element.Doom.class, Element.Resist.PARTIAL );
+
+            resistances.put( Element.Acid.class, Element.Resist.IMMUNE );
             resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
-            resistances.put( Element.Body.class, Element.Resist.IMMUNE );
+
+            resistances.put( Element.Shock.class, Element.Resist.VULNERABLE );
 		}
+
+        @Override
+        protected float healthValueModifier() { return 0.25f; }
 
         @Override
         public void die( Object cause, Element dmg ) {
@@ -264,9 +270,10 @@ public class Yog extends Mob {
         }
 
         @Override
-        public int defenseProc( Char enemy, int damage,  boolean blocked ) {
+        public int defenseProc( Char enemy, int damage, boolean blocked ) {
+            super.defenseProc( enemy, damage, blocked );
 
-            GameScene.add( Blob.seed( pos, 25, CorrosiveGas.class ) );
+            CausticOoze.spawn( pos, damage );
 
             return damage;
         }
@@ -290,13 +297,20 @@ public class Yog extends Mob {
 			
 			state = WANDERING;
 
-            resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
+            resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
             resistances.put( Element.Dispel.class, Element.Resist.PARTIAL );
 
-            resistances.put( Element.Flame.class, Element.Resist.IMMUNE );
+            resistances.put( Element.Body.class, Element.Resist.PARTIAL );
+            resistances.put( Element.Doom.class, Element.Resist.PARTIAL );
+
             resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
-            resistances.put( Element.Body.class, Element.Resist.IMMUNE );
-		}
+            resistances.put( Element.Flame.class, Element.Resist.IMMUNE );
+
+            resistances.put( Element.Frost.class, Element.Resist.VULNERABLE );
+        }
+
+        @Override
+        protected float healthValueModifier() { return 0.25f; }
 		
 		@Override
 		public void die( Object cause, Element dmg ) {
@@ -411,16 +425,15 @@ public class Yog extends Mob {
                     fist.sprite.emitter().burst(FlameParticle.FACTORY, 15);
 
                     GLog.w("Burning fist was resurrected!");
-
+                    super.detach();
                 } else {
-
+                    warned=true;
                     GLog.w( "Burning fist will be resurrected soon!" );
                     spend( Random.IntRange( FIST_RESPAWN_MIN, FIST_RESPAWN_MAX ) );
 
                 }
-            }
-
-            super.detach();
+            }else
+                super.detach();
         }
     }
 
@@ -474,16 +487,15 @@ public class Yog extends Mob {
 
 
                     GLog.w("Rotting fist was resurrected!");
-
+                    super.detach();
                 } else {
-
+                    warned=true;
                     GLog.w("Rotting fist will be resurrected soon!");
                     spend(Random.IntRange(FIST_RESPAWN_MIN, FIST_RESPAWN_MAX));
 
                 }
-            }
-
-            super.detach();
+            }else
+                super.detach();
         }
     }
 }

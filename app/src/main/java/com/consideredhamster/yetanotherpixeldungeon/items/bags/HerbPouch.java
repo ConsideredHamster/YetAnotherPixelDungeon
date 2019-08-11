@@ -22,6 +22,9 @@ package com.consideredhamster.yetanotherpixeldungeon.items.bags;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatBurned;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatRaw;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatStewed;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.Herb;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Icons;
@@ -29,17 +32,18 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.Icons;
 public class HerbPouch extends Bag {
 
 	{
-		name = "herb pouch";
+		name = "alchemist's pouch";
 		image = ItemSpriteSheet.POUCH;
 		
-		size = 14;
+		size = 19;
         visible = false;
         unique = true;
 	}
 	
 	@Override
 	public boolean grab( Item item ) {
-		return item instanceof Herb;
+		return item instanceof Herb || item instanceof MeatBurned ||
+            item instanceof MeatRaw || item instanceof MeatStewed;
 	}
 	
 	@Override

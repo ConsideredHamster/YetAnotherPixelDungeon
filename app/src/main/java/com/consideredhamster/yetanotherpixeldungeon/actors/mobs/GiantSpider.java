@@ -20,15 +20,15 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Web;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
-import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SpinnerSprite;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.SpiderWeb;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatRaw;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SpiderSprite;
 import com.watabou.utils.Random;
 
 public class GiantSpider extends MobHealthy {
@@ -37,20 +37,41 @@ public class GiantSpider extends MobHealthy {
 
         super( 7 );
 
+        /*
+
+            base maxHP  = 22
+            armor class = 8
+
+            damage roll = 5-12
+
+            accuracy    = 9
+            dexterity   = 7
+
+            perception  = 90%
+            stealth     = 90%
+
+         */
+
 		name = "giant spider";
-		spriteClass = SpinnerSprite.class;
+		spriteClass = SpiderSprite.class;
 		
-		loot = new MysteryMeat();
+		loot = new MeatRaw();
 		lootChance = 0.3f;
 		
 		FLEEING = new Fleeing();
+
+        resistances.put( Element.Mind.class, Element.Resist.VULNERABLE );
+        resistances.put( Element.Ensnaring.class, Element.Resist.IMMUNE );
+
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
 	}
 	
 	@Override
 	protected boolean act() {
 		boolean result = super.act();
 
-		if (state == FLEEING && !isScared() ) {
+		if (state == FLEEING && buff( Tormented.class ) == null ) {
 			if (enemy != null && enemySeen && enemy.buff( Poisoned.class ) == null) {
 				state = HUNTING;
 			}
@@ -63,30 +84,30 @@ public class GiantSpider extends MobHealthy {
 	public int attackProc( Char enemy, int damage, boolean blocked ) {
 
         if( !blocked && Random.Int( 10 ) < tier ) {
-            BuffActive.addFromDamage( enemy, Poisoned.class, damage );
+            BuffActive.addFromDamage( enemy, Poisoned.class, damage * 2 );
             state = FLEEING;
 		}
-
-        GameScene.add( Blob.seed( enemy.pos, Random.IntRange( 5, 7 ), Web.class ) );
 		
 		return damage;
 	}
 
+	@Override
+    public void die( Object cause, Element dmg ) {
 
-	
-//	@Override
-//	public void move( int step ) {
-//		if (state == FLEEING) {
-//			GameScene.add( Blob.seed( pos, Random.IntRange( 5, 7 ), Web.class ) );
-//		}
-//		super.move( step );
-//	}
+        Ghost.Quest.process( pos );
+
+        SpiderWeb.spawn( pos, Random.IntRange( 5, 7 ) );
+
+        super.die( cause, dmg );
+
+    }
 	
 	@Override
 	public String description() {		
 		return 
-			"These greenish furry cave spiders try to avoid direct combat, preferring to wait in the distance " +
-			"while their victim, entangled in the spinner's excreted cobweb, slowly dies from their poisonous bite.";
+			"These overgrown subterranean spiders try to avoid direct combat, preferring to poison " +
+            "their target and then run away. Their abdomens store large amounts of web, which is " +
+            "usually used to wrap up their prey after it succumbs to their venom.";
 	}
 	
 	private class Fleeing extends Mob.Fleeing {

@@ -72,11 +72,14 @@ public class DM300 extends MobHealthy {
         resistances.put(Element.Mind.class, Element.Resist.IMMUNE );
         resistances.put(Element.Body.class, Element.Resist.IMMUNE );
         resistances.put(Element.Dispel.class, Element.Resist.IMMUNE );
+
+        resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Doom.class, Element.Resist.PARTIAL );
     }
 
     @Override
     public boolean isMagical() {
-        return true;
+        return false;
     }
 
     @Override
@@ -151,7 +154,7 @@ public class DM300 extends MobHealthy {
             BuffActive.add(this, Enraged.class, breaks * Random.Float(8.0f, 12.0f));
 
             if (Dungeon.visible[pos]) {
-                sprite.showStatus( CharSprite.NEGATIVE, "enraged!" );
+//                sprite.showStatus( CharSprite.NEGATIVE, "enraged!" );
                 GLog.n( "DM-300 is enraged!" );
             }
 
@@ -167,21 +170,22 @@ public class DM300 extends MobHealthy {
 	
 	@Override
 	public void die( Object cause, Element dmg ) {
-		
-		super.die( cause, dmg );
-		
-		GameScene.bossSlain();
-		Dungeon.level.drop( new SkeletonKey(), pos ).sprite.drop();
-		
-		Badges.validateBossSlain();
-		
-		yell( "Mission failed. Shutting down." );
+
+        yell( "Mission failed. Shutting down." );
+
+        super.die( cause, dmg );
+
+        GameScene.bossSlain();
+        Dungeon.level.drop( new SkeletonKey(), pos ).sprite.drop();
+
+        Badges.validateBossSlain();
+
 	}
-	
+
 	@Override
 	public void notice() {
 		super.notice();
-        if( enemySeen ) {
+        if( enemySeen && HP == HT && breaks == 0 ) {
             yell("Unauthorised personnel detected.");
         }
 	}
@@ -196,7 +200,7 @@ public class DM300 extends MobHealthy {
 
     public void dropBoulders( int pos, int power ) {
 
-        if( pos < 0 || pos >= 1024 )
+        if( pos < 0 || pos > Level.LENGTH )
             return;
 
         if( Level.solid[pos] )
@@ -210,14 +214,14 @@ public class DM300 extends MobHealthy {
 
             ch.damage(dmg, this, Element.PHYSICAL);
 
-            if (ch.isAlive() ) {
+            if ( ch.isAlive() ) {
                 BuffActive.addFromDamage(ch, Vertigo.class, dmg);
             }
         }
 
         Heap heap = Dungeon.level.heaps.get(pos);
         if (heap != null) {
-            heap.shatter( "Boulders" );
+            heap.shatter();
         }
 
         if (Dungeon.visible[pos]) {

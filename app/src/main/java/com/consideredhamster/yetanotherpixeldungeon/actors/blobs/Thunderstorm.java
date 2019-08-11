@@ -116,6 +116,15 @@ public class Thunderstorm extends Blob {
 //                        }
                     }
 
+                    // attempt to fill the wells
+                    if (
+                        Random.Int(20) < humidity[i] &&
+                        ( Dungeon.level.map[i] == Terrain.WELL ||
+                        Dungeon.level.map[i] == Terrain.EMPTY_WELL )
+                    ) {
+                        fill( i );
+                    }
+
                     Char ch = Actor.findChar(i);
 
                     if (ch != null) {
@@ -198,10 +207,7 @@ public class Thunderstorm extends Blob {
 
         Emitter emitter = CellEmitter.get( cell );
 
-        boolean visible = false;
-        boolean cross = Random.Int( 2 ) == 0;
-
-        int[] tiles = cross ? Level.NEIGHBOURS5 : Level.NEIGHBOURSX ;
+        int[] tiles = Random.Int( 2 ) == 0 ? Level.NEIGHBOURS5 : Level.NEIGHBOURSX ;
 
         for( int n : tiles ) {
 
@@ -222,44 +228,48 @@ public class Thunderstorm extends Blob {
 
             }
 
-            visible = visible || Dungeon.visible[ cell ];
+            if( Dungeon.visible[ cell + n ] ) {
+                emitter.parent.add( new Lightning( cell, cell + n ) );
+            }
 
         }
 
-        if( visible ) {
-
-            int[] points1 = new int[2];
-            int[] points2 = new int[2];
-
-            if( cross ) {
-
-                points1[0] = cell - Level.WIDTH;
-                points1[1] = cell + Level.WIDTH;
-
-                points2[0] = cell - 1;
-                points2[1] = cell + 1;
-
-            } else {
-
-                points1[0] = cell - Level.WIDTH - 1;
-                points1[1] = cell + Level.WIDTH + 1;
-
-                points2[0] = cell - Level.WIDTH + 1;
-                points2[1] = cell + Level.WIDTH - 1;
-
-            }
-
-            emitter.parent.add( new Lightning( points1, 2, null ) );
-            emitter.parent.add( new Lightning( points2, 2, null ) );
-
+        if( Dungeon.visible[ cell ] ){
             emitter.burst( SparkParticle.FACTORY, Random.Int( 4, 6 ) );
-
         }
 
         for (Mob mob : Dungeon.level.mobs) {
             if (Level.distance( cell, mob.pos ) <= 4 ) {
                 mob.beckon(cell);
             }
+        }
+    }
+
+    public void fill( int cell ) {
+
+        if( Dungeon.depth == 24 )
+            return;
+
+        WellWater water = (WellWater)Dungeon.level.blobs.get( WellWater.class );
+        if (water == null) {
+            try {
+                water = new WellWater();
+            } catch (Exception e) {
+                water = null;
+            }
+        }
+
+        water.seed( cell, water.volume + 1 );
+
+        if ( Dungeon.level.map[ cell ] == Terrain.EMPTY_WELL) {
+
+            Level.set( cell, Terrain.WELL );
+            GameScene.updateMap( cell );
+
+        }
+
+        if( Dungeon.visible[ cell ] ) {
+            GLog.i("Rain fills the well!");
         }
     }
 	

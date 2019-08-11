@@ -22,12 +22,10 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.enchantments;
 
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfHarm;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfAcidSpray;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite.Glowing;
 import com.watabou.utils.Random;
 
@@ -40,7 +38,7 @@ public class Vampiric extends Weapon.Enchantment {
 
     @Override
     public Class<? extends Wand> wandBonus() {
-        return WandOfHarm.class;
+        return WandOfAcidSpray.class;
     }
 
     @Override
@@ -55,7 +53,7 @@ public class Vampiric extends Weapon.Enchantment {
 
     @Override
     protected String desc_p() {
-        return "drain health from non-magical enemies and increase damage dealt by wands of Harm";
+        return "drain health from non-magical enemies";
     }
 
     @Override
@@ -68,27 +66,7 @@ public class Vampiric extends Weapon.Enchantment {
 
         if ( attacker.isAlive() ) {
 
-            int effValue = Random.IntRange(damage / 3, damage / 2);
-
-            float resist = Element.Resist.getResistance( defender, Element.BODY );
-
-            if( !Element.Resist.checkIfDefault( resist ) ) {
-
-                if ( Element.Resist.checkIfNegated( resist ) ) {
-
-                    effValue = 0;
-
-                } else if ( Element.Resist.checkIfPartial( resist ) ) {
-
-                    effValue = effValue / 2 + Random.Int( (int)effValue % 2 + 1 );
-
-                } else if ( Element.Resist.checkIfAmplified( resist ) ) {
-
-                    effValue *= 2;
-
-                }
-
-            }
+            int effValue = Element.Resist.modifyValue( damage / 2, defender, Element.BODY );
 
             if( effValue > defender.HP ) {
                 effValue = defender.HP;

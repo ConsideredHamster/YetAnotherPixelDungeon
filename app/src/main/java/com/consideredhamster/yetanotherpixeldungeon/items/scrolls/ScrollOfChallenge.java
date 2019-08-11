@@ -70,8 +70,10 @@ public class ScrollOfChallenge extends Scroll {
                 mob.state = mob.HUNTING;
                 mob.pos = Dungeon.level.randomRespawnCell();
                 if (mob.pos != -1) {
-                    GameScene.add(mob);
+                    GameScene.add( mob );
+                    Actor.occupyCell( mob );
                 }
+
             }
         }
 
@@ -83,7 +85,7 @@ public class ScrollOfChallenge extends Scroll {
 		
 		GLog.w(TXT_MESSAGE);
 
-        BuffActive.add( curUser, Enraged.class, 10.0f * ( 110 + curUser.magicSkill() ) / 100 );
+        BuffActive.add( curUser, Enraged.class, 20.0f );
 
 		curUser.sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.3f, 3);
 		Sample.INSTANCE.play(Assets.SND_CHALLENGE);

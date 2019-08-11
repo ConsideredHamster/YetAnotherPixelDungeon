@@ -47,9 +47,14 @@ public class WellPainter extends Painter {
 			}
 		}
 
-        int chapter = Dungeon.chapter();
+        int amount = 3 + Dungeon.chapter() + Random.IntRange( 0, 4 );
 
-		water.seed( c.x + Level.WIDTH * c.y, 3 + chapter + Random.IntRange( 0, 4 ) );
+        // same as in NNYPD, we decrease amount of water in the non-guaranteed well rooms
+        if( Dungeon.depth % 6 != 4 ) {
+            amount /= 2;
+        }
+
+		water.seed( c.x + Level.WIDTH * c.y, amount );
 		level.blobs.put( WellWater.class, water );
 		
 		room.entrance().set( Room.Door.Type.REGULAR );

@@ -23,23 +23,38 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SwarmSprite;
 
 public class CarrionSwarm extends MobEvasive {
 
-    public static boolean swarmer = true;
-
     public CarrionSwarm() {
 
         super( 5 );
+
+        /*
+
+            base maxHP  = 11
+            armor class = 2
+
+            damage roll = 1-7
+
+            accuracy    = 11
+            dexterity   = 14
+
+            perception  = 100%
+            stealth     = 120%
+
+         */
 
         name = "carrion eater";
         spriteClass = SwarmSprite.class;
 
         flying = true;
 
-        resistances.put(Element.Body.class, Element.Resist.PARTIAL);
-        resistances.put(Element.Acid.class, Element.Resist.PARTIAL);
+        resistances.put( Element.Knockback.class, Element.Resist.VULNERABLE );
+        resistances.put( Element.Mind.class, Element.Resist.VULNERABLE );
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
 
 	}
 
@@ -71,5 +86,11 @@ public class CarrionSwarm extends MobEvasive {
         }
 
         return damage;
+    }
+
+    @Override
+    public void die( Object cause, Element dmg ) {
+        Ghost.Quest.process( pos );
+        super.die( cause, dmg );
     }
 }

@@ -30,8 +30,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisib
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.ChargrilledMeat;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.MysteryMeat;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatBurned;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatRaw;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatStewed;
 import com.consideredhamster.yetanotherpixeldungeon.items.herbs.Herb;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.Scroll;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
@@ -110,20 +111,22 @@ public class Burning extends Debuff {
 
             Item item = ((Hero) target).belongings.randomUnequipped();
 
-            if (item instanceof Scroll || item instanceof Herb) {
+            if ( item instanceof Scroll || item instanceof Herb ) {
 
                 item = item.detach(((Hero) target).belongings.backpack);
                 GLog.w(TXT_BURNS_UP, item.toString());
 
                 Heap.burnFX(target.pos);
 
-            } else if (item instanceof MysteryMeat) {
+            } else if ( item instanceof MeatRaw || item instanceof MeatStewed ) {
 
                 item = item.detach(((Hero) target).belongings.backpack);
-                ChargrilledMeat steak = new ChargrilledMeat();
+                MeatBurned steak = new MeatBurned();
+
                 if (!steak.collect(((Hero) target).belongings.backpack)) {
                     Dungeon.level.drop(steak, target.pos).sprite.drop();
                 }
+
                 GLog.w(TXT_BURNS_UP, item.toString());
 
                 Heap.burnFX(target.pos);

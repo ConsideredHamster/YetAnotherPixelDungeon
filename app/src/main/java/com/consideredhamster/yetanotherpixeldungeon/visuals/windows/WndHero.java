@@ -26,6 +26,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.HuntressArmor;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.MageArmor;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.RogueArmor;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Quarterstaff;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.ScrollPane;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
@@ -41,11 +42,11 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.Shield;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAccuracy;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfConcentration;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfMysticism;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEvasion;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAwareness;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfSorcery;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfWillpower;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.PixelScene;
@@ -63,11 +64,11 @@ public class WndHero extends WndTabbed {
 	private static final String TXT_HEALTH	= "Health";
 	private static final String TXT_SATIETY	= "Satiety";
     private static final String TXT_STEALTH	= "Stealth";
-    private static final String TXT_WILLPWR = "Willpower";
+    private static final String TXT_ATTNMNT = "Attunement";
     private static final String TXT_AWARNSS	= "Perception";
     private static final String TXT_OFFENSE = "Accuracy";
 	private static final String TXT_DEFENSE	= "Dexterity";
-	private static final String TXT_WNDSKLL = "Magic skill";
+	private static final String TXT_MAGPOWR = "Magic power";
 	private static final String TXT_GOLD	= "Gold Collected";
 	private static final String TXT_DEPTH	= "Maximum Depth";
 	
@@ -215,21 +216,19 @@ public class WndHero extends WndTabbed {
                         hero.belongings.weap2.incompatibleWith( hero.belongings.weap1 ) && !hero.belongings.weap1.isIdentified() )
                     ? "??" : hero.baseDex(false) ) + " (" + hero.defenseSkill + ")");
 
-			statSlot(TXT_WNDSKLL, (
-                        hero.belongings.ring1 instanceof RingOfSorcery && !hero.belongings.ring1.isIdentified() ||
-                        hero.belongings.ring2 instanceof RingOfSorcery && !hero.belongings.ring2.isIdentified() ?
-                    "??" : hero.magicSkill() ) + " (" + hero.magicSkill + ")" );
-
-//			statSlot( TXT_GOLD, Statistics.goldCollected );
-//			statSlot( TXT_DEPTH, Statistics.deepestFloor );
+			statSlot( TXT_MAGPOWR, (
+                        hero.belongings.ring1 instanceof RingOfWillpower && !hero.belongings.ring1.isIdentified() ||
+                        hero.belongings.ring2 instanceof RingOfWillpower && !hero.belongings.ring2.isIdentified() ||
+                        hero.belongings.weap1 instanceof Quarterstaff && !hero.belongings.weap1.isIdentified() ?
+                    "??" : hero.magicPower() ) + " (" + hero.magicPower + ")" );
 			
 			pos += GAP;
 
-            statSlot(TXT_WILLPWR, (
-                        hero.belongings.armor instanceof MageArmor && !hero.belongings.armor.isIdentified() ||
-                        hero.belongings.ring1 instanceof RingOfConcentration && !hero.belongings.ring1.isIdentified() ||
-                        hero.belongings.ring2 instanceof RingOfConcentration && !hero.belongings.ring2.isIdentified() ?
-                    "??" : (int)( hero.willpower() * 100 ) ) + "%" );
+            statSlot( TXT_ATTNMNT, (
+                        hero.belongings.ring1 instanceof RingOfMysticism && !hero.belongings.ring1.isIdentified() ||
+                        hero.belongings.ring2 instanceof RingOfMysticism && !hero.belongings.ring2.isIdentified() ||
+                        hero.belongings.armor instanceof MageArmor && !hero.belongings.armor.isIdentified() ?
+                    "??" : (int)( hero.attunement() * 100 ) ) + "%" );
 
             statSlot( TXT_AWARNSS, (
                         hero.belongings.armor instanceof HuntressArmor && !hero.belongings.armor.isIdentified() ||

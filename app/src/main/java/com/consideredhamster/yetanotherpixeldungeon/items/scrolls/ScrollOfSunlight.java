@@ -47,7 +47,7 @@ public class ScrollOfSunlight extends Scroll {
         curUser.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
         Sample.INSTANCE.play( Assets.SND_LULLABY );
 
-        GameScene.add( Blob.seed( curUser.pos, 250 * ( 110 + curUser.magicSkill() ) / 100, Sunlight.class ) );
+        GameScene.add( Blob.seed( curUser.pos, 250 * ( 110 + curUser.magicPower() ) / 100, Sunlight.class ) );
 
         GLog.i( TXT_MESSAGE );
 

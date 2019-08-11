@@ -59,7 +59,7 @@ public abstract class Ring extends EquipableItem {
 		RingOfVitality.class,
 		RingOfAwareness.class,
 		RingOfShadows.class,
-		RingOfConcentration.class,
+		RingOfMysticism.class,
 		RingOfKnowledge.class,
 		RingOfAccuracy.class,
 		RingOfEvasion.class,
@@ -67,7 +67,7 @@ public abstract class Ring extends EquipableItem {
 		RingOfDurability.class,
 		RingOfFortune.class,
 		RingOfProtection.class,
-		RingOfSorcery.class
+		RingOfWillpower.class
 	};
 	private static final String[] gems = 
 		{"diamond", "opal", "garnet", "ruby", "amethyst", "topaz", "onyx", "tourmaline", "emerald", "sapphire", "quartz", "agate"};
@@ -115,13 +115,6 @@ public abstract class Ring extends EquipableItem {
 		image	= handler.image( this );
 		gem		= handler.label( this );
 	}
-	
-//	@Override
-//	public ArrayList<String> actions( Hero hero ) {
-//		ArrayList<String> actions = super.actions( hero );
-//		actions.add(isEquipped(hero) ? AC_UNEQUIP : AC_EQUIP);
-//		return actions;
-//	}
 
     @Override
     public String quickAction() {
@@ -257,40 +250,6 @@ public abstract class Ring extends EquipableItem {
 	public boolean isEquipped( Hero hero ) {
 		return hero.belongings.ring1 == this || hero.belongings.ring2 == this;
 	}
-	
-	@Override
-	public Item upgrade() {
-		
-		super.upgrade();
-		
-//		if (buff != null) {
-//
-//			Char owner = buff.target;
-//			buff.detach();
-//			if ((buff = buff()) != null) {
-//				buff.attachTo( owner );
-//			}
-//		}
-		
-		return this;
-	}
-	
-	@Override
-	public Item curse() {
-		
-		super.curse();
-		
-//		if (buff != null) {
-//
-//			Char owner = buff.target;
-//			buff.detach();
-//			if ((buff = buff()) != null) {
-//				buff.attachTo( owner );
-//			}
-//		}
-		
-		return this;
-	}
 
     @Override
     public boolean isUpgradeable() {
@@ -324,64 +283,56 @@ public abstract class Ring extends EquipableItem {
 	public String name() {
 		return isTypeKnown() ? super.name() : gem + " ring";
 	}
-	
-	@Override
-	public String desc() {
-		return 
-			"This metal band is adorned with a large " + gem + " gem " +
-			"that glitters in the darkness. Who knows what effect it has when worn?";
-	}
-	
-	@Override
-	public String info() {
-		if (isEquipped( Dungeon.hero )) {
-			
-			return desc() + "\n\n" + "The " + name() + " is on your finger" + 
-				(bonus < 0 ? ", and because it is cursed, you are powerless to remove it." : "." );
-			
-		} else if (bonus < 0 && isCursedKnown()) {
-			
-			return desc() + "\n\nYou can feel a malevolent magic lurking within the " + name() + ".";
-			
-		} else {
-			
-			return desc();
-			
-		}
+
+    @Override
+    public String desc() {
+        if( isIdentified() && bonus >= 0 ) {
+            return "This ring is _identified_. Effects from the rings of the same type stack additively.";
+        } else if( isCursedKnown() && bonus < 0 ) {
+            return "This ring is _cursed_. Its effects are reversed and it cannot be removed voluntarily.";
+        } else {
+            return "This ring is _not identified_. You are not sure about its exact effects.";
+        }
+    }
+
+    @Override
+    public String info() {
+
+        final String p = "\n\n";
+
+        StringBuilder info = new StringBuilder( isTypeKnown() ? desc() :
+            "This metal band is adorned with a large " + gem + " gem " +
+            "that glitters in the darkness. Who knows what effect it has when worn?"
+        );
+
+        info.append( p );
+
+        if ( isEquipped( Dungeon.hero ) ) {
+            info.append( "You wear this ring on your finger." );
+        } else if( Dungeon.hero.belongings.backpack.items.contains(this) ) {
+            info.append( "This ring is in your backpack." );
+        } else {
+            info.append( "This ring lies on the dungeon's floor." );
+        }
+
+        if( bonus < 0 && isCursedKnown() ) {
+
+            info.append( " " );
+
+            if( isEquipped( Dungeon.hero ) ){
+                info.append( "Malevolent magic prevents you from removing it." );
+            } else {
+                info.append( "You can feel a malevolent magic lurking within it." );
+            }
+        }
+
+        return info.toString();
 	}
 	
 	@Override
 	public Item identify() {
 		setKnown();
 		return super.identify();
-	}
-	
-	@Override
-	public Item random() {
-
-        Float rand = Random.Float();
-
-        int n = 0;
-
-        if ( rand < Dungeon.depth * 0.03f ) {
-            n++;
-            if ( rand < Dungeon.depth * 0.02f ) {
-                n++;
-                if ( rand < Dungeon.depth * 0.01f ) {
-                    n++;
-                }
-            }
-        }
-
-        if( n > 0 ) {
-            if ( Random.Int( Dungeon.chapter() * 10 + 1 ) < Random.Int( n * 10 + 1 ) ) {
-                curse(n);
-            } else {
-                upgrade(n);
-            }
-        }
-
-		return this;
 	}
 	
 	public static boolean allKnown() {
@@ -395,7 +346,7 @@ public abstract class Ring extends EquipableItem {
 	@Override
 	public int price() {
 
-		int price = 100;
+		int price = 75;
 
         if ( isIdentified() ) {
             price += bonus > 0 ? price * bonus / 3 : price * bonus / 6 ;
@@ -414,6 +365,10 @@ public abstract class Ring extends EquipableItem {
 	protected RingBuff buff() {
 		return null;
 	}
+
+    public static float effect( int level ) {
+        return level >= 0 ? 0.2f + 0.1f * level : 0.1f * level - 0.1f;
+    }
 	
 	private static final String UNFAMILIRIARITY	= "unfamiliarity";
 	
@@ -430,29 +385,30 @@ public abstract class Ring extends EquipableItem {
 			ticksToKnow = TICKS_TO_KNOW;
 		}
 	}
-	
-	public class RingBuff extends Buff {
+
+    public class RingBuff extends Buff {
 
         protected String desc() {
             return "You don't feel anything special on equipping this ring.";
         }
 
-//		public int energy;
-		public int level() {
-            return Ring.this.bonus < 0 ? Ring.this.bonus : Ring.this.bonus + 1 ;
-        };
-
         public float effect() {
-            return level() >= 0 ? 0.2f + 0.1f * level() : 0.167f * level();
+            return Ring.effect( Ring.this.bonus );
         }
-		
+
 		@Override
 		public boolean attachTo( Char target ) {
 
 			if (target instanceof Hero && !isTypeKnown()) {
+
 				setKnown();
-				GLog.i( desc() );
-//				Badges.validateItemLevelAcquired(Ring.this);
+
+                if( bonus < 0 ){
+                    GLog.n( desc() );
+                } else {
+                    GLog.i( desc() );
+                }
+
 			}
 
 			return super.attachTo(target);
@@ -463,7 +419,7 @@ public abstract class Ring extends EquipableItem {
 
             if (!isIdentified() && !((Hero)target).restoreHealth) {
 
-                float effect = target.ringBuffs(RingOfKnowledge.Knowledge.class);
+                float effect = target.ringBuffs( RingOfKnowledge.Knowledge.class);
 
                 ticksToKnow -= (int) effect;
                 ticksToKnow -= Random.Float() < effect % 1 ? 1 : 0 ;
@@ -471,12 +427,12 @@ public abstract class Ring extends EquipableItem {
                 if (ticksToKnow <= 0) {
                     String gemName = name();
                     identify();
-                    GLog.w(Ring.this.bonus >= 0 ? TXT_IDENTIFY_NORMAL : TXT_IDENTIFY_CURSED, gemName, Ring.this.name(), Math.abs(Ring.this.bonus));
-//                    Badges.validateItemLevelAcquired(Ring.this);
+                    GLog.i(
+                        Ring.this.bonus >= 0 ? TXT_IDENTIFY_NORMAL : TXT_IDENTIFY_CURSED,
+                        gemName, Ring.this.name(), Math.abs(Ring.this.bonus)
+                    );
                 }
             }
-
-//			use();
 
 			spend( TICK );
 

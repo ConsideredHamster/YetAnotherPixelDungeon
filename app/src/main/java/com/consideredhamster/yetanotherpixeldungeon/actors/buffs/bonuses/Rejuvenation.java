@@ -59,8 +59,6 @@ public class Rejuvenation extends Bonus {
 
             double effect =  Math.sqrt( target.totalHealthValue() ) + duration;
 
-            effect *= target.ringBuffs( RingOfVitality.Vitality.class );
-
             target.heal( Random.Int( (int)effect ) + 1 );
 
             spend( TICK );

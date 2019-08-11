@@ -40,7 +40,7 @@ public class ScrollOfUpgrade extends InventoryScroll {
 	private static final String TXT_UNKNW_REPAIRED  =
             "your %s looks a bit better now. But maybe you should have identified it first?";
 	private static final String TXT_UNKNW_WHOKNOWS	=
-            "your %s doesn't looks different. Maybe you should have identified it first?";
+            "your %s doesn't look different. Maybe you should have identified it first?";
 
     private static final String TXT_CURSE_WEAKENED =
             "your %s was cursed, but now the curse seems to be weaker.";

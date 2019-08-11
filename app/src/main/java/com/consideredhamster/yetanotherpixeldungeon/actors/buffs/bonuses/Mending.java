@@ -86,8 +86,6 @@ public class Mending extends Bonus {
 
             effect += (hero.lvl - 1) + hero.strBonus;
 
-            effect *= target.ringBuffs(RingOfVitality.Vitality.class );
-
         }
 
         int healthRestored = ( effect / 10 + ( effect % 10 > Random.Int(10) ? 1 : 0 ) );

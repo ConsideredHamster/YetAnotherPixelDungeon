@@ -30,11 +30,11 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Bee;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Pushing;
+import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Splash;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
 public class Honeypot extends Item {
@@ -109,14 +109,19 @@ public class Honeypot extends Item {
 		}
 		
 		if (newPos != -1) {
-			Bee bee = new Bee();
+			final Bee bee = new Bee();
 			bee.spawn( Dungeon.depth );
 			bee.HP = bee.HT;
-			bee.pos = newPos;
+			bee.pos = pos;
 			
-			GameScene.add( bee );
-			Actor.addDelayed( new Pushing( bee, pos, newPos ), -1 );
-			
+            Pushing.move( bee, newPos, new Callback() {
+                @Override
+                public void call(){
+                    GameScene.add( bee );
+                }
+            } );
+
+
 			bee.sprite.alpha( 0 );
 			bee.sprite.parent.add( new AlphaTweener( bee.sprite, 1, 0.15f ) );
 			

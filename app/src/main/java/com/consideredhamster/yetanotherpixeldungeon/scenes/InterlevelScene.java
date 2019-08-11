@@ -86,22 +86,15 @@ public class InterlevelScene extends PixelScene {
             "Perception affects your chances to hear nearby enemies while exploring or sleeping",
             "Your chance to expose your attacker depends on your Perception attribute",
 
-            "Stealth determines your chances of being noticed by enemies",
+            "Stealth determines success chance and amount of attempts when stealing from shops",
             "Stealth affects your chances to ambush an enemy to deal a sneak attack",
 
-            "Willpower significantly affects recharge rate of all of your wands",
-            "Your chance to prevent equipping a cursed item depends on your Willpower",
-            "Willpower influences your chances to miscast with a wand or squeeze additional charge",
+            "Attunement affects the recharge rate of all of your wands",
+            "Your chance to prevent equipping a cursed item depends on your Attunement",
 
-            "Magic skill affects effectiveness of some of the scrolls",
-            "Your magic skill affects your accuracy with combat wands",
-            "Your magic skill improves damage of your wand of Magic Missile",
-
+//            "Magic power affects effectiveness of enchanted equipment",
+            "Your magic power determines damage/effect of your wands",
             "High Strength increases your chances to break free when ensnared",
-            "Your health regeneration rate grows with levels and potions of Strength used",
-
-            "Your health regeneration is tripled while you are sleeping on dry land",
-            "You do not regenerate any health while you are starving, burning or poisoned",
 
             "Amount of loot and special rooms increases as you descend deeper into the dungeon",
             "Try to keep your character level higher or equal to the current depth",
@@ -116,35 +109,33 @@ public class InterlevelScene extends PixelScene {
 
             "Using a weapon which is too heavy for you decreases your attack speed",
             "Stronger weapons usually decrease your accuracy and stealth",
+            "Being electrified can force you to drop your current weapon on the ground",
 
             "Using an armor or shield which is too heavy for you decreases your movement speed",
             "Stronger shields and body armors usually decrease your dexterity and stealth",
+            "Upgraded cloth armor will increase its corresponding attribute even more",
 
-            "Your chance to block an attack depends on armor class of your shield and damage of your weapon",
+            "Your chance to block an attack depends on armor class of your shield or damage of your weapon",
             "A successful block can expose your attacker, leaving it open to a counterattack",
 
             "Excess strength decreases penalties from heavy equipment",
-            "Stronger flintlock weapons require more gunpowder to reload",
-
-            "Being electrified can force you to drop your current weapon on the ground",
             "You can identify weapons, armors, wands and rings by using them long enough",
+            "Stealth penalty from your equipment is not applied while you are asleep",
 
+            "Stronger flintlock weapons require more gunpowder to reload",
             "Flintlock weapons ignore distance penalties and the target's armor",
-            "You can craft makeshift bombs from excess gunpowder",
 
+            "You can craft makeshift bombs from excess gunpowder",
             "You can combine bomb sticks into bomb bundles which pack some extra punch",
             "You can dismantle bomb bundles or sticks to obtain some of their components",
 
-            "Upgraded cloth armor will increase its corresponding attribute even more",
-            "Stealth penalty from your equipment is not applied while you are asleep",
-
             // WANDS & RINGS
 
-            "Combat wands always have a chance to miscast, which mostly depends on their quality level",
-            "Combat wands have a chance to squeeze additional charge, which mostly depends on their quality level",
+            "Chance to miscast depends on the wand's condition and increased for cursed wands",
+            "Chance to squeeze additional charge depends on the wand's condition and upgraded level",
 
-            "Recharge rate of utility wands depends on their quality and upgrade levels",
-            "Utility wands always spend all of their charges on use",
+            "Cursed and unidentified wands can miscast, but cannot squeeze additional charges",
+            "You can can squeeze additional charges from empty wands if they are identified",
 
             "Some rings can be kept only to equip them for certain occasions",
             "Bonuses from two equipped rings of a similar type stack additively",
@@ -152,28 +143,47 @@ public class InterlevelScene extends PixelScene {
             "There is usually only 1 wand per chapter but there is a low chance to find more",
             "There is usually only 1 ring per chapter but there is a low chance to find more",
 
+//            "Wands of Magic Missile have the highest up-front single-target damage",
+            "Sometimes, disintegration rays can be angled to hit the target twice",
+            "Wands of Smiting are especially useful against enemies of magical origin",
+
+            "Wands of Lightning do not conduct through the water if their target is flying",
+            "Wands of Acid Spray deal 150% damage in melee range, but only 50% against targets afar",
+            "Creating runes with wand of Firebrand is more effective than zaping with it directly",
+
+            "Avalanches created by wand of Force Blast deal more damage than direct zaps",
+            "Thornvines are stronger and tougher when created on grassy tiles",
+            "Walls created by wand of Ice Barrier are more durable when placed on water tiles",
+
+            "Wands of Charm can be used to harm and disorient enemies of magical origin",
+            "Wands of Life Drain are more powerful when used against sleeping or wandering enemies",
+            "Efficiency of wand of Damnation depends mostly on the target's current health",
+
             // POTIONS
 
             "There is only 1 potion of Wisdom per chapter but there is a low chance to find more",
             "Potions of Wisdom also increase your level cap, allowing you to reach higher levels",
 
             "There are only 2 potions of Strength per chapter but there is a low chance to find more",
-            "Potion of Strength can be used to dispel weakness",
+            "Drinking a potion of Strength is the most effective way to heal yourself",
 
             "There is always at least one potion of Mending in every shop",
             "Potions of Mending also cure most physical debuffs such as poison or bleeding",
 
             "Potions of Mind Vision allow you to ignore most of disadvantages of being blind",
-            "Potions of Mind Vision allow you to detect hidden mimics if they are out of line of sight",
+            "Potions of Mind Vision also increase your Perception for the duration of effect",
 
-            "Potions of Levitation give you a bonus to your movement speed",
+            "Potions of Levitation give you a bonus to your movement speed and evasion",
             "Potions of Levitation can be used to descend safely when jumping into a chasm",
 
-            "Using a scroll or a wand dispels the effect of a potion of Invisibility",
+            "Being invisible also increases your stealth, making it easier to steal from shops",
             "Enemies can dispel the effect of a potion of Invisibility by stumbling into you",
 
-            "Drinking a potion of Blessing increases your armor class by 20% of your max health",
-            "Throw a potion of Blessing on adjacent tile to weaken curses on items in your inventory",
+            "Drinking a potion of Shield increases your physical resistance as well",
+            "Effects of a potion of Shield can be stacked with bonus resistances from equipment",
+
+            "Potions of Blessing will inflict heavy damage to the enemies of magical origin",
+            "Throw a potion of Blessing under yourself to weaken curses on items in your inventory",
 
             "Potions of Liquid Flame never spread on nearby water tiles",
             "Potions of Liquid Flame always affect nearby flammable tiles",
@@ -181,14 +191,16 @@ public class InterlevelScene extends PixelScene {
             "You can quickly put out fire in a room with a help of a potion of Frigid Vapours",
             "Potion of Frigid Vapours are more useful against targets standing in the water",
 
-            "Some gases are highly flammable - be careful when using potions of Corrosive Gas",
-            "Potions of Corrosive Gas are very effective against crowds of enemies",
-
-            "Potions of Overgrowth are more effective when used on an already grassy tiles",
-            "You can farm plants for alchemy with help of potions of Overgrowth",
+            "Some gases are highly flammable - be careful when using potions of Toxic Gas",
+            "Potions of Toxic Gas are very effective against crowds of non-magical enemies",
 
             "Using a potion of Thunderstorm can attract wandering monsters",
             "Potions of Thunderstorm can be used to flood the dungeon floor or to extinguish fires",
+
+            "Potions of Webbing can be very helpful if you prefer to keep your enemies away from you",
+            "Potions of Confusion Gas are especially dangerous in combination with chasms",
+            "Potions of Rage have all of the benefits of scrolls of Challenge but without any drawbacks",
+            "Potions of Caustic Ooze leave temporary acid puddles when thrown on dry land tiles",
 
             // SCROLLS
 
@@ -222,7 +234,7 @@ public class InterlevelScene extends PixelScene {
             "Scrolls of Raise Dead can be very deadly against a single creature - including you",
             "Wraiths summoned by using a scroll of Raise Dead will stop being charmed after a while",
 
-            "Using scrolls of Challenge is an effective, but risky way to farm experience faster",
+            "Using scrolls of Challenge in boss fights is probably the best way to use them",
             "Scroll of Challenge can be used to lure mimics out of their cover",
 
             "Scroll of Torment is more harmful to you if there are no more enemies in sight",
@@ -234,10 +246,10 @@ public class InterlevelScene extends PixelScene {
             "Some kinds of monsters can drop a raw meat or even a small ration",
 
             "A full stomach allows you to recover from wounds faster than normal",
-            "Eating raw meat can poison you - better cook it by burning or freezing it",
+            "Fire can burn raw or cooked meat, making it way less useful and tasty",
 
-            "Chargrilled meat doesn't have any additional advantages besides being edible",
-            "Frozen carpaccio is so tasty it recovers some of your health when eaten",
+            "Burned meat is less nutritious and cannot be properly cooked anymore",
+            "Stewed meat removes debuffs just like herbs do, but takes longer to eat",
 
             "Sometimes you can find additional rations, but they will be smaller",
             "You can buy pastry in shops; more often than not it is well worth its cost",
@@ -254,10 +266,16 @@ public class InterlevelScene extends PixelScene {
             "Bosses are quite vulnerable to explosives, potions and scrolls.",
 
             "Mind that miasma released by Goo is highly flammable",
-            "Dwarven King's ritual can be disrupted by a certain spell...",
+            "Goo have several ways to heal itself, but all of them can be denied",
 
             "Tengu teleports more often when threatened",
+            "Tengu cannot teleport when ensnared or blinded",
+
             "DM-300 is neither organic nor magical creature.",
+            "DM-300 starts moving slightly faster after every enrage.",
+
+            "Dwarven King is completetly invulnerable during the ritual",
+            "Dwarven King's ritual can be disrupted by a certain spell...",
 
             // TERRAIN
 
@@ -270,17 +288,17 @@ public class InterlevelScene extends PixelScene {
             "Traps only appear in standard rooms and never appear in corridors or special rooms",
             "Monsters inhabiting this dungeon are aware of all of its traps and secret doors",
 
+            "Your health regeneration is tripled if you are sleeping on dry land",
             "Sleeping in the water is much less efficient than sleeping anywhere else",
             "Evasion chance is decreased for every adjacent tile which is occupied or impassable",
 
-
             // MISC
 
-            "You can refill your waterskins in wells, but their capacity is limited",
             "You can pour water from your waterskin to put out fires and wash away caustic ooze",
+            "You can grow herbs by watering adjacent high grass tiles with your waterskins",
 
             "Your lantern makes it much easier to check for traps and secret doors",
-            "Oil lantern can be used to create fires on adjacent tiles if you have spare oil flasks",
+            "Oil lantern can be used to start fires on adjacent tiles if you have spare oil flasks",
     };
 	
 	private enum Phase {
@@ -542,7 +560,8 @@ public class InterlevelScene extends PixelScene {
 			Dungeon.depth++;
 			level = Dungeon.loadLevel( Dungeon.hero.heroClass );
 		}
-		Dungeon.switchLevel( level, fallIntoPit ? level.pitCell() : level.randomRespawnCell() );
+
+		Dungeon.switchLevel( level, fallIntoPit ? level.pitCell() : level.randomRespawnCell( true, true ) );
 	}
 	
 	private void ascend() throws Exception {

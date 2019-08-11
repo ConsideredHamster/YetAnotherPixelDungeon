@@ -53,6 +53,8 @@ public class ItemSlot extends Button {
 	protected BitmapText bottomRight;
 	protected BitmapText bottomLeft;
 
+	public  Item item;
+
 	private static final String TXT_STRENGTH	= ":%d";
 	private static final String TXT_TYPICAL_STR	= "%d?";
 	
@@ -132,6 +134,7 @@ public class ItemSlot extends Button {
 	}
 	
 	public void item( Item item ) {
+		this.item=item;
 		if (item == null) {
 			
 			active = false;
@@ -214,6 +217,8 @@ public class ItemSlot extends Button {
                 bottomLeft.text( item.status() );
                 bottomLeft.measure();
 
+                topRight.text( null );
+
             } else if( item instanceof OilLantern ) {
 
                 int flasks = ((OilLantern)item).getFlasks();
@@ -221,6 +226,8 @@ public class ItemSlot extends Button {
 
                 bottomLeft.text( item.status() );
                 bottomLeft.measure();
+
+                topRight.text( null );
 
             } else {
 
@@ -277,4 +284,8 @@ public class ItemSlot extends Button {
         topLeft.visible = value;
         bottomLeft.visible = value;
     }
+
+    public void clearIcon(){
+		icon.view(ItemSpriteSheet.SMTH,null);
+	}
 }

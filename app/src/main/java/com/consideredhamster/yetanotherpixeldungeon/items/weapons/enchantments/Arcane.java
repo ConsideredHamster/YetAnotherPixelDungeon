@@ -56,7 +56,7 @@ public class Arcane extends Weapon.Enchantment {
 
     @Override
     protected String desc_p() {
-        return "recharge your wands when attacking and increase damage dealt by wands of Disintegration";
+        return "recharge your wands when attacking";
     }
 
     @Override
@@ -74,9 +74,8 @@ public class Arcane extends Weapon.Enchantment {
             for (Item item : hero.belongings) {
                 if (item instanceof Wand) {
                     Wand wand = (Wand) item;
-                    if ( wand.curCharges < wand.maxCharges() && ( wand instanceof WandUtility || Random.Int( 2 ) == 0 ) ) {
-                        wand.curCharges++;
-                        wand.updateQuickslot();
+                    if ( wand instanceof WandUtility || Random.Int( 2 ) == 0 ) {
+                        wand.setCharges( wand.getCharges() + 1 );
                     }
                 }
             }
@@ -97,9 +96,8 @@ public class Arcane extends Weapon.Enchantment {
             for (Item item : hero.belongings) {
                 if (item instanceof Wand) {
                     Wand wand = (Wand) item;
-                    if ( wand.curCharges > 0 && ( wand instanceof WandUtility || Random.Int( 2 ) == 0 ) ) {
-                        wand.curCharges--;
-                        wand.updateQuickslot();
+                    if ( wand instanceof WandUtility || Random.Int( 2 ) == 0 ) {
+                        wand.setCharges( wand.getCharges() - 1 );
                     }
                 }
             }

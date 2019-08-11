@@ -20,41 +20,84 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.ShockResistance;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatStewed;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfLevitation;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfThunderstorm;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfToxicGas;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
-import com.watabou.utils.Random;
 
 public class WhirlvineHerb extends Herb {
+
+    private static final ItemSprite.Glowing WHITE = new ItemSprite.Glowing( 0xFFFFFF );
+
     {
         name = "Whirlvine herb";
         image = ItemSpriteSheet.HERB_WHIRLVINE;
 
-        alchemyClass = PotionOfLevitation.class;
-        message = "That herb tasted... acerbic, but edible.";
+        cooking = SourMeat.class;
+        message = "That herb tasted sour, but edible.";
+
+        mainPotion = PotionOfThunderstorm.class;
+
+        subPotions.add( PotionOfLevitation.class );
+        subPotions.add( PotionOfToxicGas.class );
+    }
+
+    private static void onConsume( Hero hero, float duration ) {
+
+        BuffActive.add( hero, ShockResistance.class, duration );
+//        Debuff.remove( hero, Shocked.class );
+
     }
 
     @Override
     public void onConsume( Hero hero ) {
-
-        int maxDuration = (int)( Satiety.MAXIMUM - hero.buff( Satiety.class ).energy() ) / 250 + 1;
-
-        Vertigo debuff = Debuff.add( hero, Vertigo.class, (float) Random.Int( maxDuration ) );
-
-        if( debuff != null ) debuff.delay( time );
-
         super.onConsume( hero );
+        onConsume( hero, DURATION_HERB );
+    }
+
+    @Override
+    public int price() {
+        return 15 * quantity;
     }
 
     @Override
     public String desc() {
-        return "Some say that eating Whirlvine herbs can induce a very weird state, like your head " +
-                "is floating. Such herbs are usually used to brew potions of Levitation.";
+        return "It is a pretty well-known fact that stalks of Whirlvines can be used to predict " +
+                "stormy weather, and they are often associated with winds and lightning." +
+                "\n\n" +
+                "These herbs are used to brew potions of _Thunderstorm_, _Levitation_ and _Toxic Gas_. " +
+                "Consuming them will grant a short buff to your _shock_ resistance.";
+    }
+
+    public static class SourMeat extends MeatStewed {
+
+        {
+            name = "sour meat";
+            spiceGlow = WHITE;
+            message = "That meat tasted sour, but edible.";
+        }
+
+        @Override
+        public void onConsume( Hero hero ) {
+            super.onConsume( hero );
+            WhirlvineHerb.onConsume( hero, DURATION_MEAT );
+        }
+
+        @Override
+        public String desc() {
+            return "This meat was stewed in a pot with a _Whirlvine_ herb. It smells pretty sour. " +
+                    "Consuming it will grant a long buff to your _shock_ resistance.";
+        }
+
+        @Override
+        public int price() {
+            return 30 * quantity;
+        }
     }
 }
 

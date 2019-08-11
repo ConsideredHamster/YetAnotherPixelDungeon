@@ -28,7 +28,7 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 
 public class Light extends BuffPassive {
 
-    private final static float DELAY = 5f;
+    private final static float DELAY = 4f;
 
     @Override
     public void applyVisual() {

@@ -28,62 +28,41 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.RatSprite;
 
 public class Rat extends MobEvasive {
 
-    public static boolean swarmer = true;
-
     public Rat() {
 
         super( 1 );
+
+        /*
+
+            base maxHP  = 5
+            armor class = 1
+
+            damage roll = 0-4
+
+            accuracy    = 5
+            dexterity   = 7
+
+            perception  = 100%
+            stealth     = 110%
+
+         */
 
         name = "marsupial rat";
         spriteClass = RatSprite.class;
 
         minDamage += 1;
 
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Knockback.class, Element.Resist.VULNERABLE );
+
     }
 
-	@Override
-	public void die( Object cause, Element dmg ) {
-		Ghost.Quest.process( pos );
-		
-		super.die( cause, dmg );
-	}
-
-//    @Override
-//    protected boolean act() {
-
-//        if ( enemySeen && HP >= HT ) {
+//	@Override
+//	public void die( Object cause, Element dmg ) {
+//		Ghost.Quest.process( pos );
 //
-//            for ( Mob mob : Dungeon.bonus.mobs ) {
-//                if ( mob instanceof Rat && mob.enemySeen && mob != this ) {
-//                    state = HUNTING;
-//                    return super.act();
-//                }
-//            }
-//
-//            state = FLEEING;
-//
-//        }
-
-//        return super.act();
-//    }
-
-//    @Override
-//    protected boolean getCloser( int target ) {
-//        if ( state == HUNTING && HP >= HT ) {
-//
-//            for ( Mob mob : Dungeon.bonus.mobs ) {
-//                if ( mob instanceof Rat && mob.enemySeen && mob.HP >= mob.HT && mob != this ) {
-//                    return super.getCloser( target );
-//                }
-//            }
-//
-//            state = FLEEING;
-//            return super.getFurther( target );
-//
-//        }
-//
-//        return super.getCloser( target );
-//    }
+//		super.die( cause, dmg );
+//	}
 	
 	@Override
 	public String description() {

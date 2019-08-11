@@ -20,7 +20,11 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
+import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.watabou.utils.Random;
 
 public class Javelins extends ThrowingWeaponHeavy {
 
@@ -42,11 +46,23 @@ public class Javelins extends ThrowingWeaponHeavy {
     public int lootChapter() {
         return super.lootChapter() - 1;
     }
+
+    @Override
+    public void proc( Char attacker, final Char defender, int damage ) {
+
+        super.proc(attacker, defender, damage);
+
+        if( damage > Random.Int( defender.totalHealthValue() ) ){
+            Pushing.knockback( defender, attacker.pos, 1, 0 );
+        }
+
+    }
 	
 	@Override
 	public String desc() {
 		return 
-			"This length of metal is weighted to keep the spear at its tip foremost as it sails through the air.";
+			"This length of metal is weighted to keep the spear at its tip foremost as it sails " +
+            "through the air. Good hit with this weapon can even knock its target back.";
 	}
 	
 

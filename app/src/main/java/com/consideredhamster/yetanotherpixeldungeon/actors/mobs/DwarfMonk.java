@@ -20,34 +20,44 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
-import java.util.HashSet;
-
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Combo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.AmbitiousImp;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.OverpricedRation;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.RationSmall;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MonkSprite;
 
 public class DwarfMonk extends MobEvasive {
-
-//    public static final String TXT_DISARMED = "Monk's attack has knocked your %s out of your hands!";
-
-    public static boolean swarmer = true;
 
     public DwarfMonk() {
 
         super( 13 );
 
+        /*
+
+            base maxHP  = 22
+            armor class = 4
+
+            damage roll = 3-13
+
+            accuracy    = 22
+            dexterity   = 28
+
+            perception  = 100%
+            stealth     = 140%
+
+         */
+
         name = "dwarf monk";
 
         spriteClass = MonkSprite.class;
 
-		loot = new OverpricedRation();
+		loot = new RationSmall();
 		lootChance = 0.1f;
 
-        resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
+//        resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
 	}
 
     @Override

@@ -22,7 +22,6 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import com.watabou.noosa.audio.Sample;
@@ -32,7 +31,7 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Pushing;
+import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
@@ -40,12 +39,11 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MimicSprite;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 public class Mimic extends MobHealthy {
-	
-//	private int bonus;
 
     private static final float TIME_TO_DEVOUR	= 1.5f;
 
@@ -67,6 +65,9 @@ public class Mimic extends MobHealthy {
 
         resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
         resistances.put(Element.Body.class, Element.Resist.PARTIAL);
+
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
     }
 	
 	public ArrayList<Item> items;
@@ -223,7 +224,7 @@ public class Mimic extends MobHealthy {
 	}
 	
 	public static Mimic spawnAt( int hp, int pos, List<Item> items ) {
-		Char ch = Actor.findChar( pos );
+		final Char ch = Actor.findChar( pos );
 
 		if (ch != null) {
 			ArrayList<Integer> candidates = new ArrayList<Integer>();
@@ -234,16 +235,17 @@ public class Mimic extends MobHealthy {
 				}
 			}
 			if (candidates.size() > 0) {
-				int newPos = Random.element( candidates );
-				Actor.addDelayed( new Pushing( ch, ch.pos, newPos ), -1 );
-				
-				ch.pos = newPos;
 
-//				if (ch instanceof Mob) {
-//					Dungeon.level.mobPress( (Mob)ch );
-//				} else {
-					Dungeon.level.press( newPos, ch );
-//				}
+                Pushing.move( ch, Random.element( candidates ), new Callback() {
+                    @Override
+                    public void call(){
+
+                        Actor.occupyCell( ch );
+
+                        Dungeon.level.press( ch.pos, ch );
+                    }
+                } );
+
 			} else {
 				return null;
 			}

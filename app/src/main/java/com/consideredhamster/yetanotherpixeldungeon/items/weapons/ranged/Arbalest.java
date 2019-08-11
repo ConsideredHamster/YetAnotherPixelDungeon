@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Quarrels;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponAmmo;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
@@ -47,6 +48,7 @@ public class Arbalest extends RangedWeaponMissile {
 	
 	@Override
 	public String desc() {
-		return "This devious mechanism allows shooting quarrels with ridiculous force.";
+		return "This devious mechanism allows shooting quarrels with ridiculous force, but " +
+                "requires a trained body to reload it afterwards.";
 	}
 }

@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.rings;
 
+import java.util.Locale;
+
 public class RingOfEvasion extends Ring {
 
 	{
@@ -34,20 +36,40 @@ public class RingOfEvasion extends Ring {
 	
 	@Override
 	public String desc() {
-        return isTypeKnown() ?
-                ( bonus < 0 && isIdentified() ? "Normally, this ring " : "This ring " ) +
-                "improves your reflexes, making it easier to dodge any incoming attacks when equipped - especially " +
-                "if it wearer is on the move." +
-                ( bonus < 0 && isIdentified() ? " However, because this ring is cursed, its effects are reversed." : "" ) :
-            super.desc();
+
+        String mainEffect = "??";
+        String sideEffect = "??";
+
+        if( isIdentified() ){
+            mainEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) / 2 );
+            sideEffect = String.format( Locale.getDefault(), "%.0f", 100 * Ring.effect( bonus ) );
+        }
+
+        StringBuilder desc = new StringBuilder(
+            "Rings of this kind serve to improve reflexes and speed of their wearer, making them " +
+            "harder to be hit - especially when they are on the move."
+        );
+
+        desc.append( "\n\n" );
+
+        desc.append( super.desc() );
+
+        desc.append( " " );
+
+        desc.append(
+            "Wearing this ring will increase your _evasion by " + mainEffect + "%_ when you " +
+            "are standing still and by _" + sideEffect + "% when you are moving_."
+        );
+
+        return desc.toString();
 	}
 	
 	public class Evasion extends RingBuff {
         @Override
         public String desc() {
             return bonus >= 0 ?
-                    "You feel that your reflexes are improved." :
-                    "You feel that your reflexes are dampened." ;
+                "You feel that your reflexes are improved." :
+                "You feel that your reflexes are dampened." ;
         }
 	}
 }

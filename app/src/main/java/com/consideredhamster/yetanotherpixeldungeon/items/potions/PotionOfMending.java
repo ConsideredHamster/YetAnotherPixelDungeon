@@ -29,8 +29,7 @@ import com.watabou.utils.Random;
 
 public class PotionOfMending extends Potion {
 
-    public static final float DURATION	= 15f;
-    public static final float MODIFIER	= 1.0f;
+    public static final float DURATION	= 20f;
 
 	{
 		name = "Potion of Mending";
@@ -40,13 +39,14 @@ public class PotionOfMending extends Potion {
 	@Override
 	protected void apply( Hero hero ) {
 
-        int totalHP = (int)( hero.HT * hero.ringBuffs(RingOfVitality.Vitality.class ) );
+        int totalHP = (int)( hero.HT * hero.ringBuffsHalved(RingOfVitality.Vitality.class ) );
 
         hero.heal( totalHP / 4 + ( totalHP % 4 > Random.Int(4) ? 1 : 0 ) );
 
         hero.sprite.emitter().burst(Speck.factory(Speck.HEALING), 5);
 
-        BuffActive.add( hero, Mending.class, DURATION + alchemySkill() * MODIFIER );
+        BuffActive.add( hero, Mending.class, DURATION );
+
         setKnown();
     }
 
@@ -61,4 +61,9 @@ public class PotionOfMending extends Potion {
 	public int price() {
 		return isTypeKnown() ? 30 * quantity : super.price();
 	}
+
+    @Override
+    public float brewingChance() {
+        return 1.00f;
+    }
 }

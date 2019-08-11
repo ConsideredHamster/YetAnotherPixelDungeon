@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.painters;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
@@ -33,19 +34,17 @@ import com.watabou.utils.Random;
 public class TrapsPainter extends Painter {
 
 	public static void paint( Level level, Room room ) {
-		 
-//		Integer traps[] = {
-//			Terrain.TOXIC_TRAP, Terrain.TOXIC_TRAP, Terrain.TOXIC_TRAP,
-//			Terrain.CHASM, Terrain.CHASM, Terrain.CHASM,
-//			!Dungeon.bossLevel( Dungeon.depth + 1 ) ? Terrain.CHASM : Terrain.SUMMONING_TRAP };
 
         fill( level, room, Terrain.WALL );
-        fill( level, room, 1, Terrain.TOXIC_TRAP );
-//
+
+        if( Random.Int( 20 ) < Dungeon.depth % 6 ){
+            fill( level, room, 1, Terrain.SUMMONING_TRAP );
+        } else {
+            fill( level, room, 1, Terrain.TOXIC_TRAP );
+        }
+
 		Room.Door door = room.entrance();
 		door.set( Room.Door.Type.REGULAR );
-		
-//		int lastRow = level.map[room.left + 1 + (room.top + 1) * Level.WIDTH] == Terrain.CHASM ? Terrain.CHASM : Terrain.EMPTY;
 
 		int x = -1;
 		int y = -1;
@@ -70,12 +69,6 @@ public class TrapsPainter extends Painter {
 		int pos = x + y * Level.WIDTH;
         set( level, pos, Terrain.PEDESTAL );
         level.drop( prize( level ), pos, true ).type = Heap.Type.HEAP;
-
-//        Point pos = room.center();
-//        int p = pos.x + pos.y * Level.WIDTH;
-//
-//        set( level, pos, Terrain.PEDESTAL );
-//        level.drop( prize(level), p ).type = Heap.Type.HEAP;
 
 		level.addItemToSpawn( new PotionOfLevitation() );
 	}

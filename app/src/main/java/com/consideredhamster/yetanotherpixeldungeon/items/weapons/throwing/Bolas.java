@@ -23,6 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Ensnared;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
@@ -46,13 +47,14 @@ public class Bolas extends ThrowingWeaponSpecial {
     public void proc( Char attacker, Char defender, int damage ) {
         super.proc(attacker, defender, damage);
 
-        BuffActive.addFromDamage(defender, Ensnared.class, damage * 2 );
+        BuffActive.addFromDamage(defender, Ensnared.class, damageRoll( (Hero) attacker ) * 2 );
     }
 	
 	@Override
 	public String desc() {
 		return 
 			"Bolas are mostly used for hunting and they usually don't do much damage but " +
-            "they can ensnare the target leaving it helpless and motionless for some time.";
+            "they can ensnare the target. Such bolas are often made from spider's silk to " +
+            "enhance their ensnaring capabilities.";
 	}
 }

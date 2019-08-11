@@ -24,9 +24,11 @@ import java.util.ArrayList;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfBlink;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfPhaseWarp;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfLifeDrain;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Random;
@@ -39,15 +41,11 @@ public class SummoningTrap extends Trap {
 	
 	// 0x770088
 	
-	public static void trigger( int pos ) {
-		
+	public static void trigger( int pos, Char ch ) {
+
 		if (Dungeon.bossLevel()) {
 			return;
 		}
-		
-//		if (c != null) {
-//			Actor.occupyCell( c );
-//		}
 		
 		int nMobs = 1;
 		if (Random.Int( 2 ) == 0) {
@@ -72,31 +70,13 @@ public class SummoningTrap extends Trap {
             Mob mob = Bestiary.mob(Dungeon.depth);
             mob.state = mob.HUNTING;
             GameScene.add( mob, DELAY );
-            WandOfBlink.appear( mob, candidates.get( index ) );
+
+            ScrollOfPhaseWarp.appear( mob, candidates.get( index ) );
 
 			Actor.occupyCell( mob );
 			
 			candidates.remove( index );
 			nMobs--;
 		}
-
-//        ArrayList<Integer> respawnPoints = new ArrayList<Integer>();
-//
-//        while (nMobs > 0 && candidates.size() > 0) {
-//            int index = Random.index( candidates );
-//
-//            DUMMY.pos = candidates.get( index );
-//            Actor.occupyCell( DUMMY );
-//
-//            respawnPoints.add( candidates.remove( index ) );
-//            nMobs--;
-//        }
-//
-//        for (Integer point : respawnPoints) {
-//            Mob mob = Bestiary.mob( Dungeon.depth );
-//            mob.state = mob.HUNTING;
-//            GameScene.add( mob, DELAY );
-//            WandOfBlink.appear( mob, point );
-//        }
 	}
 }

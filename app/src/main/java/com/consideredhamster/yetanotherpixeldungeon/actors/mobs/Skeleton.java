@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
@@ -33,11 +34,24 @@ import com.watabou.utils.Random;
 
 public class Skeleton extends MobPrecise {
 
-//	private static final String TXT_HERO_KILLED = "You were killed by the explosion of bones...";
-
     public Skeleton() {
 
         super( 6 );
+
+        /*
+
+            base maxHP  = 19
+            armor class = 6
+
+            damage roll = 3-9
+
+            accuracy    = 15
+            dexterity   = 12
+
+            perception  = 110%
+            stealth     = 110%
+
+         */
 
         name = "skeleton";
         spriteClass = SkeletonSprite.class;
@@ -47,12 +61,14 @@ public class Skeleton extends MobPrecise {
 
         resistances.put( Element.Frost.class, Element.Resist.PARTIAL );
         resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Doom.class, Element.Resist.PARTIAL );
 
         resistances.put( Element.Body.class, Element.Resist.IMMUNE );
         resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
 
 	}
 
+    @Override
     public boolean isMagical() {
         return true;
     }
@@ -61,25 +77,17 @@ public class Skeleton extends MobPrecise {
     public int attackProc( Char enemy, int damage, boolean blocked ) {
 
         if( !blocked && Random.Int( 10 ) < tier ) {
-            BuffActive.addFromDamage( enemy, Withered.class, damage );
+            BuffActive.addFromDamage( enemy, Withered.class, damage * 2 );
         }
 
         return damage;
     }
 
-//    @Override
-//    protected void dropLoot() {
-//        if (Random.Int( 5 ) == 0) {
-//            Item loot = Generator.random( Generator.Category.WEAPON );
-//            for (int i=0; i < 2; i++) {
-//                Item l = Generator.random( Generator.Category.WEAPON );
-//                if (l.price() < loot.price()) {
-//                    loot = l;
-//                }
-//            }
-//            Dungeon.bonus.drop( loot, pos ).sprite.drop();
-//        }
-//    }
+    @Override
+    public void die( Object cause, Element dmg ) {
+        Ghost.Quest.process( pos );
+        super.die( cause, dmg );
+    }
 
     @Override
     public String description() {

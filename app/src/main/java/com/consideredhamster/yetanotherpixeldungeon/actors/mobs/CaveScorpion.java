@@ -22,11 +22,9 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.CorrosiveGas;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
-import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.CausticOoze;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ScorpionSprite;
 import com.watabou.utils.Random;
 
@@ -36,10 +34,30 @@ public class CaveScorpion extends MobHealthy {
 
         super( 12 );
 
+        /*
+
+            base maxHP  = 32
+            armor class = 12
+
+            damage roll = 6-17
+
+            accuracy    = 15
+            dexterity   = 12
+
+            perception  = 85%
+            stealth     = 85%
+
+         */
+
 		name = "cave scorpion";
 		spriteClass = ScorpionSprite.class;
 
-        resistances.put(Element.Acid.class, Element.Resist.PARTIAL);
+        resistances.put( Element.Acid.class, Element.Resist.PARTIAL );
+
+        resistances.put( Element.Mind.class, Element.Resist.VULNERABLE );
+
+        resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
 
 	}
 
@@ -47,7 +65,7 @@ public class CaveScorpion extends MobHealthy {
     public int attackProc( Char enemy, int damage, boolean blocked ) {
 
         if( !blocked && Random.Int( 10 ) < tier ) {
-            BuffActive.addFromDamage( enemy, Corrosion.class, damage );
+            BuffActive.addFromDamage( enemy, Corrosion.class, damage * 2 );
         }
 
         return damage;
@@ -56,7 +74,7 @@ public class CaveScorpion extends MobHealthy {
     @Override
 	public void die( Object cause, Element dmg ) {
 
-        GameScene.add(Blob.seed(pos, 50, CorrosiveGas.class));
+        CausticOoze.spawn( pos, (int)Math.sqrt( totalHealthValue() ) );
 
         super.die(cause, dmg);
     }

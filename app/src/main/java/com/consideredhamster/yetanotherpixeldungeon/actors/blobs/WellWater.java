@@ -41,10 +41,10 @@ import com.watabou.utils.Random;
 public class WellWater extends Blob {
 
     private static final String TXT_PROCCED =
-            "You refill your waterskin in the well.";
+            "You refill your waterskins in the well.";
 
     private static final String TXT_VIAL_IS_FULL =
-            "Your waterskin is already full.";
+            "Your waterskins are already filled.";
 
     private static final String TXT_NO_MORE_WATER =
             "The well is empty now.";
@@ -74,7 +74,6 @@ public class WellWater extends Blob {
 
     @Override
     public void seed( int cell, int amount ) {
-        cur[pos] = 0;
         pos = cell;
         volume = cur[pos] = amount;
     }

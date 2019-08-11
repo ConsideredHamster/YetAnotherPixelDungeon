@@ -212,8 +212,6 @@ public class ScrollOfTransmutation extends InventoryScroll {
 
             if (curUser.belongings.weap2 == item) {
 
-                ((Wand) curUser.belongings.weap2).stopCharging();
-
                 curUser.belongings.weap2 = (Wand) newItem;
                 curUser.belongings.weap2.activate(curUser);
 
@@ -228,6 +226,8 @@ public class ScrollOfTransmutation extends InventoryScroll {
         } else {
             return false;
         }
+
+        curUser.sprite.emitter().start( Speck.factory( Speck.CHANGE ), 0.2f, 5 );
 
         return true;
     }
@@ -349,8 +349,8 @@ public class ScrollOfTransmutation extends InventoryScroll {
         n.bonus = w.bonus;
         n.state = w.state;
         n.known = w.known;
-        n.curCharges = w.curCharges;
         n.durability = w.durability;
+        n.setCharges( w.getCharges() );
 
         return n;
     }

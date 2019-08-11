@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Bullets;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeaponAmmo;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
@@ -47,7 +48,7 @@ public class Sling extends RangedWeaponMissile {
 	
 	@Override
 	public String desc() {
-		return "A simple sling, made out of a several leather straps. With it, simple lead bullets can be turned into " +
-                "much deadlier projectiles.";
+		return "A simple sling, made out of a several leather straps. With it, simple lead bullets " +
+                "can be turned into much deadlier projectiles.";
 	}
 }

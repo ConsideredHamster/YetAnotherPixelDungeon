@@ -79,9 +79,9 @@ public abstract class Buff extends Actor {
     }
 	
 	public void detach() {
-        removeVisual();
         target.remove(this);
-	}
+        removeVisual();
+    }
 	
 	@Override
 	public boolean act() {
@@ -98,9 +98,9 @@ public abstract class Buff extends Actor {
 		return BuffIndicator.NONE;
 	}
 
-    public float duration() {
-        return cooldown();
-    }
+//    public float duration() {
+//        return cooldown();
+//    }
 
     public boolean awakensMobs() { return true; }
 

@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.NPC;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfDurability;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.TagAttack;
@@ -47,6 +48,8 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSh
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MissileSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.QuickSlot;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+
+import java.util.HashSet;
 
 public abstract class ThrowingWeapon extends Weapon {
 
@@ -94,6 +97,9 @@ public abstract class ThrowingWeapon extends Weapon {
         return super.penaltyBase(hero, str) + tier * 4 - 4;
 
     }
+
+    @Override
+    public float stealingDifficulty() { return 0.75f; }
 
     @Override
     public int lootChapter() {
@@ -377,7 +383,7 @@ public abstract class ThrowingWeapon extends Weapon {
                         }
                     });
 
-                    curUser.buff( Satiety.class ).decrease( (float)curWeap.str() / curUser.STR() );
+                    curUser.buff( Satiety.class ).decrease( Satiety.POINT * curWeap.str() / curUser.STR() );
 
                     }
                 });
@@ -420,14 +426,17 @@ public abstract class ThrowingWeapon extends Weapon {
 
             if (returnsWhenThrown()) {
 
-                if( !(this instanceof Harpoons) || !enemy.isHeavy()) {
+                curUser.belongings.weap2 = this;
+                if (this instanceof Chakrams && ((Chakrams)this).bounce(cell) ) {
+                    return;
+                }
+
+                if ((!(this instanceof Harpoons) || !enemy.isHeavy())) {
 
                     ((MissileSprite) curUser.sprite.parent.recycle(MissileSprite.class)).
                             reset(cell, curUser.pos, this instanceof Harpoons ? ItemSpriteSheet.HARPOON_RETURN : curItem.imageAlt(), null);
 
                 }
-
-                curUser.belongings.weap2 = this;
 
             } else {
                 super.onThrow(cell);
@@ -448,7 +457,7 @@ public abstract class ThrowingWeapon extends Weapon {
             }
         }
 
-        curUser.spendAndNext( weapon.speedFactor( curUser ) );
+        curUser.spendAndNext( 1 / weapon.speedFactor( curUser ) );
         QuickSlot.refresh();
     }
 }

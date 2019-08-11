@@ -21,12 +21,42 @@
 
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffPassive;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.watabou.utils.Bundle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 
+import java.util.HashSet;
+
 public class UnholyArmor extends BuffPassive {
+
+    public static final HashSet<Class<? extends Element>> RESISTS;
+
+    static {
+
+        // yes, this buff gives immunity to *everything*
+        RESISTS = new HashSet<>();
+        RESISTS.add(Element.Physical.class);
+        RESISTS.add(Element.Knockback.class);
+
+        RESISTS.add(Element.Flame.class);
+        RESISTS.add(Element.Flame.Periodic.class);
+        RESISTS.add(Element.Shock.class);
+        RESISTS.add(Element.Shock.Periodic.class);
+        RESISTS.add(Element.Acid.class);
+        RESISTS.add(Element.Acid.Periodic.class);
+        RESISTS.add(Element.Frost.class);
+
+        RESISTS.add(Element.Unholy.class);
+        RESISTS.add(Element.Doom.class);
+
+        RESISTS.add(Element.Body.class);
+        RESISTS.add(Element.Mind.class);
+
+        RESISTS.add(Element.Energy.class);
+        RESISTS.add(Element.Dispel.class);
+    }
 
     @Override
     public void applyVisual() {
@@ -48,7 +78,7 @@ public class UnholyArmor extends BuffPassive {
 
     @Override
     public int icon() {
-        return BuffIndicator.BLESSED;
+        return BuffIndicator.SHIELDED;
     }
 
     @Override

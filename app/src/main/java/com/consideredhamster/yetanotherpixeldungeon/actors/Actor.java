@@ -30,6 +30,7 @@ import com.consideredhamster.yetanotherpixeldungeon.Statistics;
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffReactive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.Hazard;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
@@ -148,12 +149,16 @@ public abstract class Actor implements Bundlable {
 	public static void init() {
 		
 		addDelayed( Dungeon.hero, -Float.MIN_VALUE );
+
+        for ( Mob mob : Dungeon.level.mobs ) {
+            add( mob );
+        }
+
+        for ( Hazard hazard : Dungeon.level.hazards ) {
+            add( hazard );
+        }
 		
-		for (Mob mob : Dungeon.level.mobs) {
-			add( mob );
-		}
-		
-		for (Blob blob : Dungeon.level.blobs.values()) {
+		for ( Blob blob : Dungeon.level.blobs.values() ) {
 			add( blob );
 		}
 		
@@ -163,10 +168,21 @@ public abstract class Actor implements Bundlable {
 	public static void occupyCell( Char ch ) {
 		chars[ch.pos] = ch;
 	}
-	
-	public static void freeCell( int pos ) {
-		chars[pos] = null;
-	}
+
+    public static void moveToCell( Char ch, int newPos ) {
+
+        if( chars[ ch.pos ] == ch && chars[ newPos ] == null ){
+
+            chars[ ch.pos ] = null;
+            chars[ newPos ] = ch;
+
+        }
+
+    }
+
+    public static void freeCell( int pos ) {
+        chars[pos] = null;
+    }
 	
 	/*protected*/public void next() {
 		if (current == this) {
@@ -176,13 +192,14 @@ public abstract class Actor implements Bundlable {
 	
 	public static void process() {
 		
-		if (current != null) {
+		if (current != null || !Dungeon.hero.isAlive()) {
 			return;
 		}
 	
 		boolean doNext;
 
 		do {
+
 			now = Float.MAX_VALUE;
 
 			current = null;
@@ -191,7 +208,9 @@ public abstract class Actor implements Bundlable {
 			
 			for (Actor actor : all) {
 
-				if (actor.time < now || actor.time <= now && actor.actingPriority() > current.actingPriority() ) {
+				if (actor.time < now || actor.time == now &&
+                    ( current == null || actor.actingPriority() > current.actingPriority() )
+                ) {
 
 					now = actor.time;
 
@@ -219,8 +238,6 @@ public abstract class Actor implements Bundlable {
                 if (current instanceof Char) {
                     BuffReactive.check( (Char)current );
                 }
-
-
 
 				if (doNext && !Dungeon.hero.isAlive()) {
 					doNext = false;
@@ -279,7 +296,7 @@ public abstract class Actor implements Bundlable {
 	}
 	
 	public static Char findChar( int pos ) {
-		return chars[pos];
+		return pos >= 0 && pos < chars.length ? chars[pos] : null ;
 	}
 	
 	public static Actor findById( int id ) {

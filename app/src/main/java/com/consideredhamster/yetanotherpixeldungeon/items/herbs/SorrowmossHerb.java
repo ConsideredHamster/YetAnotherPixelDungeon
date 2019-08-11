@@ -20,41 +20,85 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.herbs;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.AcidResistance;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfCorrosiveGas;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatStewed;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfCausticOoze;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMending;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfToxicGas;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfWebbing;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
-import com.watabou.utils.Random;
 
 public class SorrowmossHerb extends Herb {
+
+    private static final ItemSprite.Glowing GREEN = new ItemSprite.Glowing( 0x009900 );
+
     {
         name = "Sorrowmoss herb";
         image = ItemSpriteSheet.HERB_SORROWMOSS;
 
-        alchemyClass = PotionOfCorrosiveGas.class;
+        cooking = BitterMeat.class;
         message = "That herb tasted bitter like defeat.";
+
+        mainPotion = PotionOfCausticOoze.class;
+
+        subPotions.add( PotionOfToxicGas.class );
+        subPotions.add( PotionOfWebbing.class );
+    }
+
+    private static void onConsume( Hero hero, float duration ) {
+        BuffActive.add( hero, AcidResistance.class, duration );
+        Debuff.remove( hero, Corrosion.class );
     }
 
     @Override
     public void onConsume( Hero hero ) {
-
-        int maxDuration = (int)( Satiety.MAXIMUM - hero.buff( Satiety.class ).energy() ) / 250 + 1;
-
-        Poisoned debuff = Debuff.add( hero, Poisoned.class, (float) Random.Int( maxDuration ) );
-
-        if( debuff != null ) debuff.delay( time );
-
         super.onConsume( hero );
+        onConsume( hero, DURATION_HERB );
+    }
+
+    @Override
+    public int price() {
+        return 15 * quantity;
     }
 
     @Override
     public String desc() {
-        return "Sorrowmoss herbs are used to brew potions of Corrosive Gas. Eating this herb " +
-                "would probably not the best idea.";
+        return "It is said that Sorrowmoss usually grows in places where a great tragedy took " +
+                "place. Despite its reputation and applications, it is actually completely safe to eat." +
+                "\n\n" +
+                "These herbs are used to brew potions of _Toxic Gas_, _Caustic Ooze_ and _Confusion Gas_. " +
+                "Consuming them will remove _corrosion_ and grant a short buff to your _acid_ resistance.";
+    }
+
+    public static class BitterMeat extends MeatStewed {
+
+        {
+            name = "bitter meat";
+            spiceGlow = GREEN;
+            message = "That meat tasted bitter like defeat.";
+        }
+
+        @Override
+        public void onConsume( Hero hero ) {
+            super.onConsume( hero );
+            SorrowmossHerb.onConsume( hero, DURATION_MEAT );
+        }
+
+        @Override
+        public String desc() {
+            return "This meat was stewed in a pot with a _Sorrowmoss_ herb. It smells pretty bitter. " +
+                    "Consuming it will remove _corrosion_ and grant a long buff to your _acid_ resistance.";
+        }
+
+        @Override
+        public int price() {
+            return 30 * quantity;
+        }
     }
 }
 

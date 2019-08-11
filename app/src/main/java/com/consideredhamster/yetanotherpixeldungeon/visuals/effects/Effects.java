@@ -32,6 +32,11 @@ public class Effects {
 		RAY,
 		CHAIN,
 		DRAIN,
+		CONTROL,
+		DOOM,
+        CROSS,
+        BLAST,
+        SHOCK,
 	};
 	
 	public static Image get( Type type ) {
@@ -54,6 +59,21 @@ public class Effects {
                 break;
             case DRAIN:
                 icon.frame( icon.texture.uvRect( 16, 24, 32, 32 ) );
+                break;
+            case CONTROL:
+                icon.frame( icon.texture.uvRect( 0, 24, 16, 32 ) );
+                break;
+            case DOOM:
+                icon.frame( icon.texture.uvRect( 32, 0, 48, 16 ) );
+                break;
+            case CROSS:
+                icon.frame( icon.texture.uvRect( 48, 0, 64, 16 ) );
+                break;
+            case BLAST:
+                icon.frame( icon.texture.uvRect( 32, 16, 48, 32 ) );
+                break;
+            case SHOCK:
+                icon.frame( icon.texture.uvRect( 48, 16, 64, 32 ) );
                 break;
 		}
 

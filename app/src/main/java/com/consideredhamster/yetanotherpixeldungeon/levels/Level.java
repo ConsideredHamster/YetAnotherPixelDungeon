@@ -26,8 +26,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
-import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.Plant;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.Hazard;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.RationMedium;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.EmptyBottle;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
@@ -72,7 +73,6 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.painters.Painter;
 import com.consideredhamster.yetanotherpixeldungeon.levels.traps.*;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.ShadowCaster;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -125,8 +125,6 @@ public abstract class Level implements Bundlable {
 
 	protected static final float TIME_TO_RESPAWN	= 65f;
 
-	private static final String TXT_HIDDEN_PLATE_CLICKS = "A hidden pressure plate clicks!";
-
 	public static boolean resizingNeeded;
 	public static int loadedMapSize;
 
@@ -161,9 +159,10 @@ public abstract class Level implements Bundlable {
 	public int exit;
 
 	public HashSet<Mob> mobs;
+	public HashSet<Hazard> hazards;
 	public SparseArray<Heap> heaps;
 	public HashMap<Class<? extends Blob>,Blob> blobs;
-	public SparseArray<Plant> plants;
+//	public SparseArray<Hazard> plants;
 
 	protected ArrayList<Item> itemsToSpawn = new ArrayList<Item>();
 
@@ -180,7 +179,7 @@ public abstract class Level implements Bundlable {
 	private static final String ENTRANCE	= "entrance";
 	private static final String EXIT		= "exit";
 	private static final String HEAPS		= "heaps";
-	private static final String PLANTS		= "plants";
+	private static final String HAZARDS		= "hazards";
 	private static final String MOBS		= "mobs";
 	private static final String BLOBS		= "blobs";
 
@@ -194,14 +193,14 @@ public abstract class Level implements Bundlable {
 		mapped = new boolean[LENGTH];
 		Arrays.fill( mapped, false );
 
-		mobs = new HashSet<Mob>();
-		heaps = new SparseArray<Heap>();
-		blobs = new HashMap<Class<? extends Blob>,Blob>();
-		plants = new SparseArray<Plant>();
+        heaps = new SparseArray<Heap>();
+        hazards = new HashSet<Hazard>();
+        mobs = new HashSet<Mob>();
+        blobs = new HashMap<Class<? extends Blob>,Blob>();
 
         if (!Dungeon.bossLevel()) {
 
-            addItemToSpawn( new Food() );
+            addItemToSpawn( new RationMedium() );
 
             if (Dungeon.posNeeded()) {
                 addItemToSpawn( new PotionOfStrength() );
@@ -247,6 +246,16 @@ public abstract class Level implements Bundlable {
                 addItemToSpawn( Generator.random( Generator.Category.AMMO ) );
                 Dungeon.ammos++;
             }
+
+            if (Dungeon.bottlesNeeded()) {
+                addItemToSpawn( new EmptyBottle() );
+                Dungeon.bottles++;
+            }
+
+//            if (Dungeon.scrollsNeeded()) {
+//                addItemToSpawn( new EmptyScroll() );
+//                Dungeon.scrolls++;
+//            }
 
             if (Dungeon.torchesNeeded()) {
                 addItemToSpawn( new OilLantern.OilFlask() );
@@ -333,10 +342,10 @@ public abstract class Level implements Bundlable {
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 
-		mobs = new HashSet<Mob>();
-		heaps = new SparseArray<Heap>();
-		blobs = new HashMap<Class<? extends Blob>, Blob>();
-		plants = new SparseArray<Plant>();
+        heaps = new SparseArray<Heap>();
+        hazards = new HashSet<Hazard>();
+        mobs = new HashSet<Mob>();
+        blobs = new HashMap<Class<? extends Blob>, Blob>();
 
 		map		= bundle.getIntArray( MAP );
 		visited	= bundle.getBooleanArray( VISITED );
@@ -354,19 +363,23 @@ public abstract class Level implements Bundlable {
 		Collection<Bundlable> collection = bundle.getCollection( HEAPS );
 		for (Bundlable h : collection) {
 			Heap heap = (Heap)h;
-			if (resizingNeeded) {
-				heap.pos = adjustPos( heap.pos );
-			}
-			heaps.put( heap.pos, heap );
+            if( heap != null ){
+                if( resizingNeeded ){
+                    heap.pos = adjustPos( heap.pos );
+                }
+                heaps.put( heap.pos, heap );
+            }
 		}
 
-		collection = bundle.getCollection( PLANTS );
-		for (Bundlable p : collection) {
-			Plant plant = (Plant)p;
-			if (resizingNeeded) {
-				plant.pos = adjustPos( plant.pos );
-			}
-			plants.put( plant.pos, plant );
+		collection = bundle.getCollection( HAZARDS );
+		for (Bundlable z : collection) {
+            Hazard hazard = (Hazard)z;
+            if (hazard != null){
+                if( resizingNeeded ){
+                    hazard.pos = adjustPos( hazard.pos );
+                }
+                hazards.add( hazard );
+            }
 		}
 
 		collection = bundle.getCollection( MOBS );
@@ -398,7 +411,7 @@ public abstract class Level implements Bundlable {
 		bundle.put( ENTRANCE, entrance );
 		bundle.put( EXIT, exit );
 		bundle.put( HEAPS, heaps.values() );
-		bundle.put( PLANTS, plants.values() );
+		bundle.put( HAZARDS, hazards );
 		bundle.put( MOBS, mobs );
 		bundle.put( BLOBS, blobs.values() );
 		bundle.put( MOBS_SPAWNED, mobsSpawned );
@@ -537,18 +550,17 @@ public abstract class Level implements Bundlable {
                                 new Wraith() : Bestiary.mob(Dungeon.depth));
 
                     mob.state = mob.WANDERING;
+
                     mob.pos = randomRespawnCell( mob.flying, false );
-                    if (Dungeon.hero.isAlive() && mob.pos != -1) {
+
+                    if ( Dungeon.hero.isAlive() && mob.pos != -1 ) {
+                        mobsSpawned++;
                         GameScene.add( mob );
 						if (Statistics.amuletObtained) {
 							mob.beckon( Dungeon.hero.pos );
 						}
 					}
-
-                    mobsSpawned++;
-
 				}
-//				spend( Dungeon.nightMode || Statistics.amuletObtained ? TIME_TO_RESPAWN / 2 : TIME_TO_RESPAWN );
 
 				spend( ( TIME_TO_RESPAWN - Dungeon.chapter() * 5 - ( feeling == Feeling.TRAPS ? 10 : 0 ) + mobsSpawned) );
 				return true;
@@ -556,52 +568,72 @@ public abstract class Level implements Bundlable {
 		};
 	}
 
+    public int randomRespawnCell() {
+        return randomRespawnCell( false, false );
+    }
+
     public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
-        int cell;
 
-        // FIXME
+        ArrayList<Integer> cells = getPassableCellsList();
 
-        if( ignoreTraps ) {
+        if( !ignoreTraps )
+            cells = filterTrappedCells( cells );
 
-            if( ignoreView ) {
+        if( !ignoreView )
+            cells = filterVisibleCells( cells );
 
-                do {
-                    cell = Random.Int(LENGTH);
-                } while (!passable[cell] || Actor.findChar(cell) != null);
+        return !cells.isEmpty() ? Random.element( cells ) : -1 ;
+    }
 
-            } else {
+    public ArrayList<Integer> getPassableCellsList() {
 
-                do {
-                    cell = Random.Int(LENGTH);
-                } while (!passable[cell] || Dungeon.visible[cell] || Actor.findChar(cell) != null);
+        ArrayList<Integer> result = new ArrayList<>();
 
+        for( int cell = 0 ; cell < Level.LENGTH ; cell++ ){
+
+            if( !solid[cell] && passable[cell] && Actor.findChar(cell) == null ) {
+                result.add( cell );
             }
+        }
 
-        } else {
+        return result;
+    }
 
-            if( ignoreView ) {
+    public ArrayList<Integer> filterTrappedCells( ArrayList<Integer> cells ) {
 
-                do {
-                    cell = Random.Int(LENGTH);
-                }
-                while (!mob_passable[cell] || Actor.findChar(cell) != null);
+        ArrayList<Integer> result = new ArrayList<>();
 
-            } else {
+        for( Integer cell : cells ){
 
-                do {
-                    cell = Random.Int(LENGTH);
-                }
-                while (!mob_passable[cell] || Dungeon.visible[cell] || Actor.findChar(cell) != null);
-
+            if( mob_passable[cell] ) {
+                result.add( cell );
             }
 
         }
-        return cell;
+
+        return result;
     }
 
-	public int randomRespawnCell() {
-		return randomRespawnCell( false, false );
-	}
+    public ArrayList<Integer> filterVisibleCells( ArrayList<Integer> cells ) {
+
+        ArrayList<Integer> result = new ArrayList<>();
+
+        for( Integer cell : cells ){
+
+            if( !Dungeon.visible[cell] && distance(Dungeon.hero.pos, cell) > 8 ) {
+                result.add( cell );
+            }
+
+        }
+
+        return result;
+    }
+
+    public Integer getRandomCell( ArrayList<Integer> cells ) {
+
+        return Random.element( cells );
+
+    }
 
 	public int randomDestination() {
 		int cell;
@@ -813,41 +845,37 @@ public abstract class Level implements Bundlable {
 		return heap;
 	}
 
-	public Plant plant( Plant.Seed seed, int pos ) {
-		Plant plant = plants.get( pos );
-		if (plant != null) {
-			plant.wither();
-		}
-
-		plant = seed.couch( pos );
-		plants.put( pos, plant );
-
-		GameScene.add(plant);
-
-		return plant;
-	}
-
-	public void uproot( int pos ) {
-		plants.delete(pos);
-	}
-
 	public int pitCell() {
 		return randomRespawnCell();
 	}
-
-//    public int viewDistance() {
-//        return ( feeling != Feeling.HAUNT ? viewDistance : 4 );
-//    }
 
     public float stealthModifier( int pos ) {
 		return ( Level.water[pos] ? 0.75f : ( Level.quiet[pos] ? 1.25f : 1.0f ) );
 	}
 
-    public boolean noTeleport() {
-        return false;
-    }
-
 	public void press( int cell, Char ch ) {
+
+        switch (map[cell]) {
+
+            case Terrain.WELL:
+
+                WellWater.affectCell(cell);
+                break;
+
+            case Terrain.DOOR_CLOSED:
+                Door.enter(cell);
+                break;
+
+            case Terrain.DOOR_ILLUSORY:
+                Door.discover(cell);
+                break;
+
+        }
+
+        for( Hazard hazard : Hazard.findHazards( cell ) ){
+            hazard.press( cell, ch );
+        }
+
 
         if( ch == null || !ch.flying ) {
 
@@ -862,65 +890,25 @@ public abstract class Level implements Bundlable {
                 return;
             }
 
-            boolean trap = false;
-            boolean hidden = false;
-
             switch (map[cell]) {
 
                 case Terrain.SECRET_TOXIC_TRAP:
-                    hidden = true;
                 case Terrain.TOXIC_TRAP:
-                    trap = true;
-                    ToxicTrap.trigger(cell);
-                    break;
-
                 case Terrain.SECRET_FIRE_TRAP:
-                    hidden = true;
                 case Terrain.FIRE_TRAP:
-                    trap = true;
-                    FireTrap.trigger(cell);
-                    break;
-
                 case Terrain.SECRET_BOULDER_TRAP:
-                    hidden = true;
                 case Terrain.BOULDER_TRAP:
-                    trap = true;
-                    BoulderTrap.trigger(cell);
-                    break;
-
                 case Terrain.SECRET_POISON_TRAP:
-                    hidden = true;
                 case Terrain.POISON_TRAP:
-                    trap = true;
-                    PoisonTrap.trigger(cell);
-                    break;
-
                 case Terrain.SECRET_ALARM_TRAP:
-                    hidden = true;
                 case Terrain.ALARM_TRAP:
-                    trap = true;
-                    AlarmTrap.trigger(cell);
-                    break;
-
                 case Terrain.SECRET_LIGHTNING_TRAP:
-                    hidden = true;
                 case Terrain.LIGHTNING_TRAP:
-                    trap = true;
-                    LightningTrap.trigger(cell);
-                    break;
-
                 case Terrain.SECRET_BLADE_TRAP:
-                    hidden = true;
                 case Terrain.BLADE_TRAP:
-                    trap = true;
-                    BladeTrap.trigger(cell);
-                    break;
-
                 case Terrain.SECRET_SUMMONING_TRAP:
-                    hidden = true;
                 case Terrain.SUMMONING_TRAP:
-                    trap = true;
-                    SummoningTrap.trigger(cell);
+                    Trap.trigger(cell);
                     break;
 
                 case Terrain.HIGH_GRASS:
@@ -937,49 +925,6 @@ public abstract class Level implements Bundlable {
                     }
 
                     break;
-
-                case Terrain.WELL:
-
-                    WellWater.affectCell(cell);
-                    break;
-
-                case Terrain.ALCHEMY:
-                    if (ch == null) {
-                        Alchemy.transmute(cell);
-                    }
-                    break;
-
-                case Terrain.DOOR_CLOSED:
-                    Door.enter(cell);
-                    break;
-
-                case Terrain.DOOR_ILLUSORY:
-                    Door.discover(cell);
-                    break;
-            }
-
-            if (trap) {
-
-                if (ch == Dungeon.hero) {
-                    Dungeon.hero.interrupt( "You were awoken by falling on a trap." );
-                }
-
-                if( Dungeon.visible[cell] ) {
-
-                    if( hidden ) {
-                        GLog.i(TXT_HIDDEN_PLATE_CLICKS);
-                    }
-
-                    Sample.INSTANCE.play(Assets.SND_TRAP);
-                }
-
-                set(cell, Terrain.INACTIVE_TRAP);
-                GameScene.updateMap(cell);
-            }
-
-            Plant plant = plants.get(cell);
-            if (plant != null) {
-                plant.activate(ch);
             }
 
             if (Dungeon.visible[cell]) {
@@ -1125,9 +1070,13 @@ public abstract class Level implements Bundlable {
 		return Math.max( Math.abs( ax - bx ), Math.abs( ay - by ) );
 	}
 
-	public static boolean adjacent( int a, int b ) {
+    public static boolean adjacent( int a, int b, boolean diagonal ) {
         int diff = Math.abs( a - b );
-        return diff == 1 || diff == WIDTH || diff == WIDTH + 1 || diff == WIDTH - 1;
+        return diff == 1 || diff == WIDTH || ( diagonal && diff == WIDTH + 1 ) || ( diagonal && diff == WIDTH - 1 );
+    }
+
+    public static boolean adjacent( int a, int b ) {
+        return adjacent( a, b, true );
     }
 
     public String tileName( int tile ) {
@@ -1208,7 +1157,7 @@ public abstract class Level implements Bundlable {
 		case Terrain.BOULDER_TRAP:
 			return "Boulder trap";
 		case Terrain.POISON_TRAP:
-			return "Poison dart trap";
+			return "Confusion gas trap";
 		case Terrain.ALARM_TRAP:
 			return "Alarm trap";
 		case Terrain.LIGHTNING_TRAP:

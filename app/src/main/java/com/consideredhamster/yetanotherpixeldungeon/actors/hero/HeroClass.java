@@ -20,8 +20,26 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.hero;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatRaw;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.RationMedium;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.DreamfoilHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.EarthrootHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.FeyleafHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.FirebloomHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.SungrassHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.WhirlvineHerb;
+import com.consideredhamster.yetanotherpixeldungeon.items.herbs.WyrmflowerHerb;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.EmptyBottle;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMindVision;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfThunderstorm;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfToxicGas;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfClairvoyance;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfCharm;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfFirebrand;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfMagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.ArmorerKit;
@@ -35,11 +53,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.MageArmor
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.RogueArmor;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.shields.RoundShield;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.Keyring;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.Food;
-import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfOvergrowth;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfRaiseDead;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
-import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfMagicMissile;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.Sling;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Bullets;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Dagger;
@@ -83,7 +97,7 @@ public enum HeroClass {
 //            "All threads lead here. All these years you've spent on seeking the Amulet weren't in vain. The key to all power imaginable, to all knowledge obtainable is hidden in this darkness.",
 //            "You only need to brace yourself and make your first step. Your search has ended here. And here, it has only began.",
 
-            "Scholar is the expert wand user. His greater willpower allows him to recharge wands much faster, and he is the most skilled in the arcane arts than other character classes.",
+            "Scholar is the expert wand user. His greater attunement allows him to recharge wands much faster, and he is the most skilled in the arcane arts than other character classes.",
             "However, decades of study have dulled his senses, decreasing his accuracy and perception, forcing him to rely on wands to progress. He is still somewhat strong and agile, though.",
             "Inability to properly use weapons and reliance on wands make him a bit tricky to play as, and therefore this class is only recommended for veteran players.",
     };
@@ -121,8 +135,8 @@ public enum HeroClass {
             "+ dexterity",
             "+ stealth",
             "",
-            "- magic skill",
-            "- willpower",
+            "- magic power",
+            "- attunement",
     };
 
     public static final String[] MAG_DETAILS = {
@@ -132,8 +146,8 @@ public enum HeroClass {
             "\u007F arcane battery",
             "\u007F scroll of Raise Dead",
             "",
-            "+ magic skill",
-            "+ willpower",
+            "+ magic power",
+            "+ attunement",
             "",
             "- accuracy",
             "- perception",
@@ -144,7 +158,7 @@ public enum HeroClass {
             "\u007F bullets x30",
             "\u007F elven cloak",
             "\u007F crafting kit",
-            "\u007F potion of Overgrowth",
+            "\u007F empty bottle x3",
             "",
             "+ accuracy",
             "+ perception",
@@ -181,7 +195,7 @@ public enum HeroClass {
 	private static void initCommon( Hero hero ) {
 
 		new Keyring().collect();
-        new Food().collect();
+        new RationMedium().collect();
 
         new Waterskin().setLimit( 5 ).fill().collect();
         new OilLantern().collect();
@@ -237,7 +251,7 @@ public enum HeroClass {
     private static void initRogue( Hero hero ) {
 
         hero.defenseSkill += 5;
-        hero.magicSkill -= 5;
+        hero.magicPower -= 5;
 
         (hero.belongings.weap1 = new Dagger()).identify().repair().fix();
         (hero.belongings.weap2 = new Knives()).quantity(10);
@@ -251,14 +265,14 @@ public enum HeroClass {
 	
 	private static void initMage( Hero hero ) {
 
-        hero.magicSkill += 5;
+        hero.magicPower += 5;
         hero.attackSkill -= 5;
 
 		(hero.belongings.weap1 = new Quarterstaff()).identify().repair().fix();
 		(hero.belongings.weap2 = new WandOfMagicMissile()).identify().repair().fix();
         (hero.belongings.armor = new MageArmor()).identify().repair().fix();
 
-        ((Wand)hero.belongings.weap2).recharge().charge(hero);
+        ((Wand)hero.belongings.weap2).recharge();
 
         new ScrollOfRaiseDead().identify().collect();
         new Battery().collect();
@@ -276,7 +290,7 @@ public enum HeroClass {
         (hero.belongings.weap2 = new Bullets()).quantity( 30 );
         (hero.belongings.armor = new HuntressArmor()).identify().repair().fix();
 
-        new PotionOfOvergrowth().identify().collect();
+        new EmptyBottle().quantity(3).collect();
         new CraftingKit().collect();
     }
 	

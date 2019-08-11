@@ -32,6 +32,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.ShopkeeperG
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.ShopkeeperTroll;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.ArmorerKit;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Battery;
+import com.consideredhamster.yetanotherpixeldungeon.items.potions.EmptyBottle;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Explosives;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.CraftingKit;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
@@ -58,7 +59,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.bags.PotionSash;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.ScrollHolder;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.HerbPouch;
 import com.consideredhamster.yetanotherpixeldungeon.items.bags.WandHolster;
-import com.consideredhamster.yetanotherpixeldungeon.items.food.Pasty;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.RationLarge;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMending;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfStrength;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
@@ -209,19 +210,19 @@ public class ShopPainter extends Painter {
                     new Knuckles(), new Dagger(), new Quarterstaff(),
                     new Sling(), new Bow(), new Arbalest(),
                     new Pistole(), new Arquebuse(), new Handcannon()
-            ).enchant().repair().fix().uncurse(3).upgrade(3) );
+            ).enchant().repair().fix().uncurse(3).upgrade(3).identify() );
 
             items.add( Random.oneOf(
                     new Spear(), new Mace(), new Shortsword(),
                     new Glaive(), new Battleaxe(), new Broadsword(),
                     new Halberd(), new Warhammer(), new Greatsword()
-            ).enchant().repair().fix().uncurse(3).upgrade(3) );
+            ).enchant().repair().fix().uncurse(3).upgrade(3).identify() );
 
             items.add( Random.oneOf(
                     new StuddedArmor(), new DiscArmor(), new RoundShield(),
                     new MailArmor(), new SplintArmor(), new KiteShield(),
                     new ScaleArmor(), new PlateArmor(), new TowerShield()
-            ).inscribe().repair().fix().uncurse(3).upgrade(3) );
+            ).inscribe().repair().fix().uncurse(3).upgrade(3).identify() );
 
             items.add( Random.oneOf(
                     new PoisonDarts(), new Bolas(), new Boomerangs(),
@@ -247,10 +248,11 @@ public class ShopPainter extends Painter {
             items.add(Random.Int(5 - questsCompleted) == 0 ? new ScrollOfUpgrade() : Generator.random(Generator.Category.SCROLL));
 
             items.add(Random.oneOf(new Whetstone(), new ArmorerKit(), new Battery(), new CraftingKit()));
-            items.add(new Pasty());
+            items.add(new RationLarge());
 
             items.add(new Waterskin());
             items.add(new OilLantern.OilFlask());
+            items.add(new EmptyBottle());
 
         } else {
 
@@ -303,7 +305,7 @@ public class ShopPainter extends Painter {
             }
 
             if( weapon != null ) {
-                weapon.repair().fix().upgrade(Random.Int(Dungeon.chapter()));
+                weapon.repair().fix().identify().upgrade(Random.Int(Dungeon.chapter()));
 
                 if( Random.Int( 5 ) < Dungeon.chapter() ) {
                     weapon.enchant();
@@ -313,7 +315,7 @@ public class ShopPainter extends Painter {
             }
 
             if( armour != null ) {
-                armour.repair().fix().upgrade( Random.Int( Dungeon.chapter() ) );
+                armour.repair().fix().identify().upgrade( Random.Int( Dungeon.chapter() ) );
 
                 if( Random.Int( 5 ) < Dungeon.chapter() ) {
                     armour.inscribe();
@@ -323,14 +325,14 @@ public class ShopPainter extends Painter {
             }
 
             if( ranged instanceof RangedWeapon ) {
-                ranged.repair().fix().upgrade(Random.Int(Dungeon.chapter()));
+                ranged.repair().fix().identify().upgrade(Random.Int(Dungeon.chapter()));
 
                 if( Random.Int( 5 ) < Dungeon.chapter() ) {
                     ((RangedWeapon)ranged).enchant();
                 }
 
                 items.add(ranged);
-            } else if( ranged instanceof ThrowingWeapon || ranged instanceof Explosives) {
+            } else if( ranged instanceof ThrowingWeapon || ranged instanceof Explosives ) {
                 ranged.random();
                 items.add(ranged);
             }
@@ -352,7 +354,8 @@ public class ShopPainter extends Painter {
             Wand wand = (Wand)Generator.random(Generator.Category.WAND);
             if( wand != null ) {
                 wand.bonus = Random.Int( Dungeon.chapter() );
-                wand.recharge().repair().fix();
+                wand.repair().fix();
+                wand.recharge();
                 items.add(wand);
             }
 
@@ -364,9 +367,10 @@ public class ShopPainter extends Painter {
 
             items.add( generateKits() );
 
-            items.add(new Pasty());
+            items.add(new RationLarge());
             items.add(new Waterskin());
             items.add(new OilLantern.OilFlask());
+            items.add(new EmptyBottle());
         }
 		
 		Item[] range = items.toArray( new Item[0] );

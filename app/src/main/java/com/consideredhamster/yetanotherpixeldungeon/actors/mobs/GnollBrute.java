@@ -46,14 +46,30 @@ public class GnollBrute extends MobPrecise {
 
         super( 10 );
 
+        /*
+
+            base maxHP  = 27
+            armor class = 9 + 9
+
+            damage roll = 4-13 (2-6)
+
+            accuracy    = 22
+            dexterity   = 18
+
+            perception  = 105%
+            stealth     = 105%
+
+         */
+
 		name = "gnoll brute";
 		spriteClass = BruteSprite.class;
 		
 		loot = Gold.class;
 		lootChance = 0.25f;
 
-        resistances.put(Element.Body.class, Element.Resist.PARTIAL);
-        resistances.put(Element.Mind.class, Element.Resist.PARTIAL);
+        resistances.put( Element.Body.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Mind.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
 	}
 
     @Override
@@ -76,7 +92,7 @@ public class GnollBrute extends MobPrecise {
     @Override
     protected boolean canAttack( Char enemy ) {
         return super.canAttack( enemy ) || HP >= HT && Level.distance(pos, enemy.pos) <= 2
-                && Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos && !isCharmedBy( enemy );
+                && Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos;
     }
 
     @Override
@@ -104,7 +120,7 @@ public class GnollBrute extends MobPrecise {
 
             if (Dungeon.visible[pos]) {
                 GLog.w( TXT_ENRAGED, name );
-                sprite.showStatus( CharSprite.NEGATIVE, "enraged" );
+//                sprite.showStatus( CharSprite.NEGATIVE, "enraged" );
             }
         }
 	}

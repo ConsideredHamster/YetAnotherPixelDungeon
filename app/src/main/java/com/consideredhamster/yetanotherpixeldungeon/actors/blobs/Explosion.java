@@ -68,7 +68,7 @@ public class Explosion {
 
             if (dmg > 0) {
                 ch.damage(Char.absorb(dmg, ch.armorClass(), true ), source, null);
-                if (ch.isAlive()) {
+                if ( ch.isAlive() ) {
                     BuffActive.addFromDamage( ch, Vertigo.class, damage );
                 }
             }
@@ -77,7 +77,7 @@ public class Explosion {
         if( Dungeon.hero.isAlive() ) {
             Heap heap = Dungeon.level.heaps.get(c);
             if (heap != null) {
-                heap.blast("Explosion");
+                heap.blast();
             }
         }
 

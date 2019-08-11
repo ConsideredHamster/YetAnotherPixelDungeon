@@ -168,7 +168,7 @@ public class ArmorerKit extends Item {
             "Using this kit of small tools and materials anybody can repair any armors (except cloth " +
             "armors) or shields in a quite short amount of time.\n" +
             "No skills in tailoring, leatherworking or blacksmithing are required, but it has enough materials for only " +
-            ( value > 2 ? "three usages" : value < 2 ? "only one usage" : "two usages" ) + ".";
+            ( value > 2 ? "three usages" : value < 2 ? "one usage" : "two usages" ) + ".";
 //			"Using this kit of small tools and materials anybody can transform any armor into an \"epic armor\", " +
 //			"which will keep all properties of the original armor, but will also provide its wearer a special ability " +
 //			"depending on his class. No skills in tailoring, leatherworking or blacksmithing are required.";

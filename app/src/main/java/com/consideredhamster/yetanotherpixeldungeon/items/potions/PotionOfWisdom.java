@@ -56,6 +56,11 @@ public class PotionOfWisdom extends Potion {
 	
 	@Override
 	public int price() {
-		return isTypeKnown() ? 100 * quantity : super.price();
+		return isTypeKnown() ? 200 * quantity : super.price();
 	}
+
+    @Override
+    public float brewingChance() {
+        return 0.25f;
+    }
 }

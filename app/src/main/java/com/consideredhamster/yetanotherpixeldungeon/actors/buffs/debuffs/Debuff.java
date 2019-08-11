@@ -32,10 +32,10 @@ import java.util.HashSet;
 public abstract class Debuff extends BuffActive {
 
     @Override
-    public String messagePrefix() { return GLog.NEGATIVE; }
+    public String messagePrefix() { return GLog.WARNING; }
 
     @Override
-    public int statusColor() { return CharSprite.NEGATIVE; }
+    public int statusColor() { return CharSprite.WARNING; }
 
     public static void removeAll( Char target ) {
         remove( target, Debuff.class );

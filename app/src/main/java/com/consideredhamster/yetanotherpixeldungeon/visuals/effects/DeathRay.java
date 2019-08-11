@@ -24,6 +24,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLES20;
 
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
@@ -38,12 +39,16 @@ public class DeathRay extends Image {
 	
 	private float timeLeft;
 	
-	public DeathRay( PointF s, PointF e ) {
+	public DeathRay( int source, int target ) {
+
 		super( Effects.get( Effects.Type.RAY ) );
 		
 		origin.set( 0, height / 2 );
-		
-		x = s.x - origin.x;
+
+        PointF s = DungeonTilemap.tileCenterToWorld( source );
+        PointF e = DungeonTilemap.tileCenterToWorld( target );
+
+        x = s.x - origin.x;
 		y = s.y - origin.y;
 		
 		float dx = e.x - s.x;

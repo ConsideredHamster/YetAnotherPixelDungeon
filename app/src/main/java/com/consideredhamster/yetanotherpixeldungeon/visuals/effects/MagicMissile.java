@@ -20,11 +20,12 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.effects;
 
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.AcidParticle;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.LeafParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.PoisonParticle;
@@ -87,11 +88,11 @@ public class MagicMissile extends Emitter {
 		missile.pour( FlameParticle.FACTORY, 0.01f );
 	}
 	
-	public static void earth( Group group, int from, int to, Callback callback ) {
+	public static void blast( Group group, int from, int to, Callback callback ) {
 		MagicMissile missile = ((MagicMissile)group.recycle( MagicMissile.class ));
 		missile.reset( from, to, callback );
 		missile.size( 2 );
-		missile.pour( EarthParticle.FACTORY, 0.01f );
+		missile.pour( Speck.factory( Speck.BLAST ), 0.02f );
 	}
 	
 	public static void purpleLight( Group group, int from, int to, Callback callback ) {
@@ -115,11 +116,11 @@ public class MagicMissile extends Emitter {
 		missile.pour( WoolParticle.FACTORY, 0.01f );
 	}
 	
-	public static void poison( Group group, int from, int to, Callback callback ) {
+	public static void acid( Group group, int from, int to, Callback callback ) {
 		MagicMissile missile = ((MagicMissile)group.recycle( MagicMissile.class ));
 		missile.reset( from, to, callback );
-		missile.size( 3 );
-		missile.pour( PoisonParticle.MISSILE, 0.01f );
+		missile.size( 9 );
+		missile.pour( AcidParticle.FACTORY, 0.01f );
 	}
 	
 	public static void foliage( Group group, int from, int to, Callback callback ) {
@@ -163,11 +164,25 @@ public class MagicMissile extends Emitter {
         missile.pour( SnowParticle.FACTORY, 0.005f );
     }
 
+    public static void shards( Group group, int from, int to, Callback callback ) {
+        MagicMissile missile = ((MagicMissile)group.recycle( MagicMissile.class ));
+        missile.reset( from, to, callback );
+        missile.size( 5 );
+        missile.pour( Speck.factory(Speck.ICESHARD), 0.005f );
+    }
+
     public static void web( Group group, int from, int to, Callback callback ) {
         MagicMissile missile = ((MagicMissile)group.recycle( MagicMissile.class ));
         missile.reset( from, to, callback );
         missile.size( 5 );
         missile.pour( Speck.factory(Speck.COBWEB), 0.05f );
+    }
+
+    public static void life( Group group, int from, int to, Callback callback ) {
+        MagicMissile missile = ((MagicMissile)group.recycle( MagicMissile.class ));
+        missile.reset( from, to, callback );
+        missile.size( 5 );
+        missile.pour( Speck.factory(Speck.HEALING), 0.25f );
     }
 
     public static void bones( Group group, int from, int to, Callback callback ) {
@@ -199,13 +214,9 @@ public class MagicMissile extends Emitter {
 //		public static final Emitter.Factory FACTORY = Speck.factory( Speck.DISCOVER );
 		public static final Emitter.Factory FACTORY = new Factory() {
 			@Override
-//			public void emit( Emitter emitter, int index, float x, float y ) {
-//				((MagicParticle)emitter.recycle( MagicParticle.class )).reset( x, y );
-//			}
-
-            public void emit ( Emitter emitter, int index, float x, float y ) {
-                ((Speck)emitter.recycle( Speck.class )).reset( index, x, y, Speck.DISCOVER );
-            }
+			public void emit( Emitter emitter, int index, float x, float y ) {
+				((MagicParticle)emitter.recycle( MagicParticle.class )).reset( x, y );
+			}
 			@Override
 			public boolean lightMode() {
 				return true;
@@ -251,9 +262,7 @@ public class MagicMissile extends Emitter {
 			super();
 			
 			lifespan = 0.5f;
-			
-			color( ColorMath.random( 0x555555, 0x777766 ) );
-			
+
 			acc.set( 0, +40 );
 		}
 		
@@ -264,7 +273,6 @@ public class MagicMissile extends Emitter {
 			this.y = y;
 			
 			left = lifespan;
-			size = 4;
 			
 			speed.set( Random.Float( -10, +10 ), Random.Float( -10, +10 ) );
 		}

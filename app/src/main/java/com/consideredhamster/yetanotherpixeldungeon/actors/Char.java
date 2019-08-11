@@ -26,7 +26,6 @@ import java.util.HashSet;
 import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Banished;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Blinded;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Controlled;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Disrupted;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Ensnared;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
@@ -34,6 +33,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Exposed
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Focus;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Guard;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Light;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
@@ -95,7 +95,7 @@ public abstract class Char extends Actor {
 	
 	protected float baseSpeed	= 1;
 
-	public boolean stunned      = false;
+	public boolean morphed      = false;
 	public boolean rooted		= false;
 	public boolean flying		= false;
     public boolean moving		= false;
@@ -125,7 +125,7 @@ public abstract class Char extends Actor {
 
     @Override
     public int actingPriority(){
-        return 3;
+        return 4;
     }
 
 	@Override
@@ -186,7 +186,7 @@ public abstract class Char extends Actor {
 
             return true;
 
-        } else if( hit( this, enemy, isRanged() && !ignoresDistancePenalty(), false ) ) {
+        } else if( hit( this, enemy, !isRanged() || ignoresDistancePenalty(), false ) ) {
 
             boolean blocked = !ignoresAC() && ( guarded != null || Random.Float() < enemy.guardChance() * 0.5f );
 
@@ -235,10 +235,6 @@ public abstract class Char extends Actor {
 
         } else {
 
-            if ( visibleFight ) {
-                Sample.INSTANCE.play(Assets.SND_MISS);
-            }
-
             enemy.missed();
 
             return false;
@@ -254,10 +250,10 @@ public abstract class Char extends Actor {
         if( defender.isExposedTo(attacker) )
             return true;
 
-        if( defender.isCharmedBy(attacker) )
-            return true;
+//        if( defender.isCharmedBy(attacker) )
+//            return true;
 
-        int attValue = ( magic ? attacker.magicSkill() : attacker.accuracy() );
+        int attValue = ( magic ? attacker.magicPower() : attacker.accuracy() );
 
         if( Level.fieldOfView[ defender.pos ] )
             attValue *= 2;
@@ -271,7 +267,7 @@ public abstract class Char extends Actor {
             int distance = Math.min( 9, Level.distance(attacker.pos, defender.pos) );
 
             if( distance > 1 ) {
-                attValue = attValue * (9 - distance);
+                attValue = attValue * (9 - distance)/8;
             }
         }
 
@@ -321,7 +317,10 @@ public abstract class Char extends Actor {
     public void missed() {
 
         if ( sprite.visible ) {
+
+            Sample.INSTANCE.play(Assets.SND_MISS);
             sprite.showStatus( CharSprite.NEUTRAL, dexterity() > 0 ? TXT_DODGED : TXT_MISSED );
+
         }
 
         if ( this == Dungeon.hero ) {
@@ -349,7 +348,7 @@ public abstract class Char extends Actor {
 		return 0;
 	}
 
-	public int magicSkill() {
+	public int magicPower() {
 		return 0;
 	}
 
@@ -359,7 +358,7 @@ public abstract class Char extends Actor {
 
     public float attackSpeed(){
 
-        return ( buff( Enraged.class ) == null ? ( buff( Poisoned.class ) == null ? TICK : TICK * 0.5f ) : TICK );
+        return ( buff( Enraged.class ) == null ? ( buff( Poisoned.class ) == null ? TICK : TICK * 0.75f ) : TICK );
 
     }
 
@@ -387,6 +386,9 @@ public abstract class Char extends Actor {
     }
 
 	public int armorClass( boolean withShield ) {
+
+        if( morphed )
+            return 0;
 
         float armourMod = 1.0f;
 
@@ -451,10 +453,6 @@ public abstract class Char extends Actor {
         return false;
     }
 
-    public boolean immovable() {
-        return false;
-    }
-
 	public float moveSpeed() {
 		return ( buff( Levitation.class ) == null ? ( buff( Crippled.class ) == null ? baseSpeed : baseSpeed * 0.5f ) : baseSpeed * 1.5f );
 	}
@@ -482,6 +480,8 @@ public abstract class Char extends Actor {
     public boolean isHeavy() {
         return STR() > Dungeon.hero.STR();
     }
+
+
 
 	public void heal( int value ) {
 
@@ -540,7 +540,7 @@ public abstract class Char extends Actor {
 
                 } else if ( Element.Resist.checkIfAmplified( resist ) ) {
 
-                    dmg += Random.IntRange( 1, dmg );
+                    dmg += ( dmg / 2 + Random.Int(dmg % 2 + 1) );
                     amplified = true;
 
                 }
@@ -548,6 +548,10 @@ public abstract class Char extends Actor {
             }
 
             dmg = type.proc( this, dmg );
+            //Damage type effect could have killed the target (like lighting), so return...
+            if (HP <= 0) {
+                return;
+            }
         }
 
         if( type != null && !( type instanceof Element.Physical ) && src instanceof Char ) {
@@ -578,10 +582,9 @@ public abstract class Char extends Actor {
 
         HP -= dmg;
 
-        if( src instanceof Char && isCharmedBy( (Char)src ) ) {
-            Buff.detach(this, Controlled.class);
-            Buff.detach(this, Charmed.class);
-        }
+//        if( this instanceof Mob && (Mob) && src == Dungeon.hero ) {
+//            Buff.detach(this, Charmed.class);
+//        }
 
 		if ( !isAlive() ) {
 
@@ -593,8 +596,8 @@ public abstract class Char extends Actor {
 	public void destroy() {
 		HP = 0;
 
-		Actor.remove(this);
-        Actor.freeCell(pos);
+		Actor.remove( this );
+        Actor.freeCell( pos );
     }
 
     public void die( Object src) {
@@ -731,32 +734,6 @@ public abstract class Char extends Actor {
         }
         return false;
     }
-
-    public boolean isCharmedBy( Char ch ) {
-
-        int chID = ch.id();
-
-        return isCharmed() == chID;
-    }
-
-    public int isCharmed() {
-
-        for (Buff b : buffs){
-            if( b instanceof Charmed ){
-                return ( (Charmed) b ).object;
-            } else if( b instanceof Controlled ){
-                return ( (Controlled) b ).object;
-            }
-        }
-
-        return 0;
-    }
-
-    public boolean isScared() {
-
-        return buff( Tormented.class ) != null || buff( Banished.class ) != null;
-
-    }
 	
 	public boolean add( Buff buff ) {
 
@@ -809,9 +786,8 @@ public abstract class Char extends Actor {
 			Door.leave( pos );
 		}
 
-        Actor.freeCell( pos );
-
-		pos = step;
+        Actor.moveToCell( this, step );
+        pos = step;
 		
 		if (Dungeon.level.map[pos] == Terrain.DOOR_CLOSED) {
 			Door.enter( pos );
@@ -820,8 +796,6 @@ public abstract class Char extends Actor {
 		if (this != Dungeon.hero) {
 			sprite.visible = Dungeon.visible[pos];
 		}
-
-        Actor.occupyCell( this );
 
         Dungeon.level.press(pos, this);
 

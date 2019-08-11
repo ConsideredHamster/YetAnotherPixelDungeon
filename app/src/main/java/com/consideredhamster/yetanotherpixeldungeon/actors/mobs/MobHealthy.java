@@ -40,18 +40,6 @@ public abstract class MobHealthy extends Mob {
         minDamage = tier + 3;
         maxDamage = tier * 5 + 2;
 
-//        if( Dungeon.difficulty < Difficulties.NORMAL ) {
-//            maxDamage -= tier;
-//        } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
-//            minDamage += tier;
-//        }
-
-        // old values
-        // 4-9     6-13    8-17    10-21   12-25
-
-        // new values
-        // 4-7     5-12    6-17    7-22    8-27
-
         accuracy = exp + tier;
         dexterity = exp;
 
@@ -86,11 +74,6 @@ public abstract class MobHealthy extends Mob {
         }
 
         HP = HT;
-    }
-
-    @Override
-    public int armourAC() {
-        return tier * 4;
     }
 
     @Override

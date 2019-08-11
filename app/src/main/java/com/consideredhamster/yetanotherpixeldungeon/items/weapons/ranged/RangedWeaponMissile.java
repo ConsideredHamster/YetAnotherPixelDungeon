@@ -67,13 +67,13 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
 
     @Override
     public int max( int bonus ) {
-        return tier * 5 + state * dmgMod()
+        return tier * 6 + state * dmgMod() - 4
                 + ( enchantment instanceof Tempered || bonus >= 0 ? bonus * dmgMod() : 0 )
                 + ( enchantment instanceof Tempered && bonus >= 0 ? 1 + bonus : 0 ) ;
     }
 
     public int dmgMod() {
-        return tier ;
+        return tier + 1 ;
     }
 
     @Override
@@ -193,7 +193,7 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
                                 }
                             });
 
-                        curUser.buff( Satiety.class ).decrease( (float)curWeap.str() / curUser.STR() );
+                        curUser.buff( Satiety.class ).decrease( Satiety.POINT * curWeap.str() / curUser.STR() );
                         curWeap.use( 2 );
                     }
                 });

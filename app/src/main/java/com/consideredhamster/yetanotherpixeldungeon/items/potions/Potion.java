@@ -23,6 +23,7 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
@@ -57,7 +58,7 @@ public abstract class Potion extends Item {
 	private static final Class<?>[] potions = {
 		PotionOfMending.class,
 		PotionOfWisdom.class,
-		PotionOfCorrosiveGas.class,
+		PotionOfToxicGas.class,
 		PotionOfLiquidFlame.class,
 		PotionOfStrength.class,
 		PotionOfThunderstorm.class,
@@ -65,29 +66,50 @@ public abstract class Potion extends Item {
 		PotionOfMindVision.class, 
 		PotionOfBlessing.class,
 		PotionOfInvisibility.class,
-		PotionOfOvergrowth.class,
-		PotionOfFrigidVapours.class
+		PotionOfWebbing.class,
+		PotionOfFrigidVapours.class,
+		PotionOfConfusionGas.class,
+		PotionOfRage.class,
+		PotionOfShield.class,
+		PotionOfCausticOoze.class
 	};
 	private static final String[] colors = {
-		"turquoise", "crimson", "azure", "jade", "golden", "magenta", 
-		"charcoal", "ivory", "amber", "bistre", "indigo", "silver"};
+		"turquoise", "crimson", "azure", "emerald", "golden", "magenta",
+		"charcoal", "ivory", "amber", "bistre", "indigo", "silver",
+        "chartreuse", "lavender", "bordeaux", "jade",
+	};
+
 	private static final Integer[] images = {
 		ItemSpriteSheet.POTION_TURQUOISE, 
 		ItemSpriteSheet.POTION_CRIMSON, 
-		ItemSpriteSheet.POTION_AZURE, 
-		ItemSpriteSheet.POTION_JADE, 
+		ItemSpriteSheet.POTION_AZURE,
+        ItemSpriteSheet.POTION_EMERALD,
+
 		ItemSpriteSheet.POTION_GOLDEN, 
 		ItemSpriteSheet.POTION_MAGENTA, 
 		ItemSpriteSheet.POTION_CHARCOAL, 
-		ItemSpriteSheet.POTION_IVORY, 
+		ItemSpriteSheet.POTION_IVORY,
+
 		ItemSpriteSheet.POTION_AMBER, 
 		ItemSpriteSheet.POTION_BISTRE, 
 		ItemSpriteSheet.POTION_INDIGO, 
-		ItemSpriteSheet.POTION_SILVER};
+		ItemSpriteSheet.POTION_SILVER,
+
+		ItemSpriteSheet.POTION_CHARTREUSE,
+		ItemSpriteSheet.POTION_LAVENDER,
+		ItemSpriteSheet.POTION_BORDEAUX,
+        ItemSpriteSheet.POTION_JADE,
+	};
+
 	
 	private static ItemStatusHandler<Potion> handler;
 
-	private String color;
+	protected String color;
+
+    // hides potion color in the alchemy window and
+    // disables identification by using unstable potions
+    // tbh it's a kind of hack and probably should be fixed later
+	public boolean dud = false;
 
     protected boolean harmful;
 	
@@ -114,8 +136,22 @@ public abstract class Potion extends Item {
 	
 	public Potion() {
 		super();
-		image = handler.image( this );
-		color = handler.label( this );
+
+        if( !( this instanceof EmptyBottle || this instanceof UnstablePotion ) ){
+            image = handler.image( this );
+            color = handler.label( this );
+        }
+	}
+
+	public int image() {
+		if ( dud ){
+			if ( this instanceof UnstablePotion || handler.isKnown( this ))
+				return super.image();
+			else
+				return ItemSpriteSheet.POTION_UNKNOWN;
+		} else {
+            return super.image();
+        }
 	}
 	
 	@Override
@@ -129,7 +165,7 @@ public abstract class Potion extends Item {
 	public void execute( final Hero hero, String action ) {
 		if (action.equals( AC_DRINK )) {
 			
-			if (isTypeKnown() && harmful) {
+			if (isTypeKnown() && harmful && !(this instanceof UnstablePotion)) {
 				
                 GameScene.show(
                     new WndOptions( TXT_HARMFUL, TXT_R_U_SURE_DRINK, TXT_YES, TXT_NO ) {
@@ -156,7 +192,7 @@ public abstract class Potion extends Item {
 	@Override
 	public void doThrow( final Hero hero ) {
 
-		if (isTypeKnown() && !harmful) {
+		if (isTypeKnown() && !harmful && !(this instanceof UnstablePotion)) {
 		
 			GameScene.show( 
 				new WndOptions( TXT_BENEFICIAL, TXT_R_U_SURE_THROW, TXT_YES, TXT_NO ) {
@@ -189,6 +225,7 @@ public abstract class Potion extends Item {
 	
 	@Override
 	protected void onThrow( int cell ) {
+
         if (Level.chasm[cell]) {
 
             super.onThrow(cell);
@@ -196,8 +233,10 @@ public abstract class Potion extends Item {
         } else {
 
             detach(curUser.belongings.backpack);
-			
-			shatter( cell );
+            shatter( Level.solid[ cell ] ? Ballistica.trace[ Ballistica.distance - 1 ] : cell );
+
+            Sample.INSTANCE.play( Assets.SND_SHATTER );
+            splash( cell );
 			
 		}
 	}
@@ -207,20 +246,24 @@ public abstract class Potion extends Item {
 	}
 	
 	public void shatter( int cell ) {
-		if (Dungeon.visible[cell]) {
-			GLog.i( "The flask shatters and " + color() + " liquid splashes harmlessly" );
-			Sample.INSTANCE.play( Assets.SND_SHATTER );
-			splash( cell );
+
+		if (Dungeon.visible[cell]){
+
+            if( harmful ){
+                setKnown();
+            } else {
+                GLog.i( "The flask shatters and " + color() + " liquid splashes harmlessly" );
+            }
 		}
 	}
 
     @Override
 	public boolean isTypeKnown() {
-		return handler.isKnown( this );
+		return handler.isKnown( this ) || dud;
 	}
 	
 	public void setKnown() {
-		if (!isTypeKnown()) {
+		if ( !isTypeKnown() && !dud ) {
 			handler.know( this );
 		}
 		
@@ -258,6 +301,7 @@ public abstract class Potion extends Item {
 			"This flask contains a swirling " + color + " liquid. " +
 			"Who knows what it will do when drunk or thrown?";
 	}
+
 	
 	@Override
 	public boolean isIdentified() {
@@ -272,7 +316,7 @@ public abstract class Potion extends Item {
 	public static HashSet<Class<? extends Potion>> getKnown() {
 		return handler.known();
 	}
-	
+
 	public static HashSet<Class<? extends Potion>> getUnknown() {
 		return handler.unknown();
 	}
@@ -280,29 +324,17 @@ public abstract class Potion extends Item {
 	public static boolean allKnown() {
 		return handler.known().size() == potions.length;
 	}
-
-    public static int alchemySkill() {
-
-        int result = handler.known().size();
-
-        if( handler.isKnown( PotionOfStrength.class ) )
-            result--;
-
-        if( handler.isKnown( PotionOfWisdom.class ) )
-            result--;
-
-        return result;
-     }
 	
 	protected void splash( int cell ) {
-		Splash.at( cell, ItemSprite.pick( image,  8, 10 ), 10 );
-//		Splash.at( cell, ItemSprite.pick( image, 10,  3 ), 3 );
-//		Splash.at( cell, ItemSprite.pick( image,  5,  3 ), 3 );
-//		Splash.at( cell, ItemSprite.pick( image,  8,  2 ), 1 );
+        Splash.at( cell, ItemSprite.pick( image,  8, 10 ), 10 );
 	}
-	
-	@Override
-	public int price() {
-		return 25 * quantity;
-	}
+
+    @Override
+    public int price() {
+        return 30 * quantity;
+    }
+
+    public float brewingChance() {
+        return 0f;
+    }
 }

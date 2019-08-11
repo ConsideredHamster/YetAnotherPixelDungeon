@@ -22,7 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.effects;
 
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
-import com.consideredhamster.yetanotherpixeldungeon.DungeonTilemap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 
 public class Ripple extends Image {

@@ -43,31 +43,12 @@ public class BoulderTrap extends Trap {
     // FIXME
     public static BoulderTrap TRAP = new BoulderTrap();
 	
-	public static void trigger( int pos ) {
-		
-//		GameScene.add( Blob.seed( pos, 80 + 5 * Dungeon.depth, ParalyticGas.class ) );
+	public static void trigger( int pos, Char ch ) {
 
         // FIXME
 
-        Level.set( pos, Terrain.INACTIVE_TRAP );
-
         Sample.INSTANCE.play( Assets.SND_ROCKS );
         Camera.main.shake(3, 0.07f * 5);
-
-//        Char ch = Actor.findChar(pos);
-//
-//        if (ch != null) {
-//
-//            ch.sprite.flash();
-//
-//            ch.damage(Math.max(0, Random.IntRange(Dungeon.depth / 2, Dungeon.depth) - Random.NormalIntRange(0, ch.armorClass())), BOULDERS);
-//
-//            if (ch.isAlive() && Random.Int(2) == 0) {
-//                Buff.prolong(ch, Paralysis.class, Random.IntRange(3, 6));
-//            }
-//        }
-
-//        CellEmitter.get(pos).start(Speck.factory(Speck.ROCK), 0.07f, 5);
 
         int power = 10 + Dungeon.chapter() * 4;
 
@@ -96,7 +77,6 @@ public class BoulderTrap extends Trap {
         if (ch != null) {
 
             int dmg = Char.absorb( Random.IntRange( power / 2 , power ), ch.armorClass() );
-//                    int dmg = Math.max(0, Random.IntRange(Dungeon.depth, Dungeon.depth + 10) - Random.NormalIntRange(0, ch.armorClass()));
 
             ch.damage(dmg, TRAP, Element.PHYSICAL);
 
@@ -107,7 +87,7 @@ public class BoulderTrap extends Trap {
 
         Heap heap = Dungeon.level.heaps.get(pos);
         if (heap != null) {
-            heap.shatter( "Trap" );
+            heap.shatter();
         }
 
         if (Dungeon.visible[pos]) {

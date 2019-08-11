@@ -31,8 +31,7 @@ import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 
 public class PotionOfLiquidFlame extends Potion {
 
-    public static final float BASE_VAL	= 0.25f;
-    public static final float MODIFIER	= 0.05f;
+    public static final float BASE_VAL	= 0.5f;
 
 	{
 		name = "Potion of Liquid Flame";
@@ -45,21 +44,14 @@ public class PotionOfLiquidFlame extends Potion {
 
 		GameScene.add( Blob.seed( cell, 2, Fire.class ) );
 
-        float chance = BASE_VAL + MODIFIER * alchemySkill();
-
         for (int n : Level.NEIGHBOURS8) {
             if( Level.flammable[ cell + n ] || !Level.water[ cell + n ] &&
-                    Level.passable[ cell + n ] && chance > Random.Float() ) {
+                    Level.passable[ cell + n ] && BASE_VAL > Random.Float() ) {
                 GameScene.add( Blob.seed( cell + n, 2, Fire.class ) );
             }
         }
 
-        if (Dungeon.visible[cell]) {
-            setKnown();
-
-            splash( cell );
-            Sample.INSTANCE.play( Assets.SND_SHATTER );
-        }
+        super.shatter( cell );
 	}
 	
 	@Override
@@ -71,6 +63,11 @@ public class PotionOfLiquidFlame extends Potion {
 
     @Override
     public int price() {
-        return isTypeKnown() ? 30 * quantity : super.price();
+        return isTypeKnown() ? 40 * quantity : super.price();
+    }
+
+    @Override
+    public float brewingChance() {
+        return 0.95f;
     }
 }

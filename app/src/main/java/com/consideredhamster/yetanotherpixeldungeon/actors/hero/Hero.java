@@ -27,7 +27,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Levitation;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.MindVision;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.AcidResistance;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.BodyResistance;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.ColdResistance;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.ElementResistance;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.FireResistance;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.MagicalResistance;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.MindResistance;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.PhysicalResistance;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.resistances.ShockResistance;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Banished;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Controlled;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Disrupted;
@@ -38,10 +50,13 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Shopkeeper;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Knuckles;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.melee.Quarterstaff;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Bullets;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.ThrowingWeapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Bookshelf;
 import com.consideredhamster.yetanotherpixeldungeon.levels.traps.Trap;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndAlchemy;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
@@ -56,7 +71,7 @@ import com.consideredhamster.yetanotherpixeldungeon.ResultDescriptions;
 import com.consideredhamster.yetanotherpixeldungeon.Statistics;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Blessing;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Shielding;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Crippled;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Combo;
@@ -96,9 +111,9 @@ import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAccuracy;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAwareness;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfProtection;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfEvasion;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfConcentration;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfMysticism;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfSorcery;
+import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfWillpower;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfClairvoyance;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfEnchantment;
@@ -108,7 +123,6 @@ import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedW
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.ranged.RangedWeaponMissile;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
-import com.consideredhamster.yetanotherpixeldungeon.levels.features.AlchemyPot;
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Chasm;
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Sign;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
@@ -157,13 +171,12 @@ public class Hero extends Char {
 
     private static final float TIME_TO_REST = 1f;
     private static final float TIME_TO_PICKUP = 1f;
-    private static final float UNARMED_ATTACK_SPEED = 2.0f;
     private static final float TIME_TO_SEARCH = 4f;
 
     public HeroClass heroClass = HeroClass.WARRIOR;
     public HeroSubClass subClass = HeroSubClass.NONE;
 
-    public int magicSkill = 15;
+    public int magicPower = 15;
     public int attackSkill = 10;
     public int defenseSkill = 5;
 
@@ -199,7 +212,7 @@ public class Hero extends Char {
         super();
         name = "you";
 
-        HP = HT = 20;
+        HP = HT = 25;
         STR = STARTING_STR;
 
         belongings = new Belongings( this );
@@ -231,7 +244,7 @@ public class Hero extends Char {
 
         bundle.put( ATTACK, attackSkill );
         bundle.put( DEFENSE, defenseSkill );
-        bundle.put( MAGIC, magicSkill );
+        bundle.put( MAGIC, magicPower );
 
         bundle.put( STRENGTH, STR );
 
@@ -253,7 +266,7 @@ public class Hero extends Char {
 
         attackSkill = bundle.getInt( ATTACK );
         defenseSkill = bundle.getInt( DEFENSE );
-        magicSkill = bundle.getInt( MAGIC );
+        magicPower = bundle.getInt( MAGIC );
 
         STR = bundle.getInt( STRENGTH );
         strBonus = bundle.getInt( STR_BONUS );
@@ -269,7 +282,7 @@ public class Hero extends Char {
 
     @Override
     public int actingPriority(){
-        return 4;
+        return 5;
     }
 
     public static void preview( GamesInProgress.Info info, Bundle bundle ){
@@ -334,7 +347,7 @@ public class Hero extends Char {
         float modifier = ringBuffsHalved( RingOfAccuracy.Accuracy.class );
 
         if( buff( Enraged.class ) != null )
-            modifier *= 2.0f;
+            modifier *= 1.25f;
 
         if( buff( Tormented.class ) != null )
             modifier *= 0.5f;
@@ -369,7 +382,7 @@ public class Hero extends Char {
 
     public int baseDex( boolean identified ){
 
-        if( restoreHealth || stunned )
+        if( restoreHealth || morphed )
             return 0;
 
         float modifier = moving ? ringBuffs( RingOfEvasion.Evasion.class ) : ringBuffsHalved( RingOfEvasion.Evasion.class );
@@ -397,21 +410,27 @@ public class Hero extends Char {
         if( buff( Ensnared.class ) != null )
             modifier *= 0.5f;
 
+        if( buff( Levitation.class ) != null )
+            modifier *= 1.25f;
+
         return (int) ( defenseSkill * modifier );
     }
 
     @Override
-    public int magicSkill(){
-        float modifier = ringBuffsHalved( RingOfSorcery.Sorcery.class );
+    public int magicPower(){
+        float modifier = ringBuffsHalved( RingOfWillpower.Willpower.class );
 
-        return (int) ( magicSkill * modifier );
+        if( belongings.weap1 instanceof Quarterstaff && belongings.weap1.bonus >= 0 ){
+            modifier *= ( 1.1f + 0.05f * belongings.weap1.bonus );
+        }
+
+        return (int) ( magicPower * modifier );
     }
 
     @Override
     public int armourAC(){
 
-        int dr = Random.IntRange( 0, Math.max( 0, STR() - 5 ) ) +
-            (int)(STR() * ringBuffsBaseZero( RingOfProtection.Protection.class ));
+        int dr = Random.IntRange( 0, Math.max( 0, STR() - 5 ) );
 
         if( belongings.armor != null ){
 
@@ -431,15 +450,17 @@ public class Hero extends Char {
 
         }
 
-        if( buff( Blessing.class ) != null ){
-            dr += HT / 5;
-        }
+//        if( buff( Shielding.class ) != null ){
+//            dr += HT / 5;
+//        }
+
+        dr += (int)(STR() * ringBuffsBaseZero( RingOfProtection.Protection.class ));
 
         return dr;
     }
 
     public float guardChance(){
-        return !restoreHealth && !stunned ? super.guardChance() : 0.0f;
+        return !restoreHealth && !morphed ? super.guardChance() : 0.0f;
     }
 
     @Override
@@ -490,7 +511,7 @@ public class Hero extends Char {
             dmg = wep.damageRoll( this );
 
             if( buff( Enraged.class ) != null ){
-                dmg += wep.damageRoll( this );
+                dmg += wep.damageRoll( this ) / 2;
             }
 
             if( combo != null ){
@@ -591,7 +612,7 @@ public class Hero extends Char {
 
         super.act();
 
-        if( stunned ){
+        if( morphed ){
 
             curAction = null;
 
@@ -602,8 +623,7 @@ public class Hero extends Char {
         Dungeon.observe();
         checkVisibleMobs();
         TagAttack.updateState();
-
-
+        BuffIndicator.refreshHero();
 
         if( curAction == null ){
 
@@ -612,7 +632,7 @@ public class Hero extends Char {
                 boolean wakeUp = false;
 
                 for( Mob mob : Dungeon.level.mobs ){
-                    if( mob.hostile && Level.adjacent( pos, mob.pos ) && detected( mob ) ){
+                    if( mob.hostile && !mob.friendly && Level.adjacent( pos, mob.pos ) && detected( mob ) ){
                         wakeUp = true;
                         break;
                     }
@@ -835,7 +855,41 @@ public class Hero extends Char {
     }
 
     private boolean actCook( HeroAction.Cook action ){
+
         int dst = action.dst;
+        if( Level.distance(dst, pos) <= 1 ) {
+
+            ready();
+
+            YetAnotherPixelDungeon.scene().add(
+                    new WndOptions("Alchemy Pot", "Do you want to brew potions or cook meat? ",
+                            Utils.capitalize( "Brew potions" ),
+                            Utils.capitalize( "Cook meat" ) ) {
+
+                        @Override
+                        protected void onSelect( int index ) {
+
+                            if (index == 0) {
+                                GameScene.show(new WndAlchemy(WndAlchemy.MODE_BREW));
+                            } else if (index == 1) {
+                                GameScene.show(new WndAlchemy(WndAlchemy.MODE_COOK));
+                            }
+                        }
+                    } );
+
+            return false;
+
+
+        } else if (getCloser( dst )) {
+
+            return true;
+
+        } else {
+            ready();
+            return false;
+        }
+
+        /*int dst = action.dst;
         if( Dungeon.visible[ dst ] && Level.adjacent( pos, dst ) ){
 
             ready();
@@ -849,7 +903,7 @@ public class Hero extends Char {
         } else {
             ready();
             return false;
-        }
+        }*/
     }
 
     private boolean actPickUp( HeroAction.PickUp action ){
@@ -1194,7 +1248,7 @@ public class Hero extends Char {
 
             } else if( Level.adjacent( pos, enemy.pos ) ){
 
-                if( !isScared() ){
+                if( buff( Tormented.class ) == null && buff( Banished.class ) == null ){
 
                     currentWeapon = isDualWielding() ? Random.oneOf( belongings.weap1, (Weapon) belongings.weap2 ) :
                             belongings.weap1 instanceof MeleeWeapon ? belongings.weap1 :
@@ -1202,9 +1256,10 @@ public class Hero extends Char {
                                             null;
 
                     buff( Satiety.class ).decrease(
+                        Satiety.POINT *
                         ( currentWeapon != null ?
-                        (float)currentWeapon.str()
-                        : 5.0f ) / STR() / attackSpeed()
+                        currentWeapon.str() : 5.0f )
+                        / STR() / attackSpeed()
                     );
 
                     sprite.attack( enemy.pos );
@@ -1253,8 +1308,11 @@ public class Hero extends Char {
         if( !sleep ){
 
             sprite.showStatus( CharSprite.DEFAULT, TXT_WAIT );
-            Buff.affect( this, Focus.class ).reset( 1 );
             search( false );
+
+            if( buff( Vertigo.class ) == null ){
+                Buff.affect( this, Focus.class ).reset( 1 );
+            }
 
         } else {
 
@@ -1450,11 +1508,15 @@ public class Hero extends Char {
 
         if( step < 0 ) return false;
 
-        buff( Satiety.class ).decrease(
+        Satiety satiety=buff( Satiety.class );
+        if (satiety!=null)
+            buff( Satiety.class ).decrease(
+                Satiety.POINT *
                 ( belongings.armor != null ?
-                        (float)belongings.armor.str()
-                        : 5.0f ) / STR()
-        );
+                (float)belongings.armor.str()
+                : 5.0f ) / STR()
+            );
+
 
         int oldPos = pos;
         move( step );
@@ -1468,7 +1530,9 @@ public class Hero extends Char {
                 weap.reload( this );
             }
 
-        } else if( belongings.weap2 instanceof ThrowingWeapon ) {
+        }
+
+        if( belongings.weap2 instanceof ThrowingWeapon ) {
 
             Heap heap = Dungeon.level.heaps.get( step );
 
@@ -1587,8 +1651,8 @@ public class Hero extends Char {
             if( heroClass != HeroClass.WARRIOR || lvl % 3 != 1 )
                 defBonus++;
 
-            if( heroClass != HeroClass.BRIGAND || lvl % 3 != 1 )
-                magBonus++;
+//            if( heroClass != HeroClass.BRIGAND || lvl % 3 != 1 )
+//                magBonus++;
 
 
             if( heroClass == HeroClass.WARRIOR && lvl % 6 == 1 )
@@ -1601,6 +1665,9 @@ public class Hero extends Char {
                 defBonus++;
 
             if( heroClass == HeroClass.SCHOLAR && lvl % 3 == 1 )
+                magBonus++;
+
+            if( heroClass == HeroClass.ACOLYTE && lvl % 6 == 1 )
                 magBonus++;
 
 
@@ -1623,7 +1690,7 @@ public class Hero extends Char {
 
             attackSkill += attBonus;
             defenseSkill += defBonus;
-            magicSkill += magBonus;
+            magicPower += magBonus;
 
             ArrayList bonusList = new ArrayList();
 
@@ -1643,7 +1710,7 @@ public class Hero extends Char {
             if( stlBonus > 0 )
                 bonusList.add( Utils.format( "+%d%% stealth", stlBonus ) );
             if( wilBonus > 0 )
-                bonusList.add( Utils.format( "+%d%% willpower", wilBonus ) );
+                bonusList.add( Utils.format( "+%d%% attunement", wilBonus ) );
 
             if( sprite != null ){
                 GLog.p( TXT_NEW_LEVEL, lvl, TextUtils.join( ", ", bonusList ) );
@@ -1719,6 +1786,10 @@ public class Hero extends Char {
             result *= ( 1.05f + 0.05f * belongings.armor.bonus );
         }
 
+        if( buff( MindVision.class ) != null  ){
+            result *= 1.25f;
+        }
+
         if( restoreHealth ){
             result *= 0.5f;
         }
@@ -1747,6 +1818,10 @@ public class Hero extends Char {
             result *= ( 1.05f + 0.05f * belongings.armor.bonus );
         }
 
+        if( buff( Invisibility.class ) != null  ){
+            result *= 1.25f;
+        }
+
         if( !restoreHealth ){
 
             if( belongings.armor != null ){
@@ -1766,17 +1841,11 @@ public class Hero extends Char {
         return result;
     }
 
-    public float willpower(){
+    public float attunement(){
 
-        float result = ringBuffsThirded( RingOfConcentration.Concentration.class );
+        float result = baseAttunement();
 
-        if( heroClass == HeroClass.BRIGAND ){
-            result *= 0.75f;
-        } else if( heroClass == HeroClass.SCHOLAR ){
-            result *= 1.1f + 0.01f * (int) ( ( lvl - 1 ) / 2 );
-        } else {
-            result *= 1.0f;
-        }
+        result *= ringBuffsThirded( RingOfMysticism.Mysticism.class );;
 
         if( belongings.armor instanceof MageArmor && belongings.armor.bonus >= 0 ){
             result *= ( 1.05f + 0.05f * belongings.armor.bonus );
@@ -1787,6 +1856,16 @@ public class Hero extends Char {
         }
 
         return result;
+    }
+
+    public float baseAttunement(){
+        if( heroClass == HeroClass.BRIGAND ){
+            return  0.75f;
+        } else if( heroClass == HeroClass.SCHOLAR ){
+            return 1.1f + 0.01f * ( ( lvl - 1 ) / 2 );
+        } else {
+            return 1.0f;
+        }
     }
 
     @Override
@@ -1986,9 +2065,10 @@ public class Hero extends Char {
         boolean smthFound = false;
 
         for( Integer ofs : Level.NEIGHBOURS8 ){
+
             int p = pos + ofs;
 
-            if( Dungeon.visible[ p ] ){
+            if( p >= 0 && p < Level.LENGTH && Dungeon.visible[ p ] ){
 
                 if( intentional ){
                     sprite.parent.addToBack( new CheckedCell( p ) );
@@ -2025,79 +2105,40 @@ public class Hero extends Char {
             Sample.INSTANCE.play( Assets.SND_SECRET );
             interrupt();
         }
-
-//		return smthFound;
     }
-
-//    public void resurrect( int resetLevel ){
-//
-//        HP = HT;
-////		Dungeon.gold = 0;
-//        exp = exp;
-//
-////		belongings.resurrect(resetLevel);
-//
-//        live();
-//        interrupt();
-//    }
-
-//	@Override
-//	public HashSet<Class<?>> resistances() {
-//
-//        HashSet<Class<?>> resistances = (HashSet<Class<?>>)super.resistances().clone();
-//
-//        float chance = Dungeon.hero.ringBuffs(RingOfProtection.Resistance.class);
-//
-//        if( chance >= 1.0f && Random.Float() < chance - 1.0f )
-//            resistances.addAll( RingOfProtection.FULL );
-//        else if( chance < 1.0f && Random.Float() < 1.0f - chance )
-//            return RingOfProtection.EMPTY;
-//
-//        Shield b = buff( Shield.class );
-//        if (b != null )
-//            resistances.addAll( Shield.RESISTS );
-//
-//        return resistances;
-//
-////		RingOfElements.Resistance r = buff( RingOfElements.Resistance.class );
-////		return r == null ? super.resistances() : r.resistances();
-//	}
-
-//	@Override
-
 
     @Override
     public HashMap<Class<? extends Element>, Float> resistances() {
 
         HashMap<Class<? extends Element>, Float> resistances = super.resistances();
 
-        if( buff( Blessing.class ) != null ){
-            for( Class<? extends Element> type : Blessing.RESISTS) {
-                resistances.put( type, ( resistances.containsKey( type ) ? resistances.get( type ) : 0.0f ) + Blessing.RESISTANCE );
+        if( buff( Shielding.class ) != null ){
+            for( Class<? extends Element> type : Shielding.RESISTS) {
+                resistances.put( type, ( resistances.containsKey( type ) ? resistances.get( type ) : 0.0f ) + Shielding.RESISTANCE );
             }
         }
 
         if( buff( RingOfProtection.Protection.class ) != null ){
 
-            float value = Dungeon.hero.ringBuffsBaseZero( RingOfProtection.Protection.class ) / 2 ;
+            float value = this.ringBuffsBaseZero( RingOfProtection.Protection.class ) / 2 ;
 
             for( Class<? extends Element> type : RingOfProtection.RESISTS ){
                 resistances.put( type, ( resistances.containsKey( type ) ? resistances.get( type ) : 0.0f ) + value );
             }
         }
 
-        if( buff( RingOfConcentration.Concentration.class ) != null ){
+        if( buff( RingOfWillpower.Willpower.class ) != null ){
 
-            float value = Dungeon.hero.ringBuffsBaseZero( RingOfConcentration.Concentration.class ) ;
+            float value = this.ringBuffsBaseZero( RingOfWillpower.Willpower.class ) ;
 
-            for( Class<? extends Element> type : RingOfConcentration.RESISTS ){
+            for( Class<? extends Element> type : RingOfWillpower.RESISTS ){
                 resistances.put( type, ( resistances.containsKey( type ) ? resistances.get( type ) : 0.0f ) + value );
             }
         }
 
         if( buff( RingOfVitality.Vitality.class ) != null ){
 
-            float value = Dungeon.hero.ringBuffsBaseZero( RingOfVitality.Vitality.class ) ;
+            float value = this.ringBuffsBaseZero( RingOfVitality.Vitality.class ) ;
 
             for( Class<? extends Element> type : RingOfVitality.RESISTS ){
                 resistances.put( type, ( resistances.containsKey( type ) ? resistances.get( type ) : 0.0f ) + value );
@@ -2112,7 +2153,7 @@ public class Hero extends Char {
             if( a.bonus >= 0 ){
                 resistances.put( type, ( resistances.containsKey( type ) ? resistances.get( type ) : 0.0f ) + 0.1f + a.bonus * 0.05f );
             } else {
-                resistances.put( type, resistances.containsKey( type ) ? resistances.get( type ) : 0.0f - 0.05f - a.bonus * 0.05f );
+                resistances.put( type, ( resistances.containsKey( type ) ? resistances.get( type ) : 0.0f) - 0.05f - a.bonus * 0.05f );
             }
         }
 
@@ -2124,7 +2165,26 @@ public class Hero extends Char {
             if( s.bonus >= 0 ){
                 resistances.put( type, ( resistances.containsKey( type ) ? resistances.get( type ) : 0.0f ) + 0.1f + s.bonus * 0.05f );
             } else {
-                resistances.put( type, resistances.containsKey( type ) ? resistances.get( type ) : 0.0f - 0.05f - s.bonus * 0.05f );
+                resistances.put( type, (resistances.containsKey( type ) ? resistances.get( type ) : 0.0f) - 0.05f - s.bonus * 0.05f );
+            }
+        }
+
+        ElementResistance[] buffResistances = {
+            buff(FireResistance.class),
+            buff(ColdResistance.class),
+            buff(AcidResistance.class),
+            buff(ShockResistance.class),
+            buff(MindResistance.class),
+            buff(BodyResistance.class),
+            buff(MagicalResistance.class),
+            buff(PhysicalResistance.class),
+        };
+
+        for ( ElementResistance res : buffResistances ) {
+            if ( res != null ){
+                resistances.put( res.resistance(), ( resistances.containsKey( res.resistance() ) ?
+                    resistances.get( res.resistance() ) : 0.0f ) + res.resistanceValue()
+                );
             }
         }
 

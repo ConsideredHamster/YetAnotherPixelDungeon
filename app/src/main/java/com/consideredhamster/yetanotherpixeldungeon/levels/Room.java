@@ -141,12 +141,25 @@ public class Room extends Rect implements Graph.Node, Bundlable {
 		int y = p / Level.WIDTH;
 		return x > left && y > top && x < right && y < bottom;
 	}
-	
-	public Point center() {
-		return new Point( 
-			(left + right) / 2 + (((right - left) & 1) == 1 ? Random.Int( 2 ) : 0),
-			(top + bottom) / 2 + (((bottom - top) & 1) == 1 ? Random.Int( 2 ) : 0) );
-	}
+
+    public Point center() {
+        return new Point(
+                (left + right) / 2 + (((right - left) & 1) == 1 ? Random.Int( 2 ) : 0),
+                (top + bottom) / 2 + (((bottom - top) & 1) == 1 ? Random.Int( 2 ) : 0) );
+    }
+
+    public ArrayList<Integer> cells() {
+
+        ArrayList<Integer> result = new ArrayList();
+
+        for( int x = left ; x <= right ; x++ ) {
+            for( int y = top ; y <= bottom ; y++ ){
+                result.add( x + y * Level.WIDTH );
+            }
+        }
+
+        return result;
+    }
 	
 	// **** Graph.Node interface ****
 

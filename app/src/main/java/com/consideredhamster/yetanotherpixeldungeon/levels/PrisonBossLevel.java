@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
@@ -44,51 +45,15 @@ import com.watabou.utils.Graph;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
-public class PrisonBossLevel extends RegularLevel {
+public class PrisonBossLevel extends PrisonLevel {
 
-	{
-		color1 = 0x6a723d;
-		color2 = 0x88924c;
-	}
-	
-	private Room anteroom;
-	private int arenaDoor;
-	
-	private boolean enteredArena = false;
-	private boolean keyDropped = false;
-	
-	@Override
-	public String tilesTex() {
-		return Assets.TILES_PRISON;
-	}
+    private static final int BOSS_ISHIDDEN = 0;
+    private static final int BOSS_APPEARED = 1;
+    private static final int BOSS_DEFEATED = 2;
 
-	@Override
-	public String waterTex() {
-		return Assets.WATER_PRISON;
-	}
-	
-	private static final String ARENA	= "arena";
-	private static final String DOOR	= "door";
-	private static final String ENTERED	= "entered";
-	private static final String DROPPED	= "dropped";
-	
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle(bundle);
-		bundle.put( ARENA, roomExit );
-		bundle.put( DOOR, arenaDoor );
-		bundle.put( ENTERED, enteredArena );
-		bundle.put( DROPPED, keyDropped );
-	}
-	
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle(bundle);
-		roomExit = (Room)bundle.get( ARENA );
-		arenaDoor = bundle.getInt( DOOR );
-		enteredArena = bundle.getBoolean( ENTERED );
-		keyDropped = bundle.getBoolean( DROPPED );
-	}
+    private int progress = 0;
+    private Room anteroom;
+    private int arenaDoor;
 	
 	@Override
 	protected boolean build() {
@@ -110,7 +75,8 @@ public class PrisonBossLevel extends RegularLevel {
 					return false;
 				}
 				roomEntrance = Random.element( rooms );
-			} while (roomEntrance.width() < 4 || roomEntrance.height() < 4);
+			} while (roomEntrance.width() < 4 || roomEntrance.height() < 4 ||
+                    roomEntrance.top == 0);
 			
 			innerRetry = 0;
 			do {
@@ -121,8 +87,7 @@ public class PrisonBossLevel extends RegularLevel {
 			} while (
 				roomExit == roomEntrance || 
 				roomExit.width() < 7 || 
-				roomExit.height() < 7 || 
-				roomExit.top == 0);
+				roomExit.height() < 7);
 	
 			Graph.buildDistanceMap( rooms, roomExit );
 			distance = Graph.buildPath( rooms, roomEntrance, roomExit ).size();
@@ -130,7 +95,7 @@ public class PrisonBossLevel extends RegularLevel {
 		} while (distance < 3);
 		
 		roomEntrance.type = Type.ENTRANCE;
-		roomExit.type = Type.BOSS_EXIT;
+		roomExit.type = Type.STANDARD;
 		
 		List<Room> path = Graph.buildPath( rooms, roomEntrance, roomExit );	
 		Graph.setPrice( path, roomEntrance.distance );
@@ -155,10 +120,13 @@ public class PrisonBossLevel extends RegularLevel {
 		
 		paint();
 
-		Room r = (Room)roomExit.connected.keySet().toArray()[0];
-		if (roomExit.connected.get( r ).y == roomExit.top) {
+		Room r = (Room)roomEntrance.connected.keySet().toArray()[0];
+		if (roomEntrance.connected.get( r ).y == roomEntrance.top) {
 			return false;
 		}
+
+        exit = roomEntrance.top * Level.WIDTH + (roomEntrance.left + roomEntrance.right) / 2;
+        Painter.set( this, exit, Terrain.LOCKED_EXIT );
 		
 		paintWater();
 		paintGrass();
@@ -167,14 +135,6 @@ public class PrisonBossLevel extends RegularLevel {
 //		placeSign();
 
 		return true;
-	}
-		
-	protected boolean[] water() {
-		return Patch.generate( 0.45f, 5 );
-	}
-	
-	protected boolean[] grass() {
-		return Patch.generate( 0.30f, 4 );
 	}
 	
 	protected void paintDoors( Room r ) {
@@ -272,11 +232,12 @@ public class PrisonBossLevel extends RegularLevel {
 		Painter.set( this, arenaDoor, Terrain.LOCKED_DOOR );
 
 		Painter.fill(this,
-				roomExit.left + 2,
-				roomExit.top + 2,
-				roomExit.width() - 3,
-				roomExit.height() - 3,
-				Terrain.INACTIVE_TRAP);
+            roomExit.left + 2,
+            roomExit.top + 2,
+            roomExit.width() - 3,
+            roomExit.height() - 3,
+            Terrain.INACTIVE_TRAP
+        );
 	}
 	
 	@Override
@@ -289,6 +250,7 @@ public class PrisonBossLevel extends RegularLevel {
 	
 	@Override
 	protected void createItems() {
+
 		int keyPos = anteroom.random();
 		while (!passable[keyPos]) {
 			keyPos = anteroom.random();
@@ -310,9 +272,9 @@ public class PrisonBossLevel extends RegularLevel {
 		
 		super.press( cell, ch );
 		
-		if (ch == Dungeon.hero && !enteredArena && roomExit.inside( cell )) {
-			
-			enteredArena = true;
+		if (ch == Dungeon.hero && progress == BOSS_ISHIDDEN && roomExit.inside( cell )) {
+
+            progress = BOSS_APPEARED;
 		
 			int pos;
 			do {
@@ -338,9 +300,9 @@ public class PrisonBossLevel extends RegularLevel {
 	@Override
 	public Heap drop( Item item, int cell ) {
 		
-		if (!keyDropped && item instanceof SkeletonKey) {
-			
-			keyDropped = true;
+		if ( progress == BOSS_APPEARED && item instanceof SkeletonKey) {
+
+            progress = BOSS_DEFEATED;
 			
 			set( arenaDoor, Terrain.DOOR_CLOSED);
 			GameScene.updateMap( arenaDoor );
@@ -351,57 +313,63 @@ public class PrisonBossLevel extends RegularLevel {
 		
 		return super.drop( item, cell );
 	}
-	
-	@Override
-    public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
 
-        int cell;
+    @Override
+    public ArrayList<Integer> getPassableCellsList() {
 
-        // FIXME
+        ArrayList<Integer> result = new ArrayList<>();
 
-        if( !enteredArena ) {
-            do {
-                cell = Random.Int(LENGTH);
-            } while (!mob_passable[cell] || Actor.findChar(cell) != null || roomExit.inside(cell) );
-        } else if( !keyDropped ) {
-            do {
-                cell = Random.Int(LENGTH);
-            } while (!mob_passable[cell] || Actor.findChar(cell) != null || !roomExit.inside(cell) );
-        } else {
-            do {
-                cell = Random.Int(LENGTH);
-            } while (!mob_passable[cell] || Actor.findChar(cell) != null );
+        for( Integer cell : getCellList() ){
+            if( progress != BOSS_ISHIDDEN && roomExit.inside( cell ) || progress != BOSS_APPEARED && !roomExit.inside( cell ) ){
+                result.add( cell );
+            }
         }
 
-        return cell;
+        return result;
     }
 
-    @Override
-    public boolean noTeleport() {
-        return enteredArena && !keyDropped;
-    }
+    private ArrayList<Integer> getCellList() {
 
-    @Override
-    public String tileName( int tile ) {
-        return PrisonLevel.tileNames(tile);
-    }
+        ArrayList<Integer> result = new ArrayList<>();
 
-    @Override
-    public String tileDesc( int tile ) {
-        return PrisonLevel.tileDescs(tile);
-    }
+        for (Room room : rooms) {
+            for( int cell : room.cells() ){
+                if( !solid[ cell ] && passable[ cell ] && Actor.findChar( cell ) == null ){
+                    result.add( cell );
+                }
+            }
+        }
 
-	@Override
-	public void addVisuals( Scene scene ) {
-		PrisonLevel.addVisuals( this, scene );
-	}
+        return result;
+    }
 
     @Override
     public int nMobs() {
         return 0;
     }
 
+    @Override
     public String currentTrack() {
-        return enteredArena && !keyDropped ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
-    };
+        return progress == BOSS_APPEARED ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
+    }
+
+    private static final String ARENA	    = "arena";
+    private static final String DOOR	    = "door";
+    private static final String PROGRESS    = "progress";
+
+    @Override
+    public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle(bundle);
+        bundle.put( ARENA, roomExit );
+        bundle.put( DOOR, arenaDoor );
+        bundle.put( PROGRESS, progress );
+    }
+
+    @Override
+    public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle(bundle);
+        roomExit = (Room)bundle.get( ARENA );
+        arenaDoor = bundle.getInt( DOOR );
+        progress = bundle.getInt( PROGRESS );
+    }
 }
