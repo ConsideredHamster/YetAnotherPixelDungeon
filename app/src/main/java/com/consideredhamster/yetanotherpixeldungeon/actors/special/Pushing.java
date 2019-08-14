@@ -140,48 +140,52 @@ public class Pushing extends Actor {
             Ballistica.cast( ch.pos, pushTo, true, true );
             Ballistica.distance = Math.min( Ballistica.distance, distance );
 
-            // gotta make those final for the sake of using callback mechanics
-            final int newPos = Ballistica.trace[ Ballistica.distance ];
-            final Char pushedInto = Char.findChar( newPos );
+            if( Ballistica.distance > 0 ){
 
-            // apply visual effect of moving, with all of the important stuff
-            // happening only when the knockback animation is finished
-            move( ch, newPos, new Callback() {
+                // gotta make those final for the sake of using callback mechanics
+                final int newPos = Ballistica.trace[ Ballistica.distance ];
+                final Char pushedInto = Char.findChar( newPos );
 
-                @Override
-                public void call(){
+                // apply visual effect of moving, with all of the important stuff
+                // happening only when the knockback animation is finished
+                move( ch, newPos, new Callback() {
 
-                    // if target was pushed into a wall or another char, we damage/confuse
-                    // it and move it back by a single tile of distance
-                    if( pushedInto != null || Level.solid[ newPos ] ){
-                        hitObstacle( ch, Ballistica.trace[ Ballistica.distance - 1 ], damage );
-                    }
+                    @Override
+                    public void call(){
 
-
-                    if( ch.isAlive() ){
-
-                        // mobs get waken up by this effect  (beckon() is not the best way to
-                        // do that but it works), but also get delayed for a turn to make the
-                        // knockback thing actually matter on short distances
-                        if( ch instanceof Mob ) {
-                            ((Mob)ch).beckon( ch.pos );
-                            ch.delay( 1f );
+                        // if target was pushed into a wall or another char, we damage/confuse
+                        // it and move it back by a single tile of distance
+                        if( pushedInto != null || Level.solid[ newPos ] ){
+                            hitObstacle( ch, Ballistica.trace[ Ballistica.distance - 1 ], damage );
                         }
 
-                        // apply target's current position and activate traps there
-                        // gotta re-check whether mobs killed by knockback activate traps or not
-                        Actor.occupyCell( ch );
-                        Dungeon.level.press( ch.pos, ch );
-                    }
 
-                    // if we knock our target mobs into another one, then apply knockback to this
-                    // one as well - but only for one tile of distance because I don't know any better
-                    if( pushedInto != null ) {
-                        knockback( pushedInto, ch.pos, 1, damage / 2 );
-                    }
+                        if( ch.isAlive() ){
 
-                }
-            });
+                            // mobs get waken up by this effect  (beckon() is not the best way to
+                            // do that but it works), but also get delayed for a turn to make the
+                            // knockback thing actually matter on short distances
+                            if( ch instanceof Mob ){
+                                ( (Mob) ch ).beckon( ch.pos );
+                                ch.delay( 1f );
+                            }
+
+                            // apply target's current position and activate traps there
+                            // gotta re-check whether mobs killed by knockback activate traps or not
+                            Actor.occupyCell( ch );
+                            Dungeon.level.press( ch.pos, ch );
+                        }
+
+                        // if we knock our target mobs into another one, then apply knockback to this
+                        // one as well - but only for one tile of distance because I don't know any better
+                        if( pushedInto != null ){
+                            knockback( pushedInto, ch.pos, 1, damage / 2 );
+                        }
+
+                    }
+                } );
+
+            }
 
         } else {
 

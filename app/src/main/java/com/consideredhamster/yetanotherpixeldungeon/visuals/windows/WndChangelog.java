@@ -54,6 +54,9 @@ public class WndChangelog extends Window {
         "_interface improvements_. The game should be more accessible and comfortable to play now. " +
         "Most changes are listed below. Hope you will enjoy this update, and good luck!\n" +
         "\n" +
+        "_UPD_: version _0.3.2a+_ fixes several problems which were missed during the beta testing " +
+        "somehow. The fixed issues are listed below this changelog.\n" +
+        "\n" +
         "_GENERAL_\n" +
         "\n" +
         "- \"magic skill\" stat was renamed into \"magic power\" and now affects wand's damage/effect\n" +
@@ -184,7 +187,7 @@ public class WndChangelog extends Window {
         "\n" +
         "_MOBS_\n" +
         "\n" +
-        "- slightly buffed minimum damage for most of the mobs mobs\n" +
+        "- slightly buffed minimum damage for most of the mobs\n" +
         "\n" +
         "- Goo was tweaked to make its fight easier for new players and less annoying for veterans\n" +
         "\n" +
@@ -222,11 +225,27 @@ public class WndChangelog extends Window {
         "\n" +
         "- made item piles on the already visited tiles visible through the fog of war\n" +
         "\n" +
-        "- small changes to the layout of the second boss floor nd imp's shop floor\n" +
+        "- small changes to the layout of the second boss floor and imp's shop floor\n" +
         "\n" +
         "- secret doors on the 2nd floor are now guaranteed only if you have not unlocked at " +
-        "least one of the strength, upgrade or boss badges yet\n"
-        ;
+        "least one of the strength, upgrade or boss badges yet\n" +
+        "\n" +
+        "_v.0.3.2a+_\n" +
+        "\n" +
+        "- fixed issue with wands not recharging in save games from previous versions\n"+
+        "\n" +
+        "- fixed wand of Damnation crashing the game when used with low magic power\n"+
+        "\n" +
+        "- fixed generation of the imp's shop room being botched up sometimes\n"+
+        "\n" +
+        "- fixed Goo not healing or inheriting burning debuff when absorbing its spawns\n"+
+        "\n" +
+        "- fixed characters not picking up items from pedestals when mobs are in sight\n"+
+        "\n" +
+        "- fixed scroll of Challenge possibly freezing the game\n"+
+        "\n" +
+        "- fixed possible game crashes on knockback"
+    ;
 
 	private BitmapText txtTitle;
 	private ScrollPane list;

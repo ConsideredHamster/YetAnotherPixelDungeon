@@ -55,7 +55,7 @@ public class RingOfWillpower extends Ring {
 
         StringBuilder desc = new StringBuilder(
             "By increasing wearer's willpower, this ring indirectly increases their magical " +
-            "abilities. Additionally, they offers additional benefit of making it easier to " +
+            "abilities. Also, it offers additional benefit of making it easier to " +
             "shrug off all kinds of mental debuffs."
         );
 

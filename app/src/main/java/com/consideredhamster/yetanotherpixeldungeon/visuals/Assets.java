@@ -136,17 +136,15 @@ public class Assets {
     /* *************************************** */
 
     public static final String ITEMS	    = DIR_VISUALS + "items.png";
-    public static final String EQUIP	    = DIR_VISUALS + "equipment.png";
-
     public static final String BADGES	    = DIR_VISUALS + "badges.png";
     public static final String HELP 	    = DIR_VISUALS + "help.png";
 
+    public static final String SPELL_ICONS	= DIR_VISUALS + "spell_icons.png";
     public static final String EFFECTS	    = DIR_VISUALS + "effects.png";
     public static final String SPECKS	    = DIR_VISUALS + "specks.png";
 
-    public static final String SPELL_ICONS	= DIR_VISUALS + "spell_icons.png";
-    public static final String BUFFS_LARGE	= DIR_VISUALS + "buffs_large.png";
     public static final String BUFFS_SMALL	= DIR_VISUALS + "buffs_small.png";
+    public static final String BUFFS_LARGE	= DIR_VISUALS + "buffs_large.png";
 
     /* *************************************** */
 

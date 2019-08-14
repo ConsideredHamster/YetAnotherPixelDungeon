@@ -63,6 +63,9 @@ public class LastShopLevel extends RegularLevel {
 	protected boolean build() {
 		
 		initRooms();
+
+        heaps.clear();
+        mobs.clear();
 		
 		int distance;
 		int retry = 0;
@@ -155,7 +158,7 @@ public class LastShopLevel extends RegularLevel {
         if ( roomExit.connected.get( n ) == null || roomExit.connected.get( n ).y == roomExit.top ) {
             return false;
         }
-		
+
 		paintWater();
 		paintGrass();
 

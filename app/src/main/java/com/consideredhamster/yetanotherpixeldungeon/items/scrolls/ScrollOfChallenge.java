@@ -60,11 +60,11 @@ public class ScrollOfChallenge extends Scroll {
             }
         }
 
-        int amount = Dungeon.level.nMobs() + Dungeon.chapter();
-
         if (!Dungeon.bossLevel() && Dungeon.level.nMobs() > 0) {
 
-            while( Dungeon.level.mobs.size() < amount ) {
+            int amount = Dungeon.level.nMobs() + Dungeon.chapter() - Dungeon.level.mobs.size();
+
+            for( int i = 0 ; i < amount ; i++ ) {
 
                 Mob mob = Bestiary.mob(Dungeon.depth);
                 mob.state = mob.HUNTING;

@@ -193,8 +193,10 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
                                 }
                             });
 
-                        curUser.buff( Satiety.class ).decrease( Satiety.POINT * curWeap.str() / curUser.STR() );
-                        curWeap.use( 2 );
+                        if( curWeap != null ){
+                            curUser.buff( Satiety.class ).decrease( Satiety.POINT * curWeap.str() / curUser.STR() );
+                            curWeap.use( 2 );
+                        }
                     }
                 });
 

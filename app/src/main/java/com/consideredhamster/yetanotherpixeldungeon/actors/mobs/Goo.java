@@ -236,7 +236,8 @@ public abstract class Goo extends MobEvasive {
         @Override
         public boolean act() {
 
-            if (( state == SLEEPING || Level.water[pos] ) && HP < HT && !phase && buff( Frozen.class ) == null ) {
+            if (( state == SLEEPING || Level.water[pos] ) && HP < HT && !phase ) {
+
                 sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
                 HP++;
 
@@ -418,25 +419,17 @@ public abstract class Goo extends MobEvasive {
 
             if ( phase && mother != null && mother != this && Level.adjacent( pos, mother.pos ) ){
 
-                Pushing.move( this, mother.pos, new Callback() {
-                    @Override
-                    public void call(){
-                        Burning buff1 = buff( Burning.class );
+                Burning buff1 = buff( Burning.class );
 
-                        if( buff1 != null ){
-                            BuffActive.addFromDamage( mother, Burning.class, buff1.getDuration() );
-                        }
+                if( buff1 != null ){
+                    BuffActive.add( mother, Burning.class, (float)buff1.getDuration() );
+                }
 
-                        int heal = Math.min( HP, mother.HT - mother.HP );
+                mother.heal( HP );
+                die( this );
 
-                        if( heal > 0 ){
-                            mother.sprite.showStatus( CharSprite.POSITIVE, "%d", heal );
-                            mother.sprite.emitter().burst( Speck.factory( Speck.HEALING ), (int) Math.sqrt( heal ) );
-                            mother.HP += heal;
-                        }
-                    }
-                } );
 
+                Pushing.move( this, mother.pos, null );
                 sprite.parent.add( new AlphaTweener( sprite, 0.0f, 0.1f ) );
 
                 if( Dungeon.visible[ pos ] ) {
@@ -444,15 +437,12 @@ public abstract class Goo extends MobEvasive {
                     GLog.n( "Goo absorbs entranced spawn, healing itself!" );
                 }
 
-                die( this );
-
                 return true;
 
             }
 
-            if ( Level.water[pos] && HP < HT && buff( Frozen.class ) == null ) {
-                sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
-                HP ++;
+            if ( Level.water[pos] && HP < HT ) {
+                HP++;
             }
 
             if( !phase && HP == HT ) {
@@ -460,7 +450,7 @@ public abstract class Goo extends MobEvasive {
                 sprite.idle();
 
                 if( Dungeon.visible[ pos ] ){
-                    sprite.showStatus( CharSprite.NEGATIVE, "entranced" );
+                    sprite.showStatus( CharSprite.WARNING, "entranced" );
                     GLog.n( "A spawn of Goo became entranced - do not let them stand in the water!" );
                 }
 

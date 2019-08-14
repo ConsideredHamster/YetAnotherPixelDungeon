@@ -57,7 +57,9 @@ public class WandOfDamnation extends WandUtility {
 
         if (ch != null) {
 
-            int duration = ch.currentHealthValue() * 2 / damageRoll() + 1;
+            int damage = Math.max( 1, damageRoll() );
+
+            int duration = ch.currentHealthValue() * 2 / damage + 1;
 
             if( ch.sprite.visible ){
                 ch.sprite.showStatus( CharSprite.BLACK, Integer.toString( duration ) );

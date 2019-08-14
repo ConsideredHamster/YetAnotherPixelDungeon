@@ -681,6 +681,14 @@ public class Dungeon {
         }
 
 //		QuickSlot.compress();
+
+        if( hero.buff( Satiety.class ) == null ) {
+            Buff.affect( hero, Satiety.class ).setValue( Satiety.MAXIMUM );
+        }
+
+        if( hero.buff( Recharging.class ) == null ) {
+            Buff.affect( hero, Recharging.class );
+        }
 		
 		gold = bundle.getInt( GOLD );
 		depth = bundle.getInt( DEPTH );

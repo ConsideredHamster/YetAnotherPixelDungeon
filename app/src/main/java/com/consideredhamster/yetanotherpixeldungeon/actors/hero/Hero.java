@@ -907,9 +907,10 @@ public class Hero extends Char {
     }
 
     private boolean actPickUp( HeroAction.PickUp action ){
+
         int dst = action.dst;
-        if( pos == dst  || ( ( Dungeon.level.map[ dst ] == Terrain.PEDESTAL
-            || Level.solid[ dst ] ) && Level.adjacent( pos, dst ) ) ){
+
+        if( pos == dst || Level.adjacent( pos, dst ) && ( Level.solid[ dst ] || Level.avoid[ dst ] ) ){
 
             Heap heap = Dungeon.level.heaps.get( dst );
 
@@ -1570,26 +1571,30 @@ public class Hero extends Char {
                 curAction = new HeroAction.Attack( ch );
             }
 
+        } else if( Level.fieldOfView[ cell ] && ( heap = Dungeon.level.heaps.get( cell ) ) != null ) {
+
+            if( heap.type != Type.HEAP && heap.type != Type.FOR_SALE ) {
+
+                curAction = new HeroAction.OpenChest( cell );
+
+            } else if( cell == pos || visibleEnemies.size() == 0 || Level.solid[ cell ] || Level.avoid[ cell ] ) {
+
+                if( heap.type == Type.FOR_SALE && heap.size() == 1 && heap.peek().price() > 0 ) {
+                    curAction = new HeroAction.Buy( cell );
+                } else {
+                    curAction = new HeroAction.PickUp( cell );
+                }
+
+            } else {
+
+                curAction = new HeroAction.Move( cell );
+                lastAction = null;
+
+            }
+
         } else if( Dungeon.level.map[ cell ] == Terrain.ALCHEMY && cell != pos ){
 
             curAction = new HeroAction.Cook( cell );
-
-        } else if( Level.fieldOfView[ cell ] && ( heap = Dungeon.level.heaps.get( cell ) ) != null &&
-            (visibleEnemies.size() == 0 || cell == pos || (heap.type != Type.HEAP && heap.type != Type.FOR_SALE ) )
-        ) {
-
-            switch( heap.type ){
-                case HEAP:
-                    curAction = new HeroAction.PickUp( cell );
-                    break;
-                case FOR_SALE:
-                    curAction = heap.size() == 1 && heap.peek().price() > 0 ?
-                            new HeroAction.Buy( cell ) :
-                            new HeroAction.PickUp( cell );
-                    break;
-                default:
-                    curAction = new HeroAction.OpenChest( cell );
-            }
 
         } else if( Dungeon.level.map[ cell ] == Terrain.LOCKED_DOOR || Dungeon.level.map[ cell ] == Terrain.LOCKED_EXIT ){
 
