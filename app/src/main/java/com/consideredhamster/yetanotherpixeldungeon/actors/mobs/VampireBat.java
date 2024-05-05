@@ -51,6 +51,8 @@ public class VampireBat extends MobEvasive {
          */
 
         name = "vampire bat";
+        info = "Flying, Fast movement, Life drain";
+
         spriteClass = BatSprite.class;
 
         flying = true;

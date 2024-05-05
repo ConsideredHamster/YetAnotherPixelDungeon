@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import com.consideredhamster.yetanotherpixeldungeon.Difficulties;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Banished;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Blinded;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Disrupted;
@@ -89,7 +90,8 @@ public abstract class Char extends Actor {
 	public CharSprite sprite;
 	
 	public String name = "mob";
-	
+	public String info = "nothing";
+
 	public int HT;
 	public int HP;
 	
@@ -108,6 +110,7 @@ public abstract class Char extends Actor {
 	protected boolean act() {
 
 		Dungeon.level.updateFieldOfView( this );
+        Buff.detach( this, Guard.class);
 
         moving = false;
 
@@ -206,16 +209,6 @@ public abstract class Char extends Actor {
 
             if( guarded != null ) guarded.reset( enemy.blocksRanged() );
 
-//            Shocked buff1 = buff( Shocked.class );
-//
-//            if( buff1 != null )
-//                buff1.discharge();
-//
-//            Shocked buff2 = enemy.buff( Shocked.class );
-//
-//            if( buff2 != null )
-//                buff2.discharge();
-
             if (enemy == Dungeon.hero) {
 
                 if (damageRoll >= enemy.HP) {
@@ -229,6 +222,7 @@ public abstract class Char extends Actor {
             if (visibleFight) {
                 Sample.INSTANCE.play( Assets.SND_HIT, 1, 1, Random.Float( 0.8f, 1.25f ) );
                 enemy.sprite.bloodBurstA(sprite.center(), damageRoll );
+                Invisibility.dispel( enemy );
             }
 
             return true;
@@ -247,7 +241,7 @@ public abstract class Char extends Actor {
         if( defender.buff( Guard.class ) != null )
             return true;
 
-        if( defender.isExposedTo(attacker) )
+        if( defender.isExposedTo( attacker ) )
             return true;
 
 //        if( defender.isCharmedBy(attacker) )
@@ -311,8 +305,6 @@ public abstract class Char extends Actor {
     public static boolean guard( int damage, int guard ) {
         return damage < Random.Int( guard * 3 + 1 );
     }
-
-
 
     public void missed() {
 
@@ -477,12 +469,6 @@ public abstract class Char extends Actor {
         return false;
     }
 
-    public boolean isHeavy() {
-        return STR() > Dungeon.hero.STR();
-    }
-
-
-
 	public void heal( int value ) {
 
         if (HP <= 0 || value <= 0) {
@@ -600,7 +586,7 @@ public abstract class Char extends Actor {
         Actor.freeCell( pos );
     }
 
-    public void die( Object src) {
+    public void die( Object src ) {
 
         die(src, null);
 
@@ -622,19 +608,6 @@ public abstract class Char extends Actor {
 	public boolean isAlive() {
 		return HP > 0;
 	}
-
-    public boolean isDamagedOverTime() {
-        for (Buff b : buffs) {
-            if (b instanceof Burning
-                || b instanceof Poisoned
-                || b instanceof Corrosion
-                || b instanceof Crippled
-            ) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 	@Override
 	public void spend( float time ) {
@@ -734,6 +707,13 @@ public abstract class Char extends Actor {
         }
         return false;
     }
+
+    public boolean canSeeTarget( Char ch ) {
+
+//        return Dungeon.visible[ch.pos];
+        return Level.fieldOfView[ch.pos];
+
+    }
 	
 	public boolean add( Buff buff ) {
 
@@ -775,7 +755,14 @@ public abstract class Char extends Actor {
 		
 		if (Level.adjacent( step, pos ) && Random.Int( 2 ) == 0 && ( ( buff( Vertigo.class ) != null ) ) ) {
 
-			step = pos + Level.NEIGHBOURS8[Random.Int( 8 )];
+			int changed = pos + Level.NEIGHBOURS8[Random.Int( 8 )];
+
+            if( step != changed ) {
+                step = changed;
+                if( this == Dungeon.hero ) {
+                    Dungeon.hero.interrupt();
+                }
+            }
 
 			if ( Level.solid[step] || Actor.findChar( step ) != null ) {
 				return;
@@ -794,7 +781,7 @@ public abstract class Char extends Actor {
 		}
 		
 		if (this != Dungeon.hero) {
-			sprite.visible = Dungeon.visible[pos];
+			sprite.visible = Dungeon.hero.canSeeTarget( this );
 		}
 
         Dungeon.level.press(pos, this);

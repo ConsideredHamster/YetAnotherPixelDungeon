@@ -53,10 +53,12 @@ public class GiantSpider extends MobHealthy {
          */
 
 		name = "giant spider";
+		info = "Poison bite, Spiderwebs";
+
 		spriteClass = SpiderSprite.class;
 		
 		loot = new MeatRaw();
-		lootChance = 0.3f;
+		lootChance = 0.150f;
 		
 		FLEEING = new Fleeing();
 

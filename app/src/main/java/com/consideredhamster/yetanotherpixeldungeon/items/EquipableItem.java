@@ -150,18 +150,6 @@ public abstract class EquipableItem extends Item {
         super.onThrow( cell );
 	}
 
-//    @Override
-//    protected void onThrow( int cell ) {
-//
-//        if (isEquipped( curUser )) {
-//            if (quantity == 1 && !this.doUnequip( curUser, false, false )) {
-//                return;
-//            }
-//        }
-//
-//        super.onThrow(cell);
-//    }
-
     protected static boolean detectCursed( Item item, Hero hero ) {
 
         float chance = 0.2f;
@@ -205,9 +193,9 @@ public abstract class EquipableItem extends Item {
 		return 1.0f / speedFactor( hero );
 	}
 
-    public boolean disarmable() {
-        return bonus >= 0;
-    }
+//    public boolean disarmable() {
+//        return bonus >= 0;
+//    }
 	
 	public abstract boolean doEquip( Hero hero );
 

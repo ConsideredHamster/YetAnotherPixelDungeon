@@ -126,6 +126,11 @@ public abstract class Armour extends EquipableItem {
         return glyph != null;
     }
 
+    @Override
+    public boolean isMagical() {
+        return bonus !=0 || glyph != null;
+    }
+
     public int dr( int bonus ) {
         return 0;
     }

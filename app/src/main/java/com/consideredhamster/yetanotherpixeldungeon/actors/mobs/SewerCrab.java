@@ -48,10 +48,12 @@ public class SewerCrab extends MobHealthy {
          */
 
         name = "sewer crab";
+        info = "Fast movement";
+
         spriteClass = CrabSprite.class;
 		
 		loot = new MeatRaw();
-		lootChance = 0.25f;
+		lootChance = 0.125f;
 
         resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
         resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
@@ -76,20 +78,7 @@ public class SewerCrab extends MobHealthy {
 //			"They are extremely fast and their thick exoskeleton can withstand " +
 //			"heavy blows.";
 
-        return "These huge crabs are at the top of the food chain in the sewers. "
-
-                + ( Dungeon.hero.heroClass == HeroClass.WARRIOR ?
-                "Despite the thickness of their carapaces, they can move very fast if they want to." : "" )
-
-                + ( Dungeon.hero.heroClass == HeroClass.SCHOLAR ?
-                "Old stories hypothetize that they may form entire colonies under a city if not taken care of." : "" )
-
-                + ( Dungeon.hero.heroClass == HeroClass.BRIGAND ?
-                "Better be careful around them if you don't want to keep all of your limbs in place." : "" )
-
-                + ( Dungeon.hero.heroClass == HeroClass.ACOLYTE ?
-                "Their claws can punch through metal armor. Their carapaces appear to be impenetrable. And their beady eyestalks see you as their next prey." : "" )
-
-                ;
+        return "These huge crabs are at the top of the food chain in the sewers. Despite the " +
+                "thickness of their carapaces, they can move very fast if they want to.";
 	}
 }

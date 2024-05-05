@@ -20,8 +20,23 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
+import com.consideredhamster.yetanotherpixeldungeon.items.weapons.throwing.Harpoons;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
+import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Chains;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.BlackguardSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MissileSprite;
+import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.Callback;
+import com.watabou.utils.Random;
 
 public class Blackguard extends MobHealthy {
 
@@ -44,13 +59,14 @@ public class Blackguard extends MobHealthy {
          */
 
         name = "blackguard";
+        info = "Magical, Harpoon throwing";
         spriteClass = BlackguardSprite.class;
 
         resistances.put( Element.Flame.class, Element.Resist.PARTIAL );
-        resistances.put( Element.Acid.class, Element.Resist.PARTIAL );
+//        resistances.put( Element.Acid.class, Element.Resist.PARTIAL );
         resistances.put( Element.Frost.class, Element.Resist.PARTIAL );
 
-        resistances.put( Element.Energy.class, Element.Resist.PARTIAL );
+//        resistances.put( Element.Energy.class, Element.Resist.PARTIAL );
         resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
 
         resistances.put( Element.Body.class, Element.Resist.IMMUNE );
@@ -65,11 +81,74 @@ public class Blackguard extends MobHealthy {
     public boolean isMagical() {
         return true;
     }
+	@Override
+	protected boolean canAttack( Char enemy ) {
+		return super.canAttack( enemy ) || Level.distance(pos, enemy.pos) <= 2
+				&& Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos
+				&& Element.Resist.getResistance( enemy, Element.KNOCKBACK ) < Element.Resist.IMMUNE
+				;
+	}
+	
+	@Override
+	protected void onRangedAttack( int cell ) {
+		((MissileSprite)sprite.parent.recycle( MissileSprite.class )).
+				reset(pos, cell, new Harpoons(), new Callback() {
+					@Override
+					public void call() {
+						onCastComplete();
+					}
+				});
+		
+		sprite.parent.add( new Chains( pos, cell, false ) );
+		
+		super.onRangedAttack( cell );
+	}
+	
+	@Override
+	public boolean cast( final Char enemy ) {
+
+		sprite.parent.add( new Chains( pos, enemy.pos, true ) );
+		
+		if ( hit( this, enemy, true, false ) ) {
+			
+			int distance = 1;
+			
+			distance = Element.Resist.modifyValue( distance, enemy, Element.KNOCKBACK );
+			
+			if( distance > 0 ) {
+				
+				final int newPos = Ballistica.trace[ Math.max( 1, Ballistica.distance - distance ) ];
+				
+				Pushing.move( enemy, newPos, new Callback() {
+					@Override
+					public void call() {
+						Actor.moveToCell( enemy, newPos );
+						Dungeon.level.press( newPos, enemy );
+					}
+				} );
+				
+				spend( -1 / attackSpeed() );
+			}
+			
+			if ( Dungeon.visible[ enemy.pos ] ) {
+				Sample.INSTANCE.play( Assets.SND_HIT, 1, 1, Random.Float( 0.8f, 1.25f ) );
+			}
+			
+		} else {
+			
+			enemy.missed();
+			
+		}
+		
+		return true;
+	}
 
 	@Override
 	public String description() {
 		return
-			"This metallic juggernaut once was a hero like you. Now, his tormented soul is bound within these halls forever.";
+			"These demonic juggernauts are a pure embodiment of unrelenting rage. Their skin harder " +
+			"than any armor, they instead bind their bodies with heavy chains, which can also be " +
+			"used to pull their victims closer before pounding them to death with their bare fists.";
 	}
 
 }

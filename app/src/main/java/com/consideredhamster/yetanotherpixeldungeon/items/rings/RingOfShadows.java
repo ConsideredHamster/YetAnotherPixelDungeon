@@ -51,16 +51,19 @@ public class RingOfShadows extends Ring {
             "whose job revolves around espionage or assassinations."
         );
 
-        desc.append( "\n\n" );
+        if( !dud ) {
 
-        desc.append( super.desc() );
+            desc.append("\n\n");
 
-        desc.append( " " );
+            desc.append(super.desc());
 
-        desc.append(
-            "Wearing this ring will increase your _stealth by " + mainEffect + "%_ and increasing " +
-            "_sneak attack damage by " + sideEffect + "%_."
-        );
+            desc.append(" ");
+
+            desc.append(
+                    "Wearing this ring will increase your _stealth by " + mainEffect + "%_ and increasing " +
+                            "_sneak attack damage by " + sideEffect + "%_."
+            );
+        }
 
         return desc.toString();
 	}

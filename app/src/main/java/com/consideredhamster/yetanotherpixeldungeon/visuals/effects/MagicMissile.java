@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.visuals.effects;
 
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.AcidParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ElmoParticle;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.particles.Emitter;
@@ -121,6 +122,13 @@ public class MagicMissile extends Emitter {
 		missile.reset( from, to, callback );
 		missile.size( 9 );
 		missile.pour( AcidParticle.FACTORY, 0.01f );
+	}
+	
+	public static void hellfire( Group group, int from, int to, Callback callback ) {
+		MagicMissile missile = ((MagicMissile)group.recycle( MagicMissile.class ));
+		missile.reset( from, to, callback );
+		missile.size( 5 );
+		missile.pour( ElmoParticle.FACTORY, 0.01f );
 	}
 	
 	public static void foliage( Group group, int from, int to, Callback callback ) {

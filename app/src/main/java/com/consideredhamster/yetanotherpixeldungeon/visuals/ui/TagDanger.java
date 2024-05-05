@@ -105,7 +105,7 @@ public class TagDanger extends Tag {
 	public void update() {
 		
 		if (Dungeon.hero.isAlive()) {
-			int v =  Dungeon.hero.visibleEnemies();
+			int v = Dungeon.hero.visibleEnemies().size();
 			if (v != lastNumber) {
 				lastNumber = v;
 				if (visible = lastNumber > 0) {

@@ -535,16 +535,16 @@ public class Hero extends Char {
         }
 
         if( buff( Poisoned.class ) != null )
-            dmg /= 2;
+            dmg = dmg * 3 / 4;
 
         if( buff( Withered.class ) != null )
-            dmg /= 2;
+            dmg = dmg * 3 / 4;
 
         if( buff( Charmed.class ) != null )
-            dmg /= 2;
+            dmg = dmg * 3 / 4;
 
         if( buff( Controlled.class ) != null )
-            dmg /= 2;
+            dmg = dmg * 3 / 4;
 
         return dmg;
     }
@@ -1315,13 +1315,16 @@ public class Hero extends Char {
                 Buff.affect( this, Focus.class ).reset( 1 );
             }
 
+//            InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
+//            Game.switchScene( InterlevelScene.class );
+
         } else {
 
             if( !isStarving() ){
                 Buff.detach( this, Light.class );
                 restoreHealth = true;
             } else {
-                GLog.n( "You are too hungry too sleep right now." );
+                GLog.n( "You are too hungry to sleep right now." );
             }
         }
 
@@ -1391,13 +1394,24 @@ public class Hero extends Char {
 
     }
 
-    private void checkVisibleMobs(){
+    @Override
+    public boolean canSeeTarget( Char ch ) {
+        return Dungeon.visible[ ch.pos ] && ( ch.invisible == 0 || buff( MindVision.class ) != null );
+    }
+
+    public void checkVisibleMobs(){
         ArrayList<Mob> visible = new ArrayList<>();
 
         boolean newMob = false;
 
         for( Mob m : Dungeon.level.mobs ){
-            if( Level.fieldOfView[ m.pos ] && m.hostile ){
+//            if( Level.fieldOfView[ m.pos ] && m.hostile && m.invisible == 0 ){
+            if( m.hostile && canSeeTarget( m ) ) {
+
+                if (m.sprite != null) {
+                    m.sprite.visible = true;
+                }
+
                 visible.add( m );
                 if( !visibleEnemies.contains( m ) ){
                     newMob = true;
@@ -1423,8 +1437,8 @@ public class Hero extends Char {
         visibleEnemies = visible;
     }
 
-    public int visibleEnemies(){
-        return visibleEnemies.size();
+    public ArrayList<Mob> visibleEnemies(){
+        return visibleEnemies;
     }
 
     public Mob visibleEnemy( int index ){
@@ -1458,7 +1472,9 @@ public class Hero extends Char {
 
         if( Level.adjacent( pos, target ) ){
 
-            if( Actor.findChar( target ) == null ){
+            Char ch = Actor.findChar( target );
+
+            if( ch == null ){
 
                 if( Level.chasm[ target ] && !flying && !Chasm.jumpConfirmed ){
 
@@ -1485,6 +1501,15 @@ public class Hero extends Char {
 
                     }
                 }
+            } else if( !canSeeTarget( ch ) ) {
+
+                interrupt();
+                Invisibility.dispel( ch );
+
+                ch.sprite.showStatus( CharSprite.WARNING, "!" );
+                GLog.i( "You stumble into hidden " + ch.name + "!" );
+                Camera.main.shake( 1, 0.15f );
+
             }
 
         } else {
@@ -1568,7 +1593,13 @@ public class Hero extends Char {
             if( ch instanceof NPC ){
                 curAction = new HeroAction.Talk( (NPC) ch );
             } else {
-                curAction = new HeroAction.Attack( ch );
+
+                if ( canSeeTarget( ch ) ) {
+                    curAction = new HeroAction.Attack(ch);
+                } else {
+                    curAction = new HeroAction.Move( cell );
+                    lastAction = null;
+                }
             }
 
         } else if( Level.fieldOfView[ cell ] && ( heap = Dungeon.level.heaps.get( cell ) ) != null ) {

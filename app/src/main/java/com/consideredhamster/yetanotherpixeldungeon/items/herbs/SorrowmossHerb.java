@@ -71,7 +71,7 @@ public class SorrowmossHerb extends Herb {
         return "It is said that Sorrowmoss usually grows in places where a great tragedy took " +
                 "place. Despite its reputation and applications, it is actually completely safe to eat." +
                 "\n\n" +
-                "These herbs are used to brew potions of _Toxic Gas_, _Caustic Ooze_ and _Confusion Gas_. " +
+                "These herbs are used to brew potions of _Toxic Gas_, _Caustic Ooze_ and _Webbing_. " +
                 "Consuming them will remove _corrosion_ and grant a short buff to your _acid_ resistance.";
     }
 

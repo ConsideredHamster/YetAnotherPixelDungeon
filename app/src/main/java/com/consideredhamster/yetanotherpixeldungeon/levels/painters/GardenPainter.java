@@ -49,50 +49,36 @@ public class GardenPainter extends Painter {
             }
         }
 
-        int chance = 9 - Dungeon.chapter();
+        if( Dungeon.level.feeling != Level.Feeling.ASHES ){
 
-        for (int i=room.left + 1; i < room.right; i++) {
-            if( Random.Int( chance ) == 0 ) {
-                level.drop(Generator.random(Generator.Category.HERB), (room.top + 1) * Level.WIDTH + i, true).type = Heap.Type.HEAP;
+            int chance = 9 - Dungeon.chapter();
+
+            for( int i = room.left + 1 ; i < room.right ; i++ ){
+                if( Random.Int( chance ) == 0 ){
+                    level.drop( Generator.random( Generator.Category.HERB ), ( room.top + 1 ) * Level.WIDTH + i, true ).type = Heap.Type.HEAP;
+                }
+
+                if( Random.Int( chance ) == 0 ){
+                    level.drop( Generator.random( Generator.Category.HERB ), ( room.bottom - 1 ) * Level.WIDTH + i, true ).type = Heap.Type.HEAP;
+                }
             }
 
-            if( Random.Int( chance ) == 0 ) {
-                level.drop(Generator.random(Generator.Category.HERB), (room.bottom - 1) * Level.WIDTH + i, true).type = Heap.Type.HEAP;
+            for( int i = room.top + 2 ; i < room.bottom - 1 ; i++ ){
+                if( Random.Int( chance ) == 0 ){
+                    level.drop( Generator.random( Generator.Category.HERB ), i * Level.WIDTH + room.left + 1, true ).type = Heap.Type.HEAP;
+                }
+
+                if( Random.Int( chance ) == 0 ){
+                    level.drop( Generator.random( Generator.Category.HERB ), i * Level.WIDTH + room.right - 1, true ).type = Heap.Type.HEAP;
+                }
             }
+
+            room.entrance().set( Dungeon.depth > 1 ? Room.Door.Type.HIDDEN : Room.Door.Type.REGULAR );
+
+        } else {
+
+            room.entrance().set( Room.Door.Type.EMPTY );
+
         }
-
-        for (int i=room.top + 2; i < room.bottom - 1; i++) {
-            if( Random.Int( chance ) == 0 ) {
-                level.drop(Generator.random(Generator.Category.HERB), i * Level.WIDTH + room.left + 1, true).type = Heap.Type.HEAP;
-            }
-
-            if( Random.Int( chance ) == 0 ) {
-                level.drop(Generator.random(Generator.Category.HERB), i * Level.WIDTH + room.right - 1, true).type = Heap.Type.HEAP;
-            }
-        }
-		
-//		if (Random.Int( 2 ) == 0) {
-//			bonus.drop( new Honeypot(), room.random() );
-//		} else {
-//			int bushes = (Random.Int( 5 ) == 0 ? 2 : 1);
-//			for (int i=0; i < bushes; i++) {
-//				int pos = room.random();
-//				set( bonus, pos, Terrain.GRASS );
-//				bonus.plant( new Sungrass.Seed(), pos );
-//			}
-//		}
-		
-//		Foliage light = (Foliage)bonus.blobs.get( Foliage.class );
-//		if (light == null) {
-//			light = new Foliage();
-//		}
-//		for (int i=room.top + 1; i < room.bottom; i++) {
-//			for (int j=room.left + 1; j < room.right; j++) {
-//				light.seed( j + Level.WIDTH * i, 1 );
-//			}
-//		}
-//		bonus.blobs.put( Foliage.class, light );
-
-        room.entrance().set( Dungeon.depth > 1 ? Room.Door.Type.HIDDEN : Room.Door.Type.REGULAR );
-	}
+    }
 }

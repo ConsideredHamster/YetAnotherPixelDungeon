@@ -284,7 +284,7 @@ public abstract class Shield extends Armour {
 
             info.append( "You hold the " + name + " at the ready." );
 
-        } else if( Dungeon.hero.belongings.backpack.items.contains(this) ) {
+        } else if( Dungeon.hero.belongings.backpack.contains(this) ) {
 
             info.append( "The " + name + " is in your backpack." );
 

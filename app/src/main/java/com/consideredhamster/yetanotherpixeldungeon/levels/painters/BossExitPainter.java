@@ -35,6 +35,7 @@ public class BossExitPainter extends Painter {
 
 		fill( level, room, Terrain.WALL );
 		fill( level, room, 1, Terrain.EMPTY );
+        fill( level, room.left, room.top - 1, room.width(), 1, Terrain.WALL );
 		
 		for (Room.Door door : room.connected.values()) {
 			door.set( Room.Door.Type.REGULAR );

@@ -52,6 +52,8 @@ public abstract class Potion extends Item {
 		"Are you sure you want to drink it? In most cases you should throw such potions at your enemies.";
 	private static final String TXT_R_U_SURE_THROW = 
 		"Are you sure you want to throw it? In most cases it makes sense to drink it.";
+
+    private static final String TXT_IDENTIFIED	= "You now know that %s color signifies a %s!";
 	
 	private static final float TIME_TO_DRINK = 1f;
 	
@@ -265,8 +267,12 @@ public abstract class Potion extends Item {
 	public void setKnown() {
 		if ( !isTypeKnown() && !dud ) {
 			handler.know( this );
+
+			if( Dungeon.hero.isAlive() ){
+                GLog.i( TXT_IDENTIFIED, color, name() );
+            }
 		}
-		
+
 		Badges.validateAllPotionsIdentified();
 	}
 	

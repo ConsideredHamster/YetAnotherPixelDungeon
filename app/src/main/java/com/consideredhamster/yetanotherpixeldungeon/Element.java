@@ -23,16 +23,12 @@ package com.consideredhamster.yetanotherpixeldungeon;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Crippled;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Shocked;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SparkParticle;
 import com.watabou.utils.Random;
 
 import java.util.Map;
@@ -44,6 +40,7 @@ public abstract class Element {
     public static final Physical PHYSICAL = new Physical();
     public static final Physical.Falling FALLING = new Physical.Falling();
 
+    public static final Explosion EXPLOSION = new Explosion();
     public static final Knockback KNOCKBACK = new Knockback();
     public static final Ensnaring ENSNARING = new Ensnaring();
 
@@ -101,24 +98,6 @@ public abstract class Element {
             if( !target.flying && Level.water[ target.pos ] ){
                 damage += ( damage / 2 + Random.Int( damage % 2 + 1 ) );
             }
-
-//            Shocked buff = target.buff( Shocked.class );
-//
-//            if( buff != null ){
-//
-//                buff.discharge();
-//
-//            } else {
-//
-//                if( Random.Float() < 0.25f ){
-//                    BuffActive.addFromDamage( target, Shocked.class, damage * 2 );
-//                }
-//
-////                if (target.sprite.visible) {
-////                    target.sprite.centerEmitter().burst( SparkParticle.FACTORY, (int)Math.sqrt( damage ) + 1 );
-////                }
-//
-//            }
 
             return damage;
         }
@@ -258,7 +237,17 @@ public abstract class Element {
         }
     }
 
+
+    public static class Explosion extends Element {
+
+        @Override
+        public int proc( Char target, int damage ){
+            return damage;
+        }
+    }
+
     public static class Knockback extends Element {
+
         @Override
         public int proc( Char target, int damage ){
             // not actually needed, because knockback deals physical damage
@@ -268,6 +257,7 @@ public abstract class Element {
     }
 
     public static class Ensnaring extends Element {
+
         @Override
         public int proc( Char target, int damage ){
             // yeah, I guess I really should add a separate class for cases like these

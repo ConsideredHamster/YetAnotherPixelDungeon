@@ -574,6 +574,10 @@ public class Item implements Bundlable {
     public void activate( Char ch ) {
     }
 
+    public boolean isMagical() {
+	    return false;
+    }
+
 	public static void evoke( Hero hero ) {
 		hero.sprite.emitter().burst( Speck.factory( Speck.EVOKE ), 5 );
 	}
@@ -608,9 +612,9 @@ public class Item implements Bundlable {
 		return name;
 	}
 
-	public int image() {
-		return image;
-	}
+    public int image() {
+        return image;
+    }
 
     public int imageAlt() {
         return image;

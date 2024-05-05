@@ -42,7 +42,7 @@ public class PotionOfLiquidFlame extends Potion {
 	@Override
 	public void shatter( int cell ) {
 
-		GameScene.add( Blob.seed( cell, 2, Fire.class ) );
+		GameScene.add( Blob.seed( cell, 3, Fire.class ) );
 
         for (int n : Level.NEIGHBOURS8) {
             if( Level.flammable[ cell + n ] || !Level.water[ cell + n ] &&

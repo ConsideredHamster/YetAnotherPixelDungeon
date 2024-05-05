@@ -59,16 +59,19 @@ public class RingOfWillpower extends Ring {
             "shrug off all kinds of mental debuffs."
         );
 
-        desc.append( "\n\n" );
+        if( !dud ) {
 
-        desc.append( super.desc() );
+            desc.append("\n\n");
 
-        desc.append( " " );
+            desc.append(super.desc());
 
-        desc.append(
-            "Wearing this ring will increase your _magic power by " + mainEffect + "%_ and " +
-            "increase your _resistance to mind effects by " + sideEffect + "%_."
-        );
+            desc.append(" ");
+
+            desc.append(
+                    "Wearing this ring will increase your _magic power by " + mainEffect + "%_ and " +
+                            "increase your _resistance to mind effects by " + sideEffect + "%_."
+            );
+        }
 
         return desc.toString();
     }

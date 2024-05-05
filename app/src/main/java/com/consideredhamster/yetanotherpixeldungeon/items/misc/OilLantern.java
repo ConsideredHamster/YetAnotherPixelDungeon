@@ -248,6 +248,7 @@ public class OilLantern extends Item {
         Sample.INSTANCE.play( Assets.SND_CLICK );
         updateQuickslot();
 
+        Invisibility.dispel();
         Dungeon.observe();
 
     }

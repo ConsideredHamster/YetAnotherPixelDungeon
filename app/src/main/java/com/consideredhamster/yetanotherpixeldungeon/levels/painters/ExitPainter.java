@@ -21,6 +21,8 @@
 package com.consideredhamster.yetanotherpixeldungeon.levels.painters;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.items.keys.IronKey;
+import com.consideredhamster.yetanotherpixeldungeon.items.keys.SkeletonKey;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
@@ -35,9 +37,29 @@ public class ExitPainter extends Painter {
         for (Room.Door door : room.connected.values()) {
             door.set( Room.Door.Type.REGULAR );
         }
-		
-		level.exit = room.random( 1 );
-		set( level, level.exit, Terrain.EXIT );
+
+        if( Dungeon.chapter() < 5 ){
+
+            level.exit = room.random( 1 );
+            set( level, level.exit, Terrain.EXIT );
+
+        } else {
+
+            level.exit = room.random( 2 );
+
+            fill( level, level.exit % Level.WIDTH - 1, level.exit / Level.WIDTH - 1, 3, 1, Terrain.WALL );
+
+            set( level, level.exit - 1, Terrain.WALL_DECO );
+            set( level, level.exit + 1, Terrain.WALL_DECO );
+
+            if( Dungeon.depth > 25 ){
+                set( level, level.exit, Terrain.LOCKED_EXIT );
+                level.addItemToSpawn( new SkeletonKey() );
+            } else {
+                set( level, level.exit, Terrain.UNLOCKED_EXIT );
+            }
+
+        }
 	}
 	
 }

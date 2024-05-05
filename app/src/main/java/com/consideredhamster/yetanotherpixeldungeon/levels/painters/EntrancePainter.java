@@ -25,13 +25,43 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
+import com.watabou.utils.Random;
+
+import java.util.ArrayList;
 
 public class EntrancePainter extends Painter {
 
 	public static void paint( Level level, Room room ) {
 		
 		fill( level, room, Terrain.WALL );
-		fill( level, room, 1, Terrain.EMPTY );
+        fill( level, room, 1, Terrain.EMPTY );
+
+        if( level.feeling == Level.Feeling.WATER ) {
+
+            fill( level, room, 1, Terrain.WATER );
+
+        } else if( level.feeling == Level.Feeling.GRASS ) {
+
+            fill( level, room, 1, Terrain.GRASS );
+
+        } else if( level.feeling == Level.Feeling.BOOKS ){
+
+            fill( level, room, 1, Terrain.EMPTY_SP );
+            fill( level, room, 2, Terrain.EMPTY );
+
+        } else if( level.feeling == Level.Feeling.TRAPS ) {
+
+            for( int i = 0 ; i < 3 ; i++ ){
+                set( level, room.random( 0 ), Terrain.INACTIVE_TRAP );
+            }
+
+        } else if( level.feeling == Level.Feeling.ASHES ) {
+
+            for( int i = 0 ; i < 5 ; i++ ){
+                set( level, room.random( 0 ), Terrain.EMBERS );
+            }
+
+        }
 
         Room.Door.Type type = Room.Door.Type.REGULAR;
 
@@ -49,6 +79,8 @@ public class EntrancePainter extends Painter {
 
 		level.entrance = room.random( 1 );
 		set( level, level.entrance, Terrain.ENTRANCE );
+
+
+
 	}
-	
 }

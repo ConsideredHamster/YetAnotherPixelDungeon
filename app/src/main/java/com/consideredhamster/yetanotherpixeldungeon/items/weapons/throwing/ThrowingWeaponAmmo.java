@@ -59,12 +59,6 @@ public abstract class ThrowingWeaponAmmo extends ThrowingWeapon {
         return 25 - tier * 5 ;
     }
 
-//    @Override
-//    public Item random() {
-//        quantity = Random.Int(baseAmount(), baseAmount() * 2) * ( 5 + Dungeon.chapter() ) / 10;
-//        return this;
-//    }
-
     @Override
     public int price() {
 
@@ -85,7 +79,7 @@ public abstract class ThrowingWeaponAmmo extends ThrowingWeapon {
 
             info.append("You hold these " + name + " at the ready.");
 
-        } else if( Dungeon.hero.belongings.backpack.items.contains(this) ) {
+        } else if( Dungeon.hero.belongings.backpack.contains(this) ) {
 
             info.append( "These " + name + " are in your backpack. " );
 

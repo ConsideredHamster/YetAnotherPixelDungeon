@@ -44,6 +44,8 @@ public abstract class Ring extends EquipableItem {
 	private static final int TICKS_TO_KNOW	= 100;
 	
 	private static final float TIME_TO_EQUIP = 1f;
+
+    private static final String TXT_IDENTIFIED	= "You now know that %s gem signifies a %s!";
 	
 	private static final String TXT_IDENTIFY_NORMAL = "you are now familiar enough with your %s to identify it. It is %s +%d.";
 	private static final String TXT_IDENTIFY_CURSED = "you are now familiar enough with your %s to identify it. It is %s -%d.";
@@ -54,6 +56,8 @@ public abstract class Ring extends EquipableItem {
 		"Unequip one of your equipped rings.";
 	
 	protected Buff buff;
+
+	public boolean dud = false;
 	
 	private static final Class<?>[] rings = { 
 		RingOfVitality.class,
@@ -270,11 +274,20 @@ public abstract class Ring extends EquipableItem {
 	public boolean isTypeKnown() {
 		return handler.isKnown( this );
 	}
+
+    @Override
+    public boolean isMagical() {
+        return true;
+    }
 	
 	protected void setKnown() {
 		if (!isTypeKnown()) {
 			handler.know( this );
-		}
+
+            if( Dungeon.hero.isAlive() ){
+                GLog.i( TXT_IDENTIFIED, gem, name() );
+            }
+        }
 		
 		Badges.validateAllRingsIdentified();
 	}
@@ -305,25 +318,28 @@ public abstract class Ring extends EquipableItem {
             "that glitters in the darkness. Who knows what effect it has when worn?"
         );
 
-        info.append( p );
+        if( !dud ) {
 
-        if ( isEquipped( Dungeon.hero ) ) {
-            info.append( "You wear this ring on your finger." );
-        } else if( Dungeon.hero.belongings.backpack.items.contains(this) ) {
-            info.append( "This ring is in your backpack." );
-        } else {
-            info.append( "This ring lies on the dungeon's floor." );
-        }
+			info.append( p );
 
-        if( bonus < 0 && isCursedKnown() ) {
+			if ( isEquipped( Dungeon.hero ) ) {
+				info.append( "You wear this ring on your finger." );
+			} else if( Dungeon.hero.belongings.backpack.contains(this) ) {
+				info.append( "This ring is in your backpack." );
+			} else {
+				info.append( "This ring lies on the dungeon's floor." );
+			}
 
-            info.append( " " );
+			if( bonus < 0 && isCursedKnown() ) {
 
-            if( isEquipped( Dungeon.hero ) ){
-                info.append( "Malevolent magic prevents you from removing it." );
-            } else {
-                info.append( "You can feel a malevolent magic lurking within it." );
-            }
+				info.append( " " );
+
+				if( isEquipped( Dungeon.hero ) ){
+					info.append( "Malevolent magic prevents you from removing it." );
+				} else {
+					info.append( "You can feel a malevolent magic lurking within it." );
+				}
+			}
         }
 
         return info.toString();

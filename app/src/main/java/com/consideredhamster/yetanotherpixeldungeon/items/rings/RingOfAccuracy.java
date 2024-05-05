@@ -51,16 +51,19 @@ public class RingOfAccuracy extends Ring {
             "melee and ranged weapons."
         );
 
-        desc.append( "\n\n" );
+        if( !dud ) {
 
-        desc.append( super.desc() );
+            desc.append("\n\n");
 
-        desc.append( " " );
+            desc.append(super.desc());
 
-        desc.append(
-            "Wearing this ring will increase your _accuracy by " + mainEffect + "%_ " +
-            "and _bonus damage from combo attacks by " + sideEffect + "%_."
-        );
+            desc.append(" ");
+
+            desc.append(
+                    "Wearing this ring will increase your _accuracy by " + mainEffect + "%_ " +
+                            "and _bonus damage from combo attacks by " + sideEffect + "%_."
+            );
+        }
 
         return desc.toString();
     }

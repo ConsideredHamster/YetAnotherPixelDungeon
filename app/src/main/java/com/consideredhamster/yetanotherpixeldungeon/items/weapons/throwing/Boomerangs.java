@@ -68,7 +68,7 @@ public class Boomerangs extends ThrowingWeaponSpecial {
 	@Override
 	public String desc() {
 		return 
-			"Thrown to the enemy these flat curved wooden missiles will return to the hands of its thrower when missed." +
+			"Thrown to the enemy these flat curved wooden missiles will return to the hands of its thrower when missed. " +
             "Their blunt edges do not deal significant damage, but precise throw of a boomerang can stun the target.";
 	}
 }

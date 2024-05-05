@@ -26,6 +26,7 @@ import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.DeathRay;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.PurpleParticle;
@@ -34,6 +35,7 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
@@ -75,7 +77,7 @@ public class WandOfDisintegration extends WandCombat {
                 terrainAffected = true;
 
                 if( Dungeon.visible[ c ] ){
-                    CellEmitter.center( c ).burst( PurpleParticle.BURST, 6 );
+                    CellEmitter.center( c ).burst( PurpleParticle.BURST, 16 );
                 }
 
             } else if ( Dungeon.level.map[c] == Terrain.HIGH_GRASS ) {
@@ -130,10 +132,12 @@ public class WandOfDisintegration extends WandCombat {
             }
         }
 
+        Sample.INSTANCE.play( Assets.SND_RAY );
+
 		callback.call();
 	}
 
-	private int getReflectTo( int sourcePos, int targetPos ) {
+    public static int getReflectTo( int sourcePos, int targetPos ) {
 
         int sourceX = sourcePos % Level.WIDTH;
         int sourceY = sourcePos / Level.WIDTH;
@@ -190,7 +194,7 @@ public class WandOfDisintegration extends WandCombat {
 
     }
 
-	private ArrayList<Integer> getCellsFromTrace( ArrayList<Integer> cells ){
+	public static ArrayList<Integer> getCellsFromTrace( ArrayList<Integer> cells ){
 
         if( Ballistica.distance > 0 ){
 
@@ -198,7 +202,11 @@ public class WandOfDisintegration extends WandCombat {
 
                 int cell = Ballistica.trace[ i ];
 
-                cells.add( cell );
+                if( !cells.contains( cell ) ) {
+
+                    cells.add(cell);
+
+                }
 
             }
         }
@@ -211,6 +219,6 @@ public class WandOfDisintegration extends WandCombat {
 	public String desc() {
 		return
 			"This wand emits a beam of destructive energy, which pierces all creatures in its way " +
-            "and bounce from solid obstacles, allowing its user to sohot them around the corners.";
+            "and bounce from solid obstacles, allowing its user to shoot them around the corners.";
 	}
 }

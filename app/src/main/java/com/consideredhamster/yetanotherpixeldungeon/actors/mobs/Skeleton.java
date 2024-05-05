@@ -54,6 +54,7 @@ public class Skeleton extends MobPrecise {
          */
 
         name = "skeleton";
+        info = "Magical, Weakening attack";
         spriteClass = SkeletonSprite.class;
 
         loot = Gold.class;

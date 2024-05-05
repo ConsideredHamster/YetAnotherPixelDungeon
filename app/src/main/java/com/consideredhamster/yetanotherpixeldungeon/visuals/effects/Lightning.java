@@ -38,7 +38,7 @@ import com.watabou.utils.Random;
 public class Lightning extends Group {
 
     // How long the effect lasts
-	private static final float DURATION = 0.4f;
+	private static final float DURATION = 0.5f;
 
     // How much segments will arc
 	private static final float BENDING = 1.0f;

@@ -20,34 +20,24 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Thunderstorm;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
-import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.PurpleParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
-import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Lightning;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SparkParticle;
-import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
-import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class WandOfLightning extends WandCombat {
+import java.util.ArrayList;
+import java.util.HashSet;
 
-    private final static int MAX_DISTANCE = 16;
+public class WandOfLightning extends WandCombat {
 
 	{
 		name = "Wand of Lightning";
@@ -56,7 +46,7 @@ public class WandOfLightning extends WandCombat {
         goThrough = false;
     }
 
-    private HashSet<Char> targets;
+    private static ArrayList<Char> affected = new ArrayList<Char>();
 
     @Override
     public float effectiveness( int bonus ) {
@@ -66,136 +56,69 @@ public class WandOfLightning extends WandCombat {
 	@Override
 	protected void onZap( int cell ) {
 
-        int size = targets.size();
+        affected.clear();
+        hit( cell, 2 );
 
-        if( !targets.isEmpty() ){
-            for( Char target : targets ) {
+        if (!affected.isEmpty()) {
 
-                // first target receivese full damage, everyone else receives partial damage
-                // total damage goes like 150% for 2 targets, 167% for 3 targets, 175% for 4 and etc.
-                target.damage(
-                    target.pos == cell ? damageRoll() :
-                    (int)Math.ceil( damageRoll() / size ),
-                    curUser, Element.SHOCK
-                );
+            int damage = damageRoll();
 
-//                if( cell != target.pos && target != curUser ){
-//                    curUser.sprite.parent.add( new Lightning( cell, target.pos ) );
-//                }
+            for (Char aff : affected) {
 
-                if( Dungeon.visible[ target.pos ] ){
-                    CellEmitter.center( target.pos ).burst( SparkParticle.FACTORY, Random.IntRange( 3, 5 ) );
-                }
+                int power = cell == aff.pos ? damage : damage / 2;
+                aff.damage(power, curUser, Element.SHOCK);
+
             }
         }
-
 	}
+
+	private void hit( int cell, int times ) {
+
+        Char ch = Char.findChar( cell );
+
+        if( ch != null && ( !Level.water[ cell ] || ch.flying ) ) {
+
+            if( times > 0 && !affected.contains( ch ) ) {
+
+                affected.add(ch);
+
+                for (Char mob : Dungeon.level.mobs) {
+                    if (!affected.contains(mob) && Level.distance(ch.pos, mob.pos) <= 2
+                            && Level.distance( curUser.pos, mob.pos) > Level.distance( curUser.pos, ch.pos )
+                            && Ballistica.cast(ch.pos, mob.pos, false, true) == mob.pos
+                    ) {
+
+                        CellEmitter.center(mob.pos).burst(SparkParticle.FACTORY, 3);
+                        curUser.sprite.parent.add(new Lightning(ch.pos, mob.pos));
+
+                        hit( mob.pos, times - 1 );
+                    }
+                }
+            }
+
+        } else {
+
+            affected.addAll( Thunderstorm.spreadFrom( cell ) );
+
+        }
+    }
 	
 	@Override
 	protected void fx( int cell, Callback callback ) {
 
-        targets = new HashSet<>();
-
-        Char ch = Actor.findChar( cell );
-
-        if( ch != null ){
-
-            //starting cell is always included
-            targets.add( ch );
-//            ch.damage( damageRoll(), curUser, Element.SHOCK );
-
-        }
-
-        if( Level.water[ cell ] && ( ch == null || !ch.flying ) ){
-
-            // check for other non-flying mobs in the same pool of water
-
-            PathFinder.buildDistanceMap( cell, Level.water, MAX_DISTANCE );
-
-            for( int c = 0 ; c < Level.LENGTH ; c++ ){
-
-                if( PathFinder.distance[ c ] < Integer.MAX_VALUE ){
-
-                    // highlight affected water tiles
-                    GameScene.electrify( c );
-
-                    if( Dungeon.visible[ c ] ){
-                        CellEmitter.get( c ).burst( SparkParticle.FACTORY, Random.IntRange( 2, 4 ) );
-                    }
-
-                    if( ( ch = Actor.findChar( c ) ) != null && !ch.flying && !targets.contains( ch ) ){
-                        targets.add( ch );
-                    }
-                }
-            }
-        }
+        // moved all of the logic to the Thunderstorm blob
 
         CellEmitter.center( cell ).burst( SparkParticle.FACTORY, Random.IntRange( 3, 5 ) );
         curUser.sprite.parent.add( new Lightning( curUser.pos, cell ) );
         callback.call();
 
 	}
-
-//  sadly, forking was a nifty mechanic, but ended up as either too OP or too unpredictable
-
-//    private static void fork( HashSet<Mob> targets, Char forkFrom, Integer damage ) {
-//
-//        // this wand inflicts more damage when target is in water
-//        forkFrom.damage(
-//            !forkFrom.flying && Level.water[ forkFrom.pos ] ?
-//            damage * 3 / 2 : damage, curUser, Element.SHOCK
-//        );
-//
-//        // we do not want our arcs dealing only 0 damage on forking
-//        if( damage > 1 ){
-//
-//            ArrayList<Char> nearby = new ArrayList<>();
-//
-//            for( Char forkTo : Dungeon.level.mobs ){
-//                if(
-//                    // checking valid targets
-//                    targets.contains( forkTo )
-//                    // forking distance is 2 tiles or less
-//                    && Level.distance( forkFrom.pos, forkTo.pos ) < 2
-//                    // we do not fork to targets which are closer to the source than the current target
-//                    && Level.distance( curUser.pos, forkFrom.pos ) <= Level.distance( curUser.pos, forkTo.pos )
-//                    // checking whether we can hit that target or not
-//                    && Ballistica.cast( forkFrom.pos, forkTo.pos, false, true ) == forkTo.pos
-//                ){
-//
-//                    // we are moving recursive part from here so our lightnings would fork more often
-//                    targets.remove( forkTo );
-//                    nearby.add( forkTo );
-//
-//                }
-//            }
-//
-//            int iteration = 0;
-//
-//            for( Char mob : nearby ){
-//
-//                // here we can control amount of targets the lightning can fork to
-//                if( iteration <= Random.Int( 3 ) ){
-//
-//                    iteration++;
-//
-//                    fork( targets, mob, damage * 100 / Random.IntRange( 100, 200 ) );
-//                    curUser.sprite.parent.add( new Lightning( forkFrom.pos, mob.pos, null ) );
-//                    mob.sprite.centerEmitter().burst( SparkParticle.FACTORY, Random.Int( 3, 5 ) );
-//
-//                } else {
-//                    break;
-//                }
-//            }
-//        }
-//
-//    }
 	
 	@Override
 	public String desc() {
 		return
 			"This wand conjures forth deadly arcs of electricity, roasting its target with a high " +
-            "voltage zap. Effects of this wand can be transmitted by water, so it should be used " +
-            "with a certain amount of care - mind to not stand in the same pool as your enemy!";
+            "voltage zap. Effects of this wand can chain to further targets or be transmitted by " +
+            "water, so it is better to not stand in the same pool as your target!";
 	}
 }

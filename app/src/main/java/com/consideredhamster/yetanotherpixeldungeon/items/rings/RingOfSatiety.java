@@ -51,16 +51,19 @@ public class RingOfSatiety extends Ring {
             "the times of hunger and helping to prolong times of excess."
         );
 
-        desc.append( "\n\n" );
+        if( !dud ) {
 
-        desc.append( super.desc() );
+            desc.append("\n\n");
 
-        desc.append( " " );
+            desc.append(super.desc());
 
-        desc.append(
-            "Wearing this ring will decrease the rate at which your _satiety drops by " + mainEffect +
-            "%_ and increasing _effectiveness of eating by " + sideEffect + "%_."
-        );
+            desc.append(" ");
+
+            desc.append(
+                    "Wearing this ring will decrease the rate at which your _satiety drops by " + mainEffect +
+                            "%_ and increasing _effectiveness of eating by " + sideEffect + "%_."
+            );
+        }
 
         return desc.toString();
 	}

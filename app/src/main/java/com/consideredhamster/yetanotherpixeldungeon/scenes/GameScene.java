@@ -28,7 +28,6 @@ import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfPhaseW
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Door;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.RippleShock;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.HazardSprite;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -57,7 +56,6 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.Potion;
-import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfClairvoyance;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Chasm;
@@ -85,15 +83,16 @@ public class GameScene extends PixelScene {
 	
 	private static final String TXT_WELCOME			= "Welcome to level %d of Pixel Dungeon!";
 	private static final String TXT_WELCOME_BACK	= "Welcome back to level %d of Pixel Dungeon!";
-//	private static final String TXT_NIGHT_MODE		= "Be cautious, since the dungeon is even more dangerous at night!";
-	
-//	private static final String TXT_CHASM	= "Your steps echo across the dungeon.";
+
 	private static final String TXT_WATER	= "You hear the water splashing around you.";
 	private static final String TXT_GRASS	= "The smell of vegetation is thick in the air.";
 	private static final String TXT_TRAPS	= "The atmosphere hints that this floor hides many secrets.";
-	private static final String TXT_HAUNT	= "Eerie feeling sends shivers down your spine.";
+	private static final String TXT_ASHES   = "A smell of ashes fills your mouth. Not a good smell.";
+    private static final String TXT_SWARM	= "By the sound of it, this floor is heavily guarded. Better be careful.";
+    private static final String TXT_BOOKS	= "Dust is floating in the air. This floor seems to be a warehouse.";
 
-//	private static final String TXT_SECRETS	= "The atmosphere hints that this floor hides many secrets.";
+    private static final String TXT_BAMBOOZLE	= "It looks like you somehow ended up on the same floor!";
+
 	
 	static GameScene scene;
 	
@@ -240,34 +239,29 @@ public class GameScene extends PixelScene {
 			GLog.i( TXT_WELCOME, Dungeon.depth );
 			Sample.INSTANCE.play( Assets.SND_DESCEND );
 		}
+
 		switch (Dungeon.level.feeling) {
-//		case CHASM:
-//			GLog.w( TXT_CHASM );
-//			break;
-		case WATER:
-			GLog.w( TXT_WATER );
-			break;
-		case GRASS:
-			GLog.w( TXT_GRASS );
-			break;
-        case TRAPS:
-            GLog.w( TXT_TRAPS );
-            break;
-        case HAUNT:
-            GLog.w( TXT_HAUNT );
-            break;
-		default:
+            case WATER:
+                GLog.w( TXT_WATER );
+                break;
+            case GRASS:
+                GLog.w( TXT_GRASS );
+                break;
+            case TRAPS:
+                GLog.w( TXT_TRAPS );
+                break;
+            case ASHES:
+                GLog.w( TXT_ASHES );
+                break;
+            case SWARM:
+                GLog.w( TXT_SWARM );
+                break;
+            case BOOKS:
+                GLog.w( TXT_BOOKS );
+                break;
+            default:
 		}
 
-//		if (Dungeon.bonus instanceof RegularLevel &&
-//			((RegularLevel)Dungeon.bonus).secretDoors > Random.IntRange( 3, 4 )) {
-//			GLog.w( TXT_SECRETS );
-//		}
-
-//		if (Dungeon.nightMode && !Dungeon.bossLevel()) {
-//			GLog.w( TXT_NIGHT_MODE );
-//		}
-		
 		busy = new BusyIndicator();
 		busy.camera = uiCamera;
 		busy.x = 1;
@@ -285,6 +279,11 @@ public class GameScene extends PixelScene {
 			break;
 		case FALL:
 			Chasm.heroLand();
+
+			if( Dungeon.depth > 25 ){
+                GLog.w( TXT_BAMBOOZLE );
+            }
+
 			break;
 		case DESCEND:
 			switch (Dungeon.depth) {
@@ -304,9 +303,9 @@ public class GameScene extends PixelScene {
 				WndStory.showChapter( WndStory.ID_HALLS );
 				break;
 			}
-//			if (Dungeon.hero.isAlive() && Dungeon.depth != 25) {
-//				Badges.validateNoKilling();
-//			}
+
+			
+
 			break;
 		default:
 		}
@@ -429,7 +428,8 @@ public class GameScene extends PixelScene {
 
     public void addMobSprite( Mob mob ) {
         CharSprite sprite = mob.sprite();
-        sprite.visible = Dungeon.visible[mob.pos];
+        sprite.visible = Dungeon.hero.canSeeTarget( mob );
+//        sprite.visible = Dungeon.visible[mob.pos] && mob.invisible == 0;
         mobs.add( sprite );
         sprite.link( mob );
         mob.updateSpriteState();
@@ -622,13 +622,13 @@ public class GameScene extends PixelScene {
 			scene.fog.updateVisibility( Dungeon.visible, Dungeon.level.visited, Dungeon.level.mapped );
 			
 			for (Mob mob : Dungeon.level.mobs) {
-                if( mob.sprite.visible = Dungeon.visible[mob.pos] ){
+                if( mob.sprite.visible = Dungeon.hero.canSeeTarget( mob ) ){
+//                if( mob.sprite.visible = Dungeon.visible[mob.pos] && mob.invisible == 0 ){
                     if( Dungeon.level.map[ mob.pos ] == Terrain.DOOR_ILLUSORY ){
                         Door.discover( mob.pos );
                     }
                 }
             }
-
 
             updateMap(Dungeon.visible);
 		}
@@ -682,13 +682,14 @@ public class GameScene extends PixelScene {
 		}
 	}
 
-	
 	public static WndBag selectItem( WndBag.Listener listener, WndBag.Mode mode, String title ) {
+
 		cancelCellSelector();
 		
 		WndBag wnd = mode == Mode.HERB ?
-			WndBag.herbPouch(listener, mode, title) :
+			WndBag.herbPouch( listener, mode, title ) :
 			WndBag.lastBag( listener, mode, title );
+
 		scene.add( wnd );
 		
 		return wnd;

@@ -44,7 +44,7 @@ public class Heroic extends Weapon.Enchantment {
 
     @Override
     protected String desc_p() {
-        return "increase your damage when on low health and make it impossible to knock it out of your hands";
+        return "increase your damage when on low health";
     }
 
     @Override

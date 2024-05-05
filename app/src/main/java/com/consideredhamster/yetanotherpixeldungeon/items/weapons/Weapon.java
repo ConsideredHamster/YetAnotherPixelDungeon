@@ -249,10 +249,10 @@ public abstract class Weapon extends EquipableItem {
         return false;
     }
 
-    @Override
-    public boolean disarmable() {
-        return super.disarmable() && !(enchantment instanceof Heroic);
-    }
+//    @Override
+//    public boolean disarmable() {
+//        return super.disarmable() && !(enchantment instanceof Heroic);
+//    }
 
     public int min( int bonus ) {
         return 0;
@@ -329,6 +329,11 @@ public abstract class Weapon extends EquipableItem {
 	public boolean isEnchanted() {
 		return enchantment != null;
 	}
+
+    @Override
+    public boolean isMagical() {
+        return bonus !=0 || enchantment != null;
+    }
 	
 	@Override
 	public ItemSprite.Glowing glowing() {
@@ -549,9 +554,9 @@ public abstract class Weapon extends EquipableItem {
 
         if (isEquipped( Dungeon.hero )) {
 
-            info.append("You hold the " + name + " at the ready.");
+            info.append( "You hold the " + name + " at the ready." );
 
-        } else if( Dungeon.hero.belongings.backpack.items.contains(this) ) {
+        } else if( Dungeon.hero.belongings.backpack.contains(this) ) {
 
             info.append( "The " + name + " is in your backpack." );
 

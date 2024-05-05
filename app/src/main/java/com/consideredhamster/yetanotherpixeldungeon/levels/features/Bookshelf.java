@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels.features;
 
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.Scroll;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
@@ -32,7 +33,8 @@ import com.watabou.utils.Random;
 
 public class Bookshelf {
 
-    private static final String TXT_FOUND_SCROLL	= "You found a scroll!";
+    private static final String TXT_FOUND_SCROLL	= "You found a %s!";
+    private static final String TXT_IDENTIFY_SCROLL	= "You found some notes about scrolls.";
     private static final String TXT_FOUND_NOTHING	= "You found nothing interesting.";
     private static final String TXT_FOUND_READING	= "You found %s";
 
@@ -114,9 +116,15 @@ public class Bookshelf {
 	public static void examine( int cell ) {
 
         if (Random.Float() < ( 0.05f + 0.05f * Dungeon.chapter() ) ) {
+            Scroll scroll =  (Scroll)Generator.random( Generator.Category.SCROLL );
 
-            Dungeon.level.drop( Generator.random( Generator.Category.SCROLL ), Dungeon.hero.pos ).sprite.drop();
-            GLog.i( TXT_FOUND_SCROLL );
+            if( !scroll.isTypeKnown() && Random.Int( 2 ) == 0 ){
+                GLog.i( TXT_IDENTIFY_SCROLL );
+                scroll.identify();
+            } else {
+                GLog.i( TXT_FOUND_SCROLL, scroll.name() );
+                Dungeon.level.drop( scroll, Dungeon.hero.pos ).sprite.drop();
+            }
 
         } else if (Random.Float() < 0.05f ) {
 

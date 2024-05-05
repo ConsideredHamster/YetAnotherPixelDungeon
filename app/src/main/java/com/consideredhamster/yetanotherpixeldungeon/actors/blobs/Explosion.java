@@ -20,9 +20,11 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
+import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
+import com.consideredhamster.yetanotherpixeldungeon.levels.features.Chasm;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
@@ -37,6 +39,9 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 
 public class Explosion {
+
+    // FIXME
+    private static Explosion EXPLOSION = new Explosion();
 
 	// Returns true, if this cell is visible
 	public static boolean affect( int c, int r, int radius, int damage, Object source ) {
@@ -58,16 +63,16 @@ public class Explosion {
 
         if (ch != null) {
 
-            int mod = ch.HT * damage /
-                ( Bestiary.isBoss(ch) ? 200 : ch instanceof Hero ? 100 : 50 );
+//            int mod = ch.HT * damage /
+//                ( Bestiary.isBoss(ch) ? 200 : ch instanceof Hero ? 100 : 50 );
+//
+//            int dmg = Random.IntRange( mod / 2, mod );
+//            dmg += Random.IntRange( damage / 2, damage );
+//            dmg *= ( radius - r + 2 );
+//            dmg /= ( radius + 2 );
 
-            int dmg = Random.IntRange( mod / 2, mod );
-            dmg += Random.IntRange( damage / 2, damage );
-            dmg *= ( radius - r + 2 );
-            dmg /= ( radius + 2 );
-
-            if (dmg > 0) {
-                ch.damage(Char.absorb(dmg, ch.armorClass(), true ), source, null);
+            if (damage > 0) {
+                ch.damage(Char.absorb(damage, ch.armorClass(), true ), EXPLOSION, Element.EXPLOSION);
                 if ( ch.isAlive() ) {
                     BuffActive.addFromDamage( ch, Vertigo.class, damage );
                 }

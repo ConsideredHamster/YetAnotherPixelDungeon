@@ -23,6 +23,7 @@ package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Banished;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.UnholyArmor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
@@ -72,7 +73,7 @@ public class ScrollOfBanishment extends Scroll {
 
                 if( mob.isMagical() ) {
                     new Flare(6, 24).color(SpellSprite.COLOUR_HOLY, true).show(mob.sprite, 2f);
-                    BuffActive.addFromDamage( mob, Tormented.class, (10 + curUser.magicPower()) );
+                    BuffActive.addFromDamage( mob, Banished.class, (10 + curUser.magicPower()) );
                     affected = true;
                 }
 
@@ -122,7 +123,8 @@ public class ScrollOfBanishment extends Scroll {
 
                     if (item.bonus < 0) {
 
-                        item.bonus = Random.IntRange(item.bonus + 1, 0);
+                        item.bonus++;
+//                        item.bonus = Random.IntRange(item.bonus + 1, 0);
 
                         if (item.bonus == 0) {
                             if (item instanceof Weapon && ((Weapon) item).enchantment != null) {

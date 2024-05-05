@@ -185,7 +185,7 @@ public abstract class BodyArmor extends Armour {
 
             info.append( "You are wearing the " + name + "." );
 
-        } else if( Dungeon.hero.belongings.backpack.items.contains(this) ) {
+        } else if( Dungeon.hero.belongings.backpack.contains(this) ) {
 
             info.append( "The " + name + " is in your backpack." );
 

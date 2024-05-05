@@ -21,9 +21,12 @@
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndInfoItem;
 import com.watabou.noosa.Scene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Bones;
@@ -44,304 +47,281 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Graph;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
+import com.watabou.utils.Rect;
 
-public class PrisonBossLevel extends PrisonLevel {
+public class PrisonBossLevel extends Level {
 
-    private static final int BOSS_ISHIDDEN = 0;
-    private static final int BOSS_APPEARED = 1;
-    private static final int BOSS_DEFEATED = 2;
+	{
+		color1 = 0x48763c;
+		color2 = 0x59994a;
+	}
 
-    private int progress = 0;
-    private Room anteroom;
-    private int arenaDoor;
+//    private static final int BOSS_ISHIDDEN = 0;
+//    private static final int BOSS_APPEARED = 1;
+//    private static final int BOSS_DEFEATED = 2;
+
+//    private int progress = 0;
+//    private Room anteroom;
+//    private int arenaDoor;
+
+	private static final int ARENA_WIDTH    = 13;
+	private static final int ARENA_HEIGHT   = 13;
+	private static final int CHAMBER_SIZE	= 5;
+
+	private static final int TOP	= (HEIGHT - ARENA_HEIGHT) / 2;
+	private static final int LEFT	= (WIDTH - ARENA_WIDTH) / 2;
+	private static final int RIGHT	= LEFT + ARENA_WIDTH;
+	private static final int BOTTOM	= TOP + ARENA_HEIGHT;
+
+	private static final int CENTER_X = LEFT + ARENA_WIDTH / 2;
+	private static final int CENTER_Y = TOP + ARENA_HEIGHT / 2;
+	private static final int CENTER = CENTER_Y * WIDTH + CENTER_X;
+
+	private static final int ENTRANCE = CENTER - ( ARENA_HEIGHT + CHAMBER_SIZE ) / 2 - 1 ;
+	private static final int EXIT = ENTRANCE + ARENA_HEIGHT + CHAMBER_SIZE + 2; ;
+
+
+	private static final int DOOR1 = CENTER_Y * WIDTH + LEFT - 1 ;
+	private static final int DOOR2 = CENTER_Y * WIDTH + RIGHT;
+
+	private int progress = 0;
+
+	private static final int BOSS_ISHIDDEN = 0;
+	private static final int BOSS_APPEARED = 1;
+	private static final int BOSS_DEFEATED = 2;
 	
 	@Override
 	protected boolean build() {
-		
-		initRooms();
 
-		int distance;
-		int retry = 0;
+		// entrance room
 
-		do {
-			
-			if (retry++ > 10) {
-				return false;
-			}
-			
-			int innerRetry = 0;
-			do {
-				if (innerRetry++ > 10) {
-					return false;
-				}
-				roomEntrance = Random.element( rooms );
-			} while (roomEntrance.width() < 4 || roomEntrance.height() < 4 ||
-                    roomEntrance.top == 0);
-			
-			innerRetry = 0;
-			do {
-				if (innerRetry++ > 10) {
-					return false;
-				}
-				roomExit = Random.element( rooms );
-			} while (
-				roomExit == roomEntrance || 
-				roomExit.width() < 7 || 
-				roomExit.height() < 7);
-	
-			Graph.buildDistanceMap( rooms, roomExit );
-			distance = Graph.buildPath( rooms, roomEntrance, roomExit ).size();
-			
-		} while (distance < 3);
-		
-		roomEntrance.type = Type.ENTRANCE;
-		roomExit.type = Type.STANDARD;
-		
-		List<Room> path = Graph.buildPath( rooms, roomEntrance, roomExit );	
-		Graph.setPrice( path, roomEntrance.distance );
-		
-		Graph.buildDistanceMap( rooms, roomExit );
-		path = Graph.buildPath( rooms, roomEntrance, roomExit );
-		
-		anteroom = path.get( path.size() - 2 );
-		anteroom.type = Type.STANDARD;
-		
-		Room room = roomEntrance;
-		for (Room next : path) {
-			room.connect( next );
-			room = next;
-		}
-		
-		for (Room r : rooms) {
-			if (r.type == Type.NULL && r.connected.size() > 0) {
-				r.type = Type.PASSAGE; 
+		Painter.fill(this, LEFT - 1, CENTER_Y - CHAMBER_SIZE / 2, 1, 5, Terrain.GRATE );
+		Painter.fill(this, LEFT - CHAMBER_SIZE - 1, TOP + ( ARENA_HEIGHT - CHAMBER_SIZE ) / 2,
+				CHAMBER_SIZE, CHAMBER_SIZE, Terrain.EMPTY );
+
+		entrance = ENTRANCE;
+		map[entrance] = Terrain.ENTRANCE;
+
+		int sign = entrance - WIDTH * 3;
+		map[sign] = Terrain.WALL_SIGN;
+
+		// main room
+
+		Painter.fill(this, LEFT, TOP, ARENA_WIDTH, ARENA_HEIGHT, Terrain.HIGH_GRASS);
+		Painter.fill(this, LEFT, CENTER_Y - 1 , 1, 3, Terrain.GRASS );
+		Painter.fill(this, RIGHT - 1, CENTER_Y - 1 , 1, 3, Terrain.GRASS );
+
+		for (int i=0; i < LENGTH; i++) {
+
+			if( Math.sqrt( Math.pow( CENTER_X - i % WIDTH, 2 ) + Math.pow( CENTER_Y - i / WIDTH, 2 ) ) < 6 ) {
+				map[i] = Terrain.WATER;
 			}
 		}
-		
-		paint();
 
-		Room r = (Room)roomEntrance.connected.keySet().toArray()[0];
-		if (roomEntrance.connected.get( r ).y == roomEntrance.top) {
-			return false;
-		}
+		Painter.fill(this, LEFT, CENTER_Y, ARENA_WIDTH, 1, Terrain.EMPTY );
+		Painter.fill(this, CENTER_X - 1, CENTER_Y - 2, 3, 5, Terrain.EMPTY );
+		Painter.fill(this, CENTER_X - 2, CENTER_Y - 1, 5, 3, Terrain.EMPTY );
 
-        exit = roomEntrance.top * Level.WIDTH + (roomEntrance.left + roomEntrance.right) / 2;
-        Painter.set( this, exit, Terrain.LOCKED_EXIT );
+		map[ CENTER - WIDTH * 4 ] = Terrain.WALL_DECO;
+		map[ CENTER + WIDTH * 4 ] = Terrain.WALL_DECO;
+
+		map[ CENTER - WIDTH * 2 - 4 ] = Terrain.WALL_DECO;
+		map[ CENTER - WIDTH * 2 + 4 ] = Terrain.WALL_DECO;
+
+		map[ CENTER + WIDTH * 2 - 4 ] = Terrain.WALL_DECO;
+		map[ CENTER + WIDTH * 2 + 4 ] = Terrain.WALL_DECO;
+
+		map[ CENTER - WIDTH * 2 - 1 ] = Terrain.STATUE;
+		map[ CENTER - WIDTH * 2 + 1 ] = Terrain.STATUE;
+
+		map[ CENTER + WIDTH * 2 - 1 ] = Terrain.STATUE;
+		map[ CENTER + WIDTH * 2 + 1 ] = Terrain.STATUE;
+
+		map[ CENTER ] = Terrain.PEDESTAL;
+
+		// exit room
+
+		exit = EXIT;
 		
-		paintWater();
-		paintGrass();
-		
-		placeTraps();
-//		placeSign();
+		Painter.fill(this, RIGHT, CENTER_Y - CHAMBER_SIZE / 2, 1, 5, Terrain.GRATE );
+		Painter.fill(this, RIGHT + 1, TOP + ( ARENA_HEIGHT - CHAMBER_SIZE ) / 2,
+				CHAMBER_SIZE, CHAMBER_SIZE, Terrain.EMPTY );
+
+		Painter.fill(this, exit % WIDTH - 1, exit / WIDTH - 1, 3, 2, Terrain.WALL );
+
+		map[ exit ] = Terrain.LOCKED_EXIT;
+		map[ exit + 1 ] = Terrain.WALL_DECO;
+		map[ exit - 1 ] = Terrain.WALL_DECO;
+
+		map[ DOOR1 ] = Terrain.LOCKED_DOOR;
+		map[ DOOR2 ] = Terrain.LOCKED_DOOR;
 
 		return true;
 	}
 	
-	protected void paintDoors( Room r ) {
-		for (Room n : r.connected.keySet()) {
-			
-			if (r.type == Type.NULL) {
-				continue;
-			}
-			
-			Point door = r.connected.get( n );
-			
-			if (r.type == Room.Type.PASSAGE && n.type == Room.Type.PASSAGE) {
-				
-				Painter.set( this, door, Terrain.EMPTY );
-				
-			} else {
-				
-				Painter.set( this, door, Terrain.DOOR_CLOSED);
-				
-			}
-			
-		}
-	}
-	
 	@Override
-	protected void placeTraps() {
+	protected void decorate() {
 
-		int nTraps = nTraps();
+        for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
+            if (map[i] == Terrain.EMPTY) {
+                if (Random.Int( 10 ) == 0 ) {
+                    map[i] = Terrain.EMPTY_DECO;
+                }
+            }
+        }
 
-		for (int i=0; i < nTraps; i++) {
-			
-			int trapPos = Random.Int( LENGTH );
-			
-			if (map[trapPos] == Terrain.EMPTY) {
-				map[trapPos] = Terrain.BLADE_TRAP;
-			}
-		}
-	}
-	
-	@Override
-	protected void decorate() {	
-		
-		for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
-			if (map[i] == Terrain.EMPTY) { 
-				
-				float c = 0.15f;
-				if (map[i + 1] == Terrain.WALL && map[i + WIDTH] == Terrain.WALL) {
-					c += 0.2f;
-				}
-				if (map[i - 1] == Terrain.WALL && map[i + WIDTH] == Terrain.WALL) {
-					c += 0.2f;
-				}
-				if (map[i + 1] == Terrain.WALL && map[i - WIDTH] == Terrain.WALL) {
-					c += 0.2f;
-				}
-				if (map[i - 1] == Terrain.WALL && map[i - WIDTH] == Terrain.WALL) {
-					c += 0.2f;
-				}
-				
-				if (Random.Float() < c) {
-					map[i] = Terrain.EMPTY_DECO;
-				}
-			}
-		}
-		
-		for (int i=0; i < WIDTH; i++) {
-			if (map[i] == Terrain.WALL &&  
-				(map[i + WIDTH] == Terrain.EMPTY || map[i + WIDTH] == Terrain.EMPTY_SP) &&
-				Random.Int( 4 ) == 0) {
-				
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
-		
-		for (int i=WIDTH; i < LENGTH - WIDTH; i++) {
-			if (map[i] == Terrain.WALL && 
-				map[i - WIDTH] == Terrain.WALL && 
-				(map[i + WIDTH] == Terrain.EMPTY || map[i + WIDTH] == Terrain.EMPTY_SP) &&
-				Random.Int( 2 ) == 0) {
-				
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
-		
-//		while (true) {
-//			int pos = roomEntrance.random();
-//			if (pos != entrance) {
-//				map[pos] = Terrain.SIGN;
-//				break;
-//			}
-//		}
-		
-		Point door = roomExit.entrance();
-		arenaDoor = door.x + door.y * WIDTH;
-		Painter.set( this, arenaDoor, Terrain.LOCKED_DOOR );
+        for (int i=0; i < LENGTH ; i++) {
+            if(
+                map[i] == Terrain.WALL && Random.Int( 10 ) == 0
+            ) {
 
-		Painter.fill(this,
-            roomExit.left + 2,
-            roomExit.top + 2,
-            roomExit.width() - 3,
-            roomExit.height() - 3,
-            Terrain.INACTIVE_TRAP
-        );
-	}
-	
-	@Override
-	protected void createMobs() {
-	}
-	
-	public Actor respawner() {
-		return null;
+                map[i] = Random.oneOf(
+                        Terrain.WALL_DECO3, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
+            }
+        }
+
+		for ( int i=0; i < ARENA_WIDTH; i = i + 2 ) {
+			map[ ( TOP - 1 ) * WIDTH + LEFT + i] = Terrain.WALL_DECO2;
+			map[ BOTTOM * WIDTH + LEFT + i] = Terrain.WALL_DECO2;
+		}
+
+		ArrayList<Integer> cells = new ArrayList<>();
+
+		for( int cell = 0 ; cell < Level.LENGTH ; cell++ ){
+			if( ( map[ cell ] == Terrain.EMPTY || map[ cell ] == Terrain.WATER
+				|| map[ cell ] == Terrain.HIGH_GRASS ) && insideArena( cell )
+				&& !adjacent( cell, DOOR1 ) && !adjacent( cell, DOOR2 ) && !adjacent( cell, CENTER )
+			){
+				cells.add( cell );
+			}
+		}
+
+		if( !cells.isEmpty() ) {
+			for ( int i = 0; i < 8; i++ ) {
+
+				int cell = Random.element( cells );
+
+				if ( map[ cell ] == Terrain.EMPTY ) {
+					map[ cell ] = Random.oneOf( Terrain.GRASS, Terrain.HIGH_GRASS, Terrain.BARRICADE );
+				} else {
+					map[ cell ] = Terrain.BARRICADE;
+				}
+			}
+		}
 	}
 	
 	@Override
 	protected void createItems() {
 
-		int keyPos = anteroom.random();
-		while (!passable[keyPos]) {
-			keyPos = anteroom.random();
-		}
-		drop( new IronKey(), keyPos ).type = Heap.Type.CHEST;
-		
+		drop( new IronKey(), ENTRANCE - 1 ).type = Heap.Type.CHEST;
+
 		Item item = Bones.get();
 		if (item != null) {
-			int pos;
-			do {
-				pos = roomEntrance.random();
-			} while (pos == entrance || map[pos] == Terrain.SIGN);
-			drop( item, pos ).type = Heap.Type.BONES;
+			drop( item, entrance + 1 ).type = Heap.Type.BONES;
 		}
+	}
+
+	@Override
+	public ArrayList<Integer> getPassableCellsList() {
+
+		ArrayList<Integer> result = new ArrayList<>();
+
+		for( Integer cell : super.getPassableCellsList() ){
+			if( progress != BOSS_ISHIDDEN && insideArena( cell ) || progress != BOSS_APPEARED && beforeArena( cell ) ){
+				result.add( cell );
+			}
+		}
+
+		return result;
+	}
+
+	private boolean insideArena(int cell) {
+		return !beforeArena(cell) && !outOfArena(cell);
+	}
+
+	private boolean beforeArena(int cell) {
+		return cell % WIDTH < LEFT;
+	}
+
+	private boolean outOfArena(int cell) {
+		return cell % WIDTH >= RIGHT;
 	}
 
 	@Override
 	public void press( int cell, Char ch ) {
-		
+
 		super.press( cell, ch );
-		
-		if (ch == Dungeon.hero && progress == BOSS_ISHIDDEN && roomExit.inside( cell )) {
+
+		if (ch == Dungeon.hero && progress == BOSS_ISHIDDEN && cell % WIDTH > CENTER_X - 4 ) {
 
             progress = BOSS_APPEARED;
-		
-			int pos;
-			do {
-				pos = roomExit.random();
-			} while (pos == cell || Actor.findChar( pos ) != null);
-			
+
 			Mob boss = Bestiary.mob( Dungeon.depth );
 			boss.state = boss.HUNTING;
-			boss.pos = pos;
+			boss.pos = CENTER;
 			GameScene.add( boss, 2f );
+
+			boss.sprite.turnTo( boss.pos, Dungeon.hero.pos );
+			boss.beckon( Dungeon.hero.pos );
 			boss.notice();
-			
-			press( pos, boss );
-			
-			set( arenaDoor, Terrain.LOCKED_DOOR );
-			GameScene.updateMap( arenaDoor );
+
+			press( boss.pos, boss );
+
+			seal();
 			Dungeon.observe();
 
             Music.INSTANCE.play( currentTrack(), true );
 		}
 	}
-	
+
 	@Override
 	public Heap drop( Item item, int cell ) {
-		
-		if ( progress == BOSS_APPEARED && item instanceof SkeletonKey) {
 
-            progress = BOSS_DEFEATED;
-			
-			set( arenaDoor, Terrain.DOOR_CLOSED);
-			GameScene.updateMap( arenaDoor );
+		// FIXME
+
+		if ( progress == BOSS_APPEARED && item instanceof Gold) {
+
+			progress = BOSS_DEFEATED;
+
+			Music.INSTANCE.play( currentTrack(), true );
+
+			unseal();
+
 			Dungeon.observe();
-
-            Music.INSTANCE.play( currentTrack(), true );
 		}
-		
+
 		return super.drop( item, cell );
 	}
 
-    @Override
-    public ArrayList<Integer> getPassableCellsList() {
+	public void seal() {
 
-        ArrayList<Integer> result = new ArrayList<>();
+		set( DOOR1, Terrain.LOCKED_DOOR );
+		GameScene.updateMap( DOOR1 );
 
-        for( Integer cell : getCellList() ){
-            if( progress != BOSS_ISHIDDEN && roomExit.inside( cell ) || progress != BOSS_APPEARED && !roomExit.inside( cell ) ){
-                result.add( cell );
-            }
-        }
+		set( DOOR2, Terrain.LOCKED_DOOR );
+		GameScene.updateMap( DOOR2 );
 
-        return result;
-    }
+	}
 
-    private ArrayList<Integer> getCellList() {
+	public void unseal() {
 
-        ArrayList<Integer> result = new ArrayList<>();
+		set( DOOR1, Terrain.DOOR_CLOSED );
+		GameScene.updateMap( DOOR1 );
 
-        for (Room room : rooms) {
-            for( int cell : room.cells() ){
-                if( !solid[ cell ] && passable[ cell ] && Actor.findChar( cell ) == null ){
-                    result.add( cell );
-                }
-            }
-        }
+		set( DOOR2, Terrain.DOOR_CLOSED );
+		GameScene.updateMap( DOOR2 );
 
-        return result;
-    }
+		Dungeon.observe();
+	}
+
+	@Override
+	protected void createMobs() {
+	}
+
+	public Actor respawner() {
+		return null;
+	}
 
     @Override
     public int nMobs() {
@@ -353,23 +333,43 @@ public class PrisonBossLevel extends PrisonLevel {
         return progress == BOSS_APPEARED ? Assets.TRACK_BOSS_LOOP : super.currentTrack();
     }
 
-    private static final String ARENA	    = "arena";
-    private static final String DOOR	    = "door";
+	@Override
+	public String tileName( int tile ) {
+		return PrisonLevel.tileNames( tile );
+	}
+
+	@Override
+	public String tileDesc( int tile ) {
+		return PrisonLevel.tileDescs(tile);
+	}
+
+	@Override
+	public String tilesTex() {
+		return Assets.TILES_PRISON;
+	}
+
+	@Override
+	public String waterTex() {
+		return Assets.WATER_CAVES;
+	}
+
+	@Override
+	public void addVisuals( Scene scene ) {
+		super.addVisuals( scene );
+		PrisonLevel.addVisuals( this, scene );
+	}
+
     private static final String PROGRESS    = "progress";
 
     @Override
     public void storeInBundle( Bundle bundle ) {
         super.storeInBundle(bundle);
-        bundle.put( ARENA, roomExit );
-        bundle.put( DOOR, arenaDoor );
         bundle.put( PROGRESS, progress );
     }
 
     @Override
     public void restoreFromBundle( Bundle bundle ) {
         super.restoreFromBundle(bundle);
-        roomExit = (Room)bundle.get( ARENA );
-        arenaDoor = bundle.getInt( DOOR );
         progress = bundle.getInt( PROGRESS );
     }
 }

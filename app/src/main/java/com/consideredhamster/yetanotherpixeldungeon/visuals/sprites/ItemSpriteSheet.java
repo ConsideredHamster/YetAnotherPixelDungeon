@@ -220,6 +220,8 @@ public class ItemSpriteSheet {
     public static final int HARPOON_THROWN    	= 178;
     public static final int HARPOON_RETURN    	= 179;
 
+    public static final int BOMB_ROUND      	= 181;
+
     // New additions, gotta move them later
 
     public static final int POTION_CHARTREUSE  	= 192;

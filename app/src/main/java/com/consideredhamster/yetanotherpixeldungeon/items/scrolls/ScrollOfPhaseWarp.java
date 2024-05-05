@@ -22,8 +22,10 @@ package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.scenes.InterlevelScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Random;
@@ -65,15 +67,6 @@ public class ScrollOfPhaseWarp extends Scroll {
 
         } else {
 
-//            float chance = 0.5f / curUser.attunement();
-//
-//            if( chance > Random.Float() ) {
-//
-//                GLog.i(Dungeon.level.visited[pos] ? TXT_TELEPORTED_VISITED : TXT_TELEPORTED_UNKNOWN);
-//                Arrays.fill(Dungeon.level.visited, false);
-//
-//            }
-
             ScrollOfPhaseWarp.appear(curUser, pos);
             Dungeon.level.press(pos, curUser);
 
@@ -81,6 +74,9 @@ public class ScrollOfPhaseWarp extends Scroll {
             Dungeon.observe();
 
         }
+
+//        InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
+//        Game.switchScene( InterlevelScene.class );
 
         super.doRead();
 	}

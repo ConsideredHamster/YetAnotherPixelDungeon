@@ -29,6 +29,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Golem;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.DwarfMonk;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ElmoParticle;
 import com.consideredhamster.yetanotherpixeldungeon.items.quest.DwarfToken;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
@@ -236,9 +237,13 @@ public class AmbitiousImp extends NPC {
 
 				AmbitiousImp npc = new AmbitiousImp();
 
-				do {
-					npc.pos = level.randomRespawnCell();
-				} while (npc.pos == -1 || level.heaps.get( npc.pos ) != null);
+//				do {
+//					npc.pos = level.randomRespawnCell();
+//				} while (npc.pos == -1 || level.heaps.get( npc.pos ) != null);
+
+                do {
+                    npc.pos = room.random();
+                } while ( level.map[npc.pos] == Terrain.EXIT );
 
 				level.mobs.add(npc);
 				Actor.occupyCell( npc );

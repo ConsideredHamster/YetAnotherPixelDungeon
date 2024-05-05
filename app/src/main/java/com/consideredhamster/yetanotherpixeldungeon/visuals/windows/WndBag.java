@@ -22,7 +22,11 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.windows;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.EquipableItem;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmorCloth;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.ArmorerKit;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.Battery;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.CraftingKit;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.Whetstone;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSprite;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
@@ -79,20 +83,25 @@ public class WndBag extends WndTabbed {
 
 	public static enum Mode {
 		ALL,
+
 		UNIDENTIFED,
-		UPGRADEABLE,
-		REPAIRABLE,
+        TRANSMUTABLE,
+        REPAIRABLE,
+
+        ENCHANTABLE,
+        UPGRADEABLE,
+        CURSED,
+
 		QUICKSLOT,
 		OFFHAND,
-		FOR_SALE,
-		WEAPON,
+        WEAPON,
+        FOR_SALE,
+
         WHETSTONE,
         CRAFTING_KIT,
         ARMORERS_KIT,
         ARCANE_BATTERY,
-		ENCHANTABLE,
-		TRANSMUTABLE,
-		CURSED,
+
 		WAND,
         HERB,
         KEYS
@@ -570,10 +579,10 @@ public class WndBag extends WndTabbed {
 						mode == Mode.REPAIRABLE && item.isRepairable() && item.state < 3 ||
 						mode == Mode.UNIDENTIFED && !item.isIdentified() ||
 						mode == Mode.WEAPON && item instanceof Weapon && item.isRepairable() && item.state < 3 ||
-						mode == Mode.WHETSTONE && (item instanceof MeleeWeapon && item.state < 3) ||
-						mode == Mode.CRAFTING_KIT && ((item instanceof RangedWeapon || item instanceof BodyArmorCloth)&& item.state < 3) ||
-						mode == Mode.ARMORERS_KIT && (item instanceof Armour && !(item instanceof BodyArmorCloth) && item.state < 3) ||
-						mode == Mode.ARCANE_BATTERY && (item instanceof Wand && item.state < 3) ||
+						mode == Mode.WHETSTONE && (item instanceof MeleeWeapon && ( item.state < 3 || item.durability < item.maxDurability() )) ||
+						mode == Mode.CRAFTING_KIT && ((item instanceof RangedWeapon || item instanceof BodyArmorCloth) && ( item.state < 3 || item.durability < item.maxDurability() ) ) ||
+						mode == Mode.ARMORERS_KIT && (item instanceof Armour && !(item instanceof BodyArmorCloth) && ( item.state < 3 || item.durability < item.maxDurability() ) ) ||
+						mode == Mode.ARCANE_BATTERY && (item instanceof Wand && ( item.state < 3 || item.durability < item.maxDurability() ) ) ||
 						mode == Mode.TRANSMUTABLE && item instanceof EquipableItem ||
 						mode == Mode.WAND && (item instanceof Wand) ||
 						mode == Mode.HERB && (item instanceof Herb) ||

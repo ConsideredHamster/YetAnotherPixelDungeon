@@ -32,7 +32,6 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Piranha;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Statue;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Wraith;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
@@ -69,10 +68,16 @@ public abstract class RegularLevel extends Level {
 			do {
 				roomEntrance = Random.element( rooms );
 			} while (roomEntrance.width() < 4 || roomEntrance.height() < 4);
-			
-			do {
-				roomExit = Random.element( rooms );
-			} while (roomExit == roomEntrance || roomExit.width() < 4 || roomExit.height() < 4);
+
+			if( Dungeon.chapter() < 5 ){
+                do{
+                    roomExit = Random.element( rooms );
+                } while( roomExit == roomEntrance || roomExit.width() < 4 || roomExit.height() < 4 );
+            } else {
+                do{
+                    roomExit = Random.element( rooms );
+                } while( roomExit == roomEntrance || roomExit.width() < 6 || roomExit.height() < 5 );
+            }
 	
 			Graph.buildDistanceMap( rooms, roomExit );
 			distance = roomEntrance.distance();
@@ -145,11 +150,21 @@ public abstract class RegularLevel extends Level {
 		assignRoomType();
 		
 		paint();
-		paintWater();
+
+        placeSign( roomEntrance );
+
+        if( feeling == Level.Feeling.BOOKS ){
+            for( Room r : rooms ){
+                if( r.type == Type.STANDARD ){
+                    StandardPainter.paintBooks( this, r );
+                }
+            }
+        }
+
+        paintWater();
 		paintGrass();
 		
 		placeTraps();
-//		placeSign();
 		
 		return true;
 	}
@@ -158,7 +173,7 @@ public abstract class RegularLevel extends Level {
 		rooms = new HashSet<Room>();
 		split( new Rect( 0, 0, WIDTH - 1, HEIGHT - 1 ) );
 		
-		if (rooms.size() < 8) {
+		if ( rooms.size() < 7 + Dungeon.chapter() ) {
 			return false;
 		}
 		
@@ -187,21 +202,7 @@ public abstract class RegularLevel extends Level {
                     Dungeon.depth % 6 == 4 && specials.contains( Type.MAGIC_WELL ) )
                 ) {
 
-					if (pitRoomNeeded) {
-
-						r.type = Type.PIT;
-						pitRoomNeeded = false;
-
-//						specials.remove( Type.ARMORY );
-//						specials.remove( Type.CRYPT );
-//						specials.remove( Type.LABORATORY );
-//						specials.remove( Type.LIBRARY );
-//						specials.remove( Type.STATUE );
-//						specials.remove( Type.TREASURY );
-//						specials.remove( Type.VAULT );
-//						specials.remove( Type.WEAK_FLOOR );
-
-					} else if (Dungeon.depth % 6 == 2 && specials.contains( Type.LABORATORY )) {
+                    if (Dungeon.depth % 6 == 2 && specials.contains( Type.LABORATORY )) {
 
 						r.type = Type.LABORATORY;
 						
@@ -213,16 +214,11 @@ public abstract class RegularLevel extends Level {
 
 						int n = specials.size();
 						r.type = specials.get( Random.Int( n ) );
-//						r.type = specials.get( Math.min( Random.Int( n ), Random.Int( n ) ) );
-//						if (r.type == Type.WEAK_FLOOR) {
-//							weakFloorCreated = true;
-//						}
 
 					}
 					
 					Room.useType( r.type );
 					specials.remove( r.type );
-//					specialRooms++;
 					
 				} else if (Random.Int( 2 ) == 0){
 
@@ -292,13 +288,22 @@ public abstract class RegularLevel extends Level {
 
 		for (int i=WIDTH+1; i < LENGTH-WIDTH-1; i++) {
 			if (map[i] == Terrain.EMPTY && grass[i]) {
-				int count = 1;
-				for (int n : NEIGHBOURS8) {
-					if (grass[i + n]) {
-						count++;
+
+				if( feeling != Feeling.ASHES ) {
+
+					int count = 1;
+
+					for (int n : NEIGHBOURS8) {
+						if (grass[i + n]) {
+							count++;
+						}
 					}
+
+					map[i] = (Random.Float() < count / 12f) ? Terrain.HIGH_GRASS : Terrain.GRASS;
+
+				} else {
+					map[i] = Terrain.EMBERS;
 				}
-				map[i] = (Random.Float() < count / 12f) ? Terrain.HIGH_GRASS : Terrain.GRASS;
 			}
 		}
 	}
@@ -348,35 +353,53 @@ public abstract class RegularLevel extends Level {
 			}
 		}
 	}
-
-	protected void placeSign() {
-
-		while (true) {
-			int pos = roomEntrance.random_top();
-			if ( map[pos] == Terrain.WALL || map[pos] == Terrain.WALL_DECO ) {
-				map[pos] = Terrain.WALL_SIGN;
-				break;
-			}
-		}
-	}
 	
 	protected int nTraps() {
-		return Dungeon.depth > 1 ? feeling == Feeling.TRAPS ?
-                Dungeon.chapter() + Random.Int(6) :
-                Random.Int( Dungeon.chapter() ) + Random.Int(6) :
-                0 ;
-	}
 
-//    protected int nSecrets() {
-//        return feeling == Feeling.TRAPS ?
-//                ( Dungeon.depth - 1 ) / 6 + 1 + Random.Int( 3 ) :
-//                Random.Int( ( Dungeon.depth - 1 ) / 6 + 1 ) + Random.Int( 3 ) ;
-//    }
+		if( Dungeon.depth == 1 )
+			return 0;
+
+		if( feeling == Feeling.TRAPS )
+			return Dungeon.chapter() + Random.Int( 5 );
+
+		if( feeling == Feeling.WATER )
+			return Random.Int( Dungeon.chapter() + 1 );
+
+		return Random.Int( Dungeon.chapter() + 1 ) + Random.Int( 5 );
+
+	}
 	
 	protected float[] trapChances() {
 		float[] chances = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 		return chances;
 	}
+
+	protected void placeSign( Room room ) {
+
+        // gotta find an empty place for the sign
+
+        ArrayList<Integer> candidates = new ArrayList<>(  );
+
+        for( int i = room.left + 1 ; i < room.right ; i++ ) {
+            int pos = i + room.top * Level.WIDTH;
+            if( map[pos] == Terrain.WALL){
+                candidates.add( pos );
+            }
+        }
+
+        for (Room.Door door : room.connected.values()) {
+            Integer pos = door.x + door.y * Level.WIDTH;
+
+            if( candidates.contains( pos ) ) {
+                candidates.remove( pos );
+            }
+        }
+
+        if( !candidates.isEmpty() ){
+//            set( Random.element( candidates ), Terrain.WALL_SIGN );
+            map[ Random.element( candidates ) ] = Terrain.WALL_SIGN;
+        }
+    }
 	
 	protected int minRoomSize = 7;
 	protected int maxRoomSize = 9;
@@ -461,8 +484,6 @@ public abstract class RegularLevel extends Level {
 	
 	protected void paintDoors( Room r ) {
 
-//        int nSecrets = nSecrets();
-
 		for (Room n : r.connected.keySet()) {
 
 			if (joinRooms( r, n )) {
@@ -480,12 +501,7 @@ public abstract class RegularLevel extends Level {
 				map[door] = tunnelTile();
 				break;
 			case REGULAR:
-//				if (Dungeon.depth > 1 && secretDoors < nSecrets && Random.Int( 10 - Dungeon.depth % 6  ) == 0 ) {
-//                    map[door] = Terrain.DOOR_ILLUSORY;
-//                    secretDoors++;
-//                } else {
-                    map[door] = Terrain.DOOR_CLOSED;
-//                }
+                map[door] = Terrain.DOOR_CLOSED;
 				break;
 			case UNLOCKED:
 				map[door] = Terrain.DOOR_CLOSED;
@@ -500,7 +516,7 @@ public abstract class RegularLevel extends Level {
 				map[door] = Terrain.LOCKED_DOOR;
 				break;
 			}
-		}
+        }
 	}
 	
 	protected boolean joinRooms( Room r, Room n ) {
@@ -558,12 +574,18 @@ public abstract class RegularLevel extends Level {
 	
 	@Override
 	public int nMobs() {
-		return 4 + Math.max( Dungeon.depth % 6, Dungeon.chapter() ) + ( feeling == Feeling.TRAPS ? Dungeon.chapter() : 0 );
+		return 5 + Math.max( Dungeon.depth % 6, Dungeon.chapter() );
 	}
 	
 	@Override
 	protected void createMobs() {
+
 		int nMobs = nMobs();
+
+        if ( feeling == Feeling.SWARM ) {
+            nMobs += Dungeon.chapter();
+        }
+
 		for (int i=0; i < nMobs; i++) {
 
             Mob mob;
@@ -573,16 +595,20 @@ public abstract class RegularLevel extends Level {
             if( pos > -1 ){
 
                 if( feeling == Feeling.GRASS && map[ pos ] == Terrain.HIGH_GRASS && Random.Int( 4 ) == 0 ){
+
                     mob = new Statue();
                     mob.state = mob.PASSIVE;
+
                 } else if( feeling == Feeling.WATER && map[ pos ] == Terrain.WATER && Random.Int( 3 ) == 0 ){
+
                     mob = new Piranha();
                     mob.state = mob.SLEEPING;
-                } else if( feeling == Feeling.HAUNT && Random.Int( 5 ) == 0 ){
-                    mob = new Wraith();
-                    mob.state = mob.HUNTING;
+
                 } else {
+
                     mob = Bestiary.mob( Dungeon.depth );
+                    mob.state = feeling == Feeling.SWARM && Random.Int( 3 ) == 0 ? mob.WANDERING : mob.SLEEPING;
+
                 }
 
                 mob.pos = pos;
@@ -594,27 +620,22 @@ public abstract class RegularLevel extends Level {
 		}
 	}
 
-    public int randomRespawnCell( boolean ignoreTraps, boolean ignoreView ) {
+    @Override
+    public ArrayList<Integer> getPassableCellsList() {
 
-        ArrayList<Integer> cells = new ArrayList<>();
+        ArrayList<Integer> result = new ArrayList<>();
 
         for (Room room : rooms) {
             if( room.type == Type.STANDARD ){
                 for( Integer cell : room.cells() ){
                     if( !solid[ cell ] && passable[ cell ] && Actor.findChar( cell ) == null ){
-                        cells.add( cell );
+                        result.add( cell );
                     }
                 }
             }
         }
 
-        if( !ignoreTraps )
-            cells = filterTrappedCells( cells );
-
-        if( !ignoreView )
-            cells = filterVisibleCells( cells );
-
-        return !cells.isEmpty() ? Random.element( cells ) : -1 ;
+        return result;
     }
 	
 	@Override
@@ -627,7 +648,7 @@ public abstract class RegularLevel extends Level {
             while (true) {
 
                 Room room = Random.element(rooms);
-                if (room == null) {
+                if (room == null || room.type == Type.SHOP || room.type == Type.BLACKSMITH ) {
                     continue;
                 }
 
@@ -669,7 +690,7 @@ public abstract class RegularLevel extends Level {
 
         }
 
-        if( feeling == Feeling.HAUNT ) {
+        if( feeling == Feeling.ASHES ) {
 
             for ( int i = Random.IntRange( itemsMin, itemsMax ); i > 0 ; i-- ) {
 

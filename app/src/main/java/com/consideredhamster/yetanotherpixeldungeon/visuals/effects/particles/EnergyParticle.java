@@ -60,6 +60,50 @@ public class EnergyParticle extends PixelParticle {
             return true;
         };
     };
+	
+	public static final Emitter.Factory FACTORY_PURPLE = new Factory() {
+		@Override
+		public void emit( Emitter emitter, int index, float x, float y ) {
+			((PurpleEnergyParticle)emitter.recycle( PurpleEnergyParticle.class )).reset( x, y );
+		}
+		@Override
+		public boolean lightMode() {
+			return true;
+		};
+	};
+	
+	public static final Emitter.Factory FACTORY_ORANGE = new Factory() {
+		@Override
+		public void emit( Emitter emitter, int index, float x, float y ) {
+			((OrangeEnergyParticle)emitter.recycle( OrangeEnergyParticle.class )).reset( x, y );
+		}
+		@Override
+		public boolean lightMode() {
+			return true;
+		};
+	};
+	
+	public static final Emitter.Factory FACTORY_GREEN = new Factory() {
+		@Override
+		public void emit( Emitter emitter, int index, float x, float y ) {
+			((GreenEnergyParticle)emitter.recycle( GreenEnergyParticle.class )).reset( x, y );
+		}
+		@Override
+		public boolean lightMode() {
+			return true;
+		};
+	};
+	
+	public static final Emitter.Factory FACTORY_BLIGHT = new Factory() {
+		@Override
+		public void emit( Emitter emitter, int index, float x, float y ) {
+			((BlightEnergyParticle)emitter.recycle( BlightEnergyParticle.class )).reset( x, y );
+		}
+		@Override
+		public boolean lightMode() {
+			return false;
+		};
+	};
 
     public static final Emitter.Factory FACTORY_BLACK = new Factory() {
         @Override
@@ -120,6 +164,46 @@ public class EnergyParticle extends PixelParticle {
             color(0xFFFFFF);
         }
     }
+	
+	public static class PurpleEnergyParticle extends EnergyParticle {
+		
+		public PurpleEnergyParticle() {
+			
+			super();
+			
+			color(0xFFAAFF);
+		}
+	}
+	
+	public static class OrangeEnergyParticle extends EnergyParticle {
+		
+		public OrangeEnergyParticle() {
+			
+			super();
+			
+			color(0xEE7722);
+		}
+	}
+	
+	public static class BlightEnergyParticle extends EnergyParticle {
+		
+		public BlightEnergyParticle() {
+			
+			super();
+			
+			color(0x00c500);
+		}
+	}
+	
+	public static class GreenEnergyParticle extends EnergyParticle {
+		
+		public GreenEnergyParticle() {
+			
+			super();
+			
+			color(0x22EE66);
+		}
+	}
 
     public static class BlackEnergyParticle extends EnergyParticle {
 

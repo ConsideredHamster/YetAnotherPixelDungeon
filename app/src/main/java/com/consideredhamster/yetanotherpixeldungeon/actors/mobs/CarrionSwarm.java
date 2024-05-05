@@ -48,8 +48,9 @@ public class CarrionSwarm extends MobEvasive {
          */
 
         name = "carrion eater";
-        spriteClass = SwarmSprite.class;
+        info = "Flying, Satiety drain, Food detection";
 
+        spriteClass = SwarmSprite.class;
         flying = true;
 
         resistances.put( Element.Knockback.class, Element.Resist.VULNERABLE );

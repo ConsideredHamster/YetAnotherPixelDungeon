@@ -58,35 +58,41 @@ public class Assets {
     public static final String EVILEYE  = DIR_ENEMIES + "mob_evileye.png";
 
     public static final String MONK		= DIR_ENEMIES + "mob_monk.png";
-    public static final String ELEMENTAL= DIR_ENEMIES + "mob_elemental.png";
+    public static final String DRAKE    = DIR_ENEMIES + "mob_drake.png";
     public static final String WARLOCK	= DIR_ENEMIES + "mob_warlock.png";
     public static final String GOLEM	= DIR_ENEMIES + "mob_golem.png";
 
     public static final String IMP		= DIR_ENEMIES + "mob_imp.png";
     public static final String SUCCUBUS	= DIR_ENEMIES + "mob_succubus.png";
-    public static final String FIEND    = DIR_ENEMIES + "mob_fiend.png";
+    public static final String MAGUS    = DIR_ENEMIES + "mob_magus.png";
     public static final String GUARD	= DIR_ENEMIES + "mob_blackguard.png";
-
+    
     public static final String PIRANHA	= DIR_ENEMIES + "mob_piranha.png";
     public static final String STATUE	= DIR_ENEMIES + "mob_statue.png";
     public static final String WRAITH	= DIR_ENEMIES + "mob_wraith.png";
     public static final String MIMIC	= DIR_ENEMIES + "mob_mimic.png";
-
-    public static final String LARVA	= DIR_ENEMIES + "mob_larva.png";
+    
+    public static final String DM100	= DIR_ENEMIES + "mob_dm100.png";
     public static final String UNDEAD	= DIR_ENEMIES + "mob_undead.png";
+    public static final String TSHADOW  = DIR_ENEMIES + "mob_shadow.png";
     public static final String ROTTING	= DIR_ENEMIES + "mob_fist_rotting.png";
     public static final String BURNING	= DIR_ENEMIES + "mob_fist_burning.png";
-
+    
     public static final String ICEBLOCK = DIR_ENEMIES + "mob_iceblock.png";
     public static final String THORNVINE= DIR_ENEMIES + "mob_thornvine.png";
     public static final String TENTACLE	= DIR_ENEMIES + "mob_tentacle.png";
-
+    
+    
     public static final String GOO		= DIR_ENEMIES + "mob_boss_goo.png";
     public static final String TENGU	= DIR_ENEMIES + "mob_boss_tengu.png";
     public static final String DM300	= DIR_ENEMIES + "mob_boss_dm300.png";
     public static final String KING		= DIR_ENEMIES + "mob_boss_king.png";
     public static final String YOG		= DIR_ENEMIES + "mob_boss_yog.png";
-
+    
+    public static final String LARVA	= DIR_ENEMIES + "mob_larva.png";
+    public static final String FIEND    = DIR_ENEMIES + "mob_fiend.png";
+    public static final String ELEMENTAL= DIR_ENEMIES + "mob_elemental.png";
+    
     /* *************************************** */
 
     public static final String GHOST	= DIR_ALLIES + "npc_ghost.png";
@@ -164,6 +170,8 @@ public class Assets {
     public static final String HAZ_RUNE   	= DIR_TERRAIN + "hazard_rune.png";
     public static final String HAZ_OOZE   	= DIR_TERRAIN + "hazard_ooze.png";
     public static final String HAZ_WEBS   	= DIR_TERRAIN + "hazard_web.png";
+    public static final String HAZ_MARK   	= DIR_TERRAIN + "hazard_mark.png";
+    public static final String HAZ_BOMB   	= DIR_TERRAIN + "hazard_bombs.png";
 //    public static final String TRAPS   	    = DIR_TERRAIN + "traps.png";
 
     /* *************************************** */

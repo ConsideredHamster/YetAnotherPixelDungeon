@@ -52,6 +52,8 @@ public class Mimic extends MobHealthy {
         super( Dungeon.depth + 1 );
 
         name = "mimic";
+        info = "Slow, Devour item";
+
         spriteClass = MimicSprite.class;
 
         items = new ArrayList<>();

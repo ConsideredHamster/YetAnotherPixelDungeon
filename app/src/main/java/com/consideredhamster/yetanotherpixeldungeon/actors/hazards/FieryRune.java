@@ -9,6 +9,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
@@ -51,8 +52,8 @@ import java.util.ArrayList;
  */
 public class FieryRune extends Hazard {
 
-    private static int W = Level.WIDTH;
-    private static int MAX_LEVEL = 4;
+    private final static int W = Level.WIDTH;
+    private final static int MAX_LEVEL = 4;
 
     public static final int[][] RADIUS = {
         { 0 },
@@ -77,6 +78,11 @@ public class FieryRune extends Hazard {
         var = 0;
 
     }
+
+    @Override
+    public String desc() {
+        return "There is a Firebrand rune placed here.";
+    };
 
     public void setValues( int pos, int strength, int duration ) {
 
@@ -111,13 +117,20 @@ public class FieryRune extends Hazard {
     public void upgrade( int strength, int duration ) {
 
         if( var < MAX_LEVEL ) {
+
             var++;
+
+            this.strength += strength;
+            this.duration += duration;
+
+        } else {
+
+            this.duration += duration;
+            GLog.w( "This rune seems to have to reached its limit already. Only duration is increased." );
+
         }
 
         ((RuneSprite)sprite).renew();
-
-        this.strength += strength;
-        this.duration += duration;
 
     }
 
@@ -133,7 +146,7 @@ public class FieryRune extends Hazard {
 
                     Char ch = Actor.findChar( cell );
                     if( ch != null ){
-                        ch.damage( ch != Dungeon.hero ? strength : strength / 2, null, Element.FLAME );
+                        ch.damage( ch != Dungeon.hero ? strength : strength / 2, this, Element.FLAME );
                     }
 
                     Heap heap = Dungeon.level.heaps.get( cell );

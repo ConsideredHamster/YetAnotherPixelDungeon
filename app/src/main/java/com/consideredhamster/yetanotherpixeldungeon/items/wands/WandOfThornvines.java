@@ -173,29 +173,26 @@ public class WandOfThornvines extends WandUtility {
         @Override
         public void interact(){
 
-            Dungeon.hero.sprite.operate( pos );
-
             if( Dungeon.hero.belongings.weap2 instanceof WandOfThornvines ) {
 
                 // we restore at least one charge less than what was spent on the vine
-                ((WandOfThornvines)Dungeon.hero.belongings.weap2).addCharges(
-                        ( ( HP - 1 ) * charges / HT )
-                );
-
+                ((WandOfThornvines)Dungeon.hero.belongings.weap2).addCharges( ( ( HP - 1 ) * charges / HT ) );
                 GLog.i( "You recall the thornvine into the wand." );
-                Sample.INSTANCE.play( Assets.SND_PLANT );
 
             } else {
 
                 GLog.i( "You unsummon the thornvine." );
-                Sample.INSTANCE.play( Assets.SND_PLANT );
 
             }
+
+            Dungeon.hero.sprite.pickup( pos );
+            Sample.INSTANCE.play( Assets.SND_MELD );
 
             Dungeon.hero.spend( TICK );
             Dungeon.hero.busy();
 
             die( this );
+
         }
 
         @Override
@@ -308,7 +305,8 @@ public class WandOfThornvines extends WandUtility {
             return
                 "Thornvines are kind of semisentient plants which are very territorial and will " +
                 "attack anything which comes near. Their sharp thorns can inflict grievous wounds, " +
-                "but they are very vulnerable to fire and will quickly wither as time passes.";
+                "but they are very vulnerable to fire and will quickly wither as time passes. " +
+                "You can unsummon it by interacting with it while holding your wand.";
         }
 
         private static final String STATS	= "stats";

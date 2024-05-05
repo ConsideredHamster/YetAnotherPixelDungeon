@@ -79,14 +79,14 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
     @Override
     public int min( int bonus ) {
-        return tier + state + bonus + ( enchantment instanceof Tempered ? bonus : 0 ) + 1;
+        return Math.max( 0, tier + state + bonus + ( enchantment instanceof Tempered ? bonus : 0 ) + 1 );
     }
 
     @Override
     public int max( int bonus ) {
-        return tier * 4 + state * dmgMod() + 8
+        return Math.max( 0, tier * 4 + state * dmgMod() + 8
                 + ( enchantment instanceof Tempered || bonus >= 0 ? bonus * dmgMod() : 0 )
-                + ( enchantment instanceof Tempered && bonus >= 0 ? 1 + bonus : 0 ) ;
+                + ( enchantment instanceof Tempered && bonus >= 0 ? 1 + bonus : 0 ) );
     }
 
     public int dmgMod() {
@@ -184,7 +184,7 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
             curUser = hero;
 
-            if( reload(hero ) ) {
+            if( reload( hero ) ) {
 
                 curUser.sprite.operate( curUser.pos );
 
@@ -223,16 +223,16 @@ public abstract class RangedWeaponFlintlock extends RangedWeapon {
 
         Item powder = Dungeon.hero.belongings.getItem( Explosives.Gunpowder.class );
 
-        if ( isEquipped(hero) && !loaded && powder != null && tier <= powder.quantity ) {
+        if ( isEquipped(hero) && !loaded && powder != null && powder.quantity >= 1 ) {
 
             loaded = true;
 
-            if( powder.quantity <= tier ){
+            if( powder.quantity <= 1 ){
 
                 powder.detachAll( Dungeon.hero.belongings.backpack );
 
             } else {
-                powder.quantity -= tier;
+                powder.quantity --;
             }
 
             curItem.updateQuickslot();

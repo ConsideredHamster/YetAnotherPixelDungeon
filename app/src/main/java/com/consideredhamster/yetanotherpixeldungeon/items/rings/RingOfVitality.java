@@ -59,17 +59,20 @@ public class RingOfVitality extends Ring {
             "to negative effects such as poison or withering."
         );
 
-        desc.append( "\n\n" );
+        if( !dud ) {
 
-        desc.append( super.desc() );
+            desc.append("\n\n");
 
-        desc.append( " " );
+            desc.append(super.desc());
 
-        desc.append(
-            "Wearing this ring will increase potence of all _healing effects by " + mainEffect + "%_ " +
-            "(including natural regeneration rate) and increase your _resistance to body effects " +
-            "by " + sideEffect + "%_."
-        );
+            desc.append(" ");
+
+            desc.append(
+                    "Wearing this ring will increase potence of all _healing effects by " + mainEffect + "%_ " +
+                            "(including natural regeneration rate) and increase your _resistance to body effects " +
+                            "by " + sideEffect + "%_."
+            );
+        }
 
         return desc.toString();
 	}

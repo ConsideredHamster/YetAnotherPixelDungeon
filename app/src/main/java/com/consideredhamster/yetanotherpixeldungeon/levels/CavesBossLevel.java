@@ -43,6 +43,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CavesBossLevel extends Level {
 	
@@ -63,7 +64,7 @@ public class CavesBossLevel extends Level {
     private static final int BOSS_DEFEATED = 2;
 
     private int progress = 0;
-    private int arenaDoor;
+    public int arenaDoor;
 	
 	@Override
 	public String tilesTex() {
@@ -106,34 +107,67 @@ public class CavesBossLevel extends Level {
 		}
 		
 		map[exit] = Terrain.LOCKED_EXIT;
-		
-		for (int i=0; i < LENGTH; i++) {
-			if (map[i] == Terrain.EMPTY && Random.Int( 10 ) == 0) {
-				map[i] = Terrain.INACTIVE_TRAP;
+
+		map[exit - 1] = Terrain.WALL_SIGN;
+		map[exit + 1] = Terrain.WALL_SIGN;
+
+        for( int w = 0 ; w < 10; w++ ){
+            for( int h = 0 ; h < 10 ; h++ ){
+
+                int x = w * 3 + Random.Int( 3 ) + 1;
+                int y = h * 3 + Random.Int( 3 ) + 1;
+
+                int pos = x * Level.WIDTH + y ;
+
+                if( map[pos] == Terrain.EMPTY ){
+                    map[ pos ] = Random.oneOf( Terrain.STATUE, Terrain.GRATE, Terrain.GRATE );
+                }
+
+            }
+        }
+
+		for( int i = ROOM_LEFT - 2 ; i < ROOM_RIGHT + 4 ; i = i + 2 ) {
+			for (int o = ROOM_TOP - 2; o < ROOM_BOTTOM + 4; o = o + 2) {
+				int pos = i * Level.WIDTH + o ;
+				map[ pos ] = Terrain.INACTIVE_TRAP;
 			}
 		}
-		
-		Painter.fill( this, ROOM_LEFT - 1, ROOM_TOP - 1, 
+
+		Painter.fill( this, ROOM_LEFT - 1, ROOM_TOP - 1,
 			ROOM_RIGHT - ROOM_LEFT + 3, ROOM_BOTTOM - ROOM_TOP + 3, Terrain.WALL );
-		Painter.fill( this, ROOM_LEFT, ROOM_TOP + 1, 
-			ROOM_RIGHT - ROOM_LEFT + 1, ROOM_BOTTOM - ROOM_TOP, Terrain.EMPTY );
-		
+		Painter.fill( this, ROOM_LEFT, ROOM_TOP + 1,
+				ROOM_RIGHT - ROOM_LEFT + 1, ROOM_BOTTOM - ROOM_TOP, Terrain.EMPTY );
+
 		Painter.fill( this, ROOM_LEFT, ROOM_TOP, 
 			ROOM_RIGHT - ROOM_LEFT + 1, 1, Terrain.TOXIC_TRAP );
 		
 		arenaDoor = Random.Int( ROOM_LEFT, ROOM_RIGHT ) + (ROOM_BOTTOM + 1) * WIDTH;
 		map[arenaDoor] = Terrain.DOOR_CLOSED;
-//		map[arenaDoor - 1] = Terrain.WALL_SIGN;
-//		map[arenaDoor + 1] = Terrain.WALL_SIGN;
+
+        // gotta make sure that player would not be trapped by debris
+        map[arenaDoor + WIDTH] = Terrain.EMPTY_DECO;
 
 		entrance = Random.Int( ROOM_LEFT + 1, ROOM_RIGHT - 1 ) + 
 			Random.Int( ROOM_TOP + 1, ROOM_BOTTOM - 1 ) * WIDTH;
 		map[entrance] = Terrain.ENTRANCE;
-		
-		boolean[] patch = Patch.generate( 0.45f, 6 );
+
+		boolean[] water = Patch.generate( 0.45f, 5 );
 		for (int i=0; i < LENGTH; i++) {
-			if (map[i] == Terrain.EMPTY && patch[i]) {
+			if (map[i] == Terrain.EMPTY && water[i]) {
 				map[i] = Terrain.WATER;
+			}
+		}
+
+		boolean[] grass = Patch.generate( 0.35f, 3 );
+		for (int i=WIDTH+1; i < LENGTH-WIDTH-1; i++) {
+			if (map[i] == Terrain.EMPTY && grass[i]) {
+				int count = 1;
+				for (int n : NEIGHBOURS8) {
+					if (grass[i + n]) {
+						count++;
+					}
+				}
+				map[i] = (Random.Float() < count / 12f) ? Terrain.HIGH_GRASS : Terrain.GRASS;
 			}
 		}
 		
@@ -141,40 +175,22 @@ public class CavesBossLevel extends Level {
 	}
 	
 	@Override
-	protected void decorate() {	
-		
-		for (int i=WIDTH + 1; i < LENGTH - WIDTH; i++) {
-			if (map[i] == Terrain.EMPTY) {
-				int n = 0;
-				if (map[i+1] == Terrain.WALL) {
-					n++;
-				}
-				if (map[i-1] == Terrain.WALL) {
-					n++;
-				}
-				if (map[i+WIDTH] == Terrain.WALL) {
-					n++;
-				}
-				if (map[i-WIDTH] == Terrain.WALL) {
-					n++;
-				}
-				if (Random.Int( 8 ) <= n) {
-					map[i] = Terrain.EMPTY_DECO;
-				}
-			}
-		}
-		
-		for (int i=0; i < LENGTH; i++) {
-			if (map[i] == Terrain.WALL && Random.Int( 8 ) == 0) {
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
-		
-//		int sign;
-//		do {
-//			sign = Random.Int( ROOM_LEFT, ROOM_RIGHT ) + Random.Int( ROOM_TOP, ROOM_BOTTOM ) * WIDTH;
-//		} while (sign == entrance);
-//		map[sign] = Terrain.SIGN;
+	protected void decorate() {
+
+        for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
+            if (map[i] == Terrain.EMPTY && Random.Int( 10 ) == 0 ) {
+				map[i] = Terrain.EMPTY_DECO;
+            }
+        }
+
+        for (int i=0; i < LENGTH ; i++) {
+            if( map[i] == Terrain.WALL && Random.Int( 10 ) == 0 ) {
+
+                map[i] = Random.oneOf(
+                        Terrain.WALL_DECO, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
+            }
+        }
 	}
 	
 	@Override
@@ -226,16 +242,15 @@ public class CavesBossLevel extends Level {
             progress = BOSS_APPEARED;
 			
 			Mob boss = Bestiary.mob( Dungeon.depth );
-			boss.state = boss.HUNTING;
-			do {
-				boss.pos = Random.Int( LENGTH );
-			} while (
-				!passable[boss.pos] ||
-				!outsideEntranceRoom(boss.pos) ||
-				Dungeon.visible[boss.pos]);
+			boss.state = boss.SLEEPING;
+
+            boss.pos = exit + WIDTH * 2;
 			GameScene.add( boss );
+
+            set( boss.pos, Terrain.EMPTY_DECO );
+            GameScene.updateMap( boss.pos );
 			
-			set( arenaDoor, Terrain.WALL );
+			set( arenaDoor, Terrain.GRATE );
 			GameScene.updateMap( arenaDoor );
 			
 			CellEmitter.get( arenaDoor ).start(Speck.factory(Speck.ROCK), 0.07f, 10 );
@@ -271,8 +286,14 @@ public class CavesBossLevel extends Level {
 		
 		return super.drop( item, cell );
 	}
-	
 
+	protected boolean[] water() {
+		return Patch.generate( 0.45f, 6 );
+	}
+
+	protected boolean[] grass() {
+		return Patch.generate( 0.35f, 3 );
+	}
 
     @Override
     public String tileName( int tile ) {
@@ -286,6 +307,7 @@ public class CavesBossLevel extends Level {
 	
 	@Override
 	public void addVisuals( Scene scene ) {
+        super.addVisuals( scene );
 		CavesLevel.addVisuals( this, scene );
 	}
 

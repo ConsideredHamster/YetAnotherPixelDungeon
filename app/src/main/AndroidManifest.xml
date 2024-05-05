@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.consideredhamster.yetanotherpixeldungeon"
+	package="com.consideredhamster.yetanotherpixeldungeon.github"
 	android:versionCode="0"
 	android:versionName="0.0.0"
 	android:installLocation="auto">
 
     <uses-permission android:name="android.permission.VIBRATE"/>
     
-	<uses-sdk 
-	    android:minSdkVersion="9"
-	    android:targetSdkVersion="20"/>
+	<uses-sdk android:targetSdkVersion="20"/>
 	
 	<uses-feature 
 	    android:glEsVersion="0x00020000"/>

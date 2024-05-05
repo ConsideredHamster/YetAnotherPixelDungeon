@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.sprites;
 
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.watabou.noosa.TextureFilm;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -66,7 +67,7 @@ public class WandmakerSprite extends MobSprite {
 			shield.putOut();
 		}
 
-		emitter().start( ElmoParticle.FACTORY, 0.03f, 60 );
+		emitter().start( Speck.factory( Speck.LIGHT ), 0.03f, 60 );
 	}
 	
 

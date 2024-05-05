@@ -26,46 +26,26 @@ import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room;
+import com.consideredhamster.yetanotherpixeldungeon.levels.SewerLevel;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
+import com.watabou.utils.Rect;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class StandardPainter extends Painter {
 
 	public static void paint( Level level, Room room ) {
-		
-		fill( level, room, Terrain.WALL );
 
-		for (Room.Door door : room.connected.values()) {
+        fill( level, room, Terrain.WALL );
 
-//            door.set( Room.Door.Type.HIDDEN );
+        paintDoors( level, room );
 
-            switch ( Random.Int(10)) {
-                case 0:
-                    door.set( Dungeon.depth > 1 ? Room.Door.Type.HIDDEN : Room.Door.Type.EMPTY );
+        if( level.feeling == Level.Feeling.ASHES &&	Math.min( room.width(), room.height() ) >= 4 && Random.Int( 3 ) == 0 ) {
 
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                    door.set( Room.Door.Type.EMPTY );
-                    break;
-                case 4:
-                case 5:
-                case 6:
-                    door.set( level.feeling == Level.Feeling.TRAPS ? Room.Door.Type.HIDDEN : Room.Door.Type.REGULAR );
-                    break;
-                case 7:
-                case 8:
-                case 9:
-                    door.set( Room.Door.Type.REGULAR );
-                    break;
-            }
-		}
-
-        if( level.feeling == Level.Feeling.HAUNT &&	Math.min( room.width(), room.height() ) >= 4 && Random.Int( 3 ) == 0 ) {
-
-            paintFissure( level, room );
+            paintGraveyard( level, room );
             return;
 
         } else if( level.feeling == Level.Feeling.GRASS && Math.max(room.width(), room.height()) >= 4 && Random.Int( 3 ) == 0 ) {
@@ -83,18 +63,24 @@ public class StandardPainter extends Painter {
             paintBridge(level, room);
             return;
 
-        } else if (!Dungeon.bossLevel() && Random.Int( 3 ) == 0) {
+        } else if( level.feeling == Level.Feeling.SWARM && room.width() >= 4 && room.height() >= 4 && Random.Int( 3 ) == 0 ) {
+
+            paintFissure(level, room);
+            return;
+
+        } else if( level.feeling == Level.Feeling.BOOKS && room.width() >= 4 && room.height() >= 4 && Random.Int( 3 ) == 0 ) {
+
+            paintStudy(level, room);
+            return;
+
+        } else if (!Dungeon.bossLevel() && Random.Int( 2 ) == 0 ) {
             switch ( Random.Int(6) ) {
                 case 0:
-                    if (level.feeling != Level.Feeling.GRASS) {
-                        if (Math.min(room.width(), room.height()) >= 4 && Math.max(room.width(), room.height()) >= 6) {
-                            paintGraveyard(level, room);
-                            return;
-                        }
-                        break;
-                    } else {
-//					 Burned room
+                    if (Math.min(room.width(), room.height()) >= 4 && Math.max(room.width(), room.height()) >= 6) {
+                        paintGraveyard(level, room);
+                        return;
                     }
+                    break;
                 case 1:
                     if (Math.min(room.width(), room.height()) >= 4) {
                         paintBurned(level, room);
@@ -130,6 +116,33 @@ public class StandardPainter extends Painter {
         }
 
 		fill( level, room, 1, Terrain.EMPTY );
+
+        if ( room.width() > 3 && room.height() > 3 && Random.Int(2) == 0 ){
+
+            int pos = room.random( 1 );
+
+            if( level.map[ pos ] != Terrain.EMPTY_SP && level.heaps.get( pos ) == null ){
+
+                switch( Dungeon.chapter() ) {
+                    case 1:
+                        level.map[ pos ] = Random.oneOf( Terrain.STATUE, Terrain.BARRICADE, Terrain.PEDESTAL, Terrain.EMPTY_WELL );
+                        break;
+                    case 2:
+                        level.map[ pos ] = Random.oneOf( Terrain.STATUE, Terrain.BARRICADE, Terrain.PEDESTAL, Terrain.CHASM );
+                        break;
+                    case 3:
+                        level.map[ pos ] = Random.oneOf( Terrain.STATUE, Terrain.BARRICADE, Terrain.GRATE, Terrain.CHASM );
+                        break;
+                    case 4:
+                        level.map[ pos ] = Random.oneOf( Terrain.STATUE, Terrain.SHELF_EMPTY, Terrain.PEDESTAL, Terrain.CHASM );
+                        break;
+                    case 5:
+                        level.map[ pos ] = Random.oneOf( Terrain.STATUE, Terrain.SHELF_EMPTY, Terrain.PEDESTAL, Terrain.CHASM );
+                        break;
+                }
+            }
+        }
+
 	}
 	
 	private static void paintBurned( Level level, Room room ) {
@@ -144,7 +157,7 @@ public class StandardPainter extends Painter {
 					t = Terrain.FIRE_TRAP;
 					break;
 				case 2:
-					t = Terrain.SECRET_FIRE_TRAP;
+					t = Dungeon.depth > 1 ? Terrain.SECRET_FIRE_TRAP : Terrain.FIRE_TRAP ;
 					break;
 				case 3:
 					t = Terrain.INACTIVE_TRAP;
@@ -328,4 +341,113 @@ public class StandardPainter extends Painter {
 			}
 		}
 	}
+
+	private static void paintDoors( Level level, Room room ) {
+        for (Room.Door door : room.connected.values()) {
+
+            switch ( Dungeon.chapter() ) {
+
+                case 1:
+
+                    door.set( Random.oneOf(
+                        Room.Door.Type.HIDDEN, Room.Door.Type.REGULAR,
+                        Room.Door.Type.REGULAR, Room.Door.Type.REGULAR,
+                        Room.Door.Type.EMPTY, Room.Door.Type.EMPTY
+                    ) );
+                    break;
+
+                case 2:
+
+                    door.set( Random.oneOf(
+                        Room.Door.Type.HIDDEN, Room.Door.Type.HIDDEN,
+                        Room.Door.Type.REGULAR, Room.Door.Type.REGULAR,
+                        Room.Door.Type.REGULAR, Room.Door.Type.EMPTY
+                    ) );
+                    break;
+
+                case 3:
+
+                    door.set( Random.oneOf(
+                        Room.Door.Type.HIDDEN, Room.Door.Type.REGULAR,
+                        Room.Door.Type.REGULAR, Room.Door.Type.EMPTY,
+                        Room.Door.Type.EMPTY, Room.Door.Type.EMPTY
+                    ) );
+                    break;
+
+                case 4:
+                case 5:
+
+                    door.set( Room.Door.Type.REGULAR );
+                    break;
+
+            }
+
+            if( level.feeling == Level.Feeling.TRAPS && Random.Int( 3 ) == 0 ) {
+                door.type = Room.Door.Type.HIDDEN;
+            }
+
+            if( Dungeon.depth == 1 && door.type == Room.Door.Type.HIDDEN ) {
+                door.type = Room.Door.Type.REGULAR;
+            }
+        }
+    }
+
+    public static void paintBooks( Level level, Room room ) {
+
+        // Mmm, splendid! Simply... delicious!
+
+        for( int x = room.left + 1 ; x < room.right ; x++ ){
+
+            int pos = room.top * Level.WIDTH + x;
+
+            if(
+                ( room.top > 0 )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos - Level.WIDTH ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos - Level.WIDTH - 1 ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos - Level.WIDTH + 1 ] )
+            ) {
+                set( level, pos, Random.Int(3) == 0 ? Terrain.BOOKSHELF : Terrain.SHELF_EMPTY );
+            }
+
+            pos = room.bottom * Level.WIDTH + x;
+
+            if(
+                ( room.bottom < ( Level.HEIGHT - 1 ) )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos + Level.WIDTH ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos + Level.WIDTH - 1 ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos + Level.WIDTH + 1 ] )
+            ){
+                set( level, pos, Random.Int(3) == 0 ? Terrain.BOOKSHELF : Terrain.SHELF_EMPTY );
+            }
+        }
+
+        for( int y = room.top + 1 ; y < room.bottom ; y++ ){
+
+            int pos = y * Level.WIDTH + room.left;
+
+            if(
+                ( room.left > 0 )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos - 1 ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos - Level.WIDTH - 1 ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos + Level.WIDTH - 1 ] )
+            ){
+                set( level, pos, Random.Int(3) == 0 ? Terrain.BOOKSHELF : Terrain.SHELF_EMPTY );
+            }
+
+            pos = y * Level.WIDTH + room.right;
+
+            if(
+                ( room.right < ( Level.WIDTH - 1 ) )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos + 1 ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos - Level.WIDTH + 1 ] )
+                && Arrays.asList( Terrain.WALLS ).contains( level.map[ pos + Level.WIDTH + 1 ] )
+            ){
+                set( level, pos, Random.Int(3) == 0 ? Terrain.BOOKSHELF : Terrain.SHELF_EMPTY );
+            }
+        }
+    }
 }

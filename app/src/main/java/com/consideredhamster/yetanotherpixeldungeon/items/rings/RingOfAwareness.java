@@ -50,16 +50,19 @@ public class RingOfAwareness extends Ring {
             "of different threats as well as allowing for a much deadlier counterattacks."
         );
 
-        desc.append( "\n\n" );
+        if( !dud ) {
 
-        desc.append( super.desc() );
+            desc.append("\n\n");
 
-        desc.append( " " );
+            desc.append(super.desc());
 
-        desc.append(
-            "Wearing this ring will increase your _perception by " + mainEffect + "%_ " +
-            "and _bonus damage from counter attacks by " + sideEffect + "%_."
-        );
+            desc.append(" ");
+
+            desc.append(
+                    "Wearing this ring will increase your _perception by " + mainEffect + "%_ " +
+                            "and _bonus damage from counter attacks by " + sideEffect + "%_."
+            );
+        }
 
         return desc.toString();
 

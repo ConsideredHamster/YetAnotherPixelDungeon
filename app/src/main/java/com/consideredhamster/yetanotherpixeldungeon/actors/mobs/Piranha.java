@@ -21,8 +21,16 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Crippled;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.TagAttack;
+import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -37,6 +45,8 @@ public class Piranha extends MobEvasive {
 		super( Dungeon.depth + 1 );
 
         name = "giant piranha";
+        info = "Crippling attack, Invisibility, Aquatic";
+
         spriteClass = PiranhaSprite.class;
 
         baseSpeed = 2f;
@@ -56,11 +66,33 @@ public class Piranha extends MobEvasive {
 	
 	@Override
 	protected boolean act() {
+
 		if (!Level.water[pos]) {
+
 			die( null );
 			return true;
-		} else {
-			return super.act();
+
+		} else if( state == HUNTING && enemy != null && !Level.adjacent( pos, enemy.pos ) && invisible == 0 ) {
+
+			sprite.cast(enemy.pos, new Callback() {
+				@Override
+				public void call() {
+				submerge();
+				sprite.idle();
+				}
+			});
+
+			spend( TICK );
+			return true;
+		}
+
+		return super.act();
+	}
+
+	public void submerge() {
+		BuffActive.add(this, Invisibility.class, Random.Float( 15.0f, 20.0f ) );
+		if (Dungeon.visible[pos]) {
+			GLog.i( name + " dives deeper into the water!");
 		}
 	}
 	

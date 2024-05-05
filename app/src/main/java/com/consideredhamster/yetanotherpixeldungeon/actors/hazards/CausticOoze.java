@@ -54,6 +54,11 @@ public class CausticOoze extends Hazard {
 
     }
 
+    @Override
+    public String desc() {
+        return "There is a pool of corrosive liquid here.";
+    };
+
     public void setValues( int pos, int duration ) {
 
         this.pos = pos;

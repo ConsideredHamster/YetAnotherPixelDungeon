@@ -48,8 +48,8 @@ public class Guard extends BuffReactive {
         return "Guard";
     }
 
-    @Override
-    public String statusMessage() { return "guard"; }
+//    @Override
+//    public String statusMessage() { return "guard"; }
 
     @Override
     public boolean attachTo( Char target ) {

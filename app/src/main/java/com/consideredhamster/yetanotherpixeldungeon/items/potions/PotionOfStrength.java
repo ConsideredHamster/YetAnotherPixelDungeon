@@ -38,7 +38,6 @@ public class PotionOfStrength extends Potion {
 	
 	@Override
 	protected void apply( Hero hero ) {
-		setKnown();
 
         hero.STR++;
         hero.strBonus++;
@@ -65,6 +64,9 @@ public class PotionOfStrength extends Potion {
         QuickSlot.refresh();
 
 		Badges.validateStrengthAttained();
+
+        setKnown();
+
 	}
 	
 	@Override

@@ -22,10 +22,19 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.AmbitiousImp;
+import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
+import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.GolemSprite;
+import com.watabou.utils.Callback;
+import com.watabou.utils.Random;
 
 public class Golem extends MobHealthy {
 
@@ -49,8 +58,9 @@ public class Golem extends MobHealthy {
          */
 
 		name = "stone golem";
-		spriteClass = GolemSprite.class;
+		info = "Magical, Slow, Knockback";
 
+		spriteClass = GolemSprite.class;
         dexterity /= 2;
 
         resistances.put( Element.Flame.class, Element.Resist.PARTIAL );
@@ -71,11 +81,6 @@ public class Golem extends MobHealthy {
     public boolean isMagical() {
         return true;
     }
-
-    @Override
-    public int armourAC() {
-        return buffs( Burning.class ) == null ? super.armourAC() : 0 ;
-    }
 	
 	@Override
 	public float attackSpeed() {
@@ -85,6 +90,16 @@ public class Golem extends MobHealthy {
     @Override
     public float moveSpeed() {
         return 0.75f;
+    }
+
+    @Override
+    public int attackProc( final Char enemy, int damage, boolean blocked ) {
+
+        if( Random.Int( 10 ) < tier ) {
+            Pushing.knockback( enemy, pos, 1, damage / 2 );
+        }
+
+        return damage;
     }
 	
 	@Override
@@ -99,8 +114,8 @@ public class Golem extends MobHealthy {
 		return
 			"The Dwarves tried to combine their knowledge of mechanisms with their newfound power of elemental binding. " +
 			"They used spirits of earth as the \"soul\" for the mechanical bodies of golems, which were believed to be " +
-			"most controllable of all. Despite this, the tiniest mistake in the ritual could cause an outbreak. Their " +
-            "metallic bodies can become less durable under high temperatures.";
+			"most controllable of all. Despite this, the tiniest mistake in the ritual could cause an outbreak. But it " +
+            "is still worth it, as golem's fists can knock away even the sturdiest foes.";
 	}
 
 }

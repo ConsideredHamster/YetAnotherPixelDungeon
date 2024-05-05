@@ -23,12 +23,12 @@ package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Blinded;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Flare;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
@@ -41,15 +41,14 @@ import com.watabou.utils.Bundle;
 
 public abstract class Scroll extends Item {
 
-	private static final String TXT_BLINDED	= "You can't read a scroll while blinded";
-	private static final String TXT_CONFUSED	= "You can't read a scroll while confused";
+	private static final String TXT_IDENTIFIED	= "You now know that rune \"%s\" signifies a %s!";
 
 	public static final String AC_READ	= "READ";
 	
 	protected static final float TIME_TO_READ	= 1f;
 
     private static final Class<?>[] scrolls = {
-            ScrollOfIdentify.class,
+            ScrollOfDetectMagic.class,
             ScrollOfTransmutation.class,
             ScrollOfBanishment.class,
             ScrollOfClairvoyance.class,
@@ -169,6 +168,10 @@ public abstract class Scroll extends Item {
 	public void setKnown() {
 		if (!isTypeKnown()) {
 			handler.know( this );
+
+            if( Dungeon.hero.isAlive() ){
+                GLog.i( TXT_IDENTIFIED, rune, name() );
+            }
 		}
 		
 		Badges.validateAllScrollsIdentified();

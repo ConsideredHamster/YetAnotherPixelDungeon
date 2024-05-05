@@ -21,7 +21,9 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses;
 
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.TagAttack;
 
 public class MindVision extends Bonus {
 
@@ -60,9 +62,21 @@ public class MindVision extends Bonus {
                 "and increases your awareness.";
     }
 
+    @Override
+    public boolean attachTo( Char target ) {
+        if (super.attachTo(target)) {
+            Dungeon.hero.checkVisibleMobs();
+            TagAttack.updateState();
+            return true;
+        }
+        return false;
+    }
+
 	@Override
 	public void detach() {
 		super.detach();
 		Dungeon.observe();
+        Dungeon.hero.checkVisibleMobs();
+        TagAttack.updateState();
 	}
 }

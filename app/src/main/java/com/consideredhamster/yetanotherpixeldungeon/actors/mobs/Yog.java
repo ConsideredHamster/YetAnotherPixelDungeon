@@ -59,6 +59,8 @@ public class Yog extends Mob {
 	
 	{
 		name = Dungeon.depth == Statistics.deepestFloor ? "Yog-Dzewa" : "echo of Yog-Dzewa";
+		info = "Boss enemy!";
+
 		spriteClass = YogSprite.class;
 		
 		HP = HT = 500;
@@ -74,6 +76,7 @@ public class Yog extends Mob {
 
         resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
         resistances.put( Element.Knockback.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Ensnaring.class, Element.Resist.IMMUNE );
 
 	}
 
@@ -163,15 +166,6 @@ public class Yog extends Mob {
 	}
 	
 	@Override
-	public void notice() {
-		super.notice();
-
-        if( enemySeen ) {
-            yell( "Greetings, mortal. Are you ready to die?" );
-        }
-	}
-	
-	@Override
 	public String description() {
 		return TXT_DESC;
 			
@@ -200,6 +194,7 @@ public class Yog extends Mob {
 
             super( 5, 25, true );
 			name = "rotting fist";
+			info = "Corrosive attack, Acidic blood, Acidic healing, Respawn";
 			spriteClass = RottingFistSprite.class;
 
 			EXP = 0;
@@ -291,11 +286,15 @@ public class Yog extends Mob {
 
             super( 5, 25, true );
 			name = "burning fist";
+			info = "Fire bolt, Always Burning";
 			spriteClass = BurningFistSprite.class;
 			
 			EXP = 0;
 			
 			state = WANDERING;
+
+			minDamage /= 2;
+			maxDamage /= 2;
 
             resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
             resistances.put( Element.Dispel.class, Element.Resist.PARTIAL );
@@ -357,7 +356,7 @@ public class Yog extends Mob {
 
             if (hit( this, enemy, true, true )) {
 
-                enemy.damage( damageRoll() / 2, this, Element.FLAME );
+                enemy.damage( damageRoll(), this, Element.FLAME );
 
             } else {
 

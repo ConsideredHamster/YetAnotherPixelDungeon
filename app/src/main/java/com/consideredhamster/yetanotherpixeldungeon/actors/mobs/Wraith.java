@@ -51,7 +51,7 @@ public class Wraith extends MobRanged {
 	private static final float BLINK_CHANCE	= 0.125f;
 
     public Wraith() {
-        this( Dungeon.depth );;
+        this( Dungeon.depth );
     }
 
     public Wraith( int depth ) {
@@ -59,6 +59,7 @@ public class Wraith extends MobRanged {
         super( depth / 6 + 1, depth + 1, false );
 
         name = "wraith";
+        info = "Magical, Flying, Teleport, Life drain, Unholy bolt";
         spriteClass = WraithSprite.class;
 
         minDamage += tier;

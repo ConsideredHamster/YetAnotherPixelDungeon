@@ -51,16 +51,19 @@ public class RingOfMysticism extends Ring {
             "attunement with magical currents really helps in their line of work."
         );
 
-        desc.append( "\n\n" );
+        if( !dud ) {
 
-        desc.append( super.desc() );
+            desc.append("\n\n");
 
-        desc.append( " " );
+            desc.append(super.desc());
 
-        desc.append(
-            "Wearing this ring will increase your _attunement by " + mainEffect + "%_ and _chance " +
-            "to proc_ of enchants on your weapons and armors by _" + sideEffect + "%_."
-        );
+            desc.append(" ");
+
+            desc.append(
+                    "Wearing this ring will increase your _attunement by " + mainEffect + "%_ and _chance " +
+                            "to proc_ of enchants on your weapons and armors by _" + sideEffect + "%_."
+            );
+        }
 
         return desc.toString();
 	}

@@ -114,9 +114,9 @@ public class Generator {
 		}
 	};
 	
-	private static HashMap<Category,Float> categoryProbs = new HashMap<Generator.Category, Float>();
-	private static HashMap<Category,Float> equipmentProbs = new HashMap<Generator.Category, Float>();
-	private static HashMap<Category,Float> comestibleProbs = new HashMap<Generator.Category, Float>();
+	private final static HashMap<Category,Float> categoryProbs = new HashMap<Generator.Category, Float>();
+	private final static HashMap<Category,Float> equipmentProbs = new HashMap<Generator.Category, Float>();
+	private final static HashMap<Category,Float> comestibleProbs = new HashMap<Generator.Category, Float>();
 
 	static {
 
@@ -200,7 +200,7 @@ public class Generator {
 
         Category.SCROLL.probs = new float[]{ 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 3, 2 };
         Category.SCROLL.classes = new Class<?>[]{
-                ScrollOfIdentify.class,         //55
+                ScrollOfDetectMagic.class,         //55
                 ScrollOfTransmutation.class,    //60
 
                 ScrollOfDarkness.class,         //65
@@ -547,7 +547,7 @@ public class Generator {
 
     // upgrade level depends on the current chapter, first chapter 100% offers unpgraded ring/wand
     // really gotta fix that when I will get to implementing the Endless difficulty
-    private static float[][] chances = {
+    private final static float[][] chances = {
             { 0, 0, 0, 1, 0, 0, 0 },
             { 0, 0, 1, 3, 1, 0, 0 },
             { 0, 1, 2, 6, 3, 1, 0 },

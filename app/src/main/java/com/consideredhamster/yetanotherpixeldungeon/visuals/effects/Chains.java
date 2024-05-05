@@ -54,7 +54,7 @@ public class Chains extends Group {
         float rotation = (float)(Math.atan2( dy, dx ) * A);
 
         spent = 0f;
-        duration = distance / 90f + 0.0f;
+        duration = distance / 360f + 0.0f;
 
         chains = new Image[ Math.round( distance / 4f ) + 1 ];
         for (int i = 0; i < chains.length; i++){
@@ -71,44 +71,53 @@ public class Chains extends Group {
 
 		super.update();
 
+        float dx = to.x - from.x;
+        float dy = to.y - from.y;
+
         if ((spent += Game.elapsed) > duration) {
 
             killAndErase();
 
-        } else if ((spent += Game.elapsed) > duration / 2) {
+//        } else if ((spent += Game.elapsed) > duration / 2) {
 
-            float dx = to.x - from.x;
-            float dy = to.y - from.y;
+//            float dx = to.x - from.x;
+//            float dy = to.y - from.y;
+//
+//            if( reversed ) {
+//
+//                for (int i = 0; i < chains.length; i++) {
+//                    chains[i].center(new PointF(
+//                            to.x + ((dx * (i / (float) chains.length)) / duration * (spent - duration) * 2),
+//                            to.y + ((dy * (i / (float) chains.length)) / duration * (spent - duration) * 2)
+//                    ));
+//                }
+//
+//            } else {
+//
+//                for (int i = 0; i < chains.length; i++) {
+//                    chains[i].center(new PointF(
+//                            from.x + ((dx * (i / (float) chains.length)) / duration * (duration - spent) * 2),
+//                            from.y + ((dy * (i / (float) chains.length)) / duration * (duration - spent) * 2)
+//                    ));
+//                }
+//
+//            }
 
-            if( reversed ) {
+        } else if( reversed ) {
 
-                for (int i = 0; i < chains.length; i++) {
-                    chains[i].center(new PointF(
-                            to.x + ((dx * (i / (float) chains.length)) / duration * (spent - duration) * 2),
-                            to.y + ((dy * (i / (float) chains.length)) / duration * (spent - duration) * 2)
-                    ));
-                }
-
-            } else {
-
-                for (int i = 0; i < chains.length; i++) {
-                    chains[i].center(new PointF(
-                            from.x + ((dx * (i / (float) chains.length)) / duration * (duration - spent) * 2),
-                            from.y + ((dy * (i / (float) chains.length)) / duration * (duration - spent) * 2)
-                    ));
-                }
-
+            for (int i = 0; i < chains.length; i++) {
+                chains[i].center(new PointF(
+                        from.x + ((dx * (i / (float) chains.length)) / duration * (duration - spent) ),
+                        from.y + ((dy * (i / (float) chains.length)) / duration * (duration - spent) )
+                ));
             }
 
         } else {
 
-            float dx = to.x - from.x;
-            float dy = to.y - from.y;
-
             for (int i = 0; i < chains.length; i++) {
                 chains[i].center(new PointF(
-                        from.x + ( ( dx * ( i / (float)chains.length ) ) / duration * spent * 2 ),
-                        from.y + ( ( dy * ( i / (float)chains.length ) ) / duration * spent * 2 )
+                        from.x + ( ( dx * ( i / (float)chains.length ) ) / duration * spent ),
+                        from.y + ( ( dy * ( i / (float)chains.length ) ) / duration * spent )
                 ));
             }
         }

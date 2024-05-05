@@ -56,6 +56,7 @@ public class ScrollOfClairvoyance extends Scroll {
 			if (discoverable[i]) {
 				
 				mapped[i] = true;
+                Dungeon.level.mapped[i] = true;
 //				if ((Terrain.flags[terr] & Terrain.TRAPPED) != 0) {
 //
 //					Level.set( i, Terrain.discover( terr ) );

@@ -55,17 +55,20 @@ public class RingOfProtection extends Ring {
             "to various magical and elemental threats."
         );
 
-        desc.append( "\n\n" );
+        if( !dud ) {
 
-        desc.append( super.desc() );
+            desc.append("\n\n");
 
-        desc.append( " " );
+            desc.append(super.desc());
 
-        desc.append(
-            "Wearing this ring will increase your _armor class by " + mainEffect + "_ and " +
-            "increase your _resistance_ to fire, cold, shock, acid and energy by " +
-            "_" + sideEffect + "%_."
-        );
+            desc.append(" ");
+
+            desc.append(
+                    "Wearing this ring will increase your _armor class by " + mainEffect + "_ and " +
+                            "increase your _resistance_ to fire, cold, shock, acid and energy by " +
+                            "_" + sideEffect + "%_."
+            );
+        }
 
         return desc.toString();
 	}

@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
+import com.consideredhamster.yetanotherpixeldungeon.levels.painters.Painter;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
@@ -30,6 +31,8 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.AmbitiousIm
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room.Type;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+
+import java.util.Arrays;
 
 public class CityLevel extends RegularLevel {
 
@@ -50,10 +53,12 @@ public class CityLevel extends RegularLevel {
 		return Assets.WATER_CITY;
 	}
 
+    @Override
     protected boolean[] water() {
         return Patch.generate( feeling == Feeling.WATER ? 0.65f : 0.45f, 4 );
     }
 
+    @Override
     protected boolean[] grass() {
         return Patch.generate( feeling == Feeling.GRASS ? 0.60f : 0.40f, 3 );
     }
@@ -71,21 +76,83 @@ public class CityLevel extends RegularLevel {
 	
 	@Override
 	protected void decorate() {
-		
-		for (int i=0; i < LENGTH; i++) {
-			if (map[i] == Terrain.EMPTY && Random.Int( 10 ) == 0) { 
-				map[i] = Terrain.EMPTY_DECO;
-			} else if (map[i] == Terrain.WALL && Random.Int( 8 ) == 0) { 
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
+
+	    for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
+            if (map[i] == Terrain.EMPTY) {
+                if (Random.Int( 10 ) == 0 ) {
+                    map[i] = Terrain.EMPTY_DECO;
+                }
+            }
+        }
+
+        for (int i=0; i < LENGTH ; i++) {
+            if (
+                    i + WIDTH < LENGTH && map[i] == Terrain.WALL &&
+                    !Arrays.asList( Terrain.WALLS ).contains( map[i + WIDTH] ) &&
+                    Random.Int( 15 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                        Terrain.WALL_DECO, Terrain.WALL_DECO1, Terrain.WALL_DECO2
+                );
+
+            } else if(
+                    map[i] == Terrain.WALL && Random.Int( 10 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                        Terrain.WALL_DECO3, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
+            }
+        }
+
+        for( Room room : rooms ){
+            if( room.type == Room.Type.STANDARD ){
+                for (Room.Door door : room.connected.values()) {
+                    if( door.type == Room.Door.Type.REGULAR ){
+
+                        int pos = door.y * Level.WIDTH + door.x;
+
+                        boolean clear = true;
+
+                        for( int i : Level.NEIGHBOURSX ) {
+                            if( map[ pos + i ] == Terrain.WALL ) {
+                                clear = false;
+                            }
+                        }
+
+                        if( clear && Random.Int( 5 ) == 0 ) {
+                            for( int i : Level.NEIGHBOURS4 ) {
+                                if( map[ pos + i ] == Terrain.WALL ) {
+                                    map[ pos + i ] = Terrain.GRATE;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+//        for (int i=WIDTH; i < LENGTH - WIDTH; i++) {
+//            if (map[i] == Terrain.WALL && map[i + WIDTH] != Terrain.WALL && Random.Int( 20 ) == 0 ) {
+//                map[i] = Terrain.WALL_DECO2;
+//            }
+//        }
+//
+//        for (int i=0; i < LENGTH; i++) {
+//            if (map[i] == Terrain.EMPTY && Random.Int( 10 ) == 0){
+//                map[ i ] = Terrain.EMPTY_DECO;
+//            } else if (map[i] == Terrain.WALL && Random.Int( 8 ) == 0) {
+//                map[i] = Terrain.WALL_DECO;
+//            }
+//        }
 	}
 	
 	@Override
 	protected void createItems() {
 		super.createItems();
 		
-		AmbitiousImp.Quest.spawn(this, roomEntrance);
+		AmbitiousImp.Quest.spawn(this, roomExit);
 	}
 
     @Override
@@ -113,24 +180,31 @@ public class CityLevel extends RegularLevel {
 //	@Override
 	public static String tileDescs(int tile) {
 		switch (tile) {
-		case Terrain.ENTRANCE:
-			return "A ramp leads up to the upper depth.";
-		case Terrain.EXIT:
-			return "A ramp leads down to the lower depth.";
-		case Terrain.WALL_DECO:
-		case Terrain.EMPTY_DECO:
-			return "Several tiles are missing here.";
-		case Terrain.EMPTY_SP:
-			return "Thick carpet covers the floor.";
-		case Terrain.STATUE:
-		case Terrain.STATUE_SP:
-			return "The statue depicts some dwarf standing in a heroic stance.";
-		case Terrain.BOOKSHELF:
-            return "The rows of books on different disciplines fill the bookshelf. Maybe, there would be something useful in here?";
-        case Terrain.SHELF_EMPTY:
-            return "The rows of books on different disciplines fill the bookshelf.";
-		default:
-			return Level.tileDescs(tile);
+            case Terrain.ENTRANCE:
+                return "A ramp leads up to the upper depth.";
+            case Terrain.EXIT:
+                return "A ramp leads down to the lower depth.";
+            case Terrain.EMPTY_DECO:
+            case Terrain.WALL_DECO3:
+            case Terrain.WALL_DECO4:
+            case Terrain.WALL_DECO5:
+                return "Several tiles are missing here.";
+            case Terrain.WALL_DECO:
+                return "There is a furnace here, and it is still burning.";
+            case Terrain.WALL_DECO1:
+            case Terrain.WALL_DECO2:
+                return "There are several weapons hanging on this wall. Purely ornamental, of course.";
+            case Terrain.EMPTY_SP:
+                return "Thick carpet covers the floor.";
+            case Terrain.STATUE:
+            case Terrain.STATUE_SP:
+                return "The statue depicts some dwarf standing in a heroic stance.";
+            case Terrain.BOOKSHELF:
+                return "The rows of books on different disciplines fill the bookshelf. Maybe, there would be something useful in here?";
+            case Terrain.SHELF_EMPTY:
+                return "The rows of books on different disciplines fill the bookshelf.";
+            default:
+                return Level.tileDescs(tile);
 		}
 	}
 	
@@ -206,4 +280,130 @@ public class CityLevel extends RegularLevel {
 			size( 8 - p * 4 );
 		}
 	}
+
+    public static void pregenerate( Level level ) {
+
+        // First, we fill everything with empty tiles
+        Painter.fill( level, 1, 1, WIDTH - 2, HEIGHT - 2, Terrain.EMPTY );
+
+        // Then, we generate chasms, which grow in size and number as you descend deeper
+        boolean[] chasm = new boolean[ Level.LENGTH ];
+
+        switch( Dungeon.depth ) {
+//            case 19:
+//                chasm = Patch.generate( 0.20f, 2 );
+//                break;
+            case 20:
+                chasm = Patch.generate( 0.35f, 3 );
+                break;
+            case 21:
+                chasm = Patch.generate( 0.45f, 4 );
+                break;
+            case 22:
+                chasm = Patch.generate( 0.55f, 5 );
+                break;
+            case 23:
+                chasm = Patch.generate( 0.65f, 6 );
+                break;
+
+        }
+
+        for ( int i = 0 ; i < LENGTH ; i++ ){
+            if ( level.map[ i ] == Terrain.EMPTY && chasm[ i ] ) {
+                level.map[ i ] = Terrain.CHASM;
+            }
+        }
+
+        // Then we seed everything with random stuff to add some visual variety to the empty floors
+        for( int w = 0 ; w < 3; w++ ) {
+            for( int h = 0 ; h < 3 ; h++ ) {
+
+                int x = w * 8 + Random.Int( 6 ) + 2 ;
+                int y = h * 8 + Random.Int( 6 ) + 2 ;
+
+                int pos = x * Level.WIDTH + y ;
+
+                switch( Random.Int( 10 ) ) {
+
+                    case 0:
+
+                        level.map[ pos ] = Terrain.STATUE;
+                        break;
+
+                    case 1:
+
+                        level.map[ pos ] = Terrain.PEDESTAL;
+                        break;
+
+                    case 2:
+
+                        level.map[ pos ] = Terrain.EMPTY_WELL;
+                        break;
+
+                    case 3:
+
+                        level.map[ pos ] = Terrain.BARRICADE;
+                        break;
+
+                    case 4:
+
+                        level.map[ pos ] = Terrain.STATUE_SP;
+                        break;
+
+                    case 5:
+
+                        level.map[ pos ] = Terrain.WALL;
+                        break;
+
+                    case 6:
+
+                        for( int c : Level.NEIGHBOURS9 ) {
+                            level.map[ pos + c ] = Terrain.WALL;
+                        }
+
+                        break;
+
+                    case 7:
+
+                        level.map[ pos ] = Random.oneOf(
+                            Terrain.PEDESTAL, Terrain.EMPTY_WELL, Terrain.EMPTY
+                        );
+
+                        for( int c : Level.NEIGHBOURS4 ) {
+                            level.map[ pos + c ] = Terrain.STATUE;
+                        }
+
+                        break;
+
+                    case 8:
+
+                        for( int c : Level.NEIGHBOURSX ) {
+                            level.map[ pos + c ] = Terrain.STATUE;
+                        }
+
+                        for( int c : Level.NEIGHBOURS4 ) {
+                            level.map[ pos + c ] = Terrain.EMPTY;
+                        }
+
+                        level.map[ pos ] = Random.oneOf(
+                                Terrain.PEDESTAL, Terrain.EMPTY_WELL, Terrain.EMPTY
+                        );
+
+                        break;
+
+                    case 9:
+
+                        for( int c : Level.NEIGHBOURS8 ) {
+                            level.map[ pos + c ] = Terrain.EMPTY_SP;
+                        }
+
+                        level.map[ pos ] = Random.oneOf(
+                                Terrain.PEDESTAL, Terrain.STATUE_SP, Terrain.EMPTY_SP
+                        );
+
+                        break;
+                }
+            }
+        }
+    }
 }

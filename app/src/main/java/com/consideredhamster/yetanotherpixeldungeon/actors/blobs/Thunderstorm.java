@@ -22,11 +22,11 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.blobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Elemental;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SparkParticle;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
@@ -46,7 +46,11 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
+import java.util.HashSet;
+
 public class Thunderstorm extends Blob {
+
+    private final static int MAX_DISTANCE = 16;
 
     public Thunderstorm() {
         super();
@@ -128,12 +132,8 @@ public class Thunderstorm extends Blob {
                     Char ch = Actor.findChar(i);
 
                     if (ch != null) {
-                        if( ch instanceof Elemental ) {
-                            ch.damage( Random.IntRange( 1, (int)Math.sqrt( ch.HT / 2 + 1 ) ), this, null );
-                        } else {
-                            Buff.detach(ch, Burning.class);
-                            Buff.detach(ch, Corrosion.class);
-                        }
+                        Buff.detach(ch, Burning.class);
+                        Buff.detach(ch, Corrosion.class);
                     }
 
                     count++;
@@ -190,32 +190,14 @@ public class Thunderstorm extends Blob {
         }
 	}
 
-    public static void viewed() {
-        GameScene.flash(0x888888);
-        Sample.INSTANCE.play(Assets.SND_BLAST);
-        Camera.main.shake(3, 0.3f);
-        Dungeon.hero.interrupt();
-    }
-
-    public static void listen() {
-        GLog.i("You hear thunder somewhere not far away.");
-        Sample.INSTANCE.play(Assets.SND_BLAST, 1, 1, Random.Float(1.8f, 2.25f));
-        Camera.main.shake(2, 0.2f);
-    }
-
     public static void thunderstrike( int cell, Blob blob ) {
 
-        Emitter emitter = CellEmitter.get( cell );
+        HashSet<Char> affected = spreadFrom( cell );
 
-        int[] tiles = Random.Int( 2 ) == 0 ? Level.NEIGHBOURS5 : Level.NEIGHBOURSX ;
+        if( affected != null && !affected.isEmpty() ) {
+            for( Char ch : affected ) {
 
-        for( int n : tiles ) {
-
-            Char ch = Actor.findChar( cell + n );
-
-            if (ch != null) {
-
-                int power = Random.IntRange(ch.HT / 3, ch.HT * 2 / 3);
+                int power = ch.pos == cell ? ch.HT * 2 / 3 : ch.HT / 3;
 
                 if( Bestiary.isBoss(ch) ) {
                     power = power / 4;
@@ -223,10 +205,21 @@ public class Thunderstorm extends Blob {
                     power = power / 2;
                 }
 
-
-                ch.damage(n == 0 ? power : power / 2, blob, Element.SHOCK);
+                ch.damage( power, blob, Element.SHOCK);
 
             }
+        }
+
+        for (Mob mob : Dungeon.level.mobs) {
+            if (Level.distance( cell, mob.pos ) <= 4 ) {
+                mob.beckon(cell);
+            }
+        }
+
+        Emitter emitter = CellEmitter.get( cell );
+        int[] tiles = Random.Int( 2 ) == 0 ? Level.NEIGHBOURS5 : Level.NEIGHBOURSX ;
+
+        for( int n : tiles ) {
 
             if( Dungeon.visible[ cell + n ] ) {
                 emitter.parent.add( new Lightning( cell, cell + n ) );
@@ -237,12 +230,46 @@ public class Thunderstorm extends Blob {
         if( Dungeon.visible[ cell ] ){
             emitter.burst( SparkParticle.FACTORY, Random.Int( 4, 6 ) );
         }
+    }
 
-        for (Mob mob : Dungeon.level.mobs) {
-            if (Level.distance( cell, mob.pos ) <= 4 ) {
-                mob.beckon(cell);
+    public static HashSet<Char> spreadFrom( int pos ) {
+
+        HashSet<Char> targets = new HashSet<>();
+
+        if( pos < 0 || pos > Level.LENGTH )
+            return targets;
+
+        Char primary = Actor.findChar( pos );
+        if( primary != null ) {
+            targets.add( primary );
+        }
+
+        if( Level.water[pos] && ( primary == null || !primary.flying ) ){
+
+            PathFinder.buildDistanceMap( pos, Level.water, MAX_DISTANCE );
+
+            // check for other non-flying mobs in the same pool of water
+            for( int c = 0 ; c < Level.LENGTH ; c++ ){
+
+                if( PathFinder.distance[ c ] < Integer.MAX_VALUE ){
+
+                    // highlight affected water tiles
+                    GameScene.electrify( c );
+
+                    if( Dungeon.visible[ c ] ){
+                        CellEmitter.get( c ).burst( SparkParticle.FACTORY, Random.IntRange( 2, 4 ) );
+                    }
+
+                    Char ch = Actor.findChar( c );
+
+                    if( ch != null && !ch.flying && !targets.contains( ch ) ){
+                        targets.add( ch );
+                    }
+                }
             }
         }
+
+        return targets;
     }
 
     public void fill( int cell ) {
@@ -271,6 +298,19 @@ public class Thunderstorm extends Blob {
         if( Dungeon.visible[ cell ] ) {
             GLog.i("Rain fills the well!");
         }
+    }
+
+    public static void viewed() {
+        GameScene.flash(0x888888);
+        Sample.INSTANCE.play(Assets.SND_BLAST);
+        Camera.main.shake(3, 0.3f);
+        Dungeon.hero.interrupt();
+    }
+
+    public static void listen() {
+        GLog.i("You hear thunder somewhere not far away.");
+        Sample.INSTANCE.play(Assets.SND_BLAST, 1, 1, Random.Float(1.8f, 2.25f));
+        Camera.main.shake(2, 0.2f);
     }
 	
 	@Override

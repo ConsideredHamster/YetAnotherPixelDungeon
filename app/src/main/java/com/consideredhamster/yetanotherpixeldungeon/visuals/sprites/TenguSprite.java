@@ -22,6 +22,7 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.sprites;
 
 import com.watabou.noosa.TextureFilm;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
+import com.watabou.utils.Callback;
 
 public class TenguSprite extends MobSprite {
 	
@@ -41,8 +42,6 @@ public class TenguSprite extends MobSprite {
 		attack = new Animation( 15, false );
 		attack.frames( frames, 6, 7, 7, 0 );
 		
-//		cast = attack.clone();
-		
 		die = new Animation( 8, false );
 		die.frames( frames, 8, 9, 10, 10, 10, 10, 10, 10 );
 		
@@ -59,67 +58,9 @@ public class TenguSprite extends MobSprite {
 		
 		isMoving = true;
 		
-//		if (Level.water[to] && visible) {
-//			GameScene.ripple( to );
-//		}
-		
 		ch.onMotionComplete();
 	}
-	
-//	@Override
-//	public void attack( int cell ) {
-//		if (!Level.adjacent( cell, ch.pos )) {
-//
-//			((MissileSprite)parent.recycle( MissileSprite.class )).
-//				reset( ch.pos, cell, new Shurikens(), new Callback() {
-//					@Override
-//					public void call() {
-//						ch.onAttackComplete();
-//					}
-//				} );
-//
-//			play( cast );
-//			turnTo( ch.pos , cell );
-//
-//		} else {
-//
-//			super.attack( cell );
-//
-//		}
-//	}
 
-//    @Override
-//    public void attack( int cell ) {
-//        if (!Level.adjacent(cell, ch.pos)) {
-//
-//            cellToAttack = cell;
-//            turnTo( ch.pos , cell );
-//            play(cast);
-//
-//        } else {
-//
-//            super.attack(cell);
-//
-//        }
-//    }
-
-//    @Override
-//    public void onComplete( Animation anim ) {
-//        if (anim == cast) {
-//            idle();
-//
-//            ((MissileSprite)parent.recycle( MissileSprite.class )).
-//                    reset(ch.pos, cellToAttack, new Shurikens(), new Callback() {
-//                        @Override
-//                        public void call() {
-//                            ch.onAttackComplete();
-//                        }
-//                    });
-//        } else {
-//            super.onComplete(anim);
-//        }
-//    }
-//
 	@Override
 	public void onComplete( Animation anim ) {
 		if (anim == run) {

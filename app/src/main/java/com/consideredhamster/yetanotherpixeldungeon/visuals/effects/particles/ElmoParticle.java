@@ -23,6 +23,8 @@ package com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.noosa.particles.Emitter.Factory;
+import com.watabou.utils.PointF;
+import com.watabou.utils.Random;
 
 public class ElmoParticle extends PixelParticle.Shrinking {
 	
@@ -36,6 +38,17 @@ public class ElmoParticle extends PixelParticle.Shrinking {
 			return true;
 		};
 	};
+
+    public static final Emitter.Factory BURST = new Factory() {
+        @Override
+        public void emit( Emitter emitter, int index, float x, float y ) {
+            ((ElmoParticle)emitter.recycle( ElmoParticle.class )).resetBurst( x, y );
+        }
+        @Override
+        public boolean lightMode() {
+            return true;
+        }
+    };
 	
 	public ElmoParticle() {
 		super();
@@ -57,6 +70,20 @@ public class ElmoParticle extends PixelParticle.Shrinking {
 		size = 4;
 		speed.set( 0 );
 	}
+
+    public void resetBurst( float x, float y ) {
+        revive();
+
+        this.x = x;
+        this.y = y;
+
+        speed.polar( Random.Float( PointF.PI2 ), Random.Float( 16, 32 ) );
+
+        left = lifespan;
+
+        size = 4;
+        speed.set( 0 );
+    }
 	
 	@Override
 	public void update() {

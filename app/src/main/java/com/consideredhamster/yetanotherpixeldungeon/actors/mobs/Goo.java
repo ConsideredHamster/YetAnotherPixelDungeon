@@ -51,28 +51,41 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
-public abstract class Goo extends MobEvasive {
+public class Goo extends MobEvasive {
 
 	private static final float PUMP_UP_DELAY	= 2f;
 
     private static final float SPLIT_DELAY	= 1f;
 
-    private static final int SPAWN_HEALTH = 8;
+    private static final int SPAWN_HEALTH = 15;
 
     public boolean phase = false;
+
+    protected int breaks = 0;
 
     public Goo() {
 
         super(2, 10, true);
 
+        name = "Goo";
+        info = "Boss enemy!";
+
+        spriteClass = GooSprite.class;
+
+        loot = Gold.class;
+        lootChance = 4f;
+
+        dexterity /= 2;
         armorClass = 0;
 
-        resistances.put(Element.Acid.class, Element.Resist.PARTIAL);
-        resistances.put(Element.Flame.class, Element.Resist.PARTIAL);
+        resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
 
-        resistances.put(Element.Mind.class, Element.Resist.IMMUNE);
-        resistances.put(Element.Body.class, Element.Resist.IMMUNE);
+        resistances.put( Element.Acid.class, Element.Resist.PARTIAL );
+        resistances.put( Element.Flame.class, Element.Resist.PARTIAL );
 
+        resistances.put( Element.Mind.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Body.class, Element.Resist.IMMUNE );
+        resistances.put( Element.Ensnaring.class, Element.Resist.IMMUNE );
 
     }
 
@@ -81,47 +94,13 @@ public abstract class Goo extends MobEvasive {
         return true;
     }
 
-    private static Goo mother() {
-        for (Mob mob : (Iterable<Mob>) Dungeon.level.mobs.clone()) {
-            if (mob instanceof Mother) {
-                return (Goo)mob;
-            }
-        }
-
-        return null;
-    }
-
-//    @Override
-//    public HashMap<Class<? extends Element>, Float> resistances() {
-//
-//        HashMap<Class<? extends Element>, Float> result=new HashMap<>();;
-//        result.putAll( super.resistances());
-//
-//        if( buff( Frozen.class ) != null ){
-//            result.put( Element.Physical.class, Element.Resist.VULNERABLE );
-//        }
-//
-//        return result;
-//    }
-
-    private static final String PHASE	= "phase";
-
     @Override
-    public void storeInBundle( Bundle bundle ) {
-        super.storeInBundle(bundle);
-        bundle.put( PHASE, phase );
+    public float awareness(){
+        return state != SLEEPING ? super.awareness() : 0.0f ;
     }
 
     @Override
-    public void restoreFromBundle( Bundle bundle ) {
-        super.restoreFromBundle(bundle);
-        phase = bundle.getBoolean( PHASE );
-    }
-
-//    @Override
-//    public DamageType damageType() {
-//        return DamageType.ACID;
-//    }
+    protected float healthValueModifier() { return 0.25f; }
 
 	@Override
 	public void damage( int dmg, Object src, Element type ) {
@@ -134,343 +113,187 @@ public abstract class Goo extends MobEvasive {
 
             dmg /= 2;
 
-        } else if ( type == Element.PHYSICAL && dmg > 1 && dmg < HP && dmg > Random.Int( SPAWN_HEALTH * 3 ) ) {
+        } else if ( type == Element.PHYSICAL && dmg > 1 && dmg < HP && dmg > Random.Int( SPAWN_HEALTH ) ) {
 
-            ArrayList<Integer> candidates = new ArrayList<Integer>();
-            boolean[] passable = Level.passable;
+            GooSpawn clone = GooSpawn.split( this, dmg );
+            clone.mother = this;
 
-            for (int n : Level.NEIGHBOURS8) {
-                if (passable[pos + n] && Actor.findChar(pos + n) == null) {
-                    candidates.add(pos + n);
-                }
-            }
-
-            if (candidates.size() > 0) {
-
-                final Spawn clone = new Spawn();
-
-                clone.pos = pos;
-                clone.HT = dmg;
-
-                clone.state = clone.HUNTING;
-
-                if( Dungeon.difficulty == Difficulties.NORMAL ) {
-                    clone.HP = Random.NormalIntRange( 1, clone.HT / 2 );
-                } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
-                    clone.HP = clone.HT / 2;
-                } else {
-                    clone.HP = 1;
-                }
-
-                GameScene.add( clone, SPLIT_DELAY );
-
-                Pushing.move( clone, Random.element( candidates ), new Callback() {
-                    @Override
-                    public void call(){
-                        Actor.occupyCell( clone );
-                        Dungeon.level.press(clone.pos, clone);
-                    }
-                } );
-
-                Burning buff1 = buff( Burning.class );
-
-                if ( buff1 != null ) {
-                    BuffActive.addFromDamage( clone, Burning.class, buff1.getDuration() );
-                }
-            }
         }
 
         super.damage( dmg, src, type );
 	}
-	
-	@Override
-	public String description() {
-		return
-			"Little is known about The Goo. It's quite possible that it is not even a creature, but rather a " +
-			"conglomerate of substances from the sewers that gained some kind of rudimentary, but very evil " +
-            "sentience.";
-	}
 
-    public static class Mother extends Goo {
+    @Override
+    public boolean act() {
 
-        public Mother() {
+        if (( state == SLEEPING || Level.water[pos] ) && HP < HT && !phase ) {
 
-            super();
+            sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
+            HP++;
 
-            name = "Goo";
-            spriteClass = GooSprite.class;
-
-            loot = Gold.class;
-            lootChance = 4f;
-
-            dexterity /= 2;
-
-            resistances.put( Element.Knockback.class, Element.Resist.PARTIAL );
-
+            if( HP >= HT ) {
+                beckon( Dungeon.hero.pos );
+                Dungeon.hero.interrupt( "You were awoken by a bad feeling." );
+                GLog.i("Goo awakens!");
+            }
         }
 
-        protected int breaks = 0;
+        if( phase ) {
 
-        private static final String BREAKS	= "breaks";
+            GameScene.add( Blob.seed(pos, 150 + breaks * 50, Miasma.class) );
 
-        @Override
-        public void storeInBundle( Bundle bundle ) {
-            super.storeInBundle(bundle);
-            bundle.put( BREAKS, breaks );
-        }
+            if( buff( Enraged.class ) == null ) {
 
-        @Override
-        public void restoreFromBundle( Bundle bundle ) {
-            super.restoreFromBundle(bundle);
-            breaks = bundle.getInt( BREAKS );
-        }
+                phase = false;
 
-        @Override
-        public float awareness(){
-            return state != SLEEPING ? super.awareness() : 0.0f ;
-        }
+                state = SLEEPING;
 
-        @Override
-        protected float healthValueModifier() { return 0.25f; }
+                Blob blob = Dungeon.level.blobs.get( Miasma.class );
 
-        @Override
-        public boolean act() {
-
-            if (( state == SLEEPING || Level.water[pos] ) && HP < HT && !phase ) {
-
-                sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
-                HP++;
-
-                if( HP >= HT ) {
-                    beckon( Dungeon.hero.pos );
-                    Dungeon.hero.interrupt( "You were awoken by a bad feeling." );
-                    GLog.i("Goo awakens!");
+                if (blob != null) {
+                    blob.remove();
                 }
+
+                for (int i = Random.Int(2) ; i < breaks + 1 ; i++) {
+
+                    int pos = ((SewerBossLevel) Dungeon.level).getRandomSpawnPoint();
+
+                    if( pos > 0 ) {
+
+                        GooSpawn clone = new GooSpawn();
+
+                        clone.HP = clone.HT;
+                        clone.pos = pos;
+                        clone.mother = this;
+                        clone.state = clone.HUNTING;
+                        clone.phase = true;
+                        clone.EXP = 0;
+
+                        clone.beckon(pos);
+
+                        if (Dungeon.level.map[clone.pos] == Terrain.DOOR_CLOSED) {
+                            Door.enter(clone.pos);
+                        }
+
+                        Dungeon.level.press(clone.pos, clone);
+
+                        GameScene.add(clone, SPLIT_DELAY);
+
+                        if (Dungeon.visible[clone.pos]) {
+                            clone.sprite.alpha(0);
+                            clone.sprite.parent.add(new AlphaTweener(clone.sprite, 1, 0.5f));
+                        }
+
+                        clone.sprite.idle();
+                    }
+                }
+
+                if (Dungeon.visible[pos]) {
+                    sprite.showStatus(CharSprite.DEFAULT, "sleeping...");
+                    GLog.i("Goo is exhausted!");
+                }
+
+                sprite.idle();
+                spend( PUMP_UP_DELAY );
+
+            } else {
+
+                spend( TICK );
+
             }
 
-            if( phase ) {
+            return true;
 
-                GameScene.add( Blob.seed(pos, 150 + breaks * 50, Miasma.class) );
+        } else if( state != SLEEPING ) {
 
-                if( buff( Enraged.class ) == null ) {
-
-                    phase = false;
-
-                    state = SLEEPING;
-
-                    Blob blob = Dungeon.level.blobs.get( Miasma.class );
-
-                    if (blob != null) {
-                        blob.remove();
-                    }
-
-                    for (int i = Random.Int(2) ; i < breaks + 1 ; i++) {
-
-                        int pos = ((SewerBossLevel) Dungeon.level).getRandomSpawnPoint();
-
-                        if( pos > 0 ) {
-
-                            Spawn clone = new Spawn();
-
-                            clone.HT = SPAWN_HEALTH;
-
-                            if( Dungeon.difficulty == Difficulties.NORMAL ) {
-                                clone.HT = Random.NormalIntRange( clone.HT, clone.HT * 2);
-                            } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
-                                clone.HT = clone.HT * 2;
-                            }
-
-                            clone.HP = clone.HT;
-                            clone.pos = pos;
-                            clone.state = clone.HUNTING;
-                            clone.phase = true;
-
-                            clone.beckon(pos);
-
-                            if (Dungeon.level.map[clone.pos] == Terrain.DOOR_CLOSED) {
-                                Door.enter(clone.pos);
-                            }
-
-                            Dungeon.level.press(clone.pos, clone);
-
-                            GameScene.add(clone, SPLIT_DELAY);
-
-                            if (Dungeon.visible[clone.pos]) {
-                                clone.sprite.alpha(0);
-                                clone.sprite.parent.add(new AlphaTweener(clone.sprite, 1, 0.5f));
-                            }
-
-                            clone.sprite.idle();
-                        }
-                    }
-
-                    if (Dungeon.visible[pos]) {
-                        sprite.showStatus(CharSprite.DEFAULT, "sleeping...");
-                        GLog.i("Goo is exhausted!");
-                    }
-
-                    sprite.idle();
-                    spend( PUMP_UP_DELAY );
-
-                } else {
-
-                    spend( TICK );
-
-                }
-
-                return true;
-
-            } else if( state != SLEEPING && 3 - breaks > 4 * HP / HT ) {
+            if ( 3 - breaks > 4 * HP / HT ) {
 
                 breaks++;
 
                 phase = true;
 
-                GameScene.add(Blob.seed(pos, 100, Miasma.class));
+                GameScene.add( Blob.seed( pos, 100, Miasma.class ) );
 
-                BuffActive.add(this, Enraged.class, breaks * Random.Float( 5.0f, 6.0f ) );
+                BuffActive.add( this, Enraged.class, breaks * Random.Float( 5.0f, 6.0f ) );
 
-                for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
-                    if (mob instanceof Spawn) {
-                        ((Spawn)mob).phase = true;
+                for ( Mob mob : (Iterable<Mob>) Dungeon.level.mobs.clone() ) {
+                    if ( mob instanceof GooSpawn ) {
+                        ( (GooSpawn) mob ).phase = true;
                         mob.sprite.idle();
                     }
                 }
 
-                if (Dungeon.visible[pos]) {
+                if ( Dungeon.visible[ pos ] ) {
 //                    sprite.showStatus( CharSprite.NEGATIVE, "enraged!" );
-                    GLog.n("Goo starts releasing deadly miasma!");
+                    GLog.n( "Goo starts releasing deadly miasma!" );
                 }
 
                 sprite.idle();
 
                 spend( TICK );
                 return true;
-            }
 
-            return super.act();
-        }
-
-        @Override
-        public void die( Object cause, Element dmg ) {
-
-            yell( "glurp... glurp..." );
-
-            super.die(cause, dmg);
-
-	    	((SewerBossLevel)Dungeon.level).unseal();
-
-            GameScene.bossSlain();
-
-            Badges.validateBossSlain();
-
-            for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
-                if (mob instanceof Spawn) {
-                    mob.die( cause, null );
-                }
-            }
-
-            Blob blob = Dungeon.level.blobs.get( Miasma.class );
-
-            if (blob != null) {
-                blob.remove();
             }
         }
 
-        @Override
-        public void notice() {
-            super.notice();
-            if( enemySeen ) {
-                yell("GLURP-GLURP!");
-            }
-        }
-
+        return super.act();
     }
 
-    public static class Spawn extends Goo {
+    @Override
+    public void die( Object cause, Element dmg ) {
 
-        public Spawn() {
+        yell( "glurp... glurp..." );
 
-            super();
+        super.die(cause, dmg);
 
-            name = "spawn of Goo";
-            spriteClass = GooSprite.SpawnSprite.class;
+        ((SewerBossLevel)Dungeon.level).unseal();
 
-            minDamage /= 2;
-            maxDamage /= 2;
+        GameScene.bossSlain();
 
-            EXP = 0;
+        Badges.validateBossSlain();
 
-        }
-
-        private Goo mother;
-
-        @Override
-        public int dexterity() {
-            return !phase ? super.dexterity() : 0 ;
-        }
-
-        @Override
-        public boolean act() {
-
-            if( mother == null ) {
-                mother = mother();
+        for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
+            if (mob instanceof GooSpawn) {
+                mob.die( cause, null );
             }
-
-            if ( phase && mother != null && mother != this && Level.adjacent( pos, mother.pos ) ){
-
-                Burning buff1 = buff( Burning.class );
-
-                if( buff1 != null ){
-                    BuffActive.add( mother, Burning.class, (float)buff1.getDuration() );
-                }
-
-                mother.heal( HP );
-                die( this );
-
-
-                Pushing.move( this, mother.pos, null );
-                sprite.parent.add( new AlphaTweener( sprite, 0.0f, 0.1f ) );
-
-                if( Dungeon.visible[ pos ] ) {
-                    mother.sprite.showStatus( CharSprite.NEGATIVE, "absorbed" );
-                    GLog.n( "Goo absorbs entranced spawn, healing itself!" );
-                }
-
-                return true;
-
-            }
-
-            if ( Level.water[pos] && HP < HT ) {
-                HP++;
-            }
-
-            if( !phase && HP == HT ) {
-                phase = true;
-                sprite.idle();
-
-                if( Dungeon.visible[ pos ] ){
-                    sprite.showStatus( CharSprite.WARNING, "entranced" );
-                    GLog.n( "A spawn of Goo became entranced - do not let them stand in the water!" );
-                }
-
-                spend( TICK );
-                return true;
-            }
-
-            return super.act();
         }
 
-        @Override
-        protected boolean getCloser( int target ) {
-            return phase && mother != null ?
-                    super.getCloser( mother.pos ) :
-                    super.getCloser( target );
-        }
+        Blob blob = Dungeon.level.blobs.get( Miasma.class );
 
-        @Override
-        protected boolean canAttack( Char enemy ) {
-            return !phase && super.canAttack( enemy );
+        if (blob != null) {
+            blob.remove();
         }
+    }
+
+    @Override
+    public void notice() {
+        super.notice();
+        if( enemySeen ) {
+            yell("GLURP-GLURP!");
+        }
+    }
+
+    @Override
+    public String description() {
+        return  "Little is known about The Goo. It's quite possible that it is not even a creature, but rather a " +
+                "conglomerate of substances from the sewers that gained some kind of rudimentary, but very evil " +
+                "sentience.";
+    }
+
+    private static final String PHASE	= "phase";
+    private static final String BREAKS	= "breaks";
+
+    @Override
+    public void storeInBundle( Bundle bundle ) {
+        super.storeInBundle(bundle);
+        bundle.put( PHASE, phase );
+        bundle.put( BREAKS, breaks );
+    }
+
+    @Override
+    public void restoreFromBundle( Bundle bundle ) {
+        super.restoreFromBundle(bundle);
+        phase = bundle.getBoolean( PHASE );
+        breaks = bundle.getInt( BREAKS );
     }
 }

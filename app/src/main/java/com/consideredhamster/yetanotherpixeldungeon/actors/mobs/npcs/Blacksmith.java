@@ -47,7 +47,7 @@ import com.watabou.utils.Random;
 public class Blacksmith extends NPC {
 
 	private static final String TXT_GOLD_1 =
-		"Hey human! Wanna be useful, eh? Take dis pickaxe and mine me some _dark gold ore_, _15 pieces_ should be enough. " +
+		"Hey human! Wanna be useful, eh? Take dis pickaxe and mine me some _dark gold ore_, _5 pieces_ should be enough. " +
 		"What do you mean, how am I gonna pay? You greedy...\n" +
 		"Ok, ok, I don't have money to pay, but I can do some smithin' for you. Consider yourself lucky, " +
 		"I'm the only blacksmith around.";
@@ -59,7 +59,7 @@ public class Blacksmith extends NPC {
 	private static final String TXT2 =
 		"Are you kiddin' me? Where is my pickaxe?!";
 	private static final String TXT3 =
-		"Dark gold ore. 15 pieces. Seriously, is it dat hard?";
+		"Dark gold ore. 5 pieces. Seriously, is it dat hard?";
 	private static final String TXT4 =
 		"I said I need bat blood on the pickaxe. Chop-chop!";
 	private static final String TXT_COMPLETED =
@@ -133,7 +133,7 @@ public class Blacksmith extends NPC {
 				DarkGold gold = Dungeon.hero.belongings.getItem( DarkGold.class );
 				if (pick == null) {
 					tell( TXT2 );
-				} else if (gold == null || gold.quantity() < 15) {
+				} else if (gold == null || gold.quantity() < 5) {
 					tell( TXT3 );
 				} else {
 //					if (pick.isEquipped( Dungeon.hero )) {
@@ -311,7 +311,7 @@ public class Blacksmith extends NPC {
 				
 				Room blacksmith = null;
 				for (Room r : rooms) {
-					if (r.type == Type.STANDARD && r.width() > 4 && r.height() > 4) {
+					if (r.type == Type.STANDARD && r.width() > 3 && r.height() > 3) {
 						blacksmith = r;
 						blacksmith.type = Type.BLACKSMITH;
 						

@@ -50,16 +50,19 @@ public class RingOfDurability extends Ring {
             "to make tools of their trade to serve longer and be repaired with greater ease."
         );
 
-        desc.append( "\n\n" );
+        if( !dud ) {
 
-        desc.append( super.desc() );
+            desc.append("\n\n");
 
-        desc.append( " " );
+            desc.append(super.desc());
 
-        desc.append(
-            "Wearing this ring will increase overall _durability of your items by " + mainEffect + "%_ " +
-            "and give _" + sideEffect + "% chance to repair your items for free_."
-        );
+            desc.append(" ");
+
+            desc.append(
+                    "Wearing this ring will increase overall _durability of your items by " + mainEffect + "%_ " +
+                            "and give _" + sideEffect + "% chance to repair your items for free_."
+            );
+        }
 
         return desc.toString();
 	}

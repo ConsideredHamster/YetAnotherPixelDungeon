@@ -62,6 +62,8 @@ public class GnollBrute extends MobPrecise {
          */
 
 		name = "gnoll brute";
+		info = "Enrage, Tomahawk throw";
+
 		spriteClass = BruteSprite.class;
 		
 		loot = Gold.class;
@@ -77,6 +79,11 @@ public class GnollBrute extends MobPrecise {
 
         return armorClass;
 
+    }
+
+    @Override
+    public float awareness(){
+        return buff( Enraged.class ) != null ? super.awareness() * 0.5f : super.awareness() ;
     }
 
     @Override
@@ -120,7 +127,6 @@ public class GnollBrute extends MobPrecise {
 
             if (Dungeon.visible[pos]) {
                 GLog.w( TXT_ENRAGED, name );
-//                sprite.showStatus( CharSprite.NEGATIVE, "enraged" );
             }
         }
 	}

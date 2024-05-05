@@ -101,6 +101,11 @@ public abstract class WandUtility extends Wand {
     }
 
     @Override
+    public int maxDurability() {
+        return 100;
+    }
+
+    @Override
     protected void spendCharges() {
 
         curCharges = 0;

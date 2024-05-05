@@ -25,10 +25,9 @@ public class Terrain {
 	public static final int CHASM			= 0;
 	public static final int EMPTY			= 1;
 	public static final int GRASS			= 2;
-//    public static final int GRASS_EMPTY     = 48;
 	public static final int EMPTY_WELL		= 3;
 	public static final int WALL			= 4;
-	public static final int DOOR_CLOSED = 5;
+	public static final int DOOR_CLOSED     = 5;
 	public static final int OPEN_DOOR		= 6;
 	public static final int ENTRANCE		= 7;
 	public static final int EXIT			= 8;
@@ -43,17 +42,23 @@ public class Terrain {
 	public static final int LOCKED_EXIT		= 25;
 	public static final int UNLOCKED_EXIT	= 26;
 	public static final int SIGN			= 29;
-	public static final int WALL_SIGN   	= 50;
 	public static final int WELL			= 34;
 	public static final int STATUE			= 35;
 	public static final int STATUE_SP		= 36;
 	public static final int BOOKSHELF		= 41;
+    public static final int ALCHEMY			= 42;
+    public static final int CHASM_FLOOR		= 43;
+    public static final int CHASM_FLOOR_SP	= 44;
+    public static final int CHASM_WALL		= 45;
+    public static final int CHASM_WATER		= 46;
+    public static final int GRATE          	= 48;
     public static final int SHELF_EMPTY 	= 49;
-	public static final int ALCHEMY			= 42;
-	public static final int CHASM_FLOOR		= 43;
-	public static final int CHASM_FLOOR_SP	= 44;
-	public static final int CHASM_WALL		= 45;
-	public static final int CHASM_WATER		= 46;
+    public static final int WALL_SIGN   	= 50;
+    public static final int WALL_DECO1      = 51;
+    public static final int WALL_DECO2      = 52;
+    public static final int WALL_DECO3      = 53;
+    public static final int WALL_DECO4      = 54;
+    public static final int WALL_DECO5      = 55;
 
 	public static final int DOOR_ILLUSORY = 16;
 	public static final int TOXIC_TRAP				= 17;
@@ -90,6 +95,11 @@ public class Terrain {
     public static final int IMPORTANT = 0x200;
     public static final int ILLUSORY = 0x400;
 
+    public static final Integer[] WALLS = new Integer[] {
+            WALL, WALL_DECO, WALL_DECO1, WALL_DECO2, WALL_DECO3, WALL_DECO4, WALL_DECO5,
+            WALL_SIGN, DOOR_CLOSED, DOOR_ILLUSORY, OPEN_DOOR, LOCKED_DOOR, LOCKED_EXIT
+    };
+
 	public static final int[] flags = new int[256];
     static {
 		flags[CHASM]		= AVOID	| PIT									| UNSTITCHABLE;
@@ -106,6 +116,11 @@ public class Terrain {
 		flags[LOCKED_DOOR]	= LOS_BLOCKING | SOLID 							| UNSTITCHABLE;
         flags[PEDESTAL]		= AVOID | IMPORTANT | UNSTITCHABLE;
 		flags[WALL_DECO]	= flags[WALL];
+		flags[WALL_DECO1]	= flags[WALL];
+		flags[WALL_DECO2]	= flags[WALL];
+		flags[WALL_DECO3]	= flags[WALL];
+		flags[WALL_DECO4]	= flags[WALL];
+		flags[WALL_DECO5]	= flags[WALL];
 		flags[BARRICADE]	= FLAMMABLE | SOLID | LOS_BLOCKING;
 		flags[EMPTY_SP]		= flags[EMPTY]									| UNSTITCHABLE;
 		flags[HIGH_GRASS]	= PASSABLE | LOS_BLOCKING | FLAMMABLE;
@@ -116,6 +131,7 @@ public class Terrain {
 		flags[WALL_SIGN]	= flags[WALL];
 		flags[WELL]			= AVOID | IMPORTANT;
 		flags[STATUE]		= SOLID;
+		flags[GRATE]		= SOLID;
 		flags[STATUE_SP]	= flags[STATUE] 								| UNSTITCHABLE;
 		flags[BOOKSHELF]	= flags[BARRICADE]								| UNSTITCHABLE;
 		flags[SHELF_EMPTY]  = flags[BOOKSHELF];

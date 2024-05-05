@@ -44,17 +44,14 @@ import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SewerBossLevel extends Level {
 
 	{
 		color1 = 0x48763c;
 		color2 = 0x59994a;
-
-//        viewDistance = 8;
 	}
-	
-//	private int stairs = 0;
 
     private static final int TOP			= 3;
     private static final int ARENA_WIDTH    = 11;
@@ -94,21 +91,14 @@ public class SewerBossLevel extends Level {
         Painter.fill(this, LEFT, TOP, ARENA_WIDTH, CHAMBER_HEIGHT, Terrain.EMPTY);
         Painter.fill(this, LEFT, TOP + CHAMBER_HEIGHT, ARENA_WIDTH, 1, Terrain.WALL_DECO);
 
-//        int left = pedestal( true );
-//        int right = pedestal( false );
-//        map[left] = map[right] = Terrain.PEDESTAL;
-//        for (int i=left+1; i < right; i++) {
-//            map[i] = Terrain.EMPTY_SP;
-//        }
-
         entrance = (TOP + 1) * WIDTH + CENTER_X;
         map[entrance] = Terrain.ENTRANCE;
 
         exit = (TOP - 1) * WIDTH + CENTER_X;
         map[exit] = Terrain.LOCKED_EXIT;
 
-//        int sign = ( TOP - 1 ) * WIDTH + CENTER_X + 1;
-//        map[sign] = Terrain.WALL_SIGN;
+        int sign = ( TOP - 1 ) * WIDTH + CENTER_X + 1;
+        map[sign] = Terrain.WALL_SIGN;
 
         Painter.fill( this, LEFT, TOP + CHAMBER_HEIGHT + 1, ARENA_WIDTH, ARENA_HEIGHT, Terrain.WATER );
         Painter.fill( this, LEFT, TOP + CHAMBER_HEIGHT + 1, 1, ARENA_HEIGHT, Terrain.EMPTY_SP );
@@ -118,7 +108,7 @@ public class SewerBossLevel extends Level {
         int y = TOP + CHAMBER_HEIGHT + ARENA_HEIGHT;
         while (x < LEFT + ARENA_WIDTH) {
             map[(y - ARENA_HEIGHT) * WIDTH + x] = x % 2 == 0 ? Terrain.WALL : Terrain.WALL_DECO;
-            map[y * WIDTH - WIDTH + x] = x % 2 == 0 ? Terrain.STATUE_SP : Terrain.WALL;
+            map[y * WIDTH - WIDTH + x] = x % 2 == 0 ? Terrain.GRATE : Terrain.WALL;
             map[y * WIDTH + x] = Terrain.WATER;
             x++;
         }
@@ -135,19 +125,35 @@ public class SewerBossLevel extends Level {
         Painter.fill( this, CENTER_X - 3, CENTER_Y + 3, 1, 1, Terrain.STATUE );
         Painter.fill( this, CENTER_X + 3, CENTER_Y + 3, 1, 1, Terrain.STATUE );
 
+        map[ CENTER - 1 ] = Terrain.HIGH_GRASS;
+        map[ CENTER + WIDTH ] = Terrain.HIGH_GRASS;
+        map[ CENTER + WIDTH - 1 ] = Terrain.HIGH_GRASS;
+        map[ CENTER + WIDTH + 1 ] = Terrain.GRASS;
+
         return true;
     }
 
     @Override
     protected void decorate() {
 
-//        for (int i=0; i < LENGTH; i++) {
-//            if (map[i] == Terrain.EMPTY && Random.Int( 10 ) == 0) {
-//                map[i] = Terrain.EMPTY_DECO;
-//            } else if (map[i] == Terrain.WALL && Random.Int( 8 ) == 0) {
-//                map[i] = Terrain.WALL_DECO;
-//            }
-//        }
+        for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
+            if (map[i] == Terrain.EMPTY) {
+                if (Random.Int( 10 ) == 0 ) {
+                    map[i] = Terrain.EMPTY_DECO;
+                }
+            }
+        }
+
+        for (int i=0; i < LENGTH ; i++) {
+            if(
+                map[i] == Terrain.WALL && Random.Int( 10 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                        Terrain.WALL_DECO3, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
+            }
+        }
     }
 
     @Override
@@ -218,10 +224,10 @@ public class SewerBossLevel extends Level {
 
                 progress = BOSS_APPEARED;
 
-                Mob boss = Bestiary.mob(Dungeon.depth);
                 GLog.i("The chest was trapped! Security system locks the doors!");
                 GLog.i("\nSomething wicked comes this way, attracted by the sound of alarm!");
 
+                Mob boss = Bestiary.mob(Dungeon.depth);
                 boss.pos = getRandomSpawnPoint();
                 boss.state = boss.HUNTING;
 
@@ -309,6 +315,7 @@ public class SewerBossLevel extends Level {
 
     @Override
     public void addVisuals( Scene scene ) {
+        super.addVisuals( scene );
         SewerLevel.addVisuals( this, scene );
     }
 

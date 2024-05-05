@@ -38,9 +38,12 @@ public class PiranhaSprite extends MobSprite {
 		
 		run = new Animation( 20, true );
 		run.frames( frames, 0, 1, 2, 1 );
-		
+
 		attack = new Animation( 20, false );
 		attack.frames( frames, 3, 4, 5, 6, 7, 8, 9, 10, 11 );
+
+		cast = new Animation( 30, false );
+		cast.frames( frames, 3, 4, 5, 6, 7, 8, 9, 10, 11 );
 		
 		die = new Animation( 4, false );
 		die.frames( frames, 12, 13, 14 );
@@ -52,7 +55,7 @@ public class PiranhaSprite extends MobSprite {
 	public void onComplete( Animation anim ) {
 		super.onComplete( anim );
 		
-		if (anim == attack) {
+		if( anim == attack || anim == cast ) {
 			GameScene.ripple( ch.pos );
 		}
 	}

@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 android {
-    compileSdkVersion 28
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 33
+    buildToolsVersion '30.0.3'
 
     defaultConfig {
-        applicationId "com.consideredhamster.yetanotherpixeldungeon"
+        applicationId "com.consideredhamster.yetanotherpixeldungeon.github"
         minSdkVersion 9
-        targetSdkVersion 28
-        versionCode 325
-        versionName '0.3.2a'
+        targetSdkVersion 33
+        versionCode 330
+        versionName '0.3.3'
         archivesBaseName = "yapd-$versionName"
     }
 

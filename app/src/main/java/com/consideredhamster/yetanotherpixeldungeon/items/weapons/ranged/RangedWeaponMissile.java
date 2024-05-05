@@ -62,14 +62,14 @@ public abstract class RangedWeaponMissile extends RangedWeapon {
 
     @Override
     public int min( int bonus ) {
-        return tier + state + bonus + ( enchantment instanceof Tempered ? bonus : 0 ) - 1;
+        return Math.max( 0, tier + state + bonus + ( enchantment instanceof Tempered ? bonus : 0 ) - 1 );
     }
 
     @Override
     public int max( int bonus ) {
-        return tier * 6 + state * dmgMod() - 4
+        return Math.max( 0, tier * 6 + state * dmgMod() - 4
                 + ( enchantment instanceof Tempered || bonus >= 0 ? bonus * dmgMod() : 0 )
-                + ( enchantment instanceof Tempered && bonus >= 0 ? 1 + bonus : 0 ) ;
+                + ( enchantment instanceof Tempered && bonus >= 0 ? 1 + bonus : 0 ) );
     }
 
     public int dmgMod() {

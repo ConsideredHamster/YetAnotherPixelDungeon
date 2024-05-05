@@ -25,9 +25,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Elemental;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.BlobEmitter;
@@ -51,10 +49,7 @@ public class ToxicGas extends Blob {
 			if (cur[i] > 0 && (ch = Actor.findChar( i )) != null) {
 
                 BuffActive.add( ch, Poisoned.class, TICK * 2 );
-
-                if ( ch.buff( Burning.class ) != null || ch instanceof Elemental ) {
-                    GameScene.add(Blob.seed(ch.pos, 2, Fire.class));
-                }
+                
 			}
 		}
 

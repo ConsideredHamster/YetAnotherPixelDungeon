@@ -31,7 +31,6 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Elemental;
 import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
 import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
@@ -44,10 +43,7 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
-import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfVitality;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
-import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.Utils;
@@ -350,12 +346,8 @@ public class Waterskin extends Item {
                 Char ch = Actor.findChar( cell );
 
                 if (ch != null) {
-                    if( ch instanceof Elemental ) {
-                        ch.damage( Random.IntRange( 1, (int)Math.sqrt( ch.HT / 2 + 1 ) ), this, null );
-                    } else {
-                        Buff.detach(ch, Burning.class);
-                        Buff.detach(ch, Corrosion.class);
-                    }
+					Buff.detach(ch, Burning.class);
+					Buff.detach(ch, Corrosion.class);
                 }
 
                 ((Waterskin)curItem).value--;

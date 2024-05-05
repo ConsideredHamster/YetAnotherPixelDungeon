@@ -24,6 +24,7 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.DM300;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
@@ -43,7 +44,7 @@ import com.watabou.utils.Random;
 public class Pushing extends Actor {
 
     private static final float SPEED  = 240f;
-
+    public static Pushing KNOCKBACK = new Pushing();
 
 	private CharSprite sprite;
 	private int from;
@@ -51,6 +52,8 @@ public class Pushing extends Actor {
 	
 //	private Effect effect;
 	private Callback callback;
+
+	public Pushing(){}
 
 	public Pushing( Char ch, int from, int to ) {
         this( ch, from, to, null );
@@ -100,26 +103,6 @@ public class Pushing extends Actor {
 		}
 	}
 
-	public static void move( final Char ch, final int newPos, final Callback callback ) {
-
-        // moved this method here to avoid repeatng the same pieces of code over and over
-        // it is still not the most elegant
-        Actor.addDelayed( new Pushing( ch, ch.pos, newPos, new Callback() {
-
-            @Override
-            public void call(){
-            if( callback != null ){
-                callback.call();
-            }
-
-            }
-
-        }), -1 );
-
-        // change target's positions immediately, but only after the animation started
-        ch.pos = newPos;
-    }
-
 	public static void knockback( final Char ch, int pushFrom, int distance, final int damage ) {
 
         // resistance roughly halves knockback distance
@@ -135,63 +118,83 @@ public class Pushing extends Actor {
             Actor.freeCell( ch.pos );
             int pushTo = Ballistica.cast( pushFrom, ch.pos, true, true );
 
-            // then we calcualte where the targer would actually land, considering
-            // the maximum distance which it is supposed to be knocked back
-            Ballistica.cast( ch.pos, pushTo, true, true );
-            Ballistica.distance = Math.min( Ballistica.distance, distance );
-
-            if( Ballistica.distance > 0 ){
-
-                // gotta make those final for the sake of using callback mechanics
-                final int newPos = Ballistica.trace[ Ballistica.distance ];
-                final Char pushedInto = Char.findChar( newPos );
-
-                // apply visual effect of moving, with all of the important stuff
-                // happening only when the knockback animation is finished
-                move( ch, newPos, new Callback() {
-
-                    @Override
-                    public void call(){
-
-                        // if target was pushed into a wall or another char, we damage/confuse
-                        // it and move it back by a single tile of distance
-                        if( pushedInto != null || Level.solid[ newPos ] ){
-                            hitObstacle( ch, Ballistica.trace[ Ballistica.distance - 1 ], damage );
-                        }
-
-
-                        if( ch.isAlive() ){
-
-                            // mobs get waken up by this effect  (beckon() is not the best way to
-                            // do that but it works), but also get delayed for a turn to make the
-                            // knockback thing actually matter on short distances
-                            if( ch instanceof Mob ){
-                                ( (Mob) ch ).beckon( ch.pos );
-                                ch.delay( 1f );
-                            }
-
-                            // apply target's current position and activate traps there
-                            // gotta re-check whether mobs killed by knockback activate traps or not
-                            Actor.occupyCell( ch );
-                            Dungeon.level.press( ch.pos, ch );
-                        }
-
-                        // if we knock our target mobs into another one, then apply knockback to this
-                        // one as well - but only for one tile of distance because I don't know any better
-                        if( pushedInto != null ){
-                            knockback( pushedInto, ch.pos, 1, damage / 2 );
-                        }
-
-                    }
-                } );
-
-            }
+            push( ch, pushTo, distance, damage, null );
 
         } else {
 
             // if the target is immovable, then just deal damage straight up
             // don't wanna this wand to be useless against Yog, for instance
             dealDamage( ch, damage );
+
+        }
+    }
+
+    public static void push( final Char ch, int pushTo, int distance, final int damage, final Callback callback ) {
+
+        // then we calculate where the targer would actually land, considering
+        // the maximum distance which it is supposed to be knocked back
+        Ballistica.cast( ch.pos, pushTo, true, true );
+        Ballistica.distance = Math.min( Ballistica.distance, distance );
+
+        if( Ballistica.distance > 0 ){
+
+            // gotta make those final for the sake of using callback mechanics
+            final int newPos = Ballistica.trace[ Ballistica.distance ];
+
+            final Char charOnPos = Char.findChar( newPos );
+
+            if( Dungeon.visible[ newPos ] ) {
+                ch.sprite.visible = true;
+            }
+
+            // apply visual effect of moving, with all of the important stuff
+            // happening only when the knockback animation is finished
+            move( ch, newPos, new Callback() {
+
+                @Override
+                public void call(){
+
+                    // if target was pushed into a wall or another char, we damage/confuse
+                    // it and move it back by a single tile of distance
+
+                    if( charOnPos != null || Level.solid[ newPos ] ){
+
+                        hitObstacle( ch, Ballistica.trace[ Ballistica.distance - 1 ], damage );
+
+                    }
+
+                    if( callback != null ) {
+                        callback.call();
+                    }
+
+                    if( ch.isAlive() ){
+
+                        // mobs get waken up by this effect  (beckon() is not the best way to
+                        // do that but it works), but also get delayed for a turn to make the
+                        // knockback thing actually matter on short distances
+                        if( ch instanceof Mob ){
+                            ( (Mob) ch ).beckon( ch.pos );
+                            ch.delay( 1f );
+                        } else if( ch == Dungeon.hero ) {
+                            Dungeon.hero.interrupt();
+                        }
+
+                        // apply target's current position and activate traps there
+                        // gotta re-check whether mobs killed by knockback activate traps or not
+
+//                        ch.pos = newPos;
+                        Actor.occupyCell( ch );
+                        Dungeon.level.press( ch.pos, ch );
+                    }
+
+                    // if we knock our target mobs into another one, then apply knockback to this
+                    // one as well - but only for one tile of distance because I don't know any better
+                    if( charOnPos != null ){
+                        knockback( charOnPos, ch.pos, 1, damage / 2 );
+                    }
+
+                }
+            } );
 
         }
     }
@@ -225,11 +228,31 @@ public class Pushing extends Actor {
 
             int dmg = Char.absorb( damage, ch.armorClass() );
 
-            ch.damage( dmg, null, Element.PHYSICAL );
+            ch.damage( dmg, KNOCKBACK, Element.PHYSICAL );
 
             if( ch.isAlive() ) {
                 BuffActive.addFromDamage( ch, Vertigo.class, damage );
             }
         }
+    }
+
+    public static void move( final Char ch, final int newPos, final Callback callback ) {
+
+        // moved this method here to avoid repeatng the same pieces of code over and over
+        // it is still not the most elegant
+        Actor.addDelayed( new Pushing( ch, ch.pos, newPos, new Callback() {
+
+            @Override
+            public void call(){
+                if( callback != null ){
+                    callback.call();
+                }
+
+            }
+
+        }), -1 );
+
+        // change target's positions immediately, but only after the animation started
+        ch.pos = newPos;
     }
 }

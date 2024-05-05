@@ -81,8 +81,8 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
             image == ItemSpriteSheet.THROWING_DART
             || image == ItemSpriteSheet.THROWING_KNIFE
             || image == ItemSpriteSheet.JAVELIN
-//            || image == ItemSpriteSheet.HARPOON
-            || image == ItemSpriteSheet.HARPOON_THROWN
+            || image == ItemSpriteSheet.HARPOON
+//            || image == ItemSpriteSheet.HARPOON_THROWN
             || image == ItemSpriteSheet.HARPOON_RETURN
             || image == ItemSpriteSheet.ARROW
             || image == ItemSpriteSheet.QUARREL

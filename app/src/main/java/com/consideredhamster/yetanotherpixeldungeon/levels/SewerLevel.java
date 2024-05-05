@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Wandmaker;
+import com.consideredhamster.yetanotherpixeldungeon.levels.painters.Painter;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.particles.Emitter;
@@ -33,6 +34,9 @@ import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import com.watabou.utils.Rect;
+
+import java.util.Arrays;
 
 public class SewerLevel extends RegularLevel {
 
@@ -51,59 +55,77 @@ public class SewerLevel extends RegularLevel {
 		return Assets.WATER_SEWERS;
 	}
 
+    @Override
     protected boolean[] water() {
         return Patch.generate( feeling == Feeling.WATER ? 0.60f : 0.45f, 5 );
     }
 
+    @Override
     protected boolean[] grass() {
         return Patch.generate( feeling == Feeling.GRASS ? 0.60f : 0.40f, 4 );
     }
 	
 	@Override
 	protected void decorate() {
-		
-		for (int i=0; i < WIDTH; i++) {
-			if (map[i] == Terrain.WALL &&  
-				map[i + WIDTH] == Terrain.WATER &&
-				Random.Int( 4 ) == 0) {
-				
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
-		
-		for (int i=WIDTH; i < LENGTH - WIDTH; i++) {
-			if (map[i] == Terrain.WALL && 
-				map[i - WIDTH] == Terrain.WALL && 
-				map[i + WIDTH] == Terrain.WATER &&
-				Random.Int( 2 ) == 0) {
-				
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
-		
-		for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
-			if (map[i] == Terrain.EMPTY) { 
-				
-				int count = 
-					(map[i + 1] == Terrain.WALL ? 1 : 0) + 
-					(map[i - 1] == Terrain.WALL ? 1 : 0) + 
-					(map[i + WIDTH] == Terrain.WALL ? 1 : 0) +
-					(map[i - WIDTH] == Terrain.WALL ? 1 : 0);
-				
-				if (Random.Int( 16 ) < count * count) {
-					map[i] = Terrain.EMPTY_DECO;
-				}
-			}
-		}
 
-//		while (true) {
-//			int pos = roomEntrance.random();
-//			if (pos != entrance) {
-//				map[pos] = Terrain.SIGN;
-//				break;
-//			}
-//		}
+        for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
+            if (map[i] == Terrain.EMPTY) {
+                if (Random.Int( 10 ) == 0 ) {
+                    map[i] = Terrain.EMPTY_DECO;
+                }
+            }
+        }
 
+        for (int i=0; i < LENGTH ; i++) {
+            if (
+                    i + WIDTH < LENGTH && map[i] == Terrain.WALL &&
+                    !Arrays.asList( Terrain.WALLS ).contains( map[i + WIDTH] ) &&
+                    Random.Int( 15 ) == 0
+            ) {
+
+                if( map[i + WIDTH] == Terrain.WATER && Random.Int( 2 ) == 0 ){
+                    map[i] = Random.oneOf(
+                            Terrain.WALL_DECO
+                    );
+                } else {
+                    map[ i ] = Random.oneOf(
+                            Terrain.WALL_DECO1, Terrain.WALL_DECO2
+                    );
+                }
+
+            } else if(
+                    map[i] == Terrain.WALL && Random.Int( 10 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                    Terrain.WALL_DECO3, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
+            }
+        }
+
+        for (Room r : rooms) {
+            if (r.type == Room.Type.STANDARD) {
+                for (Room n : r.neighbours) {
+                    if (n.type == Room.Type.STANDARD && !r.connected.containsKey( n )) {
+                        Rect w = r.intersect( n );
+                        if ( w.left == w.right && w.bottom - w.top <= 3) {
+
+                            w.top += 1;
+                            w.right++;
+
+                            Painter.fill( this, w.left, w.top, 1, w.height(), Terrain.BARRICADE );
+
+                        } else if (w.top == w.bottom && w.right - w.left <= 3) {
+
+                            w.left += 1;
+                            w.bottom++;
+
+                            Painter.fill( this, w.left, w.top, w.width(), 1, Terrain.BARRICADE );
+                        }
+                    }
+                }
+            }
+        }
 	}
 	
 	@Override
@@ -113,16 +135,6 @@ public class SewerLevel extends RegularLevel {
         Wandmaker.Quest.spawn( this, roomEntrance );
 
 	}
-	
-//	@Override
-//	protected void createItems() {
-//		if (Dungeon.dewVial && Random.Int( 4 - Dungeon.depth ) == 0) {
-//			addItemToSpawn( new DewVial() );
-//			Dungeon.dewVial = false;
-//		}
-		
-//		super.createItems();
-//	}
 	
 	@Override
 	public void addVisuals( Scene scene ) {
@@ -161,9 +173,18 @@ public class SewerLevel extends RegularLevel {
 //	@Override
 	public static String tileDescs(int tile) {
 		switch (tile) {
-		case Terrain.EMPTY_DECO:
-			return "Wet yellowish moss covers the floor.";
-		case Terrain.BOOKSHELF:
+            case Terrain.EMPTY_DECO:
+                return "Wet yellowish moss covers the floor.";
+            case Terrain.WALL_DECO:
+            case Terrain.WALL_DECO1:
+                return "There is a drain built into this wall. It is too small for you to go through.";
+            case Terrain.WALL_DECO2:
+                return "There is a ventilation vent here. Nice to feel some fresh air from time to time.";
+            case Terrain.WALL_DECO3:
+            case Terrain.WALL_DECO4:
+            case Terrain.WALL_DECO5:
+                return "Wet greenish moss covers the wall.";
+            case Terrain.BOOKSHELF:
 			return "The bookshelf is packed with some mouldy books. Maybe there would be something useful in here?";
         case Terrain.SHELF_EMPTY:
             return "The bookshelf is packed with some mouldy books.";

@@ -55,6 +55,7 @@ public class Thief extends MobPrecise {
          */
 
         name = "mugger";
+        info = "Knife throwing";
         spriteClass = ThiefSprite.class;
 
         loot = Gold.class;
@@ -96,20 +97,8 @@ public class Thief extends MobPrecise {
     @Override
     public String description(){
 
-        return "The Sewers always been hiding place for all sorts of cutthroats and outlaws. "
-
-                + ( Dungeon.hero.heroClass == HeroClass.WARRIOR ?
-                "Usually armed with different manners of daggers and knives, these cowards rely on dirty tactics instead of skill and strength." : "" )
-
-                + ( Dungeon.hero.heroClass == HeroClass.SCHOLAR ?
-                "It would be better to exercise caution when dealing with their kind, as lone old man down there can look like an easy prey through the eyes of greed." : "" )
-
-                + ( Dungeon.hero.heroClass == HeroClass.BRIGAND ?
-                "Looks like it's the time to show 'ese rookies who's da boss here. After all, their 'ill-begotten gains' can help you on your 'noble quest', isn't it?" : "" )
-
-                + ( Dungeon.hero.heroClass == HeroClass.ACOLYTE ?
-                "What leads them down the path of banditry? Greed, misfortune, or something more sinister? It doesn't really matter now, however." : "" )
-
-                ;
+        return "The Sewers always been hiding place for all sorts of cutthroats and outlaws. " +
+                "Usually armed with different manners of daggers and knives, these ruffians " +
+                "prefer to rely on dirty tactics instead of skill and strength.";
     }
 }

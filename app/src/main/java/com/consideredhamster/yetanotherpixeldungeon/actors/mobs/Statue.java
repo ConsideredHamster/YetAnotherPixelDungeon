@@ -36,6 +36,8 @@ public class Statue extends MobPrecise {
         super( Dungeon.depth + 1 );
 
         name = "animated statue";
+        info = "Magical";
+
         spriteClass = StatueSprite.class;
 
         minDamage += tier;
@@ -86,6 +88,11 @@ public class Statue extends MobPrecise {
 //        }
         // do nothing
 	}
+
+    @Override
+    public float awareness(){
+        return super.awareness() * 0.5f;
+    }
 
 
     @Override

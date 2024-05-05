@@ -49,16 +49,19 @@ public class RingOfFortune extends Ring {
             "being blessing with greater luck."
         );
 
-        desc.append( "\n\n" );
+        if( !dud ) {
 
-        desc.append( super.desc() );
+            desc.append("\n\n");
 
-        desc.append( " " );
+            desc.append(super.desc());
 
-        desc.append(
-            "Wearing this ring will increase _amount of gold_ spawned and _amount of loot_ " +
-            "dropped by defeated enemies _by " + mainEffect + "%_."
-        );
+            desc.append(" ");
+
+            desc.append(
+                    "Wearing this ring will increase _amount of gold_ spawned and _amount of loot_ " +
+                            "dropped by defeated enemies _by " + mainEffect + "%_."
+            );
+        }
 
         return desc.toString();
 	}

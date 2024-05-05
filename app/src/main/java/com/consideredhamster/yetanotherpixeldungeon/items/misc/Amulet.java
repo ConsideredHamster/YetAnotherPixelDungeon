@@ -92,7 +92,7 @@ public class Amulet extends Item {
 	@Override
 	public String info() {
 		return 
-			"The Amulet of Yendor is the most powerful known artifact, once held by a wizard of Yendor." +
+			"The Amulet of Yendor is the most powerful known artifact, once held by a wizard of Yendor. " +
             "It is said that the amulet is able to fulfil any wish of its owner, but only once.";
 	}
 }

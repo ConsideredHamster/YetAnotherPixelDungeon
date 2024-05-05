@@ -37,10 +37,12 @@ import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.SuccubusSprite;
 
+import java.util.ArrayList;
+
 public class Succubus extends MobPrecise {
 	
-	private static final int BLINK_DELAY = 6;
-	
+	private static final int BLINK_DELAY = 16;
+
 	private int delay = 0;
 
     public Succubus() {
@@ -63,6 +65,8 @@ public class Succubus extends MobPrecise {
          */
 
         name = "succubus";
+        info = "Magical, Life drain, Charm, Teleport";
+
         spriteClass = SuccubusSprite.class;
 
         armorClass /= 3;
@@ -81,8 +85,8 @@ public class Succubus extends MobPrecise {
     @Override
     protected boolean canAttack( Char enemy ) {
         return ( super.canAttack( enemy ) ||
-            Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos
-            && enemy.buff( Charmed.class) != null );
+            enemy.buff( Charmed.class ) == null ) &&
+            Ballistica.cast(pos, enemy.pos, false, true) == enemy.pos;
     }
 
     @Override
@@ -98,7 +102,7 @@ public class Succubus extends MobPrecise {
 
         Sample.INSTANCE.play(Assets.SND_ZAP);
 
-        onCastComplete();
+//        onCastComplete();
 
         super.onRangedAttack( cell );
     }
@@ -143,20 +147,16 @@ public class Succubus extends MobPrecise {
 
         return damage;
     }
-
-//    public void onZapComplete() {
-//        zap();
-//        next();
-//    }
 	
 	@Override
 	protected boolean getCloser( int target ) {
 		if (delay <= 0 && enemySeen && enemy != null && Level.fieldOfView[target]
             && Level.distance( pos, target ) > 1 && enemy.buff( Charmed.class ) != null
-            && Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos ) {
+            && Ballistica.cast( pos, enemy.pos, false, true ) == enemy.pos
+            && Level.mob_passable[ Ballistica.trace[ Ballistica.distance - 1 ] ]  ) {
 
 			blink( target );
-			spend( -2 / moveSpeed() );
+			spend( -1 / moveSpeed() );
 			return true;
 
 		} else {
@@ -166,17 +166,17 @@ public class Succubus extends MobPrecise {
 
 		}
 	}
-	
+
 	private void blink( int target ) {
-		
+
 		int cell = Ballistica.cast( pos, target, false, true );
-		
+
 		if (Actor.findChar( cell ) != null && Ballistica.distance > 1) {
 			cell = Ballistica.trace[Ballistica.distance - 1];
 		}
 
         ScrollOfPhaseWarp.appear( this, cell );
-		
+
 		delay = BLINK_DELAY;
 	}
 	

@@ -63,7 +63,7 @@ import com.consideredhamster.yetanotherpixeldungeon.items.food.RationLarge;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfMending;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.PotionOfStrength;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.Ring;
-import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfIdentify;
+import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfDetectMagic;
 import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.Wand;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
@@ -110,9 +110,9 @@ public class ShopPainter extends Painter {
     private static ArrayList<Item> ammo1;
     private static ArrayList<Item> ammo2;
 
-    private static Item[] defaultKits = { new Whetstone(), new ArmorerKit(), new CraftingKit(), new Battery() };
-    private static Item[] defaultAmmo1 = { new Arrows(), new Arrows(), new Quarrels(), new Quarrels() };
-    private static Item[] defaultAmmo2 = { new Bullets(), new Bullets(), new Explosives.Gunpowder(), new Explosives.Gunpowder() };
+    private final static Item[] defaultKits = { new Whetstone(), new ArmorerKit(), new CraftingKit(), new Battery() };
+    private final static Item[] defaultAmmo1 = { new Arrows(), new Arrows(), new Quarrels(), new Quarrels() };
+    private final static Item[] defaultAmmo2 = { new Bullets(), new Bullets(), new Explosives.Gunpowder(), new Explosives.Gunpowder() };
 
     private static final String KITS		= "shops_kits";
     private static final String AMMO1		= "shops_ammo1";
@@ -244,7 +244,7 @@ public class ShopPainter extends Painter {
             items.add(new PotionOfMending());
             items.add(Random.Int(5 - questsCompleted) == 0 ? new PotionOfStrength() : Generator.random(Generator.Category.POTION));
 
-            items.add(new ScrollOfIdentify());
+            items.add(new ScrollOfDetectMagic());
             items.add(Random.Int(5 - questsCompleted) == 0 ? new ScrollOfUpgrade() : Generator.random(Generator.Category.SCROLL));
 
             items.add(Random.oneOf(new Whetstone(), new ArmorerKit(), new Battery(), new CraftingKit()));
@@ -342,8 +342,13 @@ public class ShopPainter extends Painter {
                 items.add(thrown);
             }
 
-            items.add( generateAmmo1() );
-            items.add( generateAmmo2() );
+            Item ammo1 = generateAmmo1().random();
+            ammo1.quantity += Dungeon.chapter() * ( ammo1 instanceof Explosives.Gunpowder ? 10 : 5 );
+            items.add( ammo1 );
+
+            Item ammo2 = generateAmmo2().random();
+            ammo2.quantity += Dungeon.chapter() * ( ammo2 instanceof Explosives.Gunpowder ? 10 : 5 ); ;
+            items.add( ammo2 );
 
             Ring ring = (Ring)Generator.random(Generator.Category.RING);
             if( ring != null) {
@@ -362,7 +367,7 @@ public class ShopPainter extends Painter {
             items.add(new PotionOfMending());
             items.add(Generator.random(Generator.Category.POTION));
 
-            items.add(new ScrollOfIdentify());
+            items.add(new ScrollOfDetectMagic());
             items.add(Generator.random(Generator.Category.SCROLL));
 
             items.add( generateKits() );
@@ -381,17 +386,17 @@ public class ShopPainter extends Painter {
 
     private static Item generateAmmo1() {
         if( !ammo1.isEmpty() ) {
-            return ammo1.remove( Random.Int( ammo1.size() ) ).random();
+            return ammo1.remove( Random.Int( ammo1.size() ) );
         } else {
-            return Random.oneOf( defaultAmmo1 ).random();
+            return Random.oneOf( defaultAmmo1 );
         }
     }
 
     private static Item generateAmmo2() {
         if( !ammo2.isEmpty() ) {
-            return ammo2.remove( Random.Int( ammo2.size() ) ).random();
+            return ammo2.remove( Random.Int( ammo2.size() ) );
         } else {
-            return Random.oneOf( defaultAmmo2 ).random();
+            return Random.oneOf( defaultAmmo2 );
         }
     }
 

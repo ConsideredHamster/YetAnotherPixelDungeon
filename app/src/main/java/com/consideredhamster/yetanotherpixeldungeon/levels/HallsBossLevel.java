@@ -40,6 +40,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HallsBossLevel extends Level {
 	
@@ -117,11 +118,34 @@ public class HallsBossLevel extends Level {
 	@Override
 	protected void decorate() {
 
-		for (int i=0; i < LENGTH; i++) {
-			if (map[i] == Terrain.EMPTY && Random.Int( 10 ) == 0) {
-				map[i] = Terrain.EMPTY_DECO;
-			}
-		}
+        for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
+            if (map[i] == Terrain.EMPTY) {
+                if (Random.Int( 10 ) == 0 ) {
+                    map[i] = Terrain.EMPTY_DECO;
+                }
+            }
+        }
+
+        for (int i=0; i < LENGTH ; i++) {
+            if (
+                    i + WIDTH < LENGTH && map[i] == Terrain.WALL &&
+                            !Arrays.asList( Terrain.WALLS ).contains( map[i + WIDTH] ) &&
+                            Random.Int( 15 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                        Terrain.WALL_DECO3, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
+
+            } else if(
+                    map[i] == Terrain.WALL && Random.Int( 10 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                        Terrain.WALL_DECO, Terrain.WALL_DECO1, Terrain.WALL_DECO2
+                );
+            }
+        }
 	}
 
     @Override
@@ -195,6 +219,7 @@ public class HallsBossLevel extends Level {
 
 			GameScene.add( boss );
 			boss.spawnFists();
+
             boss.yell( "Greetings, mortal. Are you ready to die?" );
 			
 			stairs = entrance;
@@ -244,6 +269,7 @@ public class HallsBossLevel extends Level {
 
 	@Override
 	public void addVisuals( Scene scene ) {
+        super.addVisuals( scene );
 		HallsLevel.addVisuals( this, scene );
 	}
 

@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.wands;
 
 import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Rockfall;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
@@ -104,27 +105,10 @@ public class WandOfBlastWave extends WandUtility {
 
                 if( wall || Random.Int( d * 2 + 1 ) == 0) {
 
-                    Char ch = Actor.findChar(i);
-                    if (ch != null ) {
-
-                        int dmg = Char.absorb( ch == curUser ? damage / 2 : damage , ch.armorClass() );
-
-                        ch.damage(dmg, curUser, Element.PHYSICAL);
-
-                        if ( ch.isAlive() ) {
-                            BuffActive.addFromDamage( ch, Vertigo.class, dmg );
-                        }
-
-                    }
-
-                    Heap heap = Dungeon.level.heaps.get( i );
-                    if (heap != null) {
-                        heap.shatter();
-                    }
+                    Rockfall.affect( i, curUser.pos == i ? damage / 2 : damage, curUser );
 
                     Dungeon.level.press(i, null);
 
-                    CellEmitter.get(i).start(Speck.factory(Speck.ROCK), 0.1f, 3 + (size - d));
                 }
             }
         }

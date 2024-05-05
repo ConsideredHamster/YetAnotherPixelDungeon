@@ -136,7 +136,8 @@ public class PotionOfBlessing extends Potion {
 
                     if (item.bonus < 0) {
 
-                        item.bonus = Random.IntRange(item.bonus + 1, 0);
+                        item.bonus++;
+//                        item.bonus = Random.IntRange(item.bonus + 1, 0);
 
                         if (item.bonus == 0) {
                             if (item instanceof Weapon && ((Weapon) item).enchantment != null) {

@@ -48,6 +48,8 @@ public class Rat extends MobEvasive {
          */
 
         name = "marsupial rat";
+        info = "Nothing";
+
         spriteClass = RatSprite.class;
 
         minDamage += 1;
@@ -68,20 +70,6 @@ public class Rat extends MobEvasive {
 	public String description() {
 		return "This vermin inhabited the City for almost as long as these sewers had existed. " +
                 "But recently there appeared rumours about these rats attacking pets, toddlers and " +
-                "even adults sometimes. "
-
-                    + ( Dungeon.hero.heroClass == HeroClass.WARRIOR ?
-                    "They are hardly can be considered a worthy opponent for you, but they can be dangerous in large numbers." : "" )
-
-                    + ( Dungeon.hero.heroClass == HeroClass.SCHOLAR ?
-                    "Undoubtedly, these creatures are not the main threat down there, but their unnatural aggressiveness can be unnerving." : "" )
-
-                    + ( Dungeon.hero.heroClass == HeroClass.BRIGAND ?
-                    "Why, just why it did have to be rats?.." : "" )
-
-                    + ( Dungeon.hero.heroClass == HeroClass.ACOLYTE ?
-                    "The malicious intent which twisted minds of these little creatures is just a sign of the things to come." : "" )
-
-                ;
+                "even adults sometimes.";
 	}
 }

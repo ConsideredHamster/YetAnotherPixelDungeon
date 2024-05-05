@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.items.misc;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.ToxicGas;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.BombHazard;
 import com.consideredhamster.yetanotherpixeldungeon.items.Item;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.watabou.noosa.Camera;
@@ -28,22 +29,12 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
-import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
-import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.ConfusionGas;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Explosion;
-import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Fire;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
-import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
-import com.consideredhamster.yetanotherpixeldungeon.levels.Terrain;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.QuickSlot;
-import com.consideredhamster.yetanotherpixeldungeon.misc.utils.BArray;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
 
 import java.util.ArrayList;
@@ -155,74 +146,74 @@ public abstract class Explosives extends Item {
         }
     }
 
-    public static void explode( int cell, int damage, int radius, Object source ) {
-
-        PathFinder.buildDistanceMap( cell, BArray.not( Level.losBlockHigh, null ), radius );
-
-        Blob[] blobs = {
-                Dungeon.level.blobs.get( Fire.class ),
-                Dungeon.level.blobs.get( ToxicGas.class ),
-                Dungeon.level.blobs.get( ConfusionGas.class ),
-        };
-
-        Sample.INSTANCE.play( Assets.SND_BLAST, 1 + radius );
-        Camera.main.shake( 3 + radius, 0.2f + radius * 0.1f );
-
-        for (Mob mob : Dungeon.level.mobs) {
-            if (Level.distance( cell, mob.pos ) <= ( 4 + 2 * radius ) ) {
-                mob.beckon( cell );
-            }
-        }
-
-        boolean terrainAffected = false;
-
-        for (int c = 0; c < Level.LENGTH; c++ ) {
-
-            if (PathFinder.distance[c] < Integer.MAX_VALUE) {
-
-                int r = PathFinder.distance[ c ];
-
-                terrainAffected = Explosion.affect( c, r, radius, damage, source ) || terrainAffected;
-
-                for (Blob blob : blobs) {
-
-                    if (blob == null) {
-                        continue;
-                    }
-
-                    int value = blob.cur[c];
-                    if (value > 0) {
-
-                        blob.cur[c] = 0;
-                        blob.volume -= value;
-                    }
-                }
-            }
-        }
-
-        for (int n : Level.NEIGHBOURS9) {
-
-            int c = cell + n;
-
-            if (Level.flammable[c]) {
-                Level.set(c, Terrain.EMBERS);
-                GameScene.updateMap(c);
-                terrainAffected = true;
-            }
-
-            Char ch = Actor.findChar(c);
-
-            if( ch != null ) {
-
-                Pushing.knockback( ch, cell, radius, damage );
-
-            }
-        }
-
-        if (terrainAffected) {
-            Dungeon.observe();
-        }
-    }
+//    public static void explode( int cell, int damage, int radius, Object source ) {
+//
+//        PathFinder.buildDistanceMap( cell, BArray.not( Level.losBlockHigh, null ), radius );
+//
+//        Blob[] blobs = {
+//                Dungeon.level.blobs.get( Fire.class ),
+//                Dungeon.level.blobs.get( ToxicGas.class ),
+//                Dungeon.level.blobs.get( ConfusionGas.class ),
+//        };
+//
+//        Sample.INSTANCE.play( Assets.SND_BLAST, 1 + radius );
+//        Camera.main.shake( 3 + radius, 0.2f + radius * 0.1f );
+//
+//        for (Mob mob : Dungeon.level.mobs) {
+//            if (Level.distance( cell, mob.pos ) <= ( 4 + 2 * radius ) ) {
+//                mob.beckon( cell );
+//            }
+//        }
+//
+//        boolean terrainAffected = false;
+//
+//        for (int c = 0; c < Level.LENGTH; c++ ) {
+//
+//            if (PathFinder.distance[c] < Integer.MAX_VALUE) {
+//
+//                int r = PathFinder.distance[ c ];
+//
+//                terrainAffected = Explosion.affect( c, r, radius, damage, source ) || terrainAffected;
+//
+//                for (Blob blob : blobs) {
+//
+//                    if (blob == null) {
+//                        continue;
+//                    }
+//
+//                    int value = blob.cur[c];
+//                    if (value > 0) {
+//
+//                        blob.cur[c] = 0;
+//                        blob.volume -= value;
+//                    }
+//                }
+//            }
+//        }
+//
+//        for (int n : Level.NEIGHBOURS9) {
+//
+//            int c = cell + n;
+//
+//            if (Level.flammable[c]) {
+//                Level.set(c, Terrain.EMBERS);
+//                GameScene.updateMap(c);
+//                terrainAffected = true;
+//            }
+//
+//            Char ch = Actor.findChar(c);
+//
+//            if( ch != null ) {
+//
+//                Pushing.knockback( ch, cell, radius, damage );
+//
+//            }
+//        }
+//
+//        if (terrainAffected) {
+//            Dungeon.observe();
+//        }
+//    }
 
     public static class Gunpowder extends Explosives {
 
@@ -275,8 +266,7 @@ public abstract class Explosives extends Item {
 
         @Override
         public String info() {
-            return
-                    "This is a container of black powder. Gunpowder can be used to reload flintlock " +
+            return "This is a container of black powder. Gunpowder can be used to reload flintlock " +
                     "weapons or to make some makeshift explosives.\n\n" +
                     "You need " + BombStick.powderMax + " portions of gunpowder to create a bomb.";
         }
@@ -299,8 +289,8 @@ public abstract class Explosives extends Item {
 
     public static class BombStick extends Explosives {
 
-        final protected static int powderMin = 50;
-        final protected static int powderMax = 75;
+        final protected static int powderMin = 75;
+        final protected static int powderMax = 100;
 
         {
             name = "bomb stick";
@@ -314,7 +304,7 @@ public abstract class Explosives extends Item {
             return
                 "This is a makeshift pipe bomb, filled with black powder. Conveniently, its fuse is " +
                 "lit automatically when the bomb is thrown.\n\n" +
-                "You can get " + powderMin + "-" + powderMax + " portions of gunpowder by salvaging this.\n" +
+                "You can get " + powderMin + "-" + powderMax + " portions of gunpowder by salvaging this. " +
                 "You can get a bomb bundle by combining " + BombBundle.sticksMax + " " + name + "s." ;
         }
 
@@ -380,6 +370,10 @@ public abstract class Explosives extends Item {
         @Override
         protected void onThrow( int cell ) {
 
+            if( Level.solid[ cell ] ) {
+                cell = Ballistica.trace[ Ballistica.distance - 1 ];
+            }
+
             if (Level.chasm[cell]) {
 
                 super.onThrow( cell );
@@ -390,13 +384,13 @@ public abstract class Explosives extends Item {
 
                 if( bomb != null ) {
 
-                    int strength = bomb.price();
+//                    int strength = bomb.price();
+//                    explode(cell, bomb.damage(strength), bomb.radius(strength), curUser);
 
-                    if( Level.solid[ cell ] ) {
-                        cell = Ballistica.trace[ Ballistica.distance - 1 ];
-                    }
-
-                    explode(cell, bomb.damage(strength), bomb.radius(strength), curUser);
+                    BombHazard hazard = new BombHazard();
+                    hazard.setValues( cell, BombHazard.BOMB_STICK, Random.IntRange( 15, 20 ), 1 );
+                    GameScene.add( hazard );
+                    ( (BombHazard.BombSprite) hazard.sprite ).appear();
 
                 }
             }
@@ -474,9 +468,13 @@ public abstract class Explosives extends Item {
 
                 if( bomb != null ) {
 
-                    int strength = bomb.price();
+//                    int strength = bomb.price();
+//                    explode(cell, bomb.damage(strength), bomb.radius(strength), curUser);
 
-                    explode(cell, bomb.damage(strength), bomb.radius(strength), curUser);
+                    BombHazard hazard = new BombHazard();
+                    hazard.setValues( cell, BombHazard.BOMB_BUNCH, Random.IntRange( 45, 60 ), 2 );
+                    GameScene.add( hazard );
+                    ( (BombHazard.BombSprite) hazard.sprite ).appear();
 
                 }
             }

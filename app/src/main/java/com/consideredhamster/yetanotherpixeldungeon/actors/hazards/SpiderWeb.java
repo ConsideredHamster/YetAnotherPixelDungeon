@@ -51,6 +51,11 @@ public class SpiderWeb extends Hazard {
 
     }
 
+    @Override
+    public String desc() {
+        return "There is a bunch of webs covering this tile.";
+    };
+
     public void setValues( int pos, int duration ) {
 
         this.pos = pos;

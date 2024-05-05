@@ -48,10 +48,10 @@ public class Knuckles extends MeleeWeaponLightOH {
 
     }
 
-    @Override
-    public boolean disarmable() {
-        return false;
-    }
+//    @Override
+//    public boolean disarmable() {
+//        return false;
+//    }
 
     @Override
     public int str(int bonus) {

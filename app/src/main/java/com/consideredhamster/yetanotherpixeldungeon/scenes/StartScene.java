@@ -624,17 +624,17 @@ public class StartScene extends PixelScene {
 
             ArrayList<Integer> disabled = new ArrayList<>();
 
-            if( !Badges.isUnlocked( Badges.Badge.VICTORY_1 ) ) {
-
-                disabled.add( Difficulties.HARDCORE );
-
-            }
-
-            if( !Badges.isUnlocked( Badges.Badge.VICTORY_2 ) ) {
-
-                disabled.add(Difficulties.IMPOSSIBLE);
-
-            }
+//            if( !Badges.isUnlocked( Badges.Badge.VICTORY_1 ) ) {
+//
+//                disabled.add( Difficulties.HARDCORE );
+//
+//            }
+//
+//            if( !Badges.isUnlocked( Badges.Badge.VICTORY_2 ) ) {
+//
+//                disabled.add(Difficulties.IMPOSSIBLE);
+//
+//            }
 
             return disabled;
         }

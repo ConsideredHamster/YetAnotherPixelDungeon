@@ -32,94 +32,52 @@ public class Sign {
 	
 	private static final String[] TIPS = {
 
+            "By the orders of the King, the city's sewers are temporarily closed for the general public due to the recent reports. Enter at your own risk!",
+            "The sewer personnel are recommended to keep their lantern alight at all times. Otherwise, some passages may be difficult to find.",
+            "Due to the increasing numbers of criminal activity and gnoll infestation reports, the personnel is advised to stay armed at all times.",
+            "Addressing the recent requests, the sewer administration have installed sources of clean drinkable water in the sewers. Stay hydrated!",
+            "The sewer management reminds our personnel that any reports of giant hostile crab sightings are completely absurd and obviously false.",
+            "Caution! Further floors are locked by the King's decree. Security systems have been installed to prevent unauthorized access.",
 
+            "hello there! feel free to visit me anytime.",
+			"don't you think spiders are cute? and giant spiders are even cuter!",
+			"sorry for all the gnolls here, they asked REALLY nicely to let them pass",
+            "you may meet some of my friends here. don't be afraid, they just want to play!",
+            "you're almost there! just a little further... hahaha!",
+            "welcome to my playground! ready to have some fun?",
 
-//            "Don't overestimate your strength, use weapons and armor you can handle.",
-//            "Dungeon is filled with nasty traps and hidden doors. Watch your step. Look around. Search often.",
-//            "Always mind your position. Dodging in narrow tunnels is much harder than dodging in open spaces - use it to your advantage.",
-//            "Sometimes it is better to just run away. Enemies can lose your track and open themselves to an ambush, giving you a certain hit.",
-//            "You can spend your gold in shops on deeper levels of the dungeon. The first one is in the next room, by the way.",
-            "", "", "", "", "", "",
+            "HOOMANZ GO AWAY OR BE FOOD",
+            "EYE SEE U",
+            "HERE BE SKORPOS",
+            "GNOLZ STRONK",
+            "DWORFS GO AWAY GNOLLZ ROOL HEER NOW",
+            "Welcome to the Dwarven Metropolis! Outsiders aren't welcome.",
 
-//            "Flying has it's benefits. You can see over obstacles, ignore traps, move silently, and be much less affected by terrain.",
-//            "Water can be your friend or enemy. It amplifies lightning and frost effects, but extinguishes fire and washes off acid.",
-//            "Equipping the best weapon and armor possible is very helpful down here. Good equipment saves lives.",
-//            "It is possible to remove cursed items, if you try enough. It is still quite painful, though.",
-//            "Knowledge is born from patience and experience. If you want to identify something, go on and use it.",
+            "Upper City",
+            "Marketplace",
+            "Industrial Quarters",
+            "Army Quarters",
+            "Palace Square",
+            "Throne Room",
 
-            "", "", "", "", "", "",
+            "Royal Treasury",
 
-//            "Try to keep your level as high level as possible. Go back and train a little bit, if you are not sure in yourself.",
-//            "Do not underestimate anything what can save you from a dangerous situation. There is nothing worse than getting cornered.",
-//            "Smart hunter knows that water is noisy. Smart hunter prefers hiding in high grass. Except when he is on fire.",
-//            "Cooking raw meat with fire makes it more edible. Eating herbs can hold off starvation for a while, too.",
-//            "Sometimes, it is better to starve for a while, but save food for later. Especially, if you've got other ways to stay alive.",
-
-            "", "", "", "", "", "",
-
-//            "Even if you are ensnared, you can still use your hands or simply keep struggling. Also, you can put yourself on fire.",
-//            "Potions of Strength and scrolls of Recharging can dispel magical weakness, do not forget about it.",
-//            "Creatures of the magical origins are vulnerable to banishment and vorpal weapons.",
-//            "You can keep all these potions of Wisdom until it becomes to hard to increase your level in combat, instead of drinking them immediately.",
-//            "Sometimes, it is wiser to skip a level entirely - especially if you've got scrolls of Magic Mapping and potions of Mind Vision.",
-
-            "", "", "", "", "", "",
+            "Abandon hope ye who enter here.",
+            "One day, we shall escape.",
+            "Our reign will be glorious.",
+            "Nothing can stop us.",
 
             "",
 
-            "greetings, mortal" +
-                "\n\nare you ready to die?",
-            "my servants can smell your blood, human",
-            "worship me, and i may yet be merciful" +
-                "\n\nthen again, maybe not",
-            "You have played this game for too long, mortal" +
-                "\n\ni think i shall remove you from the board"
+            "",
 
-//		"Don't overestimate your strength, use weapons and armor you can handle.",
-//		"Not all doors in the dungeon are visible at first sight. If you are stuck, search for hidden doors.",
-//		"Remember, that raising your strength is not the only way to access better equipment. You can go " +
-//			"the other way, lowering its strength requirement with Scrolls of Upgrade.",
-//		"You can spend your gold in shops on deeper levels of the dungeon. The first one is on the 7th bonus.",
-//		"You can spend your gold in shops on deeper levels of the dungeon. The first one is on the 7th bonus.",
-//
-//		"Beware of Goo!",
-//
-//		"Pixel-Mart - all you need for successful adventure!",
-//		"Identify your potions and scrolls as soon as possible. Don't put it off to the moment " +
-//			"when you actually need them.",
-//		"Being hungry doesn't hurt, but starving does hurt.",
-//		"Surprise attack has a better chance to hit. For example, you can ambush your enemy behind " +
-//            "a closed door when you know it is approaching.",
-//        "Surprise attack has a better chance to hit. For example, you can ambush your enemy behind " +
-//           "a closed door when you know it is approaching.",
-//
-//		"Don't let The Tengu out!",
-//
-//		"Pixel-Mart. Spend money. Live longer.",
-//		"When you're attacked by several monsters at the same time, try to retreat behind a door.",
-//		"If you are burning, you can't put out the fire in the water while levitating.",
-//		"There is no sense in possessing more than one Ankh at the same time, because you will lose them upon resurrecting.",
-//		"There is no sense in possessing more than one Ankh at the same time, because you will lose them upon resurrecting.",
-//
-//		"DANGER! Heavy machinery can cause injury, loss of limbs or death!",
-//
-//		"Pixel-Mart. A safer life in dungeon.",
-//		"When you upgrade an enchanted weapon, there is a chance to destroy that enchantment.",
-//		"With a Well of Transmutation you can get an item, that cannot be obtained otherwise.",
-//		"The only way to enchant a weapon is by upgrading it with a Scroll of Weapon Upgrade.",
-//		"The only way to enchant a weapon is by upgrading it with a Scroll of Weapon Upgrade.",
-//
-//		"No weapons allowed in the presence of His Majesty!",
-//
-//		"Pixel-Mart. Special prices for demon hunters!",
-//        "Greetings, mortal. Are you ready to die?",
-//        "My servants can smell your blood, human.",
-//        "Worship me, and I may yet be merciful." +
-//            "\n\nThen again, maybe not.",
-//        "You have played this game for too long, mortal..." +
-//            "\n\nI think I shall remove you from the board.",
-//        "Pray to your gods for the last time, mortal." +
-//            "\n\nYour service to them ends here.",
+//            "greetings, mortal" +
+//                "\n\nare you ready to die?",
+//            "my servants can smell your blood, human",
+//            "worship me, and i may yet be merciful" +
+//                "\n\nthen again, maybe not",
+//            "you have played this game for too long, mortal" +
+//                "\n\ni think i shall remove you from the board"
 	};
 	
 	private static final String TXT_NOMESSAGE =

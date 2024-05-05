@@ -60,18 +60,21 @@ public class WandOfIceBarrier extends WandUtility {
         return super.effectiveness( bonus ) * 0.80f;
     }
 
-    protected static ArrayList<Integer> cells = new ArrayList<Integer>();
+//    protected static ArrayList<Integer> cells = new ArrayList<Integer>();
 
 	@Override
 	protected void onZap( int cell ) {
 
-        CellEmitter.get( cell ).burst( Speck.factory( Speck.ICESHARD ), 12 );
+	    int distance = Level.distance( curUser.pos, cell );
 
-        if( cells.size() > 0 ){
+        for ( int n : Level.NEIGHBOURS5 ) {
 
-            for( int c : cells ){
+            int c = cell + n;
+            CellEmitter.get( c ).burst( Speck.factory( Speck.ICESHARD ), 3 );
 
-                int power = ( Level.water[ c ] ? damageRoll() * 3 / 2 : damageRoll() ) / cells.size();
+            if( distance == Level.distance( curUser.pos, c ) && ( Actor.findChar( c ) != null || Level.passable[ c ]  ) ) {
+
+                int power = ( Level.water[ c ] ? damageRoll() * 3 / 2 : damageRoll() );
 
                 Char ch = Actor.findChar( c );
 
@@ -95,63 +98,52 @@ public class WandOfIceBarrier extends WandUtility {
 
                 }
             }
-
-        } else {
-            GLog.i( "nothing happened" );
         }
     }
 
     @Override
 	protected void fx( final int cell, final Callback callback ) {
 
-        cells = new ArrayList<>();
-        cells.add( cell );
+        MagicMissile.frost( curUser.sprite.parent, curUser.pos, cell, callback );
+        Sample.INSTANCE.play( Assets.SND_ZAP );
 
-        MagicMissile.frost( curUser.sprite.parent, curUser.pos, cell, new Callback() {
-            @Override
-            public void call(){
-            curUser.ready();
-            GameScene.selectCell( new SecondaryListener( cell, callback ) );
-            }
-        } );
+//        cells = new ArrayList<>();
+//        cells.add( cell );
+
+//        MagicMissile.frost( curUser.sprite.parent, curUser.pos, cell, new Callback() {
+//            @Override
+//            public void call(){
+//            curUser.ready();
+//            GameScene.selectCell( new SecondaryListener( cell, callback ) );
+//            }
+//        } );
 
 	}
 	
 	@Override
 	public String desc() {
 		return 
-			"This rime-covered wand allows its user to create a wall of ice between any two points. " +
-            "Durability of this wall is heavily dependent on amount of tiles affected, but it can be " +
-            "used on the same spot if its user desires. Ice shards created by this wand also may harm " +
-            "and chill your enemies.";
+			"A single zap from this rime-covered wand will attempt to create a short wall of ice " +
+            "on the targeted spot. If the targeted tiles are occupied by someone,  it will instead " +
+            "chill them to the bones. Effect of this wand is stronger when used on water tiles.";
 	}
 
-    private static class SecondaryListener implements CellSelector.Listener {
-
-        public Callback callback;
-        public Integer source;
-
-        public SecondaryListener( Integer source, Callback callback ) {
-            this.source = source;
-            this.callback = callback;
-        }
-
-        @Override
-        public void onSelect( Integer target ){
-
-            if( target != null && !source.equals( target ) ){
-
-                target = Ballistica.cast( source, target, false, false );
-                MagicMissile.shards( curUser.sprite.parent, source, target, null );
-
-                if( Ballistica.distance > 0 ){
-
-                    for( int i = 1 ; i <= Ballistica.distance ; i++ ){
-                        cells.add( Ballistica.trace[ i ] );
-                    }
-                }
-
-//                target = Ballistica.cast( source, source + source - target, false, false );
+//    private static class SecondaryListener implements CellSelector.Listener {
+//
+//        public Callback callback;
+//        public Integer source;
+//
+//        public SecondaryListener( Integer source, Callback callback ) {
+//            this.source = source;
+//            this.callback = callback;
+//        }
+//
+//        @Override
+//        public void onSelect( Integer target ){
+//
+//            if( target != null && !source.equals( target ) ){
+//
+//                target = Ballistica.cast( source, target, false, false );
 //                MagicMissile.shards( curUser.sprite.parent, source, target, null );
 //
 //                if( Ballistica.distance > 0 ){
@@ -160,18 +152,28 @@ public class WandOfIceBarrier extends WandUtility {
 //                        cells.add( Ballistica.trace[ i ] );
 //                    }
 //                }
-            }
-
-            Sample.INSTANCE.play( Assets.SND_ZAP );
-            callback.call();
-
-        }
-
-        @Override
-        public String prompt(){
-            return "Choose another tile";
-        }
-    };
+//
+////                target = Ballistica.cast( source, source + source - target, false, false );
+////                MagicMissile.shards( curUser.sprite.parent, source, target, null );
+////
+////                if( Ballistica.distance > 0 ){
+////
+////                    for( int i = 1 ; i <= Ballistica.distance ; i++ ){
+////                        cells.add( Ballistica.trace[ i ] );
+////                    }
+////                }
+//            }
+//
+//            Sample.INSTANCE.play( Assets.SND_ZAP );
+//            callback.call();
+//
+//        }
+//
+//        @Override
+//        public String prompt(){
+//            return "Choose another tile";
+//        }
+//    };
 
     public static class IceBlock extends NPC {
 
@@ -181,6 +183,7 @@ public class WandOfIceBarrier extends WandUtility {
             spriteClass = IceBlockSprite.class;
 
             resistances.put( Element.Flame.class, Element.Resist.VULNERABLE );
+            resistances.put( Element.Explosion.class, Element.Resist.VULNERABLE );
 
             resistances.put( Element.Shock.class, Element.Resist.PARTIAL);
             resistances.put( Element.Acid.class, Element.Resist.PARTIAL);
@@ -232,13 +235,16 @@ public class WandOfIceBarrier extends WandUtility {
 
         @Override
         public void interact(){
-            GLog.i( "You dispel the ice block." );
-            Dungeon.hero.sprite.operate( pos );
 
+            GLog.i( "You dispel the ice block." );
+            Sample.INSTANCE.play( Assets.SND_MELD );
+
+            Dungeon.hero.sprite.pickup( pos );
             Dungeon.hero.spend( TICK );
             Dungeon.hero.busy();
 
             die( null );
+
         }
 
         @Override
@@ -289,13 +295,15 @@ public class WandOfIceBarrier extends WandUtility {
             super.die( cause, dmg );
 
             if ( cause != null && Dungeon.visible[pos] ) {
-                CellEmitter.get( pos ).burst( Speck.factory( Speck.ICESHARD ), 16 );
+                CellEmitter.get( pos ).burst( Speck.factory( Speck.ICESHARD ), 8 );
             }
         }
 
         @Override
         public String description() {
-            return "";
+            return "This ice block was created by your wand of Ice Barrier. It slowly melts, " +
+                    "and can also be broken if damaged enough. You also can dispel the block " +
+                    "by interacting with it while holding your wand.";
         }
     }
 }

@@ -96,6 +96,11 @@ public abstract class WandCombat extends Wand {
     }
 
     @Override
+    public int maxDurability() {
+        return 50;
+    }
+
+    @Override
     protected void spendCharges() {
 
         if( curCharges > 0 ) curCharges--;

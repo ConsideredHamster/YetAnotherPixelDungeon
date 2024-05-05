@@ -93,13 +93,13 @@ public class ArmorerKit extends Item {
 	
 	@Override
 	public void execute( Hero hero, String action ) {
-		if (action == AC_APPLY) {
+        if (action == AC_APPLY) {
 
-			curUser = hero;
-			curItem = this;
-			GameScene.selectItem( itemSelector, WndBag.Mode.ARMORERS_KIT, TXT_SELECT_ARMOUR);
-			
-		} else {
+            curUser = hero;
+            curItem = this;
+            GameScene.selectItem( itemSelector, WndBag.Mode.ARMORERS_KIT, TXT_SELECT_ARMOUR);
+
+        } else {
 			
 			super.execute( hero, action );
 			
@@ -110,8 +110,8 @@ public class ArmorerKit extends Item {
     public int price() {
         return 20 + 10 * value;
     }
-	
-	private void repair(Armour armor) {
+
+    private void repair(Armour armor) {
 
         float bonus = Dungeon.hero.ringBuffsBaseZero( RingOfDurability.Durability.class ) * 0.5f;
 
@@ -123,11 +123,11 @@ public class ArmorerKit extends Item {
             }
         }
 
-        if( bonus < 0.0f && Random.Float() > -bonus ) {
+        if( bonus < 0.0f && Random.Float() < -bonus ) {
             GLog.n(TXT_CHARGE_WASTED);
         } else {
             armor.repair(1);
-            GLog.p(TXT_REPAIR_ARMOUR, armor.name());
+            GLog.i(TXT_REPAIR_ARMOUR, armor.name());
         }
 
         curUser.sprite.operate(curUser.pos);
@@ -136,32 +136,8 @@ public class ArmorerKit extends Item {
         curUser.sprite.centerEmitter().start(Speck.factory(Speck.KIT), 0.05f, 10);
         curUser.spend( TIME_TO_APPLY );
         curUser.busy();
+    }
 
-//		detach( curUser.belongings.backpack );
-//
-//		curUser.sprite.centerEmitter().start( Speck.factory( Speck.KIT ), 0.05f, 10 );
-//		curUser.spend(TIME_TO_APPLY);
-//		curUser.busy();
-//
-//		GLog.w(TXT_REPAIR_ARMOUR, armor.name() );
-//
-//		ClassArmor classArmor = ClassArmor.upgrade( curUser, armor );
-//		if (curUser.belongings.armor == armor) {
-//
-//			curUser.belongings.armor = classArmor;
-//			((HeroSprite)curUser.sprite).updateArmor();
-//
-//		} else {
-//
-//			armor.detach( curUser.belongings.backpack );
-//			classArmor.collect( curUser.belongings.backpack );
-//
-//		}
-//
-//		curUser.sprite.operate( curUser.pos );
-//		Sample.INSTANCE.play( Assets.SND_EVOKE );
-	}
-	
 	@Override
 	public String info() {
 		return
@@ -169,9 +145,6 @@ public class ArmorerKit extends Item {
             "armors) or shields in a quite short amount of time.\n" +
             "No skills in tailoring, leatherworking or blacksmithing are required, but it has enough materials for only " +
             ( value > 2 ? "three usages" : value < 2 ? "one usage" : "two usages" ) + ".";
-//			"Using this kit of small tools and materials anybody can transform any armor into an \"epic armor\", " +
-//			"which will keep all properties of the original armor, but will also provide its wearer a special ability " +
-//			"depending on his class. No skills in tailoring, leatherworking or blacksmithing are required.";
 	}
 
     @Override
@@ -183,13 +156,13 @@ public class ArmorerKit extends Item {
     public String toString() {
         return super.toString() + " (" + status() +  ")" ;
     }
-	
-	private final WndBag.Listener itemSelector = new WndBag.Listener() {
-		@Override
-		public void onSelect( Item item ) {
-			if (item != null) {
-				ArmorerKit.this.repair((Armour) item);
-			}
-		}
-	};
+
+    private final WndBag.Listener itemSelector = new WndBag.Listener() {
+        @Override
+        public void onSelect( Item item ) {
+            if (item != null) {
+                ArmorerKit.this.repair((Armour) item);
+            }
+        }
+    };
 }

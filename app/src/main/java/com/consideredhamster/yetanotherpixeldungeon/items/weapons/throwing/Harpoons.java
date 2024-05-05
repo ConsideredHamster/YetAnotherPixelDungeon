@@ -27,7 +27,9 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Chains;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.ItemSpriteSheet;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.MissileSprite;
 import com.watabou.utils.Callback;
 
 public class Harpoons extends ThrowingWeaponHeavy {
@@ -87,7 +89,7 @@ public class Harpoons extends ThrowingWeaponHeavy {
 
             } else {
 
-                super.onThrow( defender.pos );
+                onThrow( defender.pos );
 
             }
         }

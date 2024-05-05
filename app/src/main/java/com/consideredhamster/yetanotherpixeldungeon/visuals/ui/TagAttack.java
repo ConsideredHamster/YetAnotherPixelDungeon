@@ -85,10 +85,7 @@ public class TagAttack extends Tag {
 
 		candidates.clear();
 
-		int v = Dungeon.hero.visibleEnemies();
-
-		for (int i=0; i < v; i++) {
-			Mob mob = Dungeon.hero.visibleEnemy( i );
+		for (Mob mob : Dungeon.hero.visibleEnemies() ) {
 			if (mob != null) {
 				candidates.add( mob );
 			}

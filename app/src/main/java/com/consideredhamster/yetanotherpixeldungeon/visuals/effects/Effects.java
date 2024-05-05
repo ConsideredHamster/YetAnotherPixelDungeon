@@ -35,7 +35,7 @@ public class Effects {
 		CONTROL,
 		DOOM,
         CROSS,
-        BLAST,
+        LASER,
         SHOCK,
 	};
 	
@@ -69,8 +69,8 @@ public class Effects {
             case CROSS:
                 icon.frame( icon.texture.uvRect( 48, 0, 64, 16 ) );
                 break;
-            case BLAST:
-                icon.frame( icon.texture.uvRect( 32, 16, 48, 32 ) );
+            case LASER:
+                icon.frame( icon.texture.uvRect( 32, 16, 48, 24 ) );
                 break;
             case SHOCK:
                 icon.frame( icon.texture.uvRect( 48, 16, 64, 32 ) );

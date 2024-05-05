@@ -383,7 +383,7 @@ public class Speck extends Image {
                 break;
 
             case ICESHARD:
-                lifespan = 0.2f;
+                lifespan = 0.5f;
                 speed.polar( Random.Float( 2 * 3.1415926f ), 16 / lifespan );
                 acc.set( 0, 128 );
                 angle = Random.Float( 360 );

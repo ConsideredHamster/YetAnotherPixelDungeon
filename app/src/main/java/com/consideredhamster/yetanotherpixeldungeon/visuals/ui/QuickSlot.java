@@ -20,6 +20,7 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.ui;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Button;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
@@ -287,8 +288,6 @@ public class QuickSlot extends Button implements WndBag.Listener {
 	}
 	
 	private void useTargeting() {
-		
-//		targeting = currentTarget != null && currentTarget.isAlive() && Dungeon.visible[currentTarget.pos];
 
         if ( currentTarget != null && ( !currentTarget.isAlive() || !Dungeon.visible[currentTarget.pos] ) ) {
             currentTarget = null;
@@ -298,7 +297,7 @@ public class QuickSlot extends Button implements WndBag.Listener {
 
             int distance = 0;
 
-            for (Mob mob : Dungeon.level.mobs) {
+            for (Mob mob : Dungeon.hero.visibleEnemies() ) {
                 if ( mob.hostile && Dungeon.visible[mob.pos]
                         && ( Ballistica.cast( Dungeon.hero.pos, mob.pos, false, true ) == mob.pos )
                         && ( distance == 0 || Level.distance(Dungeon.hero.pos, mob.pos) < distance )
@@ -310,7 +309,7 @@ public class QuickSlot extends Button implements WndBag.Listener {
         }
 
 		if ( currentTarget != null ) {
-			if (Actor.all().contains(currentTarget) ) {
+			if ( Actor.all().contains(currentTarget) && Dungeon.hero.canSeeTarget( currentTarget ) ) {
 				currentTarget.sprite.parent.add(crossM);
                 crossM.point(DungeonTilemap.tileToWorld(currentTarget.pos));
 				crossB.visible = true;

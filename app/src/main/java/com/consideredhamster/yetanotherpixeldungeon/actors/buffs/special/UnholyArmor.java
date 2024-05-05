@@ -39,6 +39,8 @@ public class UnholyArmor extends BuffPassive {
         RESISTS = new HashSet<>();
         RESISTS.add(Element.Physical.class);
         RESISTS.add(Element.Knockback.class);
+        RESISTS.add(Element.Ensnaring.class);
+        RESISTS.add(Element.Explosion.class);
 
         RESISTS.add(Element.Flame.class);
         RESISTS.add(Element.Flame.Periodic.class);
@@ -66,15 +68,15 @@ public class UnholyArmor extends BuffPassive {
     @Override
     public void removeVisual() { target.sprite.remove( CharSprite.State.UNHOLYARMOR ); }
 
-    private int consumed;
-
-    public int consumed() {
-        return consumed;
-    }
-
-    public void consumed( int value ) {
-        consumed += value;
-    }
+//    private int consumed;
+//
+//    public int consumed() {
+//        return consumed;
+//    }
+//
+//    public void consumed( int value ) {
+//        consumed += value;
+//    }
 
     @Override
     public int icon() {
@@ -86,17 +88,17 @@ public class UnholyArmor extends BuffPassive {
         return "Unholy Armor";
     }
 
-    private static final String CONSUMED	= "consumed";
+//    private static final String CONSUMED	= "consumed";
 
-    @Override
-    public void storeInBundle( Bundle bundle ) {
-        super.storeInBundle( bundle );
-        bundle.put( CONSUMED, consumed );
-    }
-
-    @Override
-    public void restoreFromBundle( Bundle bundle ) {
-        super.restoreFromBundle( bundle );
-        consumed = bundle.getInt( CONSUMED );
-    }
+//    @Override
+//    public void storeInBundle( Bundle bundle ) {
+//        super.storeInBundle( bundle );
+//        bundle.put( CONSUMED, consumed );
+//    }
+//
+//    @Override
+//    public void restoreFromBundle( Bundle bundle ) {
+//        super.restoreFromBundle( bundle );
+//        consumed = bundle.getInt( CONSUMED );
+//    }
 }

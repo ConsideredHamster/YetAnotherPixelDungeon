@@ -82,7 +82,10 @@ public class DeadEndLevel extends Level {
 			if (map[i] == Terrain.EMPTY && Random.Int( 10 ) == 0) { 
 				map[i] = Terrain.EMPTY_DECO;
 			} else if (map[i] == Terrain.WALL && Random.Int( 8 ) == 0) { 
-				map[i] = Terrain.WALL_DECO;
+				map[i] = Random.oneOf(
+                    Terrain.WALL_DECO, Terrain.WALL_DECO1, Terrain.WALL_DECO2,
+                    Terrain.WALL_DECO3, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
 			}
 		}
 	}

@@ -21,6 +21,9 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.CharSprite;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.BuffIndicator;
 
@@ -61,5 +64,23 @@ public class Vertigo extends Debuff {
     public String description() {
         return "Everything is spinning around you! Your movement can be erratic at times, you " +
                 "cannot concentrate, and your dexterity and perception are decreased.";
+    }
+
+    @Override
+    public boolean attachTo( Char target ) {
+        if (super.attachTo( target )) {
+
+            if( target instanceof Mob ) {
+                Mob mob =(Mob)target;
+
+                if( mob.state == mob.HUNTING ) {
+                    mob.state = mob.WANDERING;
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }

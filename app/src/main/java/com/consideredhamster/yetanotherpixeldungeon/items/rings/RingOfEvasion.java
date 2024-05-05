@@ -50,16 +50,19 @@ public class RingOfEvasion extends Ring {
             "harder to be hit - especially when they are on the move."
         );
 
-        desc.append( "\n\n" );
+        if( !dud ) {
 
-        desc.append( super.desc() );
+            desc.append("\n\n");
 
-        desc.append( " " );
+            desc.append(super.desc());
 
-        desc.append(
-            "Wearing this ring will increase your _evasion by " + mainEffect + "%_ when you " +
-            "are standing still and by _" + sideEffect + "% when you are moving_."
-        );
+            desc.append(" ");
+
+            desc.append(
+                    "Wearing this ring will increase your _evasion by " + mainEffect + "%_ when you " +
+                            "are standing still and by _" + sideEffect + "% when you are moving_."
+            );
+        }
 
         return desc.toString();
 	}

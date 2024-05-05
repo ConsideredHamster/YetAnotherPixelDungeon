@@ -24,20 +24,28 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLES20;
 
+import com.consideredhamster.yetanotherpixeldungeon.levels.painters.Painter;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Halo;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ElmoParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlameParticle;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Scene;
+import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import com.watabou.utils.Rect;
+
+import java.util.Arrays;
 
 public class HallsLevel extends RegularLevel {
 
 	{
-		minRoomSize = 6;
+//		minRoomSize = 6;
 		
 //		viewDistance = 4;
 		
@@ -61,48 +69,138 @@ public class HallsLevel extends RegularLevel {
 		return Assets.WATER_HALLS;
 	}
 
+    @Override
     protected boolean[] water() {
         return Patch.generate( feeling == Feeling.WATER ? 0.55f : 0.40f, 6 );
     }
 
+    @Override
     protected boolean[] grass() {
         return Patch.generate( feeling == Feeling.GRASS ? 0.55f : 0.30f, 3 );
     }
 	
 	@Override
 	protected void decorate() {
-		
-		for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
-			if (map[i] == Terrain.EMPTY) { 
-				
-				int count = 0;
-				for (int j=0; j < NEIGHBOURS8.length; j++) {
-					if ((Terrain.flags[map[i + NEIGHBOURS8[j]]] & Terrain.PASSABLE) > 0) {
-						count++;
-					}
-				}
-				
-				if (Random.Int( 80 ) < count) {
-					map[i] = Terrain.EMPTY_DECO;
-				}
-				
-			} else
-			if (map[i] == Terrain.WALL && 
-				map[i-1] != Terrain.WALL_DECO && map[i-WIDTH] != Terrain.WALL_DECO && 
-				Random.Int( 20 ) == 0) {
-				
-				map[i] = Terrain.WALL_DECO;
-				
-			}
-		}
 
-//        while (true) {
-//            int pos = roomEntrance.random_top();
-//            if (map[pos] == Terrain.WALL) {
-//                map[pos] = Terrain.WALL_SIGN;
-//                break;
-//            }
-//        }
+        for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
+            if (map[i] == Terrain.EMPTY) {
+                if (Random.Int( 10 ) == 0 ) {
+                    map[i] = Terrain.EMPTY_DECO;
+                }
+            }
+        }
+
+        for (int i=0; i < LENGTH ; i++) {
+            if (
+                    i + WIDTH < LENGTH && map[i] == Terrain.WALL &&
+                    !Arrays.asList( Terrain.WALLS ).contains( map[i + WIDTH] ) &&
+                    Random.Int( 15 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                    Terrain.WALL_DECO3, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
+
+            } else if(
+                    map[i] == Terrain.WALL && Random.Int( 10 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                    Terrain.WALL_DECO, Terrain.WALL_DECO1, Terrain.WALL_DECO2
+                );
+            }
+        }
+
+        for( Room room : rooms ){
+            if( room.type == Room.Type.TUNNEL ){
+                for( Room.Door door : room.connected.values() ){
+                    if( door.type == Room.Door.Type.TUNNEL && Random.Int( 3 ) == 0 ){
+
+                        int pos = door.y * Level.WIDTH + door.x;
+
+                        for( int i : Level.NEIGHBOURS4 ){
+                            if( map[ pos + i ] == Terrain.CHASM ){
+                                map[ pos + i ] = Terrain.STATUE_SP;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int i=WIDTH + 1; i < LENGTH - WIDTH; i++){
+
+            if( map[ i ] == Terrain.EMPTY ){
+                int n = 0;
+                if( map[ i + 1 ] == Terrain.WALL ){
+                    n++;
+                }
+                if( map[ i - 1 ] == Terrain.WALL ){
+                    n++;
+                }
+                if( map[ i + WIDTH ] == Terrain.WALL ){
+                    n++;
+                }
+                if( map[ i - WIDTH ] == Terrain.WALL ){
+                    n++;
+                }
+                if( Random.Int( 6 ) <= n ){
+                    map[ i ] = Terrain.EMPTY_DECO;
+                }
+            }
+        }
+		
+//		for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
+//			if (map[i] == Terrain.EMPTY) {
+//
+//				int count = 0;
+//				for (int j=0; j < NEIGHBOURS8.length; j++) {
+//					if ((Terrain.flags[map[i + NEIGHBOURS8[j]]] & Terrain.PASSABLE) > 0) {
+//						count++;
+//					}
+//				}
+//
+//				if (Random.Int( 80 ) < count) {
+//					map[i] = Terrain.EMPTY_DECO;
+//				}
+//
+//			} else if (map[i] == Terrain.WALL &&
+//				map[i-1] != Terrain.WALL_DECO && map[i-WIDTH] != Terrain.WALL_DECO &&
+//				map[i-1] != Terrain.WALL_DECO2 && map[i-WIDTH] != Terrain.WALL_DECO2 &&
+//				Random.Int( 20 ) == 0) {
+//
+//				map[i] = Random.oneOf( Terrain.WALL_DECO, Terrain.WALL_DECO2 );
+//
+//			}
+//		}
+
+		for (Room r : rooms) {
+            if (r.type == Room.Type.STANDARD) {
+                for (Room n : r.neighbours) {
+                    if (n.type == Room.Type.STANDARD && !r.connected.containsKey( n )) {
+                        Rect w = r.intersect( n );
+                        if (w.left == w.right && w.bottom - w.top >= 4) {
+
+                            w.top += 2;
+                            w.bottom -= 1;
+
+                            w.right++;
+
+                            Painter.fill( this, w.left, w.top, 1, w.height(), Terrain.GRATE );
+
+                        } else if (w.top == w.bottom && w.right - w.left >= 4) {
+
+                            w.left += 2;
+                            w.right -= 1;
+
+                            w.bottom++;
+
+                            Painter.fill( this, w.left, w.top, w.width(), 1, Terrain.GRATE );
+                        }
+                    }
+                }
+            }
+        }
 	}
 
     @Override
@@ -133,17 +231,27 @@ public class HallsLevel extends RegularLevel {
 
 	public static String tileDescs(int tile) {
 		switch (tile) {
-		case Terrain.WATER:
-			return "It looks like tomato juice, but it smells metallic.";
-		case Terrain.STATUE:
-		case Terrain.STATUE_SP:
-			return "The pillar is made of real humanoid skulls. Awesome."; 
-		case Terrain.BOOKSHELF:
-			return "Books in ancient languages smoulder in the bookshelf. May it contain something useful?";
-        case Terrain.SHELF_EMPTY:
-            return "Books in ancient languages smoulder in the bookshelf.";
-		default:
-			return Level.tileDescs(tile);
+            case Terrain.WATER:
+                return "Something tells you that it isn't actually water, but it works the same.";
+            case Terrain.WALL_DECO:
+                return "There is an candle hanging on this wall. It burns with unnatural green flame.";
+            case Terrain.WALL_DECO1:
+                return "A menacing skull made from stone decorates this wall panel. Spooky!";
+            case Terrain.WALL_DECO2:
+                return "A some kind of weird eye is engraved on this wall panel. Weird.";
+            case Terrain.WALL_DECO3:
+            case Terrain.WALL_DECO4:
+            case Terrain.WALL_DECO5:
+                return "There is a window of stained glass in this wall. It doesn't looks breakable";
+            case Terrain.STATUE:
+            case Terrain.STATUE_SP:
+                return "The pillar is made of real humanoid skulls. Awesome.";
+            case Terrain.BOOKSHELF:
+                return "Books in ancient languages smoulder in the bookshelf. May it contain something useful?";
+            case Terrain.SHELF_EMPTY:
+                return "Books in ancient languages smoulder in the bookshelf.";
+            default:
+                return Level.tileDescs(tile);
 		}
 	}
 	
@@ -155,9 +263,11 @@ public class HallsLevel extends RegularLevel {
 	
 	public static void addVisuals( Level level, Scene scene ) {
 		for (int i=0; i < LENGTH; i++) {
-			if (level.map[i] == 63) {
+			if ( level.map[i] == 63 ) {
 				scene.add( new Stream( i ) );
-			}
+			} else if (level.map[i] == Terrain.WALL_DECO) {
+                scene.add( new Torch( i ) );
+            }
 		}
 	}
 	
@@ -232,4 +342,48 @@ public class HallsLevel extends RegularLevel {
 			am = p > 0.8f ? (1 - p) * 5 : 1;
 		}
 	}
+
+	private static class Torch extends Emitter {
+
+        private int pos;
+
+        public Torch( int pos ){
+            super();
+
+            this.pos = pos;
+
+            PointF p = DungeonTilemap.tileCenterToWorld( pos );
+            pos( p.x - 1, p.y - 4, 2, 0 );
+
+            pour( ElmoParticle.FACTORY, 0.15f );
+
+            add( new Halo( 16, 0xFFFFCC, 0.2f ).point( p.x, p.y ) );
+        }
+
+        @Override
+        public void update(){
+            if( visible = Dungeon.visible[ pos ] ){
+                super.update();
+            }
+        }
+    }
+
+	public static void pregenerate( Level level ) {
+
+        int square = 6;
+
+        for( int x = 1 ; x < Level.WIDTH - 1 ; x += square ) {
+            for( int y = 1 ; y < Level.HEIGHT - 1; y += square ) {
+
+                int xx = x + Random.Int( square ) + 1 ;
+                int yy = y + Random.Int( square ) + 1 ;
+
+                level.map[ xx * Level.WIDTH + yy ] = Random.oneOf(
+//                    Terrain.WALL_DECO
+                    Terrain.WALL_DECO3, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
+
+            }
+        }
+    }
 }

@@ -50,6 +50,8 @@ public class CaveScorpion extends MobHealthy {
          */
 
 		name = "cave scorpion";
+		info = "Corrosive attack, Acidic blood";
+
 		spriteClass = ScorpionSprite.class;
 
         resistances.put( Element.Acid.class, Element.Resist.PARTIAL );

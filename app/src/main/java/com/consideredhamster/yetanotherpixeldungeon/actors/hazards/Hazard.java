@@ -37,10 +37,6 @@ public abstract class Hazard extends Actor {
     public int pos;
     public int var;
 
-//    public Hazard() {
-//        super();
-//    }
-
     @Override
     protected boolean act(){
         return false;

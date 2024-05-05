@@ -39,7 +39,7 @@ public class GnollHunter extends MobRanged {
 
     public GnollHunter() {
 
-        super( 3 );
+        super( Dungeon.chapter() * 5 - 2 );
 
         /*
 
@@ -57,6 +57,8 @@ public class GnollHunter extends MobRanged {
          */
 
 		name = "gnoll hunter";
+		info = "Spear throw";
+
 		spriteClass = GnollSprite.class;
 
         resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
@@ -79,8 +81,6 @@ public class GnollHunter extends MobRanged {
                 lootChance = 0.5f;
                 break;
         }
-
-
 	}
 
     @Override
@@ -110,21 +110,8 @@ public class GnollHunter extends MobRanged {
 	@Override
 	public String description() {
 
-        return "Gnolls are hyena-like humanoids. "
-
-                + ( Dungeon.hero.heroClass == HeroClass.WARRIOR ?
-                "This one seems to be a hunter or something like. It is not like their sharped sticks gonna be a problem to you." : "" )
-
-                + ( Dungeon.hero.heroClass == HeroClass.SCHOLAR ?
-                "Curiously, they are very rarely observed so close to a human settlements, preferring to dwell somewhere in wilderness." : "" )
-
-                + ( Dungeon.hero.heroClass == HeroClass.BRIGAND ?
-                "And that's probably everything there is to know about them. Who cares, anyway?" : "" )
-
-                + ( Dungeon.hero.heroClass == HeroClass.ACOLYTE ?
-                "They seem to be in alliance with wild beasts and other denizens of these depths. Maybe, even... leading them?" : "" )
-
-                ;
+        return "Gnolls are hyena-like humanoids. Curiously, they are very rarely observed so " +
+                "close to a human settlements, preferring to dwell somewhere in wilderness.";
 	}
 
 }

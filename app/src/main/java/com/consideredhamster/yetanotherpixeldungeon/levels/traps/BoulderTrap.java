@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.levels.traps;
 
 import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Rockfall;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.watabou.noosa.Camera;
@@ -48,7 +49,7 @@ public class BoulderTrap extends Trap {
         // FIXME
 
         Sample.INSTANCE.play( Assets.SND_ROCKS );
-        Camera.main.shake(3, 0.07f * 5);
+        Camera.main.shake(3, 0.35f);
 
         int power = 10 + Dungeon.chapter() * 4;
 
@@ -56,7 +57,7 @@ public class BoulderTrap extends Trap {
 
             if( n == 0 || Random.Float() < 0.75f ) {
 
-                boulders( pos + n, power );
+                Rockfall.affect( pos + n, power, TRAP );
 
                 if( n != 0 ) {
                     Dungeon.level.press( pos + n, null );
@@ -64,36 +65,4 @@ public class BoulderTrap extends Trap {
             }
         }
 	}
-
-    public static void boulders( int pos, int power ) {
-
-        if( pos < 0 || pos >= 1024 )
-            return;
-
-        if( Level.solid[pos] )
-            return;
-
-        Char ch = Actor.findChar(pos);
-        if (ch != null) {
-
-            int dmg = Char.absorb( Random.IntRange( power / 2 , power ), ch.armorClass() );
-
-            ch.damage(dmg, TRAP, Element.PHYSICAL);
-
-            if (ch.isAlive() ) {
-                BuffActive.addFromDamage(ch, Vertigo.class, dmg);
-            }
-        }
-
-        Heap heap = Dungeon.level.heaps.get(pos);
-        if (heap != null) {
-            heap.shatter();
-        }
-
-        if (Dungeon.visible[pos]) {
-
-            CellEmitter.get(pos).start(Speck.factory(Speck.ROCK), 0.1f, 4 );
-
-        }
-    }
 }

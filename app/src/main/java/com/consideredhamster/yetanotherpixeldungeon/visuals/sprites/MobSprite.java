@@ -20,6 +20,8 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.sprites;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.MindVision;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.tweeners.ScaleTweener;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
@@ -36,17 +38,21 @@ public class MobSprite extends CharSprite {
 	public void update() {
 		sleeping = ch != null && ((Mob)ch).state == ((Mob)ch).SLEEPING;
 
+		if ( ch != null && ch.invisible > 0 && Dungeon.hero.buff( MindVision.class ) == null ) {
+			visible = false;
+		}
+
         if (ch != null && visible && ch.dexterity() > 0 && ch.isAlive() ) {
             showAlert();
         } else {
             hideAlert();
         }
 
-        if (sleeping) {
-            showSleep();
-        } else {
-            hideSleep();
-        }
+		if (sleeping) {
+			showSleep();
+		} else {
+			hideSleep();
+		}
 
 		super.update();
 	}
@@ -66,26 +72,26 @@ public class MobSprite extends CharSprite {
 			} );
 		}
 	}
-	
+
 	public void fall() {
-		
+
 		origin.set( width / 2, height - DungeonTilemap.SIZE / 2 );
 		angularSpeed = Random.Int( 2 ) == 0 ? -720 : 720;
-		
+
 		parent.add(new ScaleTweener(this, new PointF(0, 0), FALL_TIME) {
-            @Override
-            protected void onComplete() {
-                MobSprite.this.killAndErase();
-                parent.erase(this);
-            }
+			@Override
+			protected void onComplete() {
+				MobSprite.this.killAndErase();
+				parent.erase(this);
+			}
 
-            ;
+			;
 
-            @Override
-            protected void updateValues(float progress) {
-                super.updateValues(progress);
-                am = 1 - progress;
-            }
-        });
+			@Override
+			protected void updateValues(float progress) {
+				super.updateValues(progress);
+				am = 1 - progress;
+			}
+		});
 	}
 }

@@ -42,7 +42,7 @@ public class GnollShaman extends MobRanged {
 
     public GnollShaman() {
 
-        super( 8 );
+        super( 2 + Dungeon.chapter() * 6 );
 
         /*
 
@@ -60,6 +60,7 @@ public class GnollShaman extends MobRanged {
          */
 
 		name = "gnoll shaman";
+		info = "Magic missile";
 		spriteClass = ShamanSprite.class;
 
         resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );

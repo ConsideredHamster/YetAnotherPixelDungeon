@@ -21,12 +21,15 @@
 package com.consideredhamster.yetanotherpixeldungeon;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Blob;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Explosion;
+import com.consideredhamster.yetanotherpixeldungeon.actors.blobs.Rockfall;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Crippled;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Satiety;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Corrosion;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.FieryRune;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.HeroClass;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.DwarfMonk;
@@ -37,6 +40,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mimic;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Piranha;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Rat;
+import com.consideredhamster.yetanotherpixeldungeon.actors.special.Pushing;
 import com.consideredhamster.yetanotherpixeldungeon.items.armours.Armour;
 import com.consideredhamster.yetanotherpixeldungeon.items.weapons.Weapon;
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Chasm;
@@ -98,15 +102,11 @@ public abstract class ResultDescriptions {
 
                 }
 
-            } else if( killedBy instanceof DwarvenKing.BoneExplosion ) {
-
-                result = "boned";
-
-            } if( killedBy instanceof DwarvenKing.KnockBack ) {
+            } else if( killedBy instanceof Pushing ) {
 
                 result = "crushed";
 
-            } if( killedBy instanceof BoulderTrap ) {
+            } else if( killedBy instanceof BoulderTrap ) {
 
                 result = "crushed";
 
@@ -121,6 +121,8 @@ public abstract class ResultDescriptions {
             result = "electrocuted";
         } else if( killedWith instanceof Element.Acid) {
             result = "dissolved";
+        } else if( killedWith instanceof Element.Explosion) {
+            result = "blown up";
 //        } else if( killedWith instanceof DamageType.Mind) {
 //            result = "";
 //        } else if( killedWith instanceof DamageType.Body) {
@@ -145,9 +147,9 @@ public abstract class ResultDescriptions {
             Blob blob = ((Blob)killedBy);
             result = Utils.indefinite( blob.name );
         } else if( killedBy instanceof Weapon.Enchantment ) {
-            result = "cursed weapon";
+            result = "enchanted weapon";
         } else if( killedBy instanceof Armour.Glyph ) {
-            result = "cursed armor";
+            result = "enchanted armor";
         } else if( killedBy instanceof Buff ) {
             if( killedBy instanceof Crippled ) {
                 result = "excessive bleeding";
@@ -164,10 +166,12 @@ public abstract class ResultDescriptions {
             result = "a trap";
         } else if( killedBy instanceof Chasm ) {
             result = "gravity";
-        } else if( killedBy instanceof DwarvenKing.BoneExplosion ) {
-            result = "an explosion";
-        } else if( killedBy instanceof DwarvenKing.KnockBack ) {
+        } else if( killedBy instanceof Pushing ) {
             result = "knockback";
+        } else if( killedBy instanceof Explosion ) {
+            result = "explosion";
+        } else if( killedBy instanceof FieryRune) {
+            result = "your own firebrand rune";
         }
 
         return result;

@@ -34,7 +34,6 @@ public class PotionOfWisdom extends Potion {
 	
 	@Override
 	protected void apply( Hero hero ) {
-		setKnown();
 
         int exp = hero.maxExp();
 
@@ -45,6 +44,8 @@ public class PotionOfWisdom extends Potion {
 
 		hero.earnExp( exp );
         hero.lvlBonus++;
+
+        setKnown();
 	}
 	
 	@Override

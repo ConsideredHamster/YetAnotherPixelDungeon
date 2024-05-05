@@ -30,9 +30,12 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room.Type;
 import com.consideredhamster.yetanotherpixeldungeon.levels.painters.Painter;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import com.watabou.utils.Rect;
+
+import java.util.Arrays;
 
 public class CavesLevel extends RegularLevel {
 
@@ -70,92 +73,69 @@ public class CavesLevel extends RegularLevel {
 	
 	@Override
 	protected void decorate() {
-		
-		for (Room room : rooms) {
-			if (room.type != Room.Type.STANDARD) {
-				continue;
-			}
-			
-			if (room.width() <= 3 || room.height() <= 3) {
-				continue;
-			}
-			
-			int s = room.square();
-			
-			if (Random.Int( s ) > 4) {
-				int corner = (room.left + 1) + (room.top + 1) * WIDTH;
-				if (heaps.get( corner ) == null && map[corner - 1] == Terrain.WALL && map[corner - WIDTH] == Terrain.WALL) {
-					map[corner] = Terrain.WALL;
-				}
-			}
-			
-			if (Random.Int( s ) > 4) {
-				int corner = (room.right - 1) + (room.top + 1) * WIDTH;
-				if (heaps.get( corner ) == null && map[corner + 1] == Terrain.WALL && map[corner - WIDTH] == Terrain.WALL) {
-					map[corner] = Terrain.WALL;
-				}
-			}
-			
-			if (Random.Int( s ) > 4) {
-				int corner = (room.left + 1) + (room.bottom - 1) * WIDTH;
-				if (heaps.get( corner ) == null && map[corner - 1] == Terrain.WALL && map[corner + WIDTH] == Terrain.WALL) {
-					map[corner] = Terrain.WALL;
-				}
-			}
-			
-			if (Random.Int( s ) > 4) {
-				int corner = (room.right - 1) + (room.bottom - 1) * WIDTH;
-				if (heaps.get( corner ) == null && map[corner + 1] == Terrain.WALL && map[corner + WIDTH] == Terrain.WALL) {
-					map[corner] = Terrain.WALL;
-				}
-			}
 
-			for (Room n : room.connected.keySet()) {
-				if ((n.type == Room.Type.STANDARD || n.type == Room.Type.TUNNEL) && Random.Int( 3 ) == 0) {
-					Painter.set( this, room.connected.get( n ), Terrain.EMPTY_DECO );
-				}
-			}
-		}
-		
-		for (int i=WIDTH + 1; i < LENGTH - WIDTH; i++) {
-			if (map[i] == Terrain.EMPTY) {
-				int n = 0;
-				if (map[i+1] == Terrain.WALL) {
-					n++;
-				}
-				if (map[i-1] == Terrain.WALL) {
-					n++;
-				}
-				if (map[i+WIDTH] == Terrain.WALL) {
-					n++;
-				}
-				if (map[i-WIDTH] == Terrain.WALL) {
-					n++;
-				}
-				if (Random.Int( 6 ) <= n) {
-					map[i] = Terrain.EMPTY_DECO;
-				}
-			}
-		}
-		
-		for (int i=0; i < LENGTH; i++) {
-			if (map[i] == Terrain.WALL && Random.Int( 12 ) == 0) {
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
-		
-//		while (true) {
-//			int pos = roomEntrance.random_top();
-//			if (map[pos] == Terrain.WALL) {
-//				map[pos] = Terrain.WALL_SIGN;
-//				break;
+        boolean[] passable = new boolean[ LENGTH ];
+
+        for( int i = 0 ; i < LENGTH ; i++ ){
+//            passable[ i ] = map[ i ] != Terrain.WALL;
+            passable[ i ] =
+                    map[ i ] != Terrain.WALL && map[ i ] != Terrain.STATUE && map[ i ] != Terrain.GRATE &&
+                    map[ i ] != Terrain.CHASM && map[ i ] != Terrain.WALL_SIGN;
+        }
+
+        for( int i = 0 ; i < LENGTH ; i++ ) {
+            if( i != entrance && map[ i ] != Terrain.WALL ) {
+                if( !PathFinder.buildDistanceMap( i, entrance, passable ) ) {
+                    map[ i ] = Terrain.WALL;
+                }
+            }
+        }
+
+        for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
+            if (map[i] == Terrain.EMPTY) {
+                if (Random.Int( 10 ) == 0 ) {
+                    map[i] = Terrain.EMPTY_DECO;
+                }
+            }
+        }
+
+        for (int i=0; i < LENGTH ; i++) {
+            if (
+                    i + WIDTH < LENGTH && map[i] == Terrain.WALL &&
+                            !Arrays.asList( Terrain.WALLS ).contains( map[i + WIDTH] ) &&
+                            Random.Int( 15 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                        Terrain.WALL_DECO1, Terrain.WALL_DECO2, Terrain.WALL_DECO3
+                );
+
+            } else if(
+                    map[i] == Terrain.WALL && Random.Int( 10 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                        Terrain.WALL_DECO, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
+            }
+        }
+
+        for (Room room : rooms) {
+            if (room.type != Room.Type.STANDARD) {
+                continue;
+            }
+
+            if (room.width() <= 3 || room.height() <= 3) {
+                continue;
+            }
+        }
+
+//			for (Room n : room.connected.keySet()) {
+//				if ((n.type == Room.Type.STANDARD || n.type == Room.Type.TUNNEL) && Random.Int( 3 ) == 0) {
+//					Painter.set( this, room.connected.get( n ), Terrain.EMPTY_DECO );
+//				}
 //			}
-//		}
-		
-//		if (Dungeon.bossLevel( Dungeon.depth + 1 )) {
-//			return;
-//		}
-		
+
 		for (Room r : rooms) {
 			if (r.type == Type.STANDARD) {
 				for (Room n : r.neighbours) {
@@ -183,6 +163,46 @@ public class CavesLevel extends RegularLevel {
 				}
 			}
 		}
+
+		for (Room room : rooms){
+            if( room.type != Room.Type.STANDARD ){
+                continue;
+            }
+
+            if( room.width() <= 3 || room.height() <= 3 ){
+                continue;
+            }
+
+            int s = room.square();
+
+            if( Random.Int( s ) > 5 ){
+                int corner = ( room.left + 1 ) + ( room.top + 1 ) * WIDTH;
+                if( map[ corner - 1 ] == Terrain.WALL && map[ corner - WIDTH ] == Terrain.WALL ){
+                    map[ corner ] = map[ corner ] == Terrain.EMPTY_SP ? Terrain.STATUE_SP : Random.oneOf( Terrain.GRATE, Terrain.STATUE, Terrain.WALL );
+                }
+            }
+
+            if( Random.Int( s ) > 5 ){
+                int corner = ( room.right - 1 ) + ( room.top + 1 ) * WIDTH;
+                if( map[ corner + 1 ] == Terrain.WALL && map[ corner - WIDTH ] == Terrain.WALL ){
+                    map[ corner ] = map[ corner ] == Terrain.EMPTY_SP ? Terrain.STATUE_SP : Random.oneOf( Terrain.GRATE, Terrain.STATUE, Terrain.WALL );
+                }
+            }
+
+            if( Random.Int( s ) > 5 ){
+                int corner = ( room.left + 1 ) + ( room.bottom - 1 ) * WIDTH;
+                if( map[ corner - 1 ] == Terrain.WALL && map[ corner + WIDTH ] == Terrain.WALL ){
+                    map[ corner ] = map[ corner ] == Terrain.EMPTY_SP ? Terrain.STATUE_SP : Random.oneOf( Terrain.GRATE, Terrain.STATUE, Terrain.WALL );
+                }
+            }
+
+            if( Random.Int( s ) > 5 ){
+                int corner = ( room.right - 1 ) + ( room.bottom - 1 ) * WIDTH;
+                if( map[ corner + 1 ] == Terrain.WALL && map[ corner + WIDTH ] == Terrain.WALL ){
+                    map[ corner ] = map[ corner ] == Terrain.EMPTY_SP ? Terrain.STATUE_SP : Random.oneOf( Terrain.GRATE, Terrain.STATUE, Terrain.WALL );
+                }
+            }
+        }
 	}
 
     @Override
@@ -202,8 +222,12 @@ public class CavesLevel extends RegularLevel {
 			return "Fluorescent moss";
 		case Terrain.HIGH_GRASS:
 			return "Fluorescent mushrooms";
-		case Terrain.WATER:
-			return "Freezing cold water.";
+        case Terrain.WATER:
+            return "Freezing cold water";
+        case Terrain.STATUE:
+            return "Stalagmite";
+        case Terrain.GRATE:
+            return "Rock pile";
 		default:
 			return Level.tileNames(tile);
 		}
@@ -212,20 +236,33 @@ public class CavesLevel extends RegularLevel {
 //	@Override
 	public static String tileDescs( int tile ) {
 		switch (tile) {
-		case Terrain.ENTRANCE:
-			return "The ladder leads up to the upper depth.";
-		case Terrain.EXIT:
-			return "The ladder leads down to the lower depth.";
-		case Terrain.HIGH_GRASS:
-			return "Huge mushrooms block the view.";
-		case Terrain.WALL_DECO:
-			return "A vein of some ore is visible on the wall. Gold?";
-		case Terrain.BOOKSHELF:
-			return "Who would need a bookshelf in a cave? Better check it, anyway.";
-        case Terrain.SHELF_EMPTY:
-            return "Who would need a bookshelf in a cave?";
-		default:
-			return Level.tileDescs(tile);
+            case Terrain.ENTRANCE:
+                return "The ladder leads up to the upper depth.";
+            case Terrain.EXIT:
+                return "The ladder leads down to the lower depth.";
+            case Terrain.HIGH_GRASS:
+                return "Huge mushrooms block the view.";
+            case Terrain.WALL_DECO:
+                return "A vein of some ore is visible on the wall. Gold?";
+            case Terrain.WALL_DECO1:
+                return "This wall is adorned by several dwarven skulls.";
+            case Terrain.WALL_DECO2:
+                return "There is primitive tribal banner hanging here.";
+            case Terrain.WALL_DECO3:
+                return "You can just barely see a giant fossilized skull in this wall.";
+            case Terrain.WALL_DECO4:
+            case Terrain.WALL_DECO5:
+                return "These mushrooms can grow even on the walls!";
+            case Terrain.BOOKSHELF:
+                return "Who would need a bookshelf in a cave? Better check it, anyway.";
+            case Terrain.SHELF_EMPTY:
+                return "Who would need a bookshelf in a cave?";
+            case Terrain.STATUE:
+                return "A stalagmite rises from the floor of a cave.";
+            case Terrain.GRATE:
+                return "A huge pile of boulders blocks your way.";
+            default:
+                return Level.tileDescs(tile);
 		}
 	}
 	
@@ -296,4 +333,55 @@ public class CavesLevel extends RegularLevel {
 			size( (am = p < 0.5f ? p * 2 : (1 - p) * 2) * 2 );
 		}
 	}
+
+    public static void pregenerate( Level level ) {
+
+        // Just create some patches of empty tiles around the floor before painting any rooms
+        boolean[] empty = new boolean[ Level.LENGTH ];
+
+        switch( Dungeon.depth ) {
+            case 13:
+                chasm = Patch.generate( 0.400f, 2 );
+                break;
+            case 14:
+                empty = Patch.generate( 0.425f, 3 );
+                break;
+            case 15:
+                empty = Patch.generate( 0.450f, 3 );
+                break;
+            case 16:
+                empty = Patch.generate( 0.475f, 4 );
+                break;
+            case 17:
+                empty = Patch.generate( 0.500f, 4 );
+                break;
+
+        }
+
+        for( int x = 2 ; x < Level.WIDTH - 2 ; x++ ){
+            for( int y = 2 ; y < Level.HEIGHT - 2 ; y++ ){
+                int pos = x + y * Level.WIDTH;
+
+                if ( level.map[ pos ] == Terrain.WALL && empty[ pos ] ) {
+                    level.map[ pos ] = Terrain.EMPTY;
+                }
+            }
+        }
+
+        for( int w = 0 ; w < 10; w++ ){
+            for( int h = 0 ; h < 10 ; h++ ){
+
+                int x = w * 3 + Random.Int( 3 ) + 1;
+                int y = h * 3 + Random.Int( 3 ) + 1;
+
+                int pos = x * Level.WIDTH + y ;
+
+                if( level.map[pos] == Terrain.EMPTY ){
+                    level.map[ pos ] = Random.oneOf( Terrain.STATUE, Terrain.CHASM, Terrain.GRATE );
+                }
+
+            }
+        }
+
+    }
 }

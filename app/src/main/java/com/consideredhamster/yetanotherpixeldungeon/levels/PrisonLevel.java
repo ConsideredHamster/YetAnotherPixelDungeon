@@ -21,6 +21,10 @@
 package com.consideredhamster.yetanotherpixeldungeon.levels;
 
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.Ghost;
+import com.consideredhamster.yetanotherpixeldungeon.items.Generator;
+import com.consideredhamster.yetanotherpixeldungeon.items.Heap;
+import com.consideredhamster.yetanotherpixeldungeon.items.misc.Gold;
+import com.consideredhamster.yetanotherpixeldungeon.levels.painters.Painter;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.particles.Emitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
@@ -32,6 +36,9 @@ import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.Fl
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room.Type;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import com.watabou.utils.Rect;
+
+import java.util.Arrays;
 
 public class PrisonLevel extends RegularLevel {
 
@@ -52,10 +59,12 @@ public class PrisonLevel extends RegularLevel {
 		return Assets.WATER_PRISON;
 	}
 
+    @Override
     protected boolean[] water() {
         return Patch.generate( feeling == Feeling.WATER ? 0.65f : 0.45f, 4 );
     }
 
+    @Override
     protected boolean[] grass() {
         return Patch.generate( feeling == Feeling.GRASS ? 0.60f : 0.40f, 3 );
     }
@@ -80,56 +89,75 @@ public class PrisonLevel extends RegularLevel {
 	
 	@Override
 	protected void decorate() {
-		
-		for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
-			if (map[i] == Terrain.EMPTY) { 
-				
-				float c = 0.05f;
-				if (map[i + 1] == Terrain.WALL && map[i + WIDTH] == Terrain.WALL) {
-					c += 0.2f;
-				}
-				if (map[i - 1] == Terrain.WALL && map[i + WIDTH] == Terrain.WALL) {
-					c += 0.2f;
-				}
-				if (map[i + 1] == Terrain.WALL && map[i - WIDTH] == Terrain.WALL) {
-					c += 0.2f;
-				}
-				if (map[i - 1] == Terrain.WALL && map[i - WIDTH] == Terrain.WALL) {
-					c += 0.2f;
-				}
-				
-				if (Random.Float() < c) {
-					map[i] = Terrain.EMPTY_DECO;
-				}
-			}
-		}
-		
-		for (int i=0; i < WIDTH; i++) {
-			if (map[i] == Terrain.WALL &&  
-				(map[i + WIDTH] == Terrain.EMPTY || map[i + WIDTH] == Terrain.EMPTY_SP) &&
-				Random.Int( 6 ) == 0) {
-				
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
-		
-		for (int i=WIDTH; i < LENGTH - WIDTH; i++) {
-			if (map[i] == Terrain.WALL && 
-				map[i - WIDTH] == Terrain.WALL && 
-				(map[i + WIDTH] == Terrain.EMPTY || map[i + WIDTH] == Terrain.EMPTY_SP) &&
-				Random.Int( 3 ) == 0) {
-				
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
 
-//        while (true) {
-//            int pos = roomEntrance.random_top();
-//            if (map[pos] == Terrain.WALL) {
-//                map[pos] = Terrain.WALL_SIGN;
-//                break;
-//            }
-//        }
+        for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
+            if (map[i] == Terrain.EMPTY) {
+                if (Random.Int( 10 ) == 0 ) {
+                    map[i] = Terrain.EMPTY_DECO;
+                }
+            }
+        }
+
+        for (int i=0; i < LENGTH ; i++) {
+            if (
+                    i + WIDTH < LENGTH && map[i] == Terrain.WALL &&
+                    !Arrays.asList( Terrain.WALLS ).contains( map[i + WIDTH] ) &&
+                    Random.Int( 15 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                    Terrain.WALL_DECO, Terrain.WALL_DECO1, Terrain.WALL_DECO2
+                );
+
+            } else if(
+                    map[i] == Terrain.WALL && Random.Int( 10 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                    Terrain.WALL_DECO3, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
+            }
+        }
+
+		for (Room r : rooms) {
+            if (r.type == Type.STANDARD) {
+                for (Room n : r.neighbours) {
+                    if (n.type == Type.STANDARD && !r.connected.containsKey( n )) {
+                        Rect w = r.intersect( n );
+                        if (w.left == w.right && w.bottom - w.top >= 4) {
+
+                            w.top += 2;
+                            w.bottom -= 1;
+
+                            w.right++;
+
+                            Painter.fill( this, w.left, w.top, 1, w.height(), Terrain.GRATE );
+
+                        } else if (w.top == w.bottom && w.right - w.left >= 4) {
+
+                            w.left += 2;
+                            w.right -= 1;
+
+                            w.bottom++;
+
+                            Painter.fill( this, w.left, w.top, w.width(), 1, Terrain.GRATE );
+                        }
+                    }
+                }
+            }
+        }
+
+        for (Room room : rooms) {
+            if (room.type != Room.Type.STANDARD) {
+                continue;
+            }
+
+            if (room.width() <= 3 || room.height() <= 3) {
+                continue;
+            }
+
+
+        }
 	}
 
     @Override
@@ -155,15 +183,24 @@ public class PrisonLevel extends RegularLevel {
 //	@Override
 	public static String tileDescs(int tile) {
 		switch (tile) {
-		case Terrain.EMPTY_DECO:
-			return "There are old blood stains on the floor.";
-		case Terrain.BOOKSHELF:
-			return "This is probably a vestige of a prison library. Maybe there would be something useful in here?";
-        case Terrain.SHELF_EMPTY:
-
-            return "This is probably a vestige of a prison library.";
-		default:
-			return Level.tileDescs(tile);
+            case Terrain.EMPTY_DECO:
+                return "There are old blood stains on the floor.";
+            case Terrain.WALL_DECO:
+                return "A torch hangs on the wall, burning dimly. Who even keeps these alight?";
+            case Terrain.WALL_DECO1:
+                return "There is an old iron grate built into this wall. You can't see what is there in the darkness.";
+            case Terrain.WALL_DECO2:
+                return "Seems like someone's remains are stored here. Why?";
+            case Terrain.WALL_DECO3:
+            case Terrain.WALL_DECO4:
+            case Terrain.WALL_DECO5:
+                return "There is a dried up bloodstain here. Creepy.";
+            case Terrain.BOOKSHELF:
+                return "This is probably a vestige of a prison library. Maybe there would be something useful in here?";
+            case Terrain.SHELF_EMPTY:
+                return "This is probably a vestige of a prison library.";
+            default:
+                return Level.tileDescs(tile);
 		}
 	}
 	

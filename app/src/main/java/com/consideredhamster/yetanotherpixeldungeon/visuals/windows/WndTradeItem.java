@@ -152,7 +152,7 @@ public class WndTradeItem extends Window {
 
             float chance = shopkeeper.stealingChance( item );
 
-            RedButton btnSteal = new RedButton( Utils.format( TXT_STEAL, (int)( chance * 100 ) ) ) {
+            RedButton btnSteal = new RedButton( Utils.format( TXT_STEAL, (int)Math.ceil( chance * 100 ) ) ) {
                 @Override
                 protected void onClick() {
                     hide();
@@ -160,7 +160,7 @@ public class WndTradeItem extends Window {
                 }
             };
             btnSteal.setRect( 0, btnBuy.bottom() + GAP, WIDTH, BTN_HEIGHT );
-            btnSteal.enable( chance > 0.0f );
+            btnSteal.enable( chance > 0 );
             add( btnSteal );
 			
 			RedButton btnCancel = new RedButton( TXT_CANCEL ) {

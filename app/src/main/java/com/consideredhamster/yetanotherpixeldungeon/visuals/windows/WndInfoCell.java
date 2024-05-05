@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.visuals.windows;
 
 import com.consideredhamster.yetanotherpixeldungeon.YetAnotherPixelDungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.Hazard;
 import com.watabou.noosa.BitmapTextMultiline;
 import com.watabou.noosa.Image;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
@@ -71,6 +72,7 @@ public class WndInfoCell extends Window {
 		StringBuilder desc = new StringBuilder( Dungeon.level.tileDesc( tile ) );
 		
 		final char newLine = '\n';
+
 		for (Blob blob:Dungeon.level.blobs.values()) {
 			if (blob.cur[cell] > 0 && blob.tileDesc() != null) {
 				if (desc.length() > 0) {
@@ -78,6 +80,16 @@ public class WndInfoCell extends Window {
 					desc.append( newLine );
 				}
 				desc.append( blob.tileDesc() );
+			}
+		}
+
+		for (Hazard hazard : Hazard.findHazards( cell )) {
+			if ( hazard.desc() != null ) {
+				if (desc.length() > 0) {
+					desc.append( newLine );
+					desc.append( newLine );
+				}
+				desc.append( hazard.desc() );
 			}
 		}
 		

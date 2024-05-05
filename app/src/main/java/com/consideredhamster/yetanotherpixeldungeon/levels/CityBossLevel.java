@@ -41,6 +41,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CityBossLevel extends Level {
 	
@@ -103,59 +104,14 @@ public class CityBossLevel extends Level {
 		Painter.fill( this, CENTER, TOP + 2, 1, HALL_HEIGHT - 2, Terrain.EMPTY_SP );
 		Painter.fill( this, CENTER - 1, TOP + 1, 3, 3, Terrain.EMPTY_SP );
 
-
-//		int y = TOP + 1;
-//		while (y < TOP + HALL_HEIGHT) {
-//			map[y * WIDTH + CENTER - 5] = Terrain.STATUE_SP;
-//			map[y * WIDTH + CENTER + 5] = Terrain.STATUE_SP;
-//			y += 3;
-//		}
-		
-//		int left = pedestal( true );
-//		int right = pedestal( false );
-//		map[left] = map[right] = Terrain.PEDESTAL;
-//		for (int i=left+1; i < right; i++) {
-//			map[i] = Terrain.EMPTY_SP;
-//		}
-
         map[THRONE] = Terrain.PEDESTAL;
         map[THRONE - WIDTH] = Terrain.PEDESTAL;
-
-//        map[THRONE - WIDTH + 1] = Terrain.EMPTY_WELL;
-//        map[THRONE - WIDTH - 1] = Terrain.EMPTY_WELL;
 
         map[THRONE - WIDTH + 2] = Terrain.STATUE_SP;
         map[THRONE - WIDTH - 2] = Terrain.STATUE_SP;
 
-//        map[THRONE + 1] = Terrain.STATUE_SP;
-//        map[THRONE - 1] = Terrain.STATUE_SP;
-
-//        map[THRONE + 1] = Terrain.EMPTY_WELL;
-//        map[THRONE - 1] = Terrain.EMPTY_WELL;
-
-//        map[THRONE - 3] = Terrain.STATUE_SP;
-//        map[THRONE + 3] = Terrain.STATUE_SP;
-
-//        map[THRONE - WIDTH - 1] = Terrain.PEDESTAL;
-//        map[THRONE - WIDTH + 1] = Terrain.PEDESTAL;
-
-//        map[THRONE + WIDTH * 11 - 3] = Terrain.STATUE;
-//        map[THRONE + WIDTH * 11 + 3] = Terrain.STATUE;
-
-//        map[THRONE - WIDTH - 2] = Terrain.STATUE_SP;
-//        map[THRONE - WIDTH + 2] = Terrain.STATUE_SP;
-//
-//        map[THRONE - WIDTH - 4] = Terrain.STATUE;
-//        map[THRONE - WIDTH + 4] = Terrain.STATUE;
-
-//        map[THRONE + WIDTH * 2 + 4] = Terrain.STATUE;
-//        map[THRONE + WIDTH * 2 - 4] = Terrain.STATUE;
-//
-//        map[THRONE + WIDTH * 8 + 4] = Terrain.STATUE;
-//        map[THRONE + WIDTH * 8 - 4] = Terrain.STATUE;
-//
-//        map[THRONE + WIDTH * 10 + 3] = Terrain.STATUE;
-//        map[THRONE + WIDTH * 10 - 3] = Terrain.STATUE;
+        Painter.fill( this, THRONE % WIDTH - 2, THRONE / WIDTH, 1, 2, Terrain.EMBERS );
+        Painter.fill( this, THRONE % WIDTH + 2, THRONE / WIDTH, 1, 2, Terrain.EMBERS );
 
         int y = TOP + 2;
 		while (y < TOP + HALL_HEIGHT) {
@@ -167,16 +123,6 @@ public class CityBossLevel extends Level {
         for( int altar : WELLS) {
             map[ altar ] = Terrain.EMPTY_WELL;
         }
-//
-//		int left = THRONE + WIDTH * 5 - 3;
-//		int right = THRONE + WIDTH * 5 + 3;
-//
-//		for (int i=left+1; i < right; i++) {
-//			map[i] = Terrain.EMPTY_SP;
-//		}
-
-//		map[arenaDoor - 1] = Terrain.WALL_SIGN;
-//		map[arenaDoor + 1] = Terrain.WALL_SIGN;
 
         Painter.fill( this, CENTER - 1, TOP + HALL_HEIGHT - 4, 3, 3, Terrain.EMPTY_SP );
         Painter.fill( this, CENTER - 1, TOP + HALL_HEIGHT / 2 - 1, 3, 3, Terrain.EMPTY_SP );
@@ -186,6 +132,9 @@ public class CityBossLevel extends Level {
 
         map[FOUNTAIN + WIDTH + 2] = Terrain.STATUE_SP;
         map[FOUNTAIN + WIDTH - 2] = Terrain.STATUE_SP;
+
+        Painter.fill( this, FOUNTAIN % WIDTH - 2, FOUNTAIN / WIDTH - 1, 1, 2, Terrain.HIGH_GRASS );
+        Painter.fill( this, FOUNTAIN % WIDTH + 2, FOUNTAIN / WIDTH - 1, 1, 2, Terrain.HIGH_GRASS );
 
 		Painter.fill( this, LEFT, TOP + HALL_HEIGHT + 1, HALL_WIDTH, CHAMBER_HEIGHT, Terrain.EMPTY );
 		Painter.fill( this, LEFT, TOP + HALL_HEIGHT + 1, 1, CHAMBER_HEIGHT, Terrain.BOOKSHELF );
@@ -203,6 +152,12 @@ public class CityBossLevel extends Level {
 
         exit = (TOP - 1) * WIDTH + CENTER;
         map[exit] = Terrain.LOCKED_EXIT;
+
+        map[arenaDoor - 1] = Terrain.WALL_SIGN;
+        map[arenaDoor + 1] = Terrain.WALL_SIGN;
+
+        map[arenaDoor - 3] = Terrain.WALL_DECO2;
+        map[arenaDoor + 3] = Terrain.WALL_DECO2;
 
 //        WellWater water = (WellWater)blobs.get( WaterOfHealth.class );
 //        if (water == null) {
@@ -222,13 +177,24 @@ public class CityBossLevel extends Level {
 	@Override
 	protected void decorate() {
 
-		for (int i=0; i < LENGTH; i++) {
-			if (map[i] == Terrain.EMPTY && Random.Int( 10 ) == 0) {
-				map[i] = Terrain.EMPTY_DECO;
-			} else if (map[i] == Terrain.WALL && Random.Int( 8 ) == 0) {
-				map[i] = Terrain.WALL_DECO;
-			}
-		}
+        for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
+            if (map[i] == Terrain.EMPTY) {
+                if (Random.Int( 10 ) == 0 ) {
+                    map[i] = Terrain.EMPTY_DECO;
+                }
+            }
+        }
+
+        for (int i=0; i < LENGTH ; i++) {
+            if(
+                map[i] == Terrain.WALL && Random.Int( 10 ) == 0
+            ) {
+
+                map[i] = Random.oneOf(
+                    Terrain.WALL_DECO3, Terrain.WALL_DECO4, Terrain.WALL_DECO5
+                );
+            }
+        }
 	}
 	
 	public static int pedestal() {
@@ -296,7 +262,6 @@ public class CityBossLevel extends Level {
 			Mob boss = Bestiary.mob( Dungeon.depth );
 			boss.state = boss.HUNTING;
             boss.pos = THRONE;
-            ((DwarvenKing)boss).phase = true;
 
             GameScene.add( boss );
 			

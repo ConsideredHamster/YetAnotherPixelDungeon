@@ -30,6 +30,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.hazards.Hazard;
 import com.consideredhamster.yetanotherpixeldungeon.items.food.RationMedium;
 import com.consideredhamster.yetanotherpixeldungeon.items.potions.EmptyBottle;
 import com.consideredhamster.yetanotherpixeldungeon.items.misc.OilLantern;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.HallsParticle;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Scene;
 import com.watabou.noosa.audio.Sample;
@@ -47,7 +48,6 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.MindVis
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Bestiary;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Statue;
-import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Wraith;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.CellEmitter;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.FlowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.LeafParticle;
@@ -82,8 +82,9 @@ public abstract class Level implements Bundlable {
 
 	public static enum Feeling {
 		NONE,
-		CHASM,
-		HAUNT,
+        SWARM,
+		BOOKS,
+        ASHES,
 		TRAPS,
 		WATER,
 		GRASS
@@ -93,7 +94,6 @@ public abstract class Level implements Bundlable {
 	public static final int HEIGHT = 32;
 	public static final int LENGTH = WIDTH * HEIGHT;
 
-	public static final int[] NEIGHBOURS1 = {0};
 	public static final int[] NEIGHBOURS4 = {-WIDTH, +1, +WIDTH, -1};
 	public static final int[] NEIGHBOURS5 = {0, -WIDTH, +1, +WIDTH, -1};
 	public static final int[] NEIGHBOURSX = {0, -WIDTH-1, -WIDTH+1, +WIDTH-1, +WIDTH+1};
@@ -262,57 +262,53 @@ public abstract class Level implements Bundlable {
                 Dungeon.torches++;
             }
 
-            if (Dungeon.depth % 6 != 1 && Dungeon.depth < 24 ) {
+            int chapter = Dungeon.chapter();
 
-                int chapter = Dungeon.chapter();
+            if ( Dungeon.depth % 6 != 1 && chapter < 5 && Random.Int( 2 ) == 0 ) {
 
-                switch ( Random.Int( 12 ) ) {
-                    case 0:
-                        if( chapter == 1 ) {
-                            feeling = Feeling.WATER;
-                        } else {
-                            feeling = Feeling.HAUNT;
-                        }
-
-                        break;
+                switch(chapter) {
                     case 1:
-                        if( chapter == 2 ) {
-                            feeling = Feeling.HAUNT;
-                        } else {
-                            feeling = Feeling.GRASS;
-                        }
-
+                        feeling = Random.oneOf( Feeling.WATER, Feeling.TRAPS, Feeling.BOOKS );
                         break;
                     case 2:
-                        if( chapter == 3 ) {
-                            feeling = Feeling.GRASS;
-                        } else {
-                            feeling = Feeling.TRAPS;
-                        }
-
+                        feeling = Random.oneOf( Feeling.ASHES, Feeling.GRASS, Feeling.BOOKS );
                         break;
                     case 3:
-                        if( chapter == 4 ) {
-                            feeling = Feeling.TRAPS;
-                        } else {
-                            feeling = Feeling.WATER;
-                        }
-
+                        feeling = Random.oneOf( Feeling.WATER, Feeling.GRASS, Feeling.SWARM );
                         break;
+                    case 4:
+                        feeling = Random.oneOf( Feeling.TRAPS, Feeling.ASHES, Feeling.SWARM );
+                        break;
+
                 }
             }
+
+//			feeling = Feeling.WATER;
         }
 
-		boolean pitNeeded = Dungeon.depth > 1 && weakFloorCreated;
-
 		do {
-			Arrays.fill( map, Terrain.WALL );
-//			Arrays.fill( map, feeling == Feeling.CHASM ? Terrain.CHASM : Terrain.WALL );
 
-			pitRoomNeeded = pitNeeded;
-			weakFloorCreated = false;
+            Arrays.fill( map, Terrain.WALL );
+
+            if( Dungeon.chapter() == 3 && !Dungeon.bossLevel() ){
+
+                CavesLevel.pregenerate( this );
+
+            } else if( Dungeon.chapter() == 4 && !Dungeon.bossLevel() ){
+
+                CityLevel.pregenerate( this );
+
+            } else if( Dungeon.chapter() == 5 && !Dungeon.bossLevel() ){
+
+                Arrays.fill( map, Terrain.CHASM );
+
+                if( Dungeon.depth > 25 ){
+                    HallsLevel.pregenerate( this );
+                }
+            }
 
 		} while (!build());
+
 		decorate();
 
 		buildFlagMaps();
@@ -418,8 +414,8 @@ public abstract class Level implements Bundlable {
 	}
 
 	public int tunnelTile() {
-		return Terrain.EMPTY;
-//		return feeling == Feeling.CHASM ? Terrain.EMPTY_SP : Terrain.EMPTY;
+//		return Terrain.EMPTY;
+		return Dungeon.chapter() == 4 || Dungeon.chapter() == 5 ? Terrain.EMPTY_SP : Terrain.EMPTY;
 	}
 
 	private void adjustMapSize() {
@@ -498,7 +494,13 @@ public abstract class Level implements Bundlable {
 	public void addVisuals( Scene scene ) {
 		for (int i=0; i < LENGTH; i++) {
 			if (chasm[i]) {
-				scene.add( new WindParticle.Wind( i ) );
+
+                if( this instanceof HallsLevel ){
+                    scene.add( new HallsParticle.Halls( i ) );
+                } else {
+                    scene.add( new WindParticle.Wind( i ) );
+                }
+
 				if (i >= WIDTH && water[i-WIDTH]) {
 					scene.add( new FlowParticle.Flow( i - WIDTH ) );
 				}
@@ -546,8 +548,8 @@ public abstract class Level implements Bundlable {
 
 				if (mobs.size() < nMobs()) {
 
-                    Mob mob  = (feeling == Feeling.HAUNT && Random.Int(5) == 0 ?
-                                new Wraith() : Bestiary.mob(Dungeon.depth));
+//                    Mob mob = (feeling == Feeling.HAUNT && Random.Int(5) == 0 ? new Wraith() : Bestiary.mob(Dungeon.depth));
+                    Mob mob = Bestiary.mob( Dungeon.depth );
 
                     mob.state = mob.WANDERING;
 
@@ -562,7 +564,7 @@ public abstract class Level implements Bundlable {
 					}
 				}
 
-				spend( ( TIME_TO_RESPAWN - Dungeon.chapter() * 5 - ( feeling == Feeling.TRAPS ? 10 : 0 ) + mobsSpawned) );
+				spend( ( TIME_TO_RESPAWN - Dungeon.chapter() * 5 + mobsSpawned * 5 ) );
 				return true;
 			}
 		};
@@ -692,12 +694,23 @@ public abstract class Level implements Bundlable {
 		int lastRow = LENGTH - WIDTH;
 
 		for (int i=0; i < WIDTH; i++) {
+
             passable[i] = mob_passable[i] = avoid[i] = false;
+            solid[i] = true;
+
 			passable[lastRow + i] = mob_passable[lastRow + i] = avoid[lastRow + i] = false;
+			solid[lastRow + i] = true;
+
 		}
+
 		for (int i=WIDTH; i < lastRow; i += WIDTH) {
+
 			passable[i] = mob_passable[i] = avoid[i] = false;
+			solid[i] = true;
+
 			passable[i + WIDTH-1] = mob_passable[i + WIDTH-1] = avoid[i + WIDTH-1] = false;
+			solid[i + WIDTH-1] = true;
+
 		}
 
 		for (int i=WIDTH; i < LENGTH - WIDTH; i++) {
@@ -736,7 +749,7 @@ public abstract class Level implements Bundlable {
 
 			for (int j=0; j < NEIGHBOURS9.length; j++) {
 				int n = i + NEIGHBOURS9[j];
-				if (n >= 0 && n < LENGTH && map[n] != Terrain.WALL && map[n] != Terrain.WALL_DECO && map[n] != Terrain.WALL_SIGN) {
+				if (n >= 0 && n < LENGTH && !Arrays.asList( Terrain.WALLS ).contains( map[n] ) ) {
 					d = true;
 					break;
 				}
@@ -1116,6 +1129,11 @@ public abstract class Level implements Bundlable {
 			return "Water";
 		case Terrain.WALL:
 		case Terrain.WALL_DECO:
+		case Terrain.WALL_DECO1:
+		case Terrain.WALL_DECO2:
+		case Terrain.WALL_DECO3:
+		case Terrain.WALL_DECO4:
+		case Terrain.WALL_DECO5:
 		case Terrain.DOOR_ILLUSORY:
 			return "Wall";
 		case Terrain.DOOR_CLOSED:
@@ -1138,8 +1156,10 @@ public abstract class Level implements Bundlable {
 			return "High grass";
 		case Terrain.LOCKED_EXIT:
 			return "Locked depth exit";
-		case Terrain.UNLOCKED_EXIT:
-			return "Unlocked depth exit";
+        case Terrain.UNLOCKED_EXIT:
+            return "Unlocked depth exit";
+        case Terrain.GRATE:
+            return "Iron grate";
 		case Terrain.WALL_SIGN:
 		case Terrain.SIGN:
 			return "Sign";
@@ -1183,6 +1203,11 @@ public abstract class Level implements Bundlable {
 		switch (tile) {
         case Terrain.WALL:
         case Terrain.WALL_DECO:
+        case Terrain.WALL_DECO1:
+        case Terrain.WALL_DECO2:
+        case Terrain.WALL_DECO3:
+        case Terrain.WALL_DECO4:
+        case Terrain.WALL_DECO5:
         case Terrain.DOOR_ILLUSORY:
             return "Just a wall, nothing special. Mind that fighting in close spaces restricts ability to dodge.";
 		case Terrain.CHASM:
@@ -1200,8 +1225,10 @@ public abstract class Level implements Bundlable {
 			return "Dense vegetation blocks the view and hushes your steps, making it easier to move undetected through it.";
 		case Terrain.LOCKED_DOOR:
 			return "This door is locked, you need a matching key to unlock it.";
-		case Terrain.LOCKED_EXIT:
-			return "Heavy bars block the stairs leading down.";
+        case Terrain.LOCKED_EXIT:
+            return "Heavy bars block the stairs leading down.";
+        case Terrain.GRATE:
+            return "Heavy bars block your way.";
 		case Terrain.BARRICADE:
 			return "The wooden barricade is firmly set but has dried over the years. Might it burn?";
 		case Terrain.SIGN:

@@ -808,7 +808,7 @@ public class Dungeon {
 		for (Actor actor : Actor.all()) {
 			if (actor instanceof Char) {
 				int pos = ((Char)actor).pos;
-				if (visible[pos] && ((Char) actor).invisible == 0) {
+				if ( ch.canSeeTarget( ((Char)actor) ) ) {
 					passable[pos] = false;
 				}
 			}
@@ -833,7 +833,7 @@ public class Dungeon {
 		for (Actor actor : Actor.all()) {
 			if (actor instanceof Char) {
                 int pos = ((Char)actor).pos;
-                if (visible[pos] && ((Char) actor).invisible == 0) {
+                if ( ch.canSeeTarget( ((Char)actor) ) ) {
                     passable[pos] = false;
                 }
 			}

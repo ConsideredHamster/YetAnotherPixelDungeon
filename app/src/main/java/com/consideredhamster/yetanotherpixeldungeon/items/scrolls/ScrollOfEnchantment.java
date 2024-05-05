@@ -78,7 +78,9 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
             } else {
 
-                weapon.bonus = Random.IntRange( item.bonus + 1, 0 );
+//                weapon.bonus = Random.IntRange( item.bonus + 1, 0 );
+
+                weapon.bonus++;
                 weapon.identify( CURSED_KNOWN );
                 curUser.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
 
@@ -119,8 +121,10 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
             } else {
 
+//                armour.bonus = Random.IntRange( item.bonus + 1, 0 );
+
+                armour.bonus++;
                 armour.identify( CURSED_KNOWN );
-                armour.bonus = Random.IntRange( item.bonus + 1, 0 );
                 curUser.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
 
                 if( item.bonus < 0 ) {
@@ -159,7 +163,10 @@ public class ScrollOfEnchantment extends InventoryScroll {
 
             } else {
 
-                item.bonus = Random.IntRange( item.bonus + 1, 0 );
+//                item.bonus = Random.IntRange( item.bonus + 1, 0 );
+
+                item.bonus++;
+                item.identify( CURSED_KNOWN );
                 curUser.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
 
                 if( item.bonus < 0 ) {

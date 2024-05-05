@@ -78,7 +78,7 @@ public class InterlevelScene extends PixelScene {
             "There is a shop on every fifth level of the dungeon; you can spend your gold there",
             "There are only 3 ankhs in the dungeon but there is a low chance to find more",
 
-            "Trapped and flooded vaults are less likely to have cursed item in them",
+            "Trapped and flooded vaults are less likely to have a cursed item in them",
             "Special rooms with tombs or animated statues will never have their prize cursed",
 
             "Perception determines the time it takes to search for traps and secret doors",
@@ -109,7 +109,7 @@ public class InterlevelScene extends PixelScene {
 
             "Using a weapon which is too heavy for you decreases your attack speed",
             "Stronger weapons usually decrease your accuracy and stealth",
-            "Being electrified can force you to drop your current weapon on the ground",
+//            "Being electrified can force you to drop your current weapon on the ground",
 
             "Using an armor or shield which is too heavy for you decreases your movement speed",
             "Stronger shields and body armors usually decrease your dexterity and stealth",
@@ -122,17 +122,17 @@ public class InterlevelScene extends PixelScene {
             "You can identify weapons, armors, wands and rings by using them long enough",
             "Stealth penalty from your equipment is not applied while you are asleep",
 
-            "Stronger flintlock weapons require more gunpowder to reload",
+//            "Stronger flintlock weapons require more gunpowder to reload",
             "Flintlock weapons ignore distance penalties and the target's armor",
 
-            "You can craft makeshift bombs from excess gunpowder",
-            "You can combine bomb sticks into bomb bundles which pack some extra punch",
+//            "You can craft makeshift bombs from excess gunpowder",
+//            "You can combine bomb sticks into bomb bundles which pack some extra punch",
             "You can dismantle bomb bundles or sticks to obtain some of their components",
 
             // WANDS & RINGS
 
-            "Chance to miscast depends on the wand's condition and increased for cursed wands",
-            "Chance to squeeze additional charge depends on the wand's condition and upgraded level",
+            "Chance to miscast depends on the wand's condition and is increased for cursed wands",
+            "Chance to squeeze additional charge depends on the wand's condition and upgrade level",
 
             "Cursed and unidentified wands can miscast, but cannot squeeze additional charges",
             "You can can squeeze additional charges from empty wands if they are identified",
@@ -143,13 +143,12 @@ public class InterlevelScene extends PixelScene {
             "There is usually only 1 wand per chapter but there is a low chance to find more",
             "There is usually only 1 ring per chapter but there is a low chance to find more",
 
-//            "Wands of Magic Missile have the highest up-front single-target damage",
             "Sometimes, disintegration rays can be angled to hit the target twice",
             "Wands of Smiting are especially useful against enemies of magical origin",
 
             "Wands of Lightning do not conduct through the water if their target is flying",
             "Wands of Acid Spray deal 150% damage in melee range, but only 50% against targets afar",
-            "Creating runes with wand of Firebrand is more effective than zaping with it directly",
+            "Creating runes with wand of Firebrand is more effective than zapping with it directly",
 
             "Avalanches created by wand of Force Blast deal more damage than direct zaps",
             "Thornvines are stronger and tougher when created on grassy tiles",
@@ -210,8 +209,8 @@ public class InterlevelScene extends PixelScene {
             "There are only 2 scrolls of Upgrade per chapter but there is a low chance to find more",
             "Uncursing an enchanted item with scroll of Upgrade allows you to keep the enchantment",
 
-            "Using your scrolls of Identify wisely can save you a lot of time",
-            "There is always at least one scroll of Identify in every shop",
+            "Using your scrolls of Detect Magic wisely can save you a lot of time",
+            "There is always at least one scroll of Detect Magic in every shop",
 
             "Scrolls of Transmutation will never change an item into the same item",
             "Scrolls of Transmutation can be used to transmute ammunition and throwing weapons",
@@ -235,7 +234,7 @@ public class InterlevelScene extends PixelScene {
             "Wraiths summoned by using a scroll of Raise Dead will stop being charmed after a while",
 
             "Using scrolls of Challenge in boss fights is probably the best way to use them",
-            "Scroll of Challenge can be used to lure mimics out of their cover",
+            "Scroll of Challenge can be used to lure mimics out of their disguise",
 
             "Scroll of Torment is more harmful to you if there are no more enemies in sight",
             "Scroll of Torment is useless against creatures which have no mind to torture",
@@ -268,13 +267,13 @@ public class InterlevelScene extends PixelScene {
             "Mind that miasma released by Goo is highly flammable",
             "Goo have several ways to heal itself, but all of them can be denied",
 
-            "Tengu teleports more often when threatened",
-            "Tengu cannot teleport when ensnared or blinded",
+            "Tengu teleports more often when receiving damage",
+            "Tengu cannot teleport when ensnared",
 
             "DM-300 is neither organic nor magical creature.",
-            "DM-300 starts moving slightly faster after every enrage.",
+            "DM-300 starts using it's special attacks more often after every enrage.",
 
-            "Dwarven King is completetly invulnerable during the ritual",
+            "Dwarven King is completely invulnerable during the ritual",
             "Dwarven King's ritual can be disrupted by a certain spell...",
 
             // TERRAIN
@@ -554,12 +553,19 @@ public class InterlevelScene extends PixelScene {
 		Dungeon.saveAll();
 		
 		Level level;
-		if (Dungeon.depth >= Statistics.deepestFloor) {
-			level = Dungeon.newLevel();
-		} else {
-			Dungeon.depth++;
-			level = Dungeon.loadLevel( Dungeon.hero.heroClass );
-		}
+
+		if( Dungeon.depth <= 25 ){
+
+            if( Dungeon.depth >= Statistics.deepestFloor ){
+                level = Dungeon.newLevel();
+            } else {
+                Dungeon.depth++;
+                level = Dungeon.loadLevel( Dungeon.hero.heroClass );
+            }
+        } else {
+		    // You hear distant a sound of  malicious laughter.
+            level = Dungeon.loadLevel( Dungeon.hero.heroClass );
+        }
 
 		Dungeon.switchLevel( level, fallIntoPit ? level.pitCell() : level.randomRespawnCell( true, true ) );
 	}

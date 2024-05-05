@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatRaw;
+import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfDisintegration;
 import com.watabou.noosa.audio.Sample;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.Element;
@@ -59,11 +60,12 @@ public class EvilEye extends MobRanged {
          */
 
 		name = "evil eye";
+		info = "Flying, Disintegration ray";
 		spriteClass = EyeSprite.class;
 		
 		flying = true;
         loot = new MeatRaw();
-        lootChance = 0.35f;
+        lootChance = 0.175f;
 
         resistances.put(Element.Energy.class, Element.Resist.PARTIAL);
 
@@ -72,83 +74,109 @@ public class EvilEye extends MobRanged {
 
 	}
 
-    @Override
-	protected boolean getCloser( int target ) {
-		if (state == HUNTING && HP >= HT && (enemySeen || enemy != null && detected( enemy ))) {
-			return getFurther( target );
-		} else {
-			return super.getCloser( target );
-		}
-	}
+//    @Override
+//	protected boolean getCloser( int target ) {
+//		if (state == HUNTING && HP >= HT && (enemySeen || enemy != null && detected( enemy ))) {
+//			return getFurther( target );
+//		} else {
+//			return super.getCloser( target );
+//		}
+//	}
 
     @Override
     protected boolean canAttack( Char enemy ) {
-        return ( HP < HT || !Level.adjacent( pos, enemy.pos ) ) &&
-                Ballistica.cast( pos, enemy.pos, false, false ) == enemy.pos;
+        return /*Level.adjacent( pos, enemy.pos ) &&*/ Ballistica.cast( pos, enemy.pos, false, false ) == enemy.pos;
     }
 
     @Override
     protected void onRangedAttack( int cell ) {
-
-        Sample.INSTANCE.play(Assets.SND_RAY);
-
-        sprite.parent.add( new DeathRay( pos, cell ) );
-
         onCastComplete();
-
         super.onRangedAttack( cell );
-
     }
 
     @Override
-    public boolean cast( Char enemy ) {
+    public boolean attack( Char enemy ){
+        shootRay( enemy.pos );
+        return true;
+    }
+
+    private void shootRay( int target ) {
 
         boolean terrainAffected = false;
 
-        for (int i=1; i <= Ballistica.distance ; i++) {
+        int reflectFrom = Ballistica.cast( pos, target, true, false );
 
-            int pos = Ballistica.trace[i];
+        sprite.parent.add( new DeathRay( pos, reflectFrom ) );
+        Sample.INSTANCE.play( Assets.SND_RAY );
 
-            int terr = Dungeon.level.map[pos];
+        for ( int i = 1 ; i <= Ballistica.distance ; i++ ) {
+            terrainAffected = terrainAffected || burnTile( Ballistica.trace[i] );
+        }
 
-            if (terr == Terrain.DOOR_CLOSED) {
+        if( Level.solid[ reflectFrom ] ){
 
-                Level.set(pos, Terrain.EMBERS);
-                GameScene.updateMap(pos);
-                terrainAffected = true;
+            int reflectTo = WandOfDisintegration.getReflectTo( pos, reflectFrom );
 
-            } else if (terr == Terrain.HIGH_GRASS) {
+            if( reflectFrom != reflectTo ){
 
-                Level.set( pos, Terrain.GRASS );
-                GameScene.updateMap( pos );
-                terrainAffected = true;
+                Ballistica.cast( reflectFrom, reflectTo, true, false );
 
-            }
+                reflectTo = Ballistica.trace[ Ballistica.distance ] ;
 
-            Char ch = Actor.findChar( pos );
+                sprite.parent.add( new DeathRay( reflectFrom, reflectTo ) );
 
-            if (ch != null) {
+                for ( int i = 1 ; i <= Ballistica.distance ; i++ ) {
+                    terrainAffected = terrainAffected || burnTile( Ballistica.trace[i] );
+                }
 
-//                if (hit(this, ch, false, true)) {
-
-                    ch.damage( absorb( damageRoll(), enemy.armorClass(), true ), this, Element.ENERGY );
-
-                    if (Dungeon.visible[pos]) {
-                        ch.sprite.flash();
-                        CellEmitter.center(pos).burst(PurpleParticle.BURST, Random.IntRange(1, 2));
-                    }
-
-//                } else {
-//                    enemy.missed();
-//                }
             }
         }
 
         if (terrainAffected) {
             Dungeon.observe();
         }
+    }
 
-        return true;
+    private boolean burnTile( int cell ) {
+
+        boolean terrainAffected = false;
+
+        Char ch = Actor.findChar( cell );
+
+        if ( ch != null ) {
+            ch.damage( Char.absorb( damageRoll(), ch.armorClass(), true ), this, Element.ENERGY );
+            CellEmitter.center( cell ).burst( PurpleParticle.BURST, 3 );
+        }
+
+        if ( Dungeon.level.map[cell] == Terrain.DOOR_CLOSED ) {
+
+            Level.set( cell, Terrain.EMBERS );
+            GameScene.updateMap( cell );
+            terrainAffected = true;
+
+            if( Dungeon.visible[ cell ] ){
+                CellEmitter.center( cell ).burst( PurpleParticle.BURST, 16 );
+            }
+
+        } else if ( Dungeon.level.map[cell] == Terrain.HIGH_GRASS ) {
+
+            Level.set( cell, Terrain.GRASS );
+            GameScene.updateMap( cell );
+            terrainAffected = true;
+
+            if( Dungeon.visible[ cell ] ){
+                CellEmitter.center( cell ).burst( PurpleParticle.BURST, 4 );
+            }
+
+        } else {
+
+            if( Dungeon.visible[ cell ] ){
+                CellEmitter.center( cell ).burst( PurpleParticle.BURST, 3 );
+            }
+
+        }
+
+        return terrainAffected;
     }
 	
 	@Override

@@ -20,11 +20,16 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.sprites;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.watabou.noosa.TextureFilm;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
+import com.watabou.noosa.particles.Emitter;
 
 public class DM300Sprite extends MobSprite {
+
+
+    protected Emitter smoking;
 	
 	public DM300Sprite() {
 		super();
@@ -47,6 +52,48 @@ public class DM300Sprite extends MobSprite {
 		
 		play( idle );
 	}
+
+    public void smokingCharging() {
+        if ( smoking != null) {
+            smoking.pour( Speck.factory( Speck.WOOL ), 0.02f );
+        }
+    }
+
+    public void smokingDefault() {
+        if ( smoking != null) {
+            smoking.pour( Speck.factory( Speck.WOOL ), 0.2f );
+        }
+    }
+
+    @Override
+    public void link( Char ch ) {
+        super.link( ch );
+
+        if ( smoking == null){
+            smoking = emitter();
+            smokingDefault();
+        }
+    }
+
+    @Override
+    public void die() {
+        super.die();
+
+        if ( smoking != null) {
+            smoking.on = false;
+            smoking = null;
+        }
+    }
+
+    @Override
+    public void update(){
+
+        super.update();
+
+        if ( smoking != null) {
+            smoking.visible = visible;
+        }
+    }
 	
 	@Override
 	public void onComplete( Animation anim ) {

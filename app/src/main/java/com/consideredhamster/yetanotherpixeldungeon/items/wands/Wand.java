@@ -364,6 +364,11 @@ public abstract class Wand extends EquipableItem {
         return handler.isKnown( this );
     }
 
+    @Override
+    public boolean isMagical() {
+        return true;
+    }
+
     public void setKnown() {
         if (!isTypeKnown()) {
             handler.know(this);
@@ -479,12 +484,12 @@ public abstract class Wand extends EquipableItem {
                     @Override
                     public void call() {
 
-                        if ( curWand.getCharges() > 0
+                        if ( curWand.getCharges() >= 1.0f
                             && ( curWand.isIdentified() || Random.Float() > curWand.miscastChance() )
-                            || curWand.getCharges() == 0 && Random.Float() < curWand.squeezeChance()
+                            || curWand.getCharges() < 1.0f && Random.Float() < curWand.squeezeChance()
                         ) {
 
-                            if (curWand.curCharges == 0) {
+                            if ( curWand.curCharges < 1.0f ) {
 
                                 curWand.use(3);
                                 curUser.buff( Satiety.class ).decrease( Satiety.POINT * 2.0f );
@@ -530,11 +535,6 @@ public abstract class Wand extends EquipableItem {
 	};
 
     @Override
-    public int maxDurability() {
-        return 50;
-    }
-
-    @Override
     public float stealingDifficulty() { return 0.75f; }
 
     @Override
@@ -568,7 +568,7 @@ public abstract class Wand extends EquipableItem {
 
             if( isEquipped( Dungeon.hero ) ){
                 info.append( "You hold this wand at the ready." );
-            } else if( Dungeon.hero.belongings.backpack.items.contains( this ) ){
+            } else if( Dungeon.hero.belongings.backpack.contains( this ) ){
                 info.append( "This wand is in your backpack." );
             } else {
                 info.append( "This wand lies on the dungeon's floor." );

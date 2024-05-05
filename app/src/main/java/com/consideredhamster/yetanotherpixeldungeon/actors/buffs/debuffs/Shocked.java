@@ -92,25 +92,25 @@ public class Shocked extends Debuff {
 
 //        target.sprite.showStatus( CharSprite.NEGATIVE, "ZAP!");
 
-        if( target instanceof Hero ) {
+//        if( target instanceof Hero ) {
+//
+//            Camera.main.shake( 2, 0.3f );
+//
+//            Hero hero = (Hero)target;
+//            EquipableItem weapon = Random.oneOf( hero.belongings.weap1, hero.belongings.weap2 );
 
-            Camera.main.shake( 2, 0.3f );
+//            if( weapon != null && weapon.disarmable() ) {
+//
+//                GLog.w(TXT_DISARMED, weapon.name());
+//                weapon.doDrop(hero);
+//
+//            }
 
-            Hero hero = (Hero)target;
-            EquipableItem weapon = Random.oneOf( hero.belongings.weap1, hero.belongings.weap2 );
-
-            if( weapon != null && weapon.disarmable() ) {
-
-                GLog.w(TXT_DISARMED, weapon.name());
-                weapon.doDrop(hero);
-
-            }
-
-        } else {
-
-            target.delay( Random.IntRange( 1, 2 ) );
-
-        }
+//        } else {
+//
+//            target.delay( Random.IntRange( 1, 2 ) );
+//
+//        }
 
         if (target.sprite.visible) {
             target.sprite.centerEmitter().burst( SparkParticle.FACTORY, (int)Math.ceil( duration ) + 1 );

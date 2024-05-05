@@ -20,9 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.MindVision;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Banished;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Controlled;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Crippled;
@@ -31,10 +35,13 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Ensnare
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Frozen;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Poisoned;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Withered;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Exposed;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special.Focus;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.NPC;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfShadows;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.consideredhamster.yetanotherpixeldungeon.items.rings.RingOfAwareness;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.ui.TagAttack;
 import com.watabou.utils.Callback;
 import com.consideredhamster.yetanotherpixeldungeon.Badges;
 import com.consideredhamster.yetanotherpixeldungeon.Challenges;
@@ -206,23 +213,26 @@ public abstract class Mob extends Char {
             damage += Random.NormalIntRange( minDamage, maxDamage );
 
         if( buff( Poisoned.class ) != null )
-            damage /= 2;
+            damage = damage * 3 / 4;
 
         if( buff( Withered.class ) != null )
-            damage /= 2;
+            damage = damage * 3 / 4;
 
         if( buff( Charmed.class ) != null )
-            damage /= 2;
+            damage = damage * 3 / 4;
 
         if( buff( Controlled.class ) != null )
-            damage /= 2;
+            damage = damage * 3 / 4;
 
         return damage;
     }
 
-    @Override
-    public float awareness() {
-        return state == HUNTING ? super.awareness() : super.awareness() * 0.5f ;
+    public int minDamage() {
+        return minDamage ;
+    }
+
+    public int maxDamage() {
+        return maxDamage ;
     }
 
     @Override
@@ -287,7 +297,8 @@ public abstract class Mob extends Char {
 		target = bundle.getInt( TARGET );
         noticed = bundle.getBoolean( NOTICED );
         enemySeen = bundle.getBoolean( ALERTED );
-	}
+
+    }
 	
 	public CharSprite sprite() {
 		CharSprite sprite = null;
@@ -326,8 +337,8 @@ public abstract class Mob extends Char {
 		enemy = chooseEnemy();
 		
 		boolean enemyInFOV = 
-			enemy != null && enemy.isAlive() && 
-			Level.fieldOfView[enemy.pos] && enemy.invisible <= 0;
+			enemy != null && enemy.isAlive() && canSeeTarget( enemy );
+//			Level.fieldOfView[enemy.pos] && enemy.invisible <= 0;
 
         boolean act = state.act( enemyInFOV, justAlerted );
 
@@ -436,6 +447,13 @@ public abstract class Mob extends Char {
 		return Level.adjacent( pos, enemy.pos );
 	}
 
+    @Override
+    public boolean canSeeTarget( Char ch ) {
+        // Mobs can see other invisible mobs if they are on the same side
+        return super.canSeeTarget( ch ) && ( ch.invisible == 0
+            || ( ch instanceof Mob && hostile == ((Mob)ch).hostile ) );
+    }
+
     protected int nextStepTo( Char enemy ) {
         return Dungeon.findPath( this, pos, enemy.pos,
                 flying ? Level.passable : Level.mob_passable,
@@ -477,8 +495,12 @@ public abstract class Mob extends Char {
 //                }
 
             } else {
-                Invisibility.dispel( ch );
-                beckon(step);
+
+                if( ch instanceof Hero ) {
+                    Invisibility.dispel(ch);
+                    beckon(step);
+                }
+
                 spend( TICK );
             }
 //			return true;
@@ -575,7 +597,8 @@ public abstract class Mob extends Char {
         if( enemy == Dungeon.hero ) {
             noticed = true;
         }
-				
+
+        Invisibility.dispel( this );
 		spend( attackDelay() );
 		
 		return !visible;
@@ -633,6 +656,7 @@ public abstract class Mob extends Char {
         if( isExposedTo( enemy ) ) {
 
             damage += enemy.damageRoll() * enemy.ringBuffs( RingOfAwareness.Awareness.class ) * 0.5f;
+            Buff.detach( this, Exposed.class );
 
             sprite.emitter().burst(Speck.factory(Speck.MASTERY), 6);
 
@@ -652,6 +676,7 @@ public abstract class Mob extends Char {
     @Override
     public void damage( int dmg, Object src, Element type ) {
 
+        Invisibility.dispel( this );
         HealthIndicator.instance.target( this );
 
         if ( buff( Tormented.class ) == null && buff( Banished.class ) == null ) {
@@ -661,7 +686,7 @@ public abstract class Mob extends Char {
             }
         }
 
-        if( src instanceof Char ) {
+        if( src instanceof Char && src != this ) {
             enemy = (Char)src;
         }
 
@@ -707,9 +732,7 @@ public abstract class Mob extends Char {
 	@Override
 	public void die( Object cause, Element dmg ) {
 
-		super.die(cause, dmg);
-
-        if( this != cause ){
+        if( this != cause && cause != null ){
 
             if( Dungeon.visible[ pos ] && cause == Dungeon.hero ){
 
@@ -727,6 +750,8 @@ public abstract class Mob extends Char {
             }
 
         }
+
+        super.die(cause, dmg);
 
         dropLoot();
 	}
@@ -794,7 +819,7 @@ public abstract class Mob extends Char {
                 target = cell;
         }
     }
-	
+
 	public String description() {
 		return "Real description is coming soon!";
 	}
@@ -942,7 +967,7 @@ public abstract class Mob extends Char {
 
                 } else {
 
-                    if( enemy != null && enemy.invisible <= 0 ) {
+                    if( enemy != null ) {
 
 //                        target = enemy.pos;
                         target = nextStepTo( enemy );

@@ -23,6 +23,8 @@ package com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs;
 import com.consideredhamster.yetanotherpixeldungeon.Journal;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Debuff;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
+import com.consideredhamster.yetanotherpixeldungeon.misc.mechanics.Ballistica;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -139,12 +141,12 @@ public class Shopkeeper extends NPC {
 	protected boolean act() {
 
         if( noticed ) {
-
             noticed = false;
-
         }
 
-        if (!seenBefore && Dungeon.visible[pos]) {
+        Dungeon.level.updateFieldOfView( this );
+
+        if ( !seenBefore && Dungeon.visible[pos] && Level.fieldOfView[ Dungeon.hero.pos ] ) {
             Journal.add( Journal.Feature.SHOP );
             seenBefore = true;
             greetings();

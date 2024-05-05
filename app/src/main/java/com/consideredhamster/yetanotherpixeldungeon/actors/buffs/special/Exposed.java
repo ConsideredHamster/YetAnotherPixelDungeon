@@ -20,7 +20,6 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.actors.buffs.special;
 
-import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffPassive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffReactive;
 import com.watabou.utils.Bundle;
 

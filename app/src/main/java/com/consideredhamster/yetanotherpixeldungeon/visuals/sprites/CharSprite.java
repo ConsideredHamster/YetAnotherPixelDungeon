@@ -20,9 +20,13 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.sprites;
 
+import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.MindVision;
+import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.Mob;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.AcidParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.BloodParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.ShadowParticle;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SmokeParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.SnowParticle;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.particles.WebParticle;
 import com.watabou.noosa.Game;
@@ -125,8 +129,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected EnragedFX enraged;
 
 	protected IceBlock iceBlock;
-	protected TorchHalo halo;
 	protected Shield ward;
+
+    protected TorchHalo halo;
     protected UnholyArmor unholyArmor;
 
 	protected EmoIcon emo;
@@ -358,6 +363,10 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                     alpha( 0.4f );
                 }
 
+                if ( ch instanceof Mob && Dungeon.hero.buff( MindVision.class ) == null ) {
+                    visible = false;
+                }
+
                 break;
 
             case ENRAGED:
@@ -371,7 +380,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                     GameScene.effect( ward = new Shield( this ) );
                 }
                 break;
-
 
             case BURNING:
                 if (burning == null){
@@ -453,6 +461,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                 }
                 break;
 
+
             case PARALYSED:
                 paused = true;
                 break;
@@ -496,9 +505,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                 break;
 
             case INVISIBLE:
+                visible = true;
                 alpha( 1f );
                 break;
-
 
             case BURNING:
                 if (burning != null) {
@@ -506,14 +515,13 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                     burning = null;
                 }
                 break;
+
             case BLIGHTED:
                 if (blighted != null) {
                     blighted.on = false;
                     blighted = null;
                 }
                 break;
-
-
 
             case POISONED:
                 if (poisoned != null) {
@@ -535,7 +543,6 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
                     withered = null;
                 }
                 break;
-
 
             case VERTIGO:
                 if (vertigo != null) {

@@ -316,6 +316,8 @@ public class WndCatalogus extends WndTabbed {
 
                 if( item instanceof Wand) {
                     ((Wand)item).dud = true;
+                } else if( item instanceof Ring) {
+                    ((Ring)item).dud = true;
                 }
 
 //				if (identified = item.isIdentified()) {
