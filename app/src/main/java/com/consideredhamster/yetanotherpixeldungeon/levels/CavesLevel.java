@@ -77,7 +77,6 @@ public class CavesLevel extends RegularLevel {
         boolean[] passable = new boolean[ LENGTH ];
 
         for( int i = 0 ; i < LENGTH ; i++ ){
-//            passable[ i ] = map[ i ] != Terrain.WALL;
             passable[ i ] =
                     map[ i ] != Terrain.WALL && map[ i ] != Terrain.STATUE && map[ i ] != Terrain.GRATE &&
                     map[ i ] != Terrain.CHASM && map[ i ] != Terrain.WALL_SIGN;
@@ -177,28 +176,28 @@ public class CavesLevel extends RegularLevel {
 
             if( Random.Int( s ) > 5 ){
                 int corner = ( room.left + 1 ) + ( room.top + 1 ) * WIDTH;
-                if( map[ corner - 1 ] == Terrain.WALL && map[ corner - WIDTH ] == Terrain.WALL ){
+                if( map[ corner - 1 ] == Terrain.WALL && map[ corner - WIDTH ] == Terrain.WALL && heaps.get( corner ) == null ){
                     map[ corner ] = map[ corner ] == Terrain.EMPTY_SP ? Terrain.STATUE_SP : Random.oneOf( Terrain.GRATE, Terrain.STATUE, Terrain.WALL );
                 }
             }
 
             if( Random.Int( s ) > 5 ){
                 int corner = ( room.right - 1 ) + ( room.top + 1 ) * WIDTH;
-                if( map[ corner + 1 ] == Terrain.WALL && map[ corner - WIDTH ] == Terrain.WALL ){
+                if( map[ corner + 1 ] == Terrain.WALL && map[ corner - WIDTH ] == Terrain.WALL && heaps.get( corner ) == null ){
                     map[ corner ] = map[ corner ] == Terrain.EMPTY_SP ? Terrain.STATUE_SP : Random.oneOf( Terrain.GRATE, Terrain.STATUE, Terrain.WALL );
                 }
             }
 
             if( Random.Int( s ) > 5 ){
                 int corner = ( room.left + 1 ) + ( room.bottom - 1 ) * WIDTH;
-                if( map[ corner - 1 ] == Terrain.WALL && map[ corner + WIDTH ] == Terrain.WALL ){
+                if( map[ corner - 1 ] == Terrain.WALL && map[ corner + WIDTH ] == Terrain.WALL && heaps.get( corner ) == null ){
                     map[ corner ] = map[ corner ] == Terrain.EMPTY_SP ? Terrain.STATUE_SP : Random.oneOf( Terrain.GRATE, Terrain.STATUE, Terrain.WALL );
                 }
             }
 
             if( Random.Int( s ) > 5 ){
                 int corner = ( room.right - 1 ) + ( room.bottom - 1 ) * WIDTH;
-                if( map[ corner + 1 ] == Terrain.WALL && map[ corner + WIDTH ] == Terrain.WALL ){
+                if( map[ corner + 1 ] == Terrain.WALL && map[ corner + WIDTH ] == Terrain.WALL && heaps.get( corner ) == null ){
                     map[ corner ] = map[ corner ] == Terrain.EMPTY_SP ? Terrain.STATUE_SP : Random.oneOf( Terrain.GRATE, Terrain.STATUE, Terrain.WALL );
                 }
             }

@@ -230,13 +230,26 @@ public class ShopPainter extends Painter {
                     new Javelins(), new Tomahawks(), new Harpoons()
             ).random());
 
-            items.add(Random.oneOf(
-                    new Bullets(), new Arrows(), new Quarrels()
-            ).random());
+            Item ammo1 = Random.oneOf(
+                    new Bullets(), new Explosives.Gunpowder()
+            ).random();
 
-            items.add(Random.oneOf(
-                    new Explosives.Gunpowder(), new Explosives.BombStick(), new Explosives.BombBundle()
-            ).random());
+            ammo1.quantity += Random.IntRange( 20, 30 );
+            items.add( ammo1 );
+
+            Item ammo2 = Random.oneOf(
+                    new Arrows(), new Quarrels()
+            ).random();
+
+            ammo2.quantity += Random.IntRange( 10, 20 );
+            items.add( ammo2 );
+
+            Item ammo3 = Random.oneOf(
+                    new Explosives.BombStick(), new Explosives.BombBundle()
+            ).random();
+
+            ammo3.quantity += Random.IntRange( 1, 2 );
+            items.add( ammo3 );
 
             items.add(Generator.random(Generator.Category.RING).uncurse(3).upgrade(3));
             items.add(Generator.random(Generator.Category.WAND).repair().fix().uncurse(3).upgrade(3));

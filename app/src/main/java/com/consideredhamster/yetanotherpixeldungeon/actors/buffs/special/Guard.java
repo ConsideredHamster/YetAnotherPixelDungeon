@@ -85,5 +85,4 @@ public class Guard extends BuffReactive {
             }
         }
     }
-
 }

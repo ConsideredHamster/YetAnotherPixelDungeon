@@ -1335,7 +1335,7 @@ public class Hero extends Char {
 
         Weapon wep = rangedWeapon != null ? rangedWeapon : currentWeapon;
 
-        Buff.affect( this, Combo.class ).hit();
+        Buff.affect( this, Combo.class ).hit( attackDelay() );
 
         if( wep != null ){
 

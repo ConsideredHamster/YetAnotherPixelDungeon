@@ -80,8 +80,8 @@ public abstract class Shield extends Armour {
             }  else {
 
                 hero.buff( Satiety.class ).decrease( Satiety.POINT * str() / hero.STR() );
-                Buff.affect(hero, Guard.class ).reset( 1 );
                 hero.spendAndNext( Actor.TICK );
+                Buff.affect(hero, Guard.class ).reset( 1 );
 
             }
 
@@ -93,7 +93,6 @@ public abstract class Shield extends Armour {
     }
 
     public void doEquipCarefully( Hero hero ) {
-
 
         if( hero.belongings.weap1!=null && this.incompatibleWith(hero.belongings.weap1) ) {
 

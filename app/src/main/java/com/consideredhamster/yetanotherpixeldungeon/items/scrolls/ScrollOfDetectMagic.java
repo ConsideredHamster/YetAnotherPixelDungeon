@@ -54,13 +54,13 @@ public class ScrollOfDetectMagic extends Scroll {
 
         boolean identified = identify( curUser.belongings.backpack.items.toArray( new Item[0] ) );
 
-        identified = identified || identify(
+        identified = identify(
                 curUser.belongings.weap1,
                 curUser.belongings.weap2,
                 curUser.belongings.armor,
                 curUser.belongings.ring1,
                 curUser.belongings.ring2
-        );
+        ) || identified;
 
         if( identified ){
             GLog.i( TXT_IDENTIFIED );

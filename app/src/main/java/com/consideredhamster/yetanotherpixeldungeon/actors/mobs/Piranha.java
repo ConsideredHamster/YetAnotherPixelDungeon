@@ -21,8 +21,11 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.Buff;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Enraged;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Banished;
+import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Burning;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Crippled;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Tormented;
@@ -59,6 +62,7 @@ public class Piranha extends MobEvasive {
         loot = new MeatRaw();
         lootChance = 0.5f;
 
+        resistances.put( Element.Flame.class, Element.Resist.PARTIAL );
         resistances.put( Element.Dispel.class, Element.Resist.IMMUNE );
         resistances.put( Element.Knockback.class, Element.Resist.VULNERABLE );
 
@@ -72,7 +76,7 @@ public class Piranha extends MobEvasive {
 			die( null );
 			return true;
 
-		} else if( state == HUNTING && enemy != null && !Level.adjacent( pos, enemy.pos ) && invisible == 0 ) {
+		} else if( ( state == HUNTING || state == FLEEING ) && enemy != null && !Level.adjacent( pos, enemy.pos ) && invisible == 0 ) {
 
 			sprite.cast(enemy.pos, new Callback() {
 				@Override
@@ -112,6 +116,7 @@ public class Piranha extends MobEvasive {
 		int step = Dungeon.findPath(this, pos, target,
                 Level.water,
                 Level.fieldOfView);
+
 		if (step != -1) {
 			move( step );
 			return true;
@@ -133,6 +138,16 @@ public class Piranha extends MobEvasive {
 		}
 	}
 
+	@Override
+	public boolean add( Buff buff ) {
+
+		if ( buff instanceof Burning ) {
+			return false;
+		}
+
+		return super.add(buff);
+	}
+
     @Override
     protected int nextStepTo( Char enemy ) {
         return Dungeon.findPath( this, pos, enemy.pos,
@@ -140,15 +155,15 @@ public class Piranha extends MobEvasive {
                 Level.fieldOfView );
     }
 
-    @Override
-    public int attackProc( Char enemy, int damage, boolean blocked ) {
+	@Override
+	public int attackProc( Char enemy, int damage, boolean blocked ) {
 
-        if( !blocked && Random.Int( 10 ) < tier ) {
-            BuffActive.addFromDamage( enemy, Crippled.class, damage * 2 );
-        }
+		if( !blocked && Random.Int( 10 ) < tier ) {
+			BuffActive.addFromDamage( enemy, Crippled.class, damage * 2 );
+		}
 
-        return damage;
-    }
+		return damage;
+	}
 
 	@Override
 	public String description() {

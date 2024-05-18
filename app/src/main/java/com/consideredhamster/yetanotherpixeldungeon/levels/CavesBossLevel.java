@@ -242,9 +242,10 @@ public class CavesBossLevel extends Level {
             progress = BOSS_APPEARED;
 			
 			Mob boss = Bestiary.mob( Dungeon.depth );
-			boss.state = boss.SLEEPING;
+			boss.state = boss.HUNTING;
+			boss.beckon( cell );
 
-            boss.pos = exit + WIDTH * 2;
+            boss.pos = entrance - WIDTH * 5;
 			GameScene.add( boss );
 
             set( boss.pos, Terrain.EMPTY_DECO );

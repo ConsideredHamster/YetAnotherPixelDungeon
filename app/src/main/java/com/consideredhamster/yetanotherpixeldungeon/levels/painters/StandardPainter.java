@@ -73,7 +73,7 @@ public class StandardPainter extends Painter {
             paintStudy(level, room);
             return;
 
-        } else if (!Dungeon.bossLevel() && Random.Int( 2 ) == 0 ) {
+        } else if (!Dungeon.bossLevel() && Random.Int( 3 ) == 0 ) {
             switch ( Random.Int(6) ) {
                 case 0:
                     if (Math.min(room.width(), room.height()) >= 4 && Math.max(room.width(), room.height()) >= 6) {
@@ -106,7 +106,7 @@ public class StandardPainter extends Painter {
                     }
                     break;
                 case 5:
-                    if (!Dungeon.bossLevel() && Math.min(room.width(), room.height()) >= 5) {
+                    if (Math.min(room.width(), room.height()) >= 5) {
                         paintFissure(level, room);
                         return;
                     }
@@ -262,7 +262,7 @@ public class StandardPainter extends Painter {
 	
 	private static void paintBridge( Level level, Room room ) {
 		
-        if( room.connected.size() == 2 ) {
+        if( room.connected.size() == 2 && level.feeling != Level.Feeling.BOOKS ) {
 
             fill( level, room.left + 1, room.top + 1, room.width() - 1, room.height() - 1 ,
                     level.feeling == Level.Feeling.WATER ?

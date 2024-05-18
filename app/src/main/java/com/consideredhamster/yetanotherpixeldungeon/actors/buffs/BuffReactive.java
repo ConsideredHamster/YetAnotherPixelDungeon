@@ -29,8 +29,9 @@ public abstract class BuffReactive extends Buff {
 
     protected int duration;
 
-    public void reset( int value ) {
-        duration = value;
+    public void reset( float value ) {
+//        duration = value;
+        spend( value );
     }
 
     public void check(){
@@ -49,7 +50,9 @@ public abstract class BuffReactive extends Buff {
 
     @Override
     public boolean act() {
-        spend( TICK );
+//        spend( TICK );
+//        check();
+        detach();
         return true;
     }
 

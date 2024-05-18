@@ -43,9 +43,12 @@ public class DM300Sprite extends MobSprite {
 		
 		run = new Animation( 10, true );
 		run.frames( frames, 2, 3 );
-		
-		attack = new Animation( 15, false );
-		attack.frames( frames, 4, 5, 6 );
+
+        attack = new Animation( 15, false );
+        attack.frames( frames, 4, 5, 6 );
+
+        cast = new Animation( 15, false );
+        cast.frames( frames, 4, 5, 6 );
 		
 		die = new Animation( 20, false );
 		die.frames( frames, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 0, 7, 8 );

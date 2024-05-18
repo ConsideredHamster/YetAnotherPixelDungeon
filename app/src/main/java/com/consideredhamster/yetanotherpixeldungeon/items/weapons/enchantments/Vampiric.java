@@ -64,7 +64,7 @@ public class Vampiric extends Weapon.Enchantment {
     @Override
     protected boolean proc_p( Char attacker, Char defender, int damage ) {
 
-        if ( attacker.isAlive() ) {
+        if ( attacker.isAlive() && !defender.isMagical() ) {
 
             int effValue = Element.Resist.modifyValue( damage / 2, defender, Element.BODY );
 

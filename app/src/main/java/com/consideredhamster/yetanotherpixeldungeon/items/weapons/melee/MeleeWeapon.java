@@ -81,8 +81,8 @@ public abstract class MeleeWeapon extends Weapon {
             } else {
 
                 hero.buff( Satiety.class ).decrease( Satiety.POINT * str() / hero.STR() );
-                Buff.affect( hero, Guard.class ).reset( 1 );
                 hero.spendAndNext( Actor.TICK );
+                Buff.affect( hero, Guard.class ).reset( 1 );
 
             }
 

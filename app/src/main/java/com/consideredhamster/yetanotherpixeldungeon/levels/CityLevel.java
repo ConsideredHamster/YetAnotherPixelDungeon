@@ -29,6 +29,7 @@ import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.DungeonTilemap;
 import com.consideredhamster.yetanotherpixeldungeon.actors.mobs.npcs.AmbitiousImp;
 import com.consideredhamster.yetanotherpixeldungeon.levels.Room.Type;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
@@ -76,6 +77,20 @@ public class CityLevel extends RegularLevel {
 	
 	@Override
 	protected void decorate() {
+
+	    for( int i = 0 ; i < LENGTH ; i++ ){
+            passable[ i ] =
+                map[ i ] != Terrain.WALL && map[ i ] != Terrain.STATUE && map[ i ] != Terrain.GRATE &&
+                map[ i ] != Terrain.CHASM && map[ i ] != Terrain.WALL_SIGN;
+        }
+
+        for( int i = 0 ; i < LENGTH ; i++ ) {
+            if( i != entrance && map[ i ] != Terrain.WALL ) {
+                if( !PathFinder.buildDistanceMap( i, entrance, passable ) ) {
+                    map[ i ] = Terrain.CHASM;
+                }
+            }
+        }
 
 	    for (int i=WIDTH + 1; i < LENGTH - WIDTH - 1; i++) {
             if (map[i] == Terrain.EMPTY) {
@@ -132,20 +147,6 @@ public class CityLevel extends RegularLevel {
                 }
             }
         }
-
-//        for (int i=WIDTH; i < LENGTH - WIDTH; i++) {
-//            if (map[i] == Terrain.WALL && map[i + WIDTH] != Terrain.WALL && Random.Int( 20 ) == 0 ) {
-//                map[i] = Terrain.WALL_DECO2;
-//            }
-//        }
-//
-//        for (int i=0; i < LENGTH; i++) {
-//            if (map[i] == Terrain.EMPTY && Random.Int( 10 ) == 0){
-//                map[ i ] = Terrain.EMPTY_DECO;
-//            } else if (map[i] == Terrain.WALL && Random.Int( 8 ) == 0) {
-//                map[i] = Terrain.WALL_DECO;
-//            }
-//        }
 	}
 	
 	@Override

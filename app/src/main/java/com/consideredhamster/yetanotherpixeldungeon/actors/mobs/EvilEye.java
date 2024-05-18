@@ -38,6 +38,8 @@ import com.consideredhamster.yetanotherpixeldungeon.scenes.GameScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.EyeSprite;
 import com.watabou.utils.Random;
 
+import java.util.ArrayList;
+
 public class EvilEye extends MobRanged {
 
     public EvilEye() {
@@ -64,8 +66,6 @@ public class EvilEye extends MobRanged {
 		spriteClass = EyeSprite.class;
 		
 		flying = true;
-        loot = new MeatRaw();
-        lootChance = 0.175f;
 
         resistances.put(Element.Energy.class, Element.Resist.PARTIAL);
 
@@ -73,6 +73,8 @@ public class EvilEye extends MobRanged {
         resistances.put( Element.Knockback.class, Element.Resist.VULNERABLE );
 
 	}
+
+    private ArrayList<Integer> cells = new ArrayList<Integer>();
 
 //    @Override
 //	protected boolean getCloser( int target ) {
@@ -102,16 +104,18 @@ public class EvilEye extends MobRanged {
 
     private void shootRay( int target ) {
 
+        cells.clear();
         boolean terrainAffected = false;
 
         int reflectFrom = Ballistica.cast( pos, target, true, false );
+        cells = WandOfDisintegration.getCellsFromTrace( cells );
 
         sprite.parent.add( new DeathRay( pos, reflectFrom ) );
         Sample.INSTANCE.play( Assets.SND_RAY );
 
-        for ( int i = 1 ; i <= Ballistica.distance ; i++ ) {
-            terrainAffected = terrainAffected || burnTile( Ballistica.trace[i] );
-        }
+//        for ( int i = 1 ; i <= Ballistica.distance ; i++ ) {
+//            terrainAffected = terrainAffected || burnTile( Ballistica.trace[i] );
+//        }
 
         if( Level.solid[ reflectFrom ] ){
 
@@ -120,16 +124,20 @@ public class EvilEye extends MobRanged {
             if( reflectFrom != reflectTo ){
 
                 Ballistica.cast( reflectFrom, reflectTo, true, false );
-
                 reflectTo = Ballistica.trace[ Ballistica.distance ] ;
 
+                cells = WandOfDisintegration.getCellsFromTrace( cells );
                 sprite.parent.add( new DeathRay( reflectFrom, reflectTo ) );
 
-                for ( int i = 1 ; i <= Ballistica.distance ; i++ ) {
-                    terrainAffected = terrainAffected || burnTile( Ballistica.trace[i] );
-                }
+//                for ( int i = 1 ; i <= Ballistica.distance ; i++ ) {
+//                    terrainAffected = terrainAffected || burnTile( Ballistica.trace[i] );
+//                }
 
             }
+        }
+
+        for ( int c : cells ) {
+            terrainAffected = terrainAffected || burnTile( c );
         }
 
         if (terrainAffected) {

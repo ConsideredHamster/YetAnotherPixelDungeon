@@ -20,7 +20,10 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.visuals.windows;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.bonuses.Invisibility;
+import com.consideredhamster.yetanotherpixeldungeon.items.armours.body.BodyArmor;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.HeroSprite;
 import com.watabou.noosa.BitmapTextMultiline;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
@@ -133,7 +136,6 @@ public class WndTradeItem extends Window {
             item.identify();
 		
 		float pos = createDescription( item, true );
-
 
         if ( shopkeeper != null ) {
 
@@ -256,6 +258,9 @@ public class WndTradeItem extends Window {
 		
 		new Gold( price ).doPickUp( hero );
 		GLog.i( TXT_SOLD, item.name(), price );
+
+		hero.spendAndNext( Actor.TICK );
+
 	}
 	
 	private void sellOne( Item item ) {
@@ -265,12 +270,15 @@ public class WndTradeItem extends Window {
 		} else {
 			
 			Hero hero = Dungeon.hero;
-			
+
 			item = item.detach( hero.belongings.backpack );
+
 			int price = item.price();
-			
 			new Gold( price ).doPickUp( hero );
 			GLog.i( TXT_SOLD, item.name(), price );
+
+			hero.spendAndNext( Actor.TICK );
+
 		}
 	}
 	
@@ -294,6 +302,8 @@ public class WndTradeItem extends Window {
         if (!item.doPickUp( hero )) {
             Dungeon.level.drop( item, heap.pos ).sprite.drop();
         }
+
+		hero.spendAndNext( Actor.TICK );
     }
 
     private void steal( Heap heap, Shopkeeper shopkeeper ) {
@@ -321,5 +331,7 @@ public class WndTradeItem extends Window {
             shopkeeper.onCaught();
 
         }
+
+		hero.spendAndNext( Actor.TICK );
     }
 }

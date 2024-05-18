@@ -51,6 +51,7 @@
 		  spriteClass = UndeadSprite.class;
 
 		  armorClass /= 2;
+		  EXP = 0;
 
 		  resistances.put( Element.Unholy.class, Element.Resist.PARTIAL );
 		  resistances.put( Element.Acid.class, Element.Resist.PARTIAL );

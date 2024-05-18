@@ -70,7 +70,6 @@ public class WandOfIceBarrier extends WandUtility {
         for ( int n : Level.NEIGHBOURS5 ) {
 
             int c = cell + n;
-            CellEmitter.get( c ).burst( Speck.factory( Speck.ICESHARD ), 3 );
 
             if( distance == Level.distance( curUser.pos, c ) && ( Actor.findChar( c ) != null || Level.passable[ c ]  ) ) {
 
@@ -81,11 +80,13 @@ public class WandOfIceBarrier extends WandUtility {
                 if( ch != null ){
 
                     if( ch instanceof IceBlock ) {
+
                         ch.HT += power;
                         ch.heal( power );
+
                     } else {
-                        power = Char.absorb( power, ch.armorClass(), false );
-                        ch.damage( power, curUser, Element.PHYSICAL );
+
+                        ch.damage( Char.absorb( power, ch.armorClass(), false ), curUser, Element.PHYSICAL );
 
                         if( ch.isAlive() ){
                             BuffActive.add( ch, Frozen.class, power );
@@ -97,6 +98,8 @@ public class WandOfIceBarrier extends WandUtility {
                     IceBlock.spawnAt( power, c );
 
                 }
+
+                CellEmitter.get( c ).burst( Speck.factory( Speck.ICESHARD ), 4 );
             }
         }
     }

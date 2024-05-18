@@ -107,7 +107,7 @@ public class PoolPainter extends Painter {
 				Generator.Category.WEAPON, 
 				Generator.Category.ARMOR 
 			) );
-			if (another.bonus > prize.bonus) {
+			if (another.lootLevel() > prize.lootLevel()) {
 				prize = another;
 			}
 		}

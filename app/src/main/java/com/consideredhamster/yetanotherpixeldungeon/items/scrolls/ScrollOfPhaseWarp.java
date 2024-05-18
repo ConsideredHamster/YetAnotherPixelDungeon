@@ -20,20 +20,25 @@
  */
 package com.consideredhamster.yetanotherpixeldungeon.items.scrolls;
 
+import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
+import com.consideredhamster.yetanotherpixeldungeon.levels.Level;
 import com.consideredhamster.yetanotherpixeldungeon.scenes.InterlevelScene;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.Assets;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.SpellSprite;
 import com.consideredhamster.yetanotherpixeldungeon.items.wands.WandOfLifeDrain;
 import com.consideredhamster.yetanotherpixeldungeon.misc.utils.GLog;
+
+import java.util.ArrayList;
 
 public class ScrollOfPhaseWarp extends Scroll {
 
@@ -57,9 +62,24 @@ public class ScrollOfPhaseWarp extends Scroll {
 	@Override
 	protected void doRead() {
 
-        int pos;
+        int pos = curUser.pos;
 
-        pos = Dungeon.level.randomRespawnCell( false, true );
+//        pos = Dungeon.level.randomRespawnCell( false, true );
+
+        ArrayList<Integer> cells = new ArrayList<>();
+
+        for( int cell = 0; cell < Level.LENGTH ; cell++ ){
+
+            if( !Level.solid[cell] && Level.passable[cell] && Actor.findChar(cell) == null && Level.distance( pos, cell ) > 4 ) {
+                cells.add( cell );
+            }
+        }
+
+        while( pos == curUser.pos || !PathFinder.buildDistanceMap( curUser.pos, pos, Level.passable ) ) {
+
+            pos = Random.element( cells );
+
+        }
 
         if (pos == -1) {
 

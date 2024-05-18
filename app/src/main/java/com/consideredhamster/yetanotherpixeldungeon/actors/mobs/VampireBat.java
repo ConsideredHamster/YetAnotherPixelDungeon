@@ -21,6 +21,7 @@
 package com.consideredhamster.yetanotherpixeldungeon.actors.mobs;
 
 import com.consideredhamster.yetanotherpixeldungeon.Element;
+import com.consideredhamster.yetanotherpixeldungeon.items.food.MeatRaw;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Char;
@@ -56,6 +57,8 @@ public class VampireBat extends MobEvasive {
         spriteClass = BatSprite.class;
 
         flying = true;
+        loot = new MeatRaw();
+        lootChance = 0.175f;
 
         baseSpeed = 2f;
 

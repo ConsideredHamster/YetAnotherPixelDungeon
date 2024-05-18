@@ -235,10 +235,6 @@ public abstract class Actor implements Bundlable {
 				
 				doNext = current.act();
 
-                if (current instanceof Char) {
-                    BuffReactive.check( (Char)current );
-                }
-
 				if (doNext && !Dungeon.hero.isAlive()) {
 					doNext = false;
 					current = null;

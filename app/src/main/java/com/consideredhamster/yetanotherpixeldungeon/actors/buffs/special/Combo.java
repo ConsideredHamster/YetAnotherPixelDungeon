@@ -58,11 +58,11 @@ public class Combo extends BuffReactive {
         return super.attachTo( target );
     }
 
-	public void hit( ) {
+	public void hit( float delay ) {
 
 		count++;
 
-        reset( 1 );
+        reset( delay );
 
         if ( target.sprite.visible && count >= 3 ) {
             target.sprite.showStatus( CharSprite.DEFAULT, TXT_COMBO, count );

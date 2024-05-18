@@ -110,7 +110,7 @@ public abstract class Char extends Actor {
 	protected boolean act() {
 
 		Dungeon.level.updateFieldOfView( this );
-        Buff.detach( this, Guard.class);
+//        Buff.detach( this, Guard.class);
 
         moving = false;
 
@@ -182,7 +182,7 @@ public abstract class Char extends Actor {
 
                 if( exposed != null ) {
                     exposed.object = enemy.id();
-                    exposed.reset(1);
+                    exposed.reset( 1f );
                 }
 
             }
@@ -618,9 +618,9 @@ public abstract class Char extends Actor {
 			timeScale *= 0.667f;
 		}
 
-//		if (buff( Speed.class ) != null) {
-//			timeScale *= 1.5f;
-//		}
+		if (buff( Guard.class ) != null) {
+			remove( Guard.class );
+		}
 
 		super.spend( time / timeScale );
 	}

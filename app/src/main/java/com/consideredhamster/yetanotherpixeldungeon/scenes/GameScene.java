@@ -28,6 +28,8 @@ import com.consideredhamster.yetanotherpixeldungeon.items.scrolls.ScrollOfPhaseW
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Door;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.RippleShock;
 import com.consideredhamster.yetanotherpixeldungeon.visuals.sprites.HazardSprite;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndOptions;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.windows.WndTutorial;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -269,14 +271,17 @@ public class GameScene extends PixelScene {
 		add( busy );
 		
 		switch (InterlevelScene.mode) {
+
 		case RESURRECT:
             ScrollOfPhaseWarp.appear( Dungeon.hero, Dungeon.hero.pos );
 			new Flare( 8, 32 ).color( 0xFFFF66, true ).show( hero, 2f ) ;
             Sample.INSTANCE.play( Assets.SND_TELEPORT );
 			break;
+
 		case RETURN:
             ScrollOfPhaseWarp.appear( Dungeon.hero, Dungeon.hero.pos );
 			break;
+
 		case FALL:
 			Chasm.heroLand();
 
@@ -285,7 +290,9 @@ public class GameScene extends PixelScene {
             }
 
 			break;
+
 		case DESCEND:
+
 			switch (Dungeon.depth) {
 			case 1:
 				WndStory.showChapter( WndStory.ID_SEWERS );
@@ -303,8 +310,6 @@ public class GameScene extends PixelScene {
 				WndStory.showChapter( WndStory.ID_HALLS );
 				break;
 			}
-
-			
 
 			break;
 		default:
@@ -329,6 +334,32 @@ public class GameScene extends PixelScene {
         Camera.main.target = hero;
 
 		fadeIn();
+
+		if( Dungeon.depth == 2 && Statistics.deepestFloor == 2
+			&& InterlevelScene.mode == InterlevelScene.Mode.DESCEND
+			&& !( Badges.isUnlocked( Badges.Badge.BOSS_SLAIN_1 )
+			|| Badges.isUnlocked( Badges.Badge.STRENGTH_ATTAINED_1 )
+			|| Badges.isUnlocked( Badges.Badge.ITEMS_UPGRADED_1) )
+		) {
+
+			YetAnotherPixelDungeon.scene().add(
+				new WndOptions( "You're doing well!",
+					"But did you know that YetAnotherPD has an in-game guide? It explains a lot of " +
+					"the game's mechanics and intricacies, so it can be really helpful for new players." +
+					"\n\nIf you don't want to read it now, then remember that it is always available " +
+					"via the Tutorial button in the game menu (top right corner of the screen)." +
+					"\n\nSo, what would you say?", "Yes, show me the tutorial", "No, I will be fine without it" ) {
+
+					@Override
+					protected void onSelect( int index ) {
+
+						if (index == 0) {
+							GameScene.show(new WndTutorial());
+						}
+					}
+				} );
+
+		}
 	}
 	
 	public void destroy() {

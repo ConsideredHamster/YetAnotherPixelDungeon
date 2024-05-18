@@ -101,6 +101,8 @@ public class TrapsPainter extends Painter {
 				prize = another;
 			}
 		}
+
+		prize.uncurse( 3 );
 		
 		return prize;
 	}

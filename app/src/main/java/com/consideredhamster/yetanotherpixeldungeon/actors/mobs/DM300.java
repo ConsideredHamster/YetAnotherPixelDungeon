@@ -132,6 +132,11 @@ public class DM300 extends MobHealthy {
     }
 
     @Override
+    public boolean cast( Char enemy ) {
+        return false;
+    }
+
+    @Override
     public void remove( Buff buff ) {
 
         if( buff instanceof Enraged && isAlive() ) {
@@ -217,32 +222,35 @@ public class DM300 extends MobHealthy {
                         shootLasers( mark.pos );
                         mark.destroy();
 
-                        if( marks.size() <= 1 ){
-                            lastMark = -1;
-                            spend( TICK );
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        break;
+
+//                        if( marks.size() <= 1 ){
+//                            lastMark = -1;
+//                            spend( TICK );
+//                            return true;
+//                        } else {
+//                            return false;
+//                        }
 
                     case BossWarning.VAR_BOMBS:
 
                         throwBomb( mark.pos );
                         mark.destroy();
 
-                        if( marks.size() <= 1 ){
-                            lastMark = -1;
-                            spend( TICK );
-                            return true;
-                        } else {
-                            return false;
-                        }
-
+                        break;
 
                 }
+
+                return false;
+
+            } else {
+                lastMark = -1;
+                spend( TICK );
+                return true;
             }
 
-        } else if( enemy != null && Level.fieldOfView[ enemy.pos ] && Ballistica.cast( pos, enemy.pos, false, false) == enemy.pos ) {
+        } else if( state != SLEEPING && enemy != null && Level.fieldOfView[ enemy.pos ]
+            && Ballistica.cast( pos, enemy.pos, false, false) == enemy.pos ) {
 
             if( buff( Enraged.class ) != null ) {
 
@@ -507,7 +515,7 @@ public class DM300 extends MobHealthy {
 
     private void throwBomb( final int target ) {
 
-        sprite.attack( target, new Callback() {
+        sprite.cast( target, new Callback() {
             @Override
             public void call(){
 
@@ -530,7 +538,7 @@ public class DM300 extends MobHealthy {
 
     private void shootLasers( final int target ) {
 
-        sprite.attack( target, new Callback() {
+        sprite.cast( target, new Callback() {
             @Override
             public void call() {
 

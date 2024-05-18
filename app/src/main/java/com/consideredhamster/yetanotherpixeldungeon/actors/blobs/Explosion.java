@@ -25,6 +25,7 @@ import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.BuffActive;
 import com.consideredhamster.yetanotherpixeldungeon.actors.buffs.debuffs.Vertigo;
 import com.consideredhamster.yetanotherpixeldungeon.actors.hero.Hero;
 import com.consideredhamster.yetanotherpixeldungeon.levels.features.Chasm;
+import com.consideredhamster.yetanotherpixeldungeon.visuals.effects.Speck;
 import com.watabou.utils.Random;
 import com.consideredhamster.yetanotherpixeldungeon.Dungeon;
 import com.consideredhamster.yetanotherpixeldungeon.actors.Actor;
@@ -49,8 +50,9 @@ public class Explosion {
         boolean terrainAffected = false;
 
         if (Dungeon.visible[c]) {
-            CellEmitter.get(c).burst( BlastParticle.FACTORY, 12 / ( r + 1 ) );
-            CellEmitter.get(c).burst( SmokeParticle.FACTORY, 6 / ( r + 1 ) );
+            CellEmitter.get( c ).start( Speck.factory( Speck.BLAST_FIRE, true ), 0.05f, 6 );
+//            CellEmitter.get(c).burst( BlastParticle.FACTORY, 6 );
+            CellEmitter.get(c).burst( SmokeParticle.FACTORY, 3 );
         }
 
         if (Level.flammable[c]) {

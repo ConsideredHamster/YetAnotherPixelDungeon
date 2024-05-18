@@ -44,7 +44,9 @@ public class DM100 extends MobHealthy {
 
 		maxDamage /= 2;
 		dexterity /= 2;
-		EXP += EXP / 2;
+
+		HP = HT /= 2;
+		EXP = 0;
 
 		resistances.put( Element.Acid.class, Element.Resist.PARTIAL );
 		resistances.put( Element.Flame.class, Element.Resist.PARTIAL );
@@ -111,11 +113,14 @@ public class DM100 extends MobHealthy {
 
 	public void repair( int pos ) {
 
-		Char ch = Actor.findChar(pos );
-		ch.heal( damageRoll() / 2 );
+		Char ch = Actor.findChar(pos);
 
-		Sample.INSTANCE.play(Assets.SND_LIGHTNING);
-		sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
+		if (ch != null) {
+
+			ch.heal(damageRoll() / 2);
+			ch.sprite.emitter().burst(Speck.factory(Speck.HEALING), 1);
+
+		}
 
 		next();
 	}

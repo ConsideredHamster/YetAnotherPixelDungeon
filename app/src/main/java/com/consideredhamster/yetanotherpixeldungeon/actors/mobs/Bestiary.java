@@ -86,7 +86,7 @@ public abstract class Bestiary {
 				break;
 			case 5:
 				chances = new float[]{ 6, 5, 4, 3, 2, 1 };
-				classes = new Class<?>[]{ Rat.class, Thief.class, GnollHunter.class, SewerCrab.class, CarrionSwarm.class, Skeleton.class };
+				classes = new Class<?>[]{ Rat.class, Thief.class, GnollHunter.class, SewerCrab.class, CarrionSwarm.class, GnollShaman.class };
 				break;
 
 			case 6:

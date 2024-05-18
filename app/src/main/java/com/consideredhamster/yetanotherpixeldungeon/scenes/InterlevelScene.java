@@ -78,8 +78,8 @@ public class InterlevelScene extends PixelScene {
             "There is a shop on every fifth level of the dungeon; you can spend your gold there",
             "There are only 3 ankhs in the dungeon but there is a low chance to find more",
 
-            "Trapped and flooded vaults are less likely to have a cursed item in them",
-            "Special rooms with tombs or animated statues will never have their prize cursed",
+            "Special rooms like animated statue rooms are more likely to have a better equipment",
+            "Special rooms like tombs or flooded vaults will never have their prize cursed",
 
             "Perception determines the time it takes to search for traps and secret doors",
             "Perception affects your chances to notice a trap or a secret door by walking near it",

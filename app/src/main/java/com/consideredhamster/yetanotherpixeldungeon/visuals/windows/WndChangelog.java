@@ -36,96 +36,60 @@ public class WndChangelog extends Window {
 	private static final int WIDTH_L	= 160;
 	private static final int HEIGHT_L	= 128;
 
-	private static final String TXT_TITLE	= "YAPD v0.3.3";
+	private static final String TXT_TITLE	= "YAPD v0.3.4";
 
     private static final String TXT_DESCR =
 
-                "Finally! This update is finished! Here are most of the changes in this new version:" +
-
-                "\n\n" +
-                "_GENERAL_\n" +
+                "After a few weeks of receiving feedback and testing the latest update myself, I " +
+                "found and fixed quite a bunch of issues. Hopefully, after this update I will be " +
+                "able to get to work on the next major one.\n" +
                 "\n" +
-                "- all difficulty levels are now unlocked by default\n" +
-                "- last three chapters became much more open-ended\n" +
-                "- added more decorations for wall and floor tiles\n" +
-                "- made a lot of tweaks to make chapters differ from each other\n" +
-                "- added random clutter in empty rooms to make them look a bit different\n" +
+                "By the way! I am really interested in watching how other people play this mod. " +
+                "If you care enough to stream yourself playing the latest version of YAPD or even " +
+                "upload it to Youtube, please contact me about it. I promise I'll do my best" +
+                "to participate however I can, and will be very grateful regardless of how it goes.\n" +
                 "\n" +
-                "- added \"burnt\" floors which have a lot of (likely cursed) bones and barely any grass\n" +
-                "- added \"storage\" floors which change most of the floor's walls to (mostly empty) shelves\n" +
-                "- added \"guarded\" floors with additional mobs spawned, some of them wandering by default\n" +
-                "- \"trapped\" floors no longer affect mob amount and respawn rate\n" +
-                "- decreased amount of traps on \"flooded\" floors\n" +
+                "Anyway, here's the changelog for this update:\n" +
                 "\n" +
-                "- removed the \"haunted\" floor feeling\n" +
-                "- all hazards now have descriptions when inspected\n" +
-                "- the ambitious imp now only spawns in the floor's exit room\n" +
-                "- the troll blacksmith's quest now requires only 5 pieces of dark gold ore\n" +
+                "_MINOR CHANGES_\n" +
                 "\n" +
-                "_ENEMIES & BOSSES_\n" +
+                "- added a pop-up about Tutorial on the second floor for new players\n" +
                 "\n" +
-                "- the mob description window now also shows their stats, resistances and abilities\n" +
-                "- completely reworked the Tengu boss fight\n" +
-                "- completely reworked the DM-300 boss fight\n" +
-                "- boss summons now can be encountered as regular mobs\n" +
+                "- decreased the amount of healing Goo receives from absorbing its spawn\n" +
+                "- decreased the distance between Tengu's shadows spawned in the alternate phase\n" +
+                "- DM-300 now spawns immediately aggroed and closer to the starting room\n" +
+                "- decreased DM-100's health by half (they deserved it)\n" +
                 "\n" +
-                "- evil eyes no longer run away when approached\n" +
-                "- evil eye beams are now reflected from walls\n" +
-                "- golems can now inflict knockback upon attacking\n" +
-                "- blackguards can now pull you closer with harpoons\n" +
+                "- boss summons no longer grant any experience\n" +
+                "- piranhas are now resistant to fire and immune to burning\n" +
+                "- changed skeletons spawning on the fifth floor to gnoll shamans\n" +
+                "- evil eyes no longer drop meat, but vampire bats do\n" +
                 "\n" +
-                "- stats of gnoll hunters/shamans now scale with the current chapter\n" +
-                "- piranhas and imps can turn invisible now\n" +
-                "- significantly decreased the chance of mobs dropping food\n" +
-                "- delay between mob respawns now increases much faster\n" +
+                "- buying, selling, and stealing items from shops now takes one turn\n" +
+                "- increased amount of ammo/gunpowder/bombs sold at the last shop\n" +
+                "- freezing duration from Wands of Ice Barrier will ignore the target's armor now\n" +
+                "- Scrolls of Phase Warp are now more reliably random\n" +
                 "\n" +
-                "- replaced fire elementals with a new enemy: fire drakes\n" +
-                "- replaced fiends with a new enemy: demonic magi\n" +
-                "- reworked the succubus sprite so it looks more demonic\n" +
-                "- removed class-specific mob descriptions in the sewers\n" +
+                "_BUGS & ISSUES_\n" +
                 "\n" +
-                "_ITEMS & CONSUMABLES_\n" +
+                "- fixed Yog's fists not counting as magical enemies\n" +
+                "- fixed the burning fist ability description\n" +
+                "- fixed evil eyes being able to hit you twice\n" +
                 "\n" +
-                "- interacting with bookshelves now has a chance of identifying one unknown scroll\n" +
-                "- changed the Scroll of Identify into the Scroll of Detect Magic\n" +
-                "- Potions of Invisibility now snuff out the lantern when used\n" +
-                "- Invisibility is also dispelled when lighting the lantern\n" +
-                "- all uncursing effects now remove only one negative level from cursed items\n" +
-                "- items in perfect condition can now be repaired anyway\n" +
+                "- fixed DM-300 bombs not exploding at the same time\n" +
+                "- fixed DM-300 being able to hit you at a distance\n" +
+                "- fixed DM-300 being able to use abilities while asleep\n" +
+                "- fixed DM-300 always throwing two bombs while enraged\n" +
                 "\n" +
-                "_BOMBS & FIREARMS_\n" +
+                "- fixed dropping/throwing equipped armor taking fewer turns than unequipping it\n" +
+                "- fixed Scrolls of Detect Magic failing to identify equipped items in certain cases\n" +
+                "- fixed some shelves being inaccessible on warehouse floors\n" +
+                "- fixed vampiric weapons draining health from magical enemies\n" +
                 "\n" +
-                "- all flintlock weapons now require only 1 portion of gunpowder to reload\n" +
-                "- bombs now explode on the next turn after being thrown\n" +
-                "- bomb sticks now require more gunpowder to craft\n" +
-                "- bomb explosions no longer inflict knockback\n" +
-                "- changed damage from explosions from non-elemental to their own element\n" +
+                "- fixed the guard buff lasting longer than intended\n" +
+                "- fixed some other (even less important) stuff\n" +
                 "\n" +
-                "_WANDS_\n" +
-                "\n" +
-                "- the Wand of Lightning zaps now arc to nearby targets unless the target is standing in the water\n" +
-                "- the Wand of Ice Barrier now simply creates a short wall on the tiles adjacent to the target\n" +
-                "- the Wand of Disintegration shouldn't affect the same target twice anymore\n" +
-                "- stacking runes of the Wand of Firebrand beyond fifth stack only affects their duration now\n" +
-                "\n" +
-                "_DEBUFFS_\n" +
-                "\n" +
-                "- lightning damage from all sources now spreads over the water, just like the Wand of Lightning zaps\n" +
-                "- damage debuff from being Poisoned, Withered, Charmed and Controlled was decreased from 50% to 25%\n" +
-                "- the Vertigo debuff now interrupts your movement when causing you to misstep\n" +
-                "- mobs affected by the Vertigo debuff will now switch their behavior to \"wandering\"\n" +
-                "\n" +
-                "_FIXES_\n" +
-                "\n" +
-                "- fixed cave scorpions appearing one floor earlier than intended\n" +
-                "- fixed the issue that caused Scrolls of Banishment to apply the Tormented debuff instead of Banished\n" +
-                "- fixed the issue that caused cursed Rings of Durability to prevent repair too often\n" +
-                "- fixed visual issues with harpoons\n" +
-                "- fixed a lot of minor issues and typos\n" +
-
-                "\n" +
-
-                "Thank you for playing this mod! And, as usual, please report any issues you may find, that'll help me immensely."
+                "That's all for now. _Have fun!_"
     ;
 
 	private BitmapText txtTitle;

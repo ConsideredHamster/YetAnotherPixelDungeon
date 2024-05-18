@@ -75,7 +75,7 @@ public class IceBlockSprite extends MobSprite {
         }
 
         if ( Dungeon.visible[ch.pos]) {
-            emitter().burst( Speck.factory( Speck.ICESHARD ), 16 );
+            emitter().burst( Speck.factory( Speck.ICESHARD ), 6 );
         }
     }
 

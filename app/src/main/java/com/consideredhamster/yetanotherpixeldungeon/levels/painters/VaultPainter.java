@@ -84,13 +84,15 @@ public class VaultPainter extends Painter {
         if( ring != null && prize != ring )
             level.addItemToSpawn( ring );
 
-        if( prize != null ) {
-            return prize;
+        if( prize == null ) {
+        	prize = Generator.random( Random.oneOf(
+					Generator.Category.WAND,
+					Generator.Category.RING
+			) );
         }
 
-		return Generator.random( Random.oneOf(  
-			Generator.Category.WAND, 
-			Generator.Category.RING 
-		) );
+		prize.uncurse( 3 );
+
+		return prize;
 	}
 }

@@ -404,7 +404,7 @@ public class Tengu extends MobRanged {
 
         ArrayList<Integer> cells = new ArrayList<>();
         for (Integer cell : Dungeon.level.filterTrappedCells(Dungeon.level.getPassableCellsList())) {
-            if ( pos != cell && !Level.adjacent( pos, cell ) && Level.distance( pos, cell  ) <= 4 ) {
+            if ( pos != cell && !Level.adjacent( pos, cell ) && Level.distance( pos, cell  ) <= 3 ) {
                 cells.add(cell);
             }
         }

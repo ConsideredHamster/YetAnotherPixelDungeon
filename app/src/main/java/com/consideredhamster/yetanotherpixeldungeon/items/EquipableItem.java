@@ -132,7 +132,7 @@ public abstract class EquipableItem extends Item {
 	
 	@Override
 	public void doDrop( Hero hero ) {
-		if (!isEquipped( hero ) || doUnequip( hero, false, false )) {
+		if (!isEquipped( hero ) || doUnequip( hero, false, this instanceof BodyArmor ) ) {
 			super.doDrop( hero );
 		}
 	}
@@ -142,7 +142,7 @@ public abstract class EquipableItem extends Item {
 
 		if (isEquipped( curUser ) ) {
 
-            if (quantity == 1 && !this.doUnequip( curUser, false, false )) {
+            if (quantity == 1 && !this.doUnequip( curUser, false, this instanceof BodyArmor )) {
 				return;
 			}
         }
@@ -200,7 +200,6 @@ public abstract class EquipableItem extends Item {
 	public abstract boolean doEquip( Hero hero );
 
     public void doEquipCarefully( Hero hero ) {
-
 
         if( bonus < 0 && isCursedKnown() ) {
 
@@ -261,8 +260,6 @@ public abstract class EquipableItem extends Item {
 			Dungeon.level.drop( this, hero.pos );
 		}
 
-
-				
 		return true;
 	}
 

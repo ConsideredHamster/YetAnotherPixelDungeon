@@ -63,18 +63,18 @@ public class GooSpawn extends MobEvasive {
         HT = SPAWN_HEALTH;
 
         if( Dungeon.difficulty == Difficulties.NORMAL ) {
-            HT = Random.NormalIntRange( HT, HT * 2);
+            HT = Random.NormalIntRange( HT, HT * 2 );
         } else if( Dungeon.difficulty > Difficulties.NORMAL ) {
             HT = HT * 2;
         }
 
+        HP = HT;
+
         minDamage /= 2;
         maxDamage /= 2;
 
-        HP  = HT;
-        EXP = 5;
-
         armorClass = 0;
+        EXP = 0;
 
         resistances.put( Element.Acid.class, Element.Resist.PARTIAL );
         resistances.put( Element.Flame.class, Element.Resist.PARTIAL );
@@ -134,7 +134,7 @@ public class GooSpawn extends MobEvasive {
                 BuffActive.add( mother, Burning.class, (float)buff1.getDuration() );
             }
 
-            mother.heal( HP );
+            mother.heal( Math.max( 1, HP / 2 ) );
             die( this );
 
             Pushing.move( this, mother.pos, null );

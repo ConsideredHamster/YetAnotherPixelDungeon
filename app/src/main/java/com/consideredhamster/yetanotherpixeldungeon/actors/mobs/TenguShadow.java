@@ -39,7 +39,10 @@ public class TenguShadow extends MobRanged {
         info = "Shuriken throw, Stationary";
 
         HT = HP /= 2;
+        accuracy /= 2;
+
         armorClass = 0;
+        EXP = 0;
 
         spriteClass = ShadowSprite.class;
 

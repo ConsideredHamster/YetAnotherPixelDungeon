@@ -194,7 +194,7 @@ public class Yog extends Mob {
 
             super( 5, 25, true );
 			name = "rotting fist";
-			info = "Corrosive attack, Acidic blood, Acidic healing, Respawn";
+			info = "Corrosive attack, Acidic blood, Respawn";
 			spriteClass = RottingFistSprite.class;
 
 			EXP = 0;
@@ -215,6 +215,11 @@ public class Yog extends Mob {
 
         @Override
         protected float healthValueModifier() { return 0.25f; }
+
+        @Override
+        public boolean isMagical() {
+            return true;
+        }
 
         @Override
         public void die( Object cause, Element dmg ) {
@@ -286,7 +291,7 @@ public class Yog extends Mob {
 
             super( 5, 25, true );
 			name = "burning fist";
-			info = "Fire bolt, Always Burning";
+			info = "Fire bolt, Always burning, Respawn";
 			spriteClass = BurningFistSprite.class;
 			
 			EXP = 0;
@@ -310,6 +315,11 @@ public class Yog extends Mob {
 
         @Override
         protected float healthValueModifier() { return 0.25f; }
+
+        @Override
+        public boolean isMagical() {
+            return true;
+        }
 		
 		@Override
 		public void die( Object cause, Element dmg ) {
